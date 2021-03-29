@@ -7,24 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-class Quotation extends Model
+class WorkContract extends Model
 {
-    protected $table = 'quotations';
+    protected $table = 'work_contracts';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
 
     protected $fillable = [
         'company_id',
-        'creator_id',
         'customer_id',
-        'appoinment_id',
-
-        'quotation_type',
-        'quotation_description',
-        'expiry_date',
-        'status',
+        'contract_date_start',
+        'contract_date_end',
+        'include_weekend',
+        'price',
         'payment_method',
+        'status',
     ];
 
     protected $hidden = [
@@ -35,8 +33,8 @@ class Quotation extends Model
     {
     	parent::boot();
 
-    	self::creating(function ($quotation) {
-            $quotation->id = Uuid::generate()->string;
+    	self::creating(function ($workContract) {
+            $workContract->id = Uuid::generate()->string;
     	});
     }
 
@@ -49,29 +47,20 @@ class Quotation extends Model
         );
     }
 
-    public function creator()
-    {
-        return $this->belongsTo(
-            'App\Models\User', 
-            'creator_id', 
-            'id'
-        );
-    }
-
-    public function appointment()
-    {
-        return $this->belongsTo(
-            'App\Models\Appointment', 
-            'appoinment_id', 
-            'id'
-        );
-    }
-
-    public function photos()
+    public function works()
     {
         return $this->hasMany(
-            'App\Models\QuotationPhoto',
-            'quotation_id',
+            'App\Models\Work', 
+            'work_contract_id',
+            'id'
+        );
+    }
+
+    public function warranty()
+    {
+        return $this->hasOne(
+            'App\Models\Warranty',
+            'work_contract_id',
             'id'
         );
     }

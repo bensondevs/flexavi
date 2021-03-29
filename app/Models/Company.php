@@ -77,6 +77,87 @@ class Company extends Model
         );
     }
 
+    public function workContracts()
+    {
+        return $this->hasMany(
+            'App\Models\WorkContract', 
+            'company_id', 
+            'id'
+        );
+    }
+
+    public function inspections()
+    {
+        return $this->hasMany(
+            'App\Models\Inspection',
+            'company_id',
+            'id'
+        );
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(
+            'App\Models\Invoice', 
+            'company_id', 
+            'id'
+        );
+    }
+
+    public function paymentTerms()
+    {
+        return $this->hasMany(
+            'App\Models\PaymentTerm',
+            'company_id',
+            'id'
+        );
+    }
+
+    public function cars()
+    {
+        return $this->hasMany(
+            'App\Models\Car',
+            'company_id',
+            'id'
+        );
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(
+            'App\Models\Schedule',
+            'company_id',
+            'id'
+        );
+    }
+
+    public function workActivities()
+    {
+        return $this->hasMany(
+            'App\Models\WorkActivity',
+            'company_id',
+            'id'
+        );
+    }
+
+    public function taxSetting()
+    {
+        return $this->hasOne(
+            'App\Models\TaxSetting',
+            'company_id',
+            'id'
+        );
+    }
+
+    public function workdays()
+    {
+        return $this->hasMany(
+            'App\Models\CompanyWorkday',
+            'company_id',
+            'id'
+        );
+    }
+
     protected static function boot()
     {
     	parent::boot();

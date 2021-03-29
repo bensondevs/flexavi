@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Webpatser\Uuid\Uuid;
+
+class Inspection extends Model
+{
+    protected $table = 'inspections';
+    protected $primaryKey = 'id';
+    public $timestamps = true;
+    public $incrementing = false;
+
+    protected $fillable = [
+        'company_id',
+        'inspector_id',
+        'signable_type',
+        'signable_id',
+        'is_signed',
+        'sidenote',
+    ];
+
+    protected $hidden = [
+        
+    ];
+
+    protected static function boot()
+    {
+    	parent::boot();
+
+    	self::creating(function ($inspection) {
+            $inspection->id = Uuid::generate()->string;
+    	});
+    }
+
+    public function inspector()
+    {
+        return $this->hasOne(
+            'App\Models\User', 
+            'inspector_id', 
+            'id'
+        );
+    }
+}

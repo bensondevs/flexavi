@@ -28,7 +28,10 @@ class CreateWorkContractsTable extends Migration
                 ->on('customers')
                 ->onDelete('CASCADE');
 
-            $table->date('contract_date');
+            $table->date('contract_date_start');
+            $table->date('contract_date_end');
+            $table->boolean('include_weekend')->default(false);
+
             $table->double('price', 10, 2);
             $table->char('payment_method');
 

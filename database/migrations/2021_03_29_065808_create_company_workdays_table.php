@@ -22,7 +22,7 @@ class CreateCompanyWorkdaysTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->json('schedules');
+            $table->json('schedules_json');
             $table->boolean('include_weekend');
 
             $table->timestamps();
