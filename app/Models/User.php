@@ -33,7 +33,6 @@ class User extends Authenticatable
 
         // Authentication
         'email',
-        'password',
     ];
 
     /**
@@ -81,5 +80,10 @@ class User extends Authenticatable
             'user_id', 
             'id'
         );
+    }
+
+    public function setUnhashedPasswordAttribute(string $value)
+    {
+        $this->attributes['password'] = bcrypt($value);
     }
 }

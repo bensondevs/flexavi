@@ -58,6 +58,16 @@ class BaseRepository
 		return $this->getModel()->all();
 	}
 
+	public function find($id)
+	{
+		$model = $this->getModel();
+		$model = $model->find($id);
+
+		$this->setModel($model);
+
+		return $this->getModel();
+	}
+
 	public function freshSearch(Model $model, $keyword)
 	{
 		$columns = $model->getFillable();
