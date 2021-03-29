@@ -1,0 +1,24 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use Auth;
+use Session;
+
+// Models
+use App\Models\{{modelName}};
+
+// Repositories
+use App\Repositories\{{modelName}}Repository;
+
+class {{modelName}}Controller extends Controller
+{
+    protected ${{modelNameSingularLowerCase}};
+
+    public function __construct({{modelName}}Repository ${{modelNameSingularLowerCase}}Repository)
+    {
+        $this->{{modelNameSingularLowerCase}} = ${{modelNameSingularLowerCase}}Repository;
+    }
+}
