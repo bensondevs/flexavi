@@ -7,18 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-class Car extends Model
+class Pricing extends Model
 {
-    protected $table = 'cars';
+    protected $table = 'pricings';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
 
     protected $fillable = [
-        'company_id',
-        'car_name',
-        'car_license',
-        'status',
+        'service_name',
+        'price',
+        'description',
     ];
 
     protected $hidden = [
@@ -29,13 +28,8 @@ class Car extends Model
     {
     	parent::boot();
 
-    	self::creating(function ($car) {
-            $car->id = Uuid::generate()->string;
+    	self::creating(function ($pricing) {
+            $pricing->id = Uuid::generate()->string;
     	});
-    }
-
-    public function scopeFree($car)
-    {
-        return $car->where('status', 'free');
     }
 }

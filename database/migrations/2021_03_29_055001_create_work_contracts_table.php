@@ -37,6 +37,10 @@ class CreateWorkContractsTable extends Migration
 
             $table->char('status');
 
+            $table->boolean('is_signed')->default(false);
+            $table->json('content')->nullable();
+            $table->text('pdf_url');
+
             $table->timestamps();
             $table->softDeletes();
         });

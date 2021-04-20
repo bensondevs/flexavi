@@ -16,7 +16,6 @@ class Inspection extends Model
 
     protected $fillable = [
         'company_id',
-        'inspector_id',
         'signable_type',
         'signable_id',
         'is_signed',
@@ -36,11 +35,11 @@ class Inspection extends Model
     	});
     }
 
-    public function inspector()
+    public function inspectors()
     {
-        return $this->hasOne(
-            'App\Models\User', 
-            'inspector_id', 
+        return $this->hasMany(
+            'App\Models\Inspector', 
+            'inspection_id', 
             'id'
         );
     }

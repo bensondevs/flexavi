@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmployeesTable extends Migration
+class CreateSubscriptionPaymentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::create('employees', function (Blueprint $table) {
+        Schema::create('subscription_payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
             $table->uuid('user_id');
@@ -28,10 +28,21 @@ class CreateEmployeesTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->char('title');
-            $table->string('employee_type');
+            $table->uuid('company_subscription_id');
+            $table->foreign('company_subscription_id')
+                ->references('id')
+                ->on('company_subscriptions')
+                ->onDelete('CASCADE');
 
-            $table->char('employment_status')->default('active');
+            $table->uuid('pricing_id');
+            $table->foreign('pricing_id')
+                ->references('id')
+                ->on('pricings')
+                ->onDelete('CASCADE');
+
+            $table->char('payment_method');
+            $table->json('bank_information_json');
+            $table->double('paid_amount');
 
             $table->timestamps();
             $table->softDeletes();
@@ -45,6 +56,6 @@ class CreateEmployeesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('employees');
+        Schema::dropIfExists('subscription_payments');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCarsTable extends Migration
+class CreateInspectorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,19 +13,20 @@ class CreateCarsTable extends Migration
      */
     public function up()
     {
-        Schema::create('cars', function (Blueprint $table) {
+        Schema::create('inspectors', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
-            $table->foreign('company_id')
+            $table->uuid('inspection_id');
+            $table->foreign('inspection_id')
                 ->references('id')
-                ->on('companies')
+                ->on('inspections')
                 ->onDelete('CASCADE');
 
-            $table->string('car_name');
-            $table->string('car_license');
-
-            $table->char('status')->default('free');
+            $table->uuid('user_id');
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('CASCADE');
 
             $table->timestamps();
             $table->softDeletes();
@@ -39,6 +40,6 @@ class CreateCarsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cars');
+        Schema::dropIfExists('inspectors');
     }
 }

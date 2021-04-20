@@ -40,8 +40,11 @@ class CreateQuotationsTable extends Migration
                 ->on('appointments')
                 ->onDelete('CASCADE');
 
+            $table->string('subject');
+            $table->string('quotation_number');
             $table->string('quotation_type');
             $table->text('quotation_description');
+            $table->text('pdf_url');
 
             $table->date('expiry_date');
             $table->char('status');
