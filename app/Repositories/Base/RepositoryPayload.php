@@ -23,6 +23,8 @@ trait RepositoryPayload
 		$this->status = 'error';
 		$this->message = $message;
 		$this->httpStatus = 422;
+
+		return null;
 	}
 
 	public function setForbidden($message = 'Forbidden')
@@ -30,6 +32,8 @@ trait RepositoryPayload
 		$this->status = 'error';
 		$this->message = $message;
 		$this->httpStatus = 403;
+
+		return null;
 	}
 
 	public function setNotFound($message = 'Not found')
@@ -37,6 +41,8 @@ trait RepositoryPayload
 		$this->status = 'error';
 		$this->message = $message;
 		$this->httpStatus = 404;
+
+		return null;
 	}
 
 	public function setSuccess($message = 'Success')
@@ -44,6 +50,8 @@ trait RepositoryPayload
 		$this->status = 'success';
 		$this->httpStatus = 200;
 		$this->message = $message;
+
+		return null;
 	}
 
 	public function setError($message = 'Error', $queryError)
@@ -52,6 +60,8 @@ trait RepositoryPayload
 		$this->message = $message;
 		$this->httpStatus = 500;
 		$this->queryError = $queryError;
+
+		return null;
 	}
 
 	public function setCustomError($message, $errorCode)
@@ -60,6 +70,8 @@ trait RepositoryPayload
 		$this->message = $message;
 		$this->httpStatus = $errorCode;
 		$this->queryError = null;
+
+		return null;
 	}
 
 	public function returnResponse($data = true)

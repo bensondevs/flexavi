@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Auths\LoginRequest;
 use App\Http\Requests\Auths\RegisterRequest;
 
+use Socialite;
+
 use App\Repositories\AuthRepository;
 
 class AuthController extends Controller
@@ -29,6 +31,27 @@ class AuthController extends Controller
     	return apiResponse($this->auth, $user); 
     }
 
+    public function socialMediaLoginRedirect(Request $request, $driver)
+    {
+        return Socialite::driver($driver)
+            ->stateless()
+            ->redirect()
+            ->getTargetUrl();
+    }
+
+    public function socialMediaLoginCallback(Request $request, $driver)
+    {
+        $socialiteUser = Socialite::driver($driver)
+            ->stateless()
+            ->user();
+        $this->auth->socialiteLogin($socialiteUser);
+
+        return apiResponse(
+            $this->auth, 
+            $this->auth->getModel()
+        );
+    }
+
     public function register(RegisterRequest $request)
     {
     	$input = $request->onlyInRules();
@@ -39,6 +62,16 @@ class AuthController extends Controller
     	$user = $this->auth->register($input);
 
     	return apiResponse($this->auth, $user);     
+    }
+
+    public function socialMediaRegister(Request $request, $driver)
+    {
+        $metaUser = $this->auth->socialiteRegister($driver);
+
+        return apiResponse(
+            $this->auth, 
+            $metaUser
+        );
     }
 
     public function logout()

@@ -33,6 +33,43 @@ class UserRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	public function changePassword(string $password)
+	{
+		try {
+			$user = $this->getModel();
+			$user->unhashed_password = $password;
+			$user->save();
+
+			$this->setModel($user);
+
+			$this->setSuccess('Successfully change password.');
+		} catch (QueryException $qe) {
+			$this->setError('Failed to change user password.', $qe->getMessage());
+		}
+
+		return $this->getModel();
+	}
+
+	public function changeProfilePicture($pictureFile)
+	{
+		try {
+			$user = $this->getModel();
+			$user->profile_picture_url = uploadFile(
+				$pictureFile, 
+				'storage/profile_pictures/'
+			);
+			$user->save();
+
+			$this->setModel();
+
+			$this->setSuccess('Successfully change user profile picture.');
+		} catch (QueryException $qe) {
+			$this->setError('Failed to change profile picture', $qe->getMessage());
+		}
+
+		return $this->getModel();
+	}
+
 	public function delete($forceDelete = false)
 	{
 		try {

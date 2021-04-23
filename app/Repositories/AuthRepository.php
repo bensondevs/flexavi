@@ -5,6 +5,8 @@ namespace App\Repositories;
 use \Illuminate\Support\Facades\DB;
 use \Illuminate\Database\QueryException;
 
+use Socialite;
+
 use App\Models\User;
 
 use App\Repositories\Base\BaseRepository;
@@ -64,6 +66,67 @@ class AuthRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$this->setError(
 				'Failed to do login, there is something wrong and we don\' know yet', 
+				$qe->getMessage()
+			);
+		}
+
+		return $this->getModel();
+	}
+
+	public function socialiteLogin($driver)
+	{
+		try {
+			$socialiteUser = Socialite::driver($driver)
+	            ->stateless()
+	            ->user();
+			$user = $this->getModel()
+				->where('email', $socialiteUser->getEmail())
+				->first();
+
+			if (! $user) {
+				return $this->setNotFound(
+					'This user is not yet registered.'
+				);
+			}
+
+			/*
+				Login the found user
+			*/
+			$user->token = $user->createToken(time())->plainTextToken;
+			$user->{$driver . 'Login'}->setCallbackResponse($socialiteUser);
+
+			$this->setModel($user);
+
+			$this->setSuccess('Successfully login.');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to execute login from social media', 
+				$qe->getMessage()
+			);
+		}
+
+		return $this->getModel();
+	}
+
+	public function socialiteRegister($driver)
+	{
+		try {
+			$socialiteUser = Socialite::driver($driver)
+	            ->stateless()
+	            ->user();
+
+			$user = new User;
+			$user->id = generateUUID();
+			$user->fullname = $socialiteUser->getName();
+			$user->email = $socialiteUser->getEmail();
+			$user->profile_picture_url = $socialiteUser->getAvatar();
+
+			$this->setModel($user);
+
+			$this->setSuccess('Successfully do socialite register');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to register user through social media.', 
 				$qe->getMessage()
 			);
 		}
