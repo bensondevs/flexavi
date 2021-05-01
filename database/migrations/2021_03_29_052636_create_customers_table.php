@@ -23,14 +23,18 @@ class CreateCustomersTable extends Migration
                 ->onDelete('CASCADE');
 
             $table->string('fullname');
-            $table->char('salutation')->default('Mr.');
+            $table->string('salutation');
+
+            $table->string('email');
+            
             $table->text('address');
             $table->char('house_number');
             $table->char('zipcode');
             $table->char('city');
             $table->char('province');
-            $table->string('email');
+
             $table->string('phone');
+            $table->string('second_phone')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

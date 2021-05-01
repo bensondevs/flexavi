@@ -17,7 +17,9 @@ class Employee extends Model
     protected $fillable = [
         'user_id',
         'company_id',
+        'title',
         'employee_type',
+        'emplyee_status',
     ];
 
     protected $hidden = [

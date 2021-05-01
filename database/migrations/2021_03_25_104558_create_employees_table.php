@@ -28,6 +28,8 @@ class CreateEmployeesTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
+            $table->string('photo_url')->nullable();
+
             $table->char('title');
             $table->string('employee_type');
 

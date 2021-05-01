@@ -5,10 +5,13 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\HasApiTokens;
 use Webpatser\Uuid\Uuid;
 
 class Customer extends Model
 {
+    use HasApiTokens;
+
     protected $table = 'customers';
     protected $primaryKey = 'id';
     public $timestamps = true;

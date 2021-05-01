@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Http\Requests\Companies;
+namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateCompanyRequest extends FormRequest
+use App\Models\Car;
+
+class FindCarRequest extends FormRequest
 {
+    private $car;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +17,14 @@ class UpdateCompanyRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $this->car = Car::findOrFail(request()->input('id'));
+
+        return true;
+    }
+
+    public function getCar()
+    {
+        return $this->car;
     }
 
     /**
@@ -23,8 +34,8 @@ class UpdateCompanyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $rules = [];
+
+        return $rules;
     }
 }

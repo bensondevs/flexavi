@@ -40,7 +40,7 @@ class BaseRepository
 
 	public function setCollection(Collection $collection)
 	{
-		$this->collection = $collection;
+		return $this->collection = $collection;
 	}
 
 	public function getCollection()
@@ -53,9 +53,22 @@ class BaseRepository
 		$this->collection = collect();
 	}
 
-	public function all()
+	public function all(array $options = [])
 	{
-		return $this->getModel()->all();
+		$models = $this->getModel();
+
+		if (isset($options['withs']))
+			$models->with($options['withs']);
+
+		if (isset($options['wheres']))
+			foreach ($options['wheres'] as $column => $value)
+				$models->where($column, $value);
+
+		if (isset($options['where_likes']))
+			foreach ($options['wheres'] as $column => $value)
+				$models->where($column, 'like', $value);
+		
+		return $models->get();
 	}
 
 	public function find($id)

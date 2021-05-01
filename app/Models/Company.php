@@ -17,6 +17,8 @@ class Company extends Model
     protected $fillable = [
         'owner_id',
 
+        'company_name',
+
         'visiting_address_json',
         'invoicing_address_json',
 

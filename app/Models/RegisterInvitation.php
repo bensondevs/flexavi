@@ -33,4 +33,22 @@ class RegisterInvitation extends Model
                 randomString(6);
     	});
     }
+
+    public function findByCode($code)
+    {
+        return self::where('registration_code', $code)->first();;
+    }
+
+    public function setAttachmentsAttribute(array $attachments)
+    {
+        $this->attributes['attachments_json'] = json_encode($attachments);
+    }
+
+    public function getAttachmentsAttribute()
+    {
+        $rawAttachments = $this->attributes['attachments_json'];
+        $attachments = json_decode($rawAttachments);
+
+        return $attachments ?: [];
+    }
 }

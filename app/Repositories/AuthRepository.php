@@ -8,14 +8,18 @@ use \Illuminate\Database\QueryException;
 use Socialite;
 
 use App\Models\User;
+use App\Models\Customer;
 
 use App\Repositories\Base\BaseRepository;
 
 class AuthRepository extends BaseRepository
 {
+	protected $customer;
+
 	public function __construct()
 	{
 		$this->setInitModel(new User);
+		$this->customer = new Customer();
 	}
 
 	public function register($registerData)
@@ -36,7 +40,7 @@ class AuthRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function login($credentials)
+	public function login(array $credentials)
 	{
 		try {
 			// Collect credentials
@@ -71,6 +75,34 @@ class AuthRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function customerLogin(array $credentials)
+	{
+		try {
+			$zipcode = $credentials['zipcode'];
+			$houseNumber = $credentials['house_number'];
+
+			$customer = $this->customer->where('zipcode', $zipcode)
+				->where('house_number', $houseNumber)
+				->first();
+
+			if (! $customer) 
+				return $this->setNotFound('Customer account not found.');
+
+			$customer->token = $customer->createToken(time())->plainTextToken;
+			$this->customer = $customer;
+
+			$this->setSuccess('Successfully logged in as customer');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to login to customer.', 
+				$qe->getMessage()
+			);
+		}
+
+		return $this->status == 'success' ?
+			$this->customer : null;
 	}
 
 	public function socialiteLogin($driver)
@@ -145,6 +177,22 @@ class AuthRepository extends BaseRepository
 			$this->setSuccess('Successfully logged out');
 		} catch (QueryException $qe) {
 			$this->setError('Failed to log out', $qe->getMessage());
+		}
+
+		return $this->returnResponse();
+	}
+
+	public function customerLogout(Customer $customer)
+	{
+		try {
+			$customer->tokens()->delete();
+
+			$this->setSuccess('Successfully logged out');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to log out', 
+				$qe->getMessage()
+			);
 		}
 
 		return $this->returnResponse();

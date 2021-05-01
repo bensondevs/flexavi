@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Auths\LoginRequest;
 use App\Http\Requests\Auths\RegisterRequest;
+use App\Http\Requests\Auths\CustomerLoginRequest;
 
 use Socialite;
 
@@ -29,6 +30,15 @@ class AuthController extends Controller
     	$user = $this->auth->login($input);
 
     	return apiResponse($this->auth, $user); 
+    }
+
+    public function customerLogin(CustomerLoginRequest $request)
+    {
+        $customer = $this->auth->customerLogin(
+            $request->onlyInRules()
+        );
+
+        return apiResponse($this->auth, $customer);
     }
 
     public function socialMediaLoginRedirect(Request $request, $driver)
@@ -83,5 +93,15 @@ class AuthController extends Controller
     		'status' => $this->auth->status,
     		'message' => $this->auth->message,
     	]);
+    }
+
+    public function customerLogout()
+    {
+        $this->auth->customerLogout(auth()->user());
+
+        return response()->json([
+            'status' => $this->auth->status,
+            'message' => $this->auth->message,
+        ]);
     }
 }

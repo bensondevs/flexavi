@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Webpatser\Uuid\Uuid;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
+    use HasRoles;
     use CausesActivity;
 
     protected $table = 'users';
@@ -90,5 +92,12 @@ class User extends Authenticatable
     public function setUnhashedPasswordAttribute(string $value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function hasCompanyPermission($companyId)
+    {
+        //
+
+        return true;
     }
 }

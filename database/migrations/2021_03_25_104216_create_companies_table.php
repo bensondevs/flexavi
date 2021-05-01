@@ -22,6 +22,8 @@ class CreateCompaniesTable extends Migration
                 ->on('owners')
                 ->onDelete('CASCADE');
 
+            $table->string('company_name');
+
             $table->json('visiting_address_json');
             $table->json('invoicing_address_json');
 
