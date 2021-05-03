@@ -31,6 +31,8 @@ class EmployeeRepository extends BaseRepository
 	{
 		try {
 			$employee = $this->getModel();
+			if (isset($employeeData['photo']))
+				$employee->photo = $employeeData['photo'];
 			$employee->fill($employeeData);
 			$employee->save();
 

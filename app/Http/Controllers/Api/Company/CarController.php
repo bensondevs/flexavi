@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api\Company;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Http\Requests\Cars\SaveCarRequest;
 use App\Http\Requests\Cars\FindCarRequest;
+use App\Http\Requests\Cars\SetCarImageRequest;
+use App\Http\Requests\Cars\PopulateCarsRequest;
 
 use App\Models\Company;
 
@@ -20,7 +23,7 @@ class CarController extends Controller
     	$this->car = $car;
     }
 
-    public function companyCars(Request $request)
+    public function companyCars(PopulateCarsRequest $request)
     {
     	$cars = $this->car->companyCars(
     		$request->input('company_id'),
@@ -30,11 +33,18 @@ class CarController extends Controller
     	return response()->json(['cars' => $cars]);
     }
 
-    public function save(SaveCarRequest $request)
+    public function store(SaveCarRequest $request)
     {
     	$car = $this->car->save($request->onlyInRules());
 
     	return apiResponse($this->car, $car);
+    }
+
+    public function view(FindCarRequest $request)
+    {
+        $car = $this->car->find($request->input('id'));
+
+        return response()->json(['car' => $car]);
     }
 
     public function update(SaveCarRequest $request)
@@ -42,7 +52,18 @@ class CarController extends Controller
     	$this->car->setModel($request->getCar());
     	$car = $this->car->save($request->onlyInRules());
 
-    	return apiResponse($this->car, $responseData);
+    	return apiResponse($this->car, $this->car->getModel());
+    }
+
+    public function setCarImage(SetCarImageRequest $request)
+    {
+        $this->car->setModel($request->getCar());
+        $this->car->setCarImage($request->file('car_image'));
+
+        return apiResponse(
+            $this->car, 
+            $this->car->getModel()
+        );
     }
 
     public function delete(FindCarRequest $request)

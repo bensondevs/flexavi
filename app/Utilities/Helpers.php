@@ -40,6 +40,11 @@ function urlToUsername($urlString)
     return $domainName . $domainExtension;
 }
 
+function last_character(string $string)
+{
+    return substr($string, -1);
+}
+
 function numbertofloat($number)
 {
     return sprintf('%.2f', $number);
@@ -214,8 +219,11 @@ function uploadToCloud()
 
 }
 
-function uploadFile($fileRequest, $filePath)
+function uploadFile($fileRequest, string $filePath)
 {
+    if (last_character($filePath) !== '/')
+        $filePath = ($filePath . '/');
+
     $fileName = $filePath . Carbon::now()->format('YmdHis'); 
     $fileName .= $fileRequest->getClientOriginalName();
 

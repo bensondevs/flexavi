@@ -23,10 +23,10 @@ class CompanyController extends Controller
 
     public function userCompanies()
     {
-        $companies = auth()->user()->companies;
+        $companies = $this->company->ofUser(auth()->user());
 
         return response()->json([
-            'companies' => UserCompanyResource::collection($companies)
+            'companies' => ($companies)
         ]);
     }
 
@@ -41,7 +41,7 @@ class CompanyController extends Controller
     }
 
     public function store(StoreCompanyRequest $request)
-    {S
+    {
         $input = $request->onlyInRules();
         $company = $this->company->save($input);
 

@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 
 class Company extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'companies';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -19,9 +21,6 @@ class Company extends Model
 
         'company_name',
 
-        'visiting_address_json',
-        'invoicing_address_json',
-
         'email',
         'phone_number',
         'vat_number',
@@ -30,8 +29,15 @@ class Company extends Model
         'company_website_url',
     ];
 
+    protected $casts = [
+        'visiting_address' => 'array',
+        'invoicing_address' => 'array',
+    ];
+
     protected $hidden = [
-        
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     public function owner()
@@ -172,7 +178,7 @@ class Company extends Model
     public function getVisitingAddressAttribute()
     {
         return json_decode(
-            $this->attributes['visiting_address_json'], 
+            $this->attributes['visiting_address'], 
             true
         );
     }
@@ -187,13 +193,13 @@ class Company extends Model
             'city' => $value['city'],
         ];
 
-        $this->attributes['visiting_address_json'] = json_encode($_address);
+        $this->attributes['visiting_address'] = json_encode($_address);
     }
 
     public function getInvoicingAddressAttribute()
     {
         return json_decode(
-            $this->attributes['invoicing_address_json'], 
+            $this->attributes['invoicing_address'], 
             true
         );
     }
@@ -208,6 +214,6 @@ class Company extends Model
             'city' => $value['city'],
         ];
 
-        $this->attributes['invoicing_address_json'] = json_encode($_address);
+        $this->attributes['invoicing_address'] = json_encode($_address);
     }
 }

@@ -17,11 +17,6 @@ class UsersSeeder extends Seeder
 		$this->user = $user;
 	}
 
-	public function randomRole()
-	{
-		return (['owner', 'employee'])[rand(0, 1)];
-	}
-
     /**
      * Run the database seeds.
      *
@@ -44,10 +39,10 @@ class UsersSeeder extends Seeder
     	]);
     	$user->assignRole('admin');
 
-        for ($index = 0; $index < 100; $index++) {
+        for ($index = 0; $index < 50; $index++) {
         	$this->user->setModel(new User);
         	$this->user->save([
-        		'fullname' => 'Flexavi User ' . ($index + 1),
+        		'fullname' => 'Flexavi Owner ' . ($index + 1),
         		'salutation' => 'Mr.',
         		'birth_date' => carbon()->now()->subYears(rand(20, 25)),
         		'id_card_type' => 'id_card',
@@ -56,10 +51,28 @@ class UsersSeeder extends Seeder
         		'address' => '11, A Road Name',
         		'profile_picture_url' => 'https://dummyimage.com/300/09f/fff.png',
 
-        		'email' => 'user' . ($index + 1) . '@flexavi.nl',
-        		'password' => 'user' . ($index + 1),
+        		'email' => 'owner' . ($index + 1) . '@flexavi.nl',
+        		'password' => 'owner' . ($index + 1),
         	]);
-        	$this->user->getModel()->assignRole($this->randomRole());
+        	$this->user->getModel()->assignRole('owner');
+        }
+
+        for ($index = 0; $index < 50; $index++) {
+            $this->user->setModel(new User);
+            $user = $this->user->save([
+                'fullname' => 'Flexavi Employee ' . ($index + 1),
+                'salutation' => 'Mr.',
+                'birth_date' => carbon()->now()->subYears(rand(20, 25)),
+                'id_card_type' => 'id_card',
+                'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
+                'phone' => '999999999999',
+                'address' => '11, A Road Name',
+                'profile_picture_url' => 'https://dummyimage.com/300/09f/fff.png',
+
+                'email' => 'employee' . ($index + 1) . '@flexavi.nl',
+                'password' => 'employee' . ($index + 1),
+            ]);
+            $this->user->getModel()->assignRole('employee');
         }
     }
 }

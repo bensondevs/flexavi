@@ -18,6 +18,8 @@ class EmployeeController extends Controller
 
     public function current()
     {
-    	
+    	return response()->json([
+    		'employee' => auth()->user()
+    	]);
     }
 }

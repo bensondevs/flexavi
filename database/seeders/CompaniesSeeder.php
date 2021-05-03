@@ -35,12 +35,11 @@ class CompaniesSeeder extends Seeder
     {
         $ownerRole = Role::findByName('owner');
     	$owners = $ownerRole->users()
-            ->get()
-            ->toArray();
+            ->get();
 
-    	for ($index = 0; $index < 50; $index++) {
+    	foreach ($owners as $index => $userOwner) {
             $owner = [
-                'user_id' => $owners[rand(0, (count($owners) - 1))]['id'],
+                'user_id' => $userOwner->id,
                 'bank_name' => 'FLEXAVIBANK',
                 'bic_code' => 'DUMMYBICCODE',
                 'bank_account' => '098912361352',

@@ -24,8 +24,8 @@ class CreateCompaniesTable extends Migration
 
             $table->string('company_name');
 
-            $table->json('visiting_address_json');
-            $table->json('invoicing_address_json');
+            $table->json('visiting_address');
+            $table->json('invoicing_address');
 
             $table->string('email');
             $table->string('phone_number');

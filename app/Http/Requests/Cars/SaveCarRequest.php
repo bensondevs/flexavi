@@ -7,6 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Car;
 use App\Models\Company;
 
+use App\Rules\AmongStrings;
 use App\Rules\UniqueWithConditions;
 
 class SaveCarRequest extends FormRequest
@@ -37,10 +38,21 @@ class SaveCarRequest extends FormRequest
     {
         $rules = [
             'company_id' => ['required', 'string', 'exists:companies,id'],
-            'status' => ['required', 'string'],
+            'brand' => ['required', 'string'],
+            'model' => ['required', 'string'],
+            'year' => ['required', 'integer', 'max:' . carbon()->now()->year],
         ];
 
-        if (request()->isMethod('PUT') || request()->isMethod('POST')) {
+        if (request()->input('status'))
+            $rules['status'] = ['required', 'string', new AmongStrings(['free', 'out'])];
+
+        if (request()->input('insured'))
+            $rules['insured'] = ['required', 'boolean'];
+
+        /*
+            If on update
+        */
+        if (request()->isMethod('PUT') || request()->isMethod('PATCH')) {
             $this->car = Car::findOrFail(request()->input('id'));
 
             if ($this->car->car_name == request()->input('car_name'))
@@ -55,12 +67,12 @@ class SaveCarRequest extends FormRequest
         $rules['car_name'] = [
             'required', 
             'string', 
-            new UniqueWithConditions([
-                'company_id' => request()->input('id'),
+            new UniqueWithConditions(new Car, [
+                'company_id' => request()->input('company_id'),
 
             ])
         ];
-        $rules['car_license]' = [
+        $rules['car_license'] = [
             'required', 
             'string', 
             'unique:cars,car_license'

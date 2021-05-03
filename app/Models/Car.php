@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 
 class Car extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'cars';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -16,13 +18,19 @@ class Car extends Model
 
     protected $fillable = [
         'company_id',
+        'brand',
+        'model',
+        'year',
         'car_name',
         'car_license',
+        'insured',
         'status',
     ];
 
     protected $hidden = [
-        
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     protected static function boot()
@@ -37,5 +45,19 @@ class Car extends Model
     public function scopeFree($car)
     {
         return $car->where('status', 'free');
+    }
+
+    public function setCarImageAttribute($carImageFile)
+    {
+        // Upload Image
+        $filename = uploadFile($carImageFile, 'storage/uploads/cars/');
+        $this->attributes['car_image_url'] = asset($filename);
+    }
+
+    public function getCarImageAttribute()
+    {
+        $carImageUrl = $this->attributes['car_image'];
+
+        return $carImageUrl ?: env('BLANK_IMAGE_URL');
     }
 }

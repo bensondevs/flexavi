@@ -6,14 +6,18 @@ use Illuminate\Contracts\Validation\Rule;
 
 class UniqueWithConditions implements Rule
 {
+    private $existedRecords;
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($model, array $conditions)
     {
-        //
+        foreach ($conditions as $key => $value) 
+            $model->where($key, $value);
+        $this->existedRecords = $model->get();
     }
 
     /**
@@ -25,7 +29,9 @@ class UniqueWithConditions implements Rule
      */
     public function passes($attribute, $value)
     {
-        //
+        return $this->existedRecords
+            ->where($attribute, $value)
+            ->count() < 1;
     }
 
     /**
@@ -35,6 +41,6 @@ class UniqueWithConditions implements Rule
      */
     public function message()
     {
-        return 'The validation error message.';
+        return 'The record is exists in database.';
     }
 }

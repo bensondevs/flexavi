@@ -22,9 +22,16 @@ class CreateCarsTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
+            $table->string('car_image_url')->nullable();
+
+            $table->string('brand');
+            $table->string('model');
+            $table->integer('year');
+
             $table->string('car_name');
             $table->string('car_license');
 
+            $table->boolean('insured')->default(0);
             $table->char('status')->default('free');
 
             $table->timestamps();

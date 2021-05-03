@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
@@ -13,6 +14,7 @@ use Webpatser\Uuid\Uuid;
 
 class User extends Authenticatable
 {
+    use SoftDeletes;
     use HasFactory, Notifiable, HasApiTokens;
     use HasRoles;
     use CausesActivity;
@@ -36,7 +38,6 @@ class User extends Authenticatable
         'id_card_number',
         'phone',
         'address',
-        'profile_picture_url',
 
         // Authentication
         'email',
@@ -75,7 +76,7 @@ class User extends Authenticatable
     {
         return $this->hasMany(
             'App\Models\Owner', 
-            'user_id', 
+            'user_id',
             'id'
         );
     }
@@ -92,6 +93,21 @@ class User extends Authenticatable
     public function setUnhashedPasswordAttribute(string $value)
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    public function setProfilePictureAttribute($imageFile)
+    {
+        // Upload Profile Picture
+        $path = 'storage/uploads/profile_pictures/';
+        $uploadedImageName = uploadFile($imageFile, $path);
+        $imageUrl = asset($uploadedImageName);
+
+        $this->attributes['profile_picture_url'] = $imageUrl;
+    }
+
+    public function getProfilePictureAttribute()
+    {
+        return $this->attributes['profile_picture_url'];
     }
 
     public function hasCompanyPermission($companyId)

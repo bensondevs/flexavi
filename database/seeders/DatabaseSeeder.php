@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         	UsersSeeder::class,
             CompaniesSeeder::class,
             CustomersSeeder::class,
+            EmployeesSeeder::class,
+            CarsSeeder::class,
         ]);
     }
 }

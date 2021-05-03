@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 
+use App\Http\Controllers\Api\Company\CompanyController;
+use App\Http\Controllers\Api\Company\CarController;
+
 use App\Http\Controllers\Api\Customer\CustomerController;
 
 /*
@@ -61,10 +64,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 		Current User
 	*/
 	Route::group(['prefix' => 'user'], function () {
-		Route::get('current_user', [UserController::class, 'currentUser']);
-		Route::match(['PUT', 'PATCH'], 'update_user', [UserController::class, 'updateUser']);
+		Route::get('current', [UserController::class, 'current']);
+		Route::post('set_profile_picture', [UserController::class, 'setProfilePicture']);
+		Route::match(['PUT', 'PATCH'], 'update', [UserController::class, 'update']);
 		Route::match(['PUT', 'PATCH'], 'change_password', [UserController::class, 'changePassword']);
-		Route::match(['PUT', 'PATCH'], 'change_profile_picture', [UserController::class, 'changeProfilePicture']);
 	});
 
 	/*
@@ -74,16 +77,23 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 		Route::get('user', [CompanyController::class, 'userCompanies']);
 		Route::post('update', [CompanyController::class, 'update']);
 
+		/*
+			Company Car Module
+		*/
 		Route::group(['prefix' => 'cars'], function () {
-			Route::get('populate', [CarController::class, 'companyCars']);
+			Route::get('/', [CarController::class, 'companyCars']);
+			Route::post('store', [CarController::class, 'store']);
+			Route::post('set_image', [CarController::class, 'setCarImage']);
+			Route::match(['PUT', 'PATCH'], 'update', [CarController::class, 'update']);
+			Route::delete('delete', [CarController::class, 'delete']);
 		});
 	});
-});
 
-Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
+	Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
-});
+	});
 
-Route::group(['prefix' => 'customer', 'middleware' => 'auth:sanctum'], function () {
-	Route::get('current', [CustomerController::class, 'current']);
+	Route::group(['prefix' => 'customer', 'middleware' => 'auth:sanctum'], function () {
+		Route::get('current', [CustomerController::class, 'current']);
+	});
 });

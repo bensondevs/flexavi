@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\User\SaveUserRequest;
 use App\Http\Requests\Users\ChangePasswordRequest;
-use App\Http\Requests\Users\ChangeProfilePictureRequest;
+use App\Http\Requests\Users\SetProfilePictureRequest;
 
 use App\Repositories\UserRepository;
 
@@ -19,14 +20,27 @@ class UserController extends Controller
     	$this->user = $userRepository;
     }
 
-    public function currentUser()
+    public function current()
     {
     	return response()->json([
             'user' => auth()->user()
         ]);
     }
 
-    public function updateUser(UpdateUserRequest $request)
+    public function setProfilePicture(SetProfilePictureRequest $request)
+    {
+        $this->user->setModel($request->user());
+        $user = $this->user->setProfilePicture(
+            $request->file('profile_picture')
+        );
+
+        return apiResponse(
+            $this->user, 
+            ['profile_picture' => $user->profile_picture]
+        );
+    }
+
+    public function update(SaveUserRequest $request)
     {
         $this->user->setModel($request->user());
         $this->user->save($request->onlyInRules());
@@ -41,19 +55,6 @@ class UserController extends Controller
     {
         $this->user->setModel($request->user());
         $this->user->changePassword($request->password);
-
-        return apiResponse(
-            $this->user, 
-            $this->user->getModel()
-        );
-    }
-
-    public function changeProfilePicture(ChangeProfilePictureRequest $request)
-    {
-        $this->user->setModel($request->user());
-        $this->user->changeProfilePicture(
-            $request->file('profile_picture')
-        );
 
         return apiResponse(
             $this->user, 

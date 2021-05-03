@@ -7,6 +7,7 @@ use \Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
+use App\Models\User;
 use App\Models\Company; 
 
 class CompanyRepository extends BaseRepository
@@ -14,6 +15,17 @@ class CompanyRepository extends BaseRepository
 	public function __construct()
 	{
 		$this->setInitModel(new Company);
+	}
+
+	public function ofUser(User $user)
+	{
+		$owners = $user->owners;
+		$ownerIds = [];
+		foreach ($owners as $owner) 
+			array_push($ownerIds, $owner->id);
+
+		$companies = Company::whereIn('owner_id', $ownerIds)->get();
+		return $this->setCollection($companies);
 	}
 
 	public function save(array $companyData)

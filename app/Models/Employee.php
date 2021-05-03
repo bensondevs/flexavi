@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 
 class Employee extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'employees';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -19,7 +21,7 @@ class Employee extends Model
         'company_id',
         'title',
         'employee_type',
-        'emplyee_status',
+        'employee_status',
     ];
 
     protected $hidden = [
@@ -50,6 +52,13 @@ class Employee extends Model
             'App\Models\Company', 
             'id', 
             'company_id'
-        )
+        );
+    }
+
+    public function setPhotoAttribute($photoFile)
+    {
+        // Upload Photo
+        $url = uploadFile($photoFile, 'storage/uploads/employees');
+        $this->attributes['photo_url'] = $url;
     }
 }
