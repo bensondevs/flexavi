@@ -10,6 +10,8 @@ use App\Http\Requests\Cars\FindCarRequest;
 use App\Http\Requests\Cars\SetCarImageRequest;
 use App\Http\Requests\Cars\PopulateCarsRequest;
 
+use App\Http\Resources\CarResource;
+
 use App\Models\Company;
 
 use App\Repositories\CarRepository;
@@ -29,6 +31,8 @@ class CarController extends Controller
     		$request->input('company_id'),
     		$request->input('free_only')
     	);
+        $cars = $this->car->paginate();
+        $cars->data = CarResource::collection($cars);
 
     	return response()->json(['cars' => $cars]);
     }
@@ -45,6 +49,14 @@ class CarController extends Controller
         $car = $this->car->find($request->input('id'));
 
         return response()->json(['car' => $car]);
+    }
+
+    public function validateInsurance(FindCarRequest $request)
+    {
+        $this->car->setModel($request->getCar());
+        $car = $this->car->validateInsurance();
+
+        return apiResponse($this->car, $car);
     }
 
     public function update(SaveCarRequest $request)

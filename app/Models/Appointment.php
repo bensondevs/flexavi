@@ -14,6 +14,53 @@ class Appointment extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const TYPES = [
+        [
+            'label' => 'Inspection',
+            'value' => 'inspection',
+            'model' => 'App\Models\Inspection',
+        ],
+        [
+            'label' => 'Quotation',
+            'value' => 'quotation',
+            'model' => 'App\Models\Quotation',
+        ],
+        [
+            'label' => 'Work',
+            'value' => 'work',
+            'model' => 'App\Models\Work',
+        ],
+        [
+            'label' => 'Warranty Claim',
+            'value' => 'warranty_claim',
+            'model' => 'App\Models\WarrantyClaim',
+        ],
+        [
+            'label' => 'Payment Term',
+            'value' => 'payment_term',
+            'model' => 'App\Models\PaymentTerm',
+        ]
+    ];
+
+    const STATUSES = [
+        [
+            'label' => 'Created',
+            'value' => 'created',
+        ],
+        [
+            'label' => 'Updated',
+            'value' => 'updated',
+        ],
+        [
+            'label' => 'Processed',
+            'value' => 'processed',
+        ],
+        [
+            'label' => 'Finished',
+            'value' => 'finished',
+        ]
+    ];
+
     protected $fillable = [
         'company_id',
         'customer_id',
@@ -21,8 +68,10 @@ class Appointment extends Model
         'start',
         'end',
         'include_weekend',
+
         'appointment_type',
         'appointment_status',
+        
         'note',
     ];
 
@@ -39,6 +88,15 @@ class Appointment extends Model
     	});
     }
 
+    public function appointmentable()
+    {
+        return $this->hasOne(
+            'App\Models\Appointmentable',
+            'id',
+            'appointment_id'
+        );
+    }
+
     public function customer()
     {
         return $this->hasOne(
@@ -46,5 +104,19 @@ class Appointment extends Model
             'customer_id',
             'id'
         );
+    }
+
+    public static function getTypes()
+    {
+        return collect(static::TYPES)
+            ->only('value')
+            ->toArray();
+    }
+
+    public static function getStatuses()
+    {
+        return collect(static::STATUSES)
+            ->only('value')
+            ->toArray();
     }
 }

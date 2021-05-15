@@ -6,6 +6,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\QueryException;
 
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 use App\Repositories\Base\RepositoryPayload;
 
 class BaseRepository 
@@ -15,6 +18,7 @@ class BaseRepository
 	protected $defaultModel = null;
 	protected $model = null;
 	protected $collection = null;
+	protected $paginations = null;
 
 	public function setInitModel(Model $model)
 	{
@@ -53,22 +57,89 @@ class BaseRepository
 		$this->collection = collect();
 	}
 
-	public function all(array $options = [])
+	public function setPagination(LengthAwarePaginator $paginations)
+	{
+		return $this->paginations = $paginations;
+	}
+
+	public function getPagination()
+	{
+		return $this->paginations;
+	}
+
+	public function destroyPagination()
+	{
+		return $this->paginations = null;
+	}
+
+	public function all(array $options = [], bool $pagination = false)
 	{
 		$models = $this->getModel();
 
+		if (isset($options['search'])) {
+			$columns = $models->getFillable();
+			foreach ($columns as $key => $column) {
+				$models = ($key == 0) ?
+					$models->where($column, 'like', '%' . $options['search'] . '%') :
+					$models->orWhere($column, 'like', '%' . $options['search'] . '%');
+			}
+		}
+
+		if (isset($options['wheres'])) {
+			foreach ($options['wheres'] as $condition) {
+				$operator = isset($condition['operator']) ? 
+					$condition['operator'] : 
+					'=';
+
+				$models = $models->where(
+					$condition['column'], 
+					$operator, 
+					$condition['value']
+				);
+			}
+		}
+
+		if (isset($options['where_hases'])) {
+			foreach ($options['where_hases'] as $relation => $conditions) {
+				$models = $models->whereHas($relation, function ($query) use ($conditions) {
+					foreach ($conditions as $condition) {
+						$operator = isset($condition['operator']) ? 
+							$condition['operator'] : 
+							'=';
+						
+						$query->where(
+							$condition['column'], 
+							$operator, 
+							$condition['value']
+						);
+					}
+				});
+			}
+		}
+
 		if (isset($options['withs']))
-			$models->with($options['withs']);
+			foreach ($options['withs'] as $relation)
+				$models = $models->with($relation);
 
-		if (isset($options['wheres']))
-			foreach ($options['wheres'] as $column => $value)
-				$models->where($column, $value);
+		$models = $models->get();
+		$this->setCollection($models);
 
-		if (isset($options['where_likes']))
-			foreach ($options['wheres'] as $column => $value)
-				$models->where($column, 'like', $value);
-		
-		return $models->get();
+		return $models;
+	}
+
+	public function paginate($perPage = 10, $page = null, $options = [])
+	{
+	    $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+	    $items = $this->getCollection();
+	    $paginations = new LengthAwarePaginator(
+	    	$items->forPage($page, $perPage), 
+	    	$items->count(), 
+	    	$perPage, 
+	    	$page,
+	    	$options
+	    );
+
+	    return $this->setPagination($paginations);
 	}
 
 	public function find($id)

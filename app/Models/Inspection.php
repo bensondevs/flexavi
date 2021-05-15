@@ -16,9 +16,12 @@ class Inspection extends Model
 
     protected $fillable = [
         'company_id',
+
         'signable_type',
         'signable_id',
+
         'is_signed',
+        
         'sidenote',
     ];
 
@@ -33,6 +36,11 @@ class Inspection extends Model
     	self::creating(function ($inspection) {
             $inspection->id = Uuid::generate()->string;
     	});
+    }
+
+    public function quotationOrWorkContract()
+    {
+        return $this->morphTo();
     }
 
     public function inspectors()

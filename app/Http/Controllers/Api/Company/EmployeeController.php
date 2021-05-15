@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\Employees\SaveEmployeeRequest;
+use App\Http\Requests\Employees\PopulateEmployeesRequest;
+
 use App\Models\Company;
 
 use App\Repositories\EmployeeRepository;
@@ -21,13 +24,13 @@ class EmployeeController extends Controller
     	$this->employee = $employeeRepository;
     }
 
-    public function companyEmployees(Request $request)
+    public function companyEmployees(PopulateEmployeesRequest $request)
     {
-    	return response()->json([
-    		'employees' => $this->employee->ofCompany(
-    			$company->id
-    		),
-    	]);
+        $employees = $this->employee->all($request->options());
+        $employees = $this->employee->paginate();
+        $employess->data = EmployeeResource::collection($employees);
+
+    	return response()->json(['employees' => $employees]);
     }
 
     public function store(SaveEmployeeRequest $request)
@@ -36,21 +39,16 @@ class EmployeeController extends Controller
     		$request->onlyInRules()
     	);
 
-    	return apiResponse(
-    		$this->employee, 
-    		$employee
-    	);
+    	return apiResponse($this->employee, $employee);
     }
 
     public function update(SaveEmployeeRequest $request)
     {
-    	$this->employee->setModel($request->getEmployee());
-    	$this->employee->save($request->onlyInRules());
+        $input = $request->onlyInRules();
+    	$employee = $this->employee->setModel($request->getEmployee());
+    	$employee = $this->employee->save($input);
 
-    	return apiResponse(
-    		$this->employee, 
-    		$this->employee->getModel()
-    	);
+    	return apiResponse($this->employee, $employee);
     }
 
     public function delete(FindEmployeeRequest $request)

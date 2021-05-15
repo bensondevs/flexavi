@@ -6,8 +6,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 
-use App\Http\Controllers\Api\Company\CompanyController;
 use App\Http\Controllers\Api\Company\CarController;
+use App\Http\Controllers\Api\Company\InvoiceController;
+use App\Http\Controllers\Api\Company\CompanyController;
+use App\Http\Controllers\Api\Company\EmployeeController;
+use App\Http\Controllers\Api\Company\AppointmentController;
 
 use App\Http\Controllers\Api\Customer\CustomerController;
 
@@ -78,6 +81,36 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 		Route::post('update', [CompanyController::class, 'update']);
 
 		/*
+			Company Appointment Module
+		*/
+		Route::group(['prefix' => 'appointments'], function () {
+			Route::get('/', [AppointmentController::class, 'companyAppointments']);
+			Route::post('store', [AppointmentController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class]);
+			Route::delete('delete', [AppointmentController::class]);
+		});
+
+		/*
+			Company Quotations Module
+		*/
+		Route::group(['prefix' => 'quotations'], function () {
+			Route::get('/', [QuotationController::class, 'companyQuotations']);
+			Route::post('store', [QuotationController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
+			Route::delete('delete', [QuotationController::class, 'delete']);
+		});
+
+		/*
+			Company Employee Module
+		*/
+		Route::group(['prefix' => 'employees'], function () {
+			Route::get('/', [EmployeeController::class, 'companyEmployees']);
+			Route::post('store', [EmployeeController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [EmployeeController::class, 'update']);
+			Route::delete('delete', [EmployeeController::class, 'delete']);
+		});
+
+		/*
 			Company Car Module
 		*/
 		Route::group(['prefix' => 'cars'], function () {
@@ -86,6 +119,16 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			Route::post('set_image', [CarController::class, 'setCarImage']);
 			Route::match(['PUT', 'PATCH'], 'update', [CarController::class, 'update']);
 			Route::delete('delete', [CarController::class, 'delete']);
+		});
+
+		/*
+			Company Invoice Module
+		*/
+		Route::group(['prefix' => 'invoices'], function () {
+			Route::get('/', [InvoiceController::class, 'companyInvoices']);
+			Route::post('store', [InvoiceController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
+			Route::delete('delete', [InvoiceController::class, 'delete']);
 		});
 	});
 

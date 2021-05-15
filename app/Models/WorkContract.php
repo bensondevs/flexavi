@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Models\Inspection;
+
 class WorkContract extends Model
 {
     protected $table = 'work_contracts';
@@ -36,6 +38,14 @@ class WorkContract extends Model
     	self::creating(function ($workContract) {
             $workContract->id = Uuid::generate()->string;
     	});
+    }
+
+    public function inspection()
+    {
+        return $this->morphOne(
+            Inspection::class,
+            'signable'
+        );
     }
 
     public function customer()

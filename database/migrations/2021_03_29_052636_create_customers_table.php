@@ -25,7 +25,7 @@ class CreateCustomersTable extends Migration
             $table->string('fullname');
             $table->string('salutation');
 
-            $table->string('email');
+            $table->string('email')->unique();
             
             $table->text('address');
             $table->char('house_number');
@@ -33,7 +33,7 @@ class CreateCustomersTable extends Migration
             $table->char('city');
             $table->char('province');
 
-            $table->string('phone');
+            $table->string('phone')->unique();
             $table->string('second_phone')->nullable();
 
             $table->timestamps();

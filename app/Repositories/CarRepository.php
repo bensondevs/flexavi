@@ -47,6 +47,26 @@ class CarRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	public function validateInsurance()
+	{
+		try {
+			$car = $this->getModel();
+			$car->validateInsurance();
+			$car->save();
+
+			$this->setModel($car);
+
+			$this->setSuccess('Successfully validate car insurance');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to validate car insurance',
+				$qe->getMessage()
+			);
+		}
+
+		return $this->getModel();
+	}
+
 	public function setCarImage($imageFile)
 	{
 		try {

@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Http\Requests\Cars;
+namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Car;
+use App\Models\Company;
 
-class FindCarRequest extends FormRequest
+class PopulateCompanyAppointmentsRequest extends FormRequest
 {
-    private $car;
+    public $company;
 
-    public function getCar()
+    public function getCompany()
     {
-        return $this->car = $this->car ?: 
-            Car::findOrFail(request()->input('id'));
+        return $this->company ?:
+            Company::findOrFail(
+                request()->input('company_id')
+            );
     }
 
     /**
@@ -24,7 +26,7 @@ class FindCarRequest extends FormRequest
     public function authorize()
     {
         return auth()->user()->hasCompanyPermission(
-            $this->getCar()->company_id
+            $this->getCompany()->id
         );
     }
 
@@ -35,6 +37,8 @@ class FindCarRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            //
+        ];
     }
 }

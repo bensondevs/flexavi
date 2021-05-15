@@ -16,6 +16,17 @@ class Car extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const CAR_STATUSES = [
+        [
+            'label' => 'Free',
+            'value' => 'free',
+        ],
+        [
+            'label' => 'Out',
+            'value' => 'out',
+        ]
+    ];
+
     protected $fillable = [
         'company_id',
         'brand',
@@ -45,6 +56,17 @@ class Car extends Model
     public function scopeFree($car)
     {
         return $car->where('status', 'free');
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        $statuses = self::CAR_STATUSES;
+
+        foreach ($statuses as $status)
+            if ($status['value'] == $this->attributes['status'])
+                return $status['label'];
+
+        return $statuses[0]['label'];
     }
 
     public function setCarImageAttribute($carImageFile)

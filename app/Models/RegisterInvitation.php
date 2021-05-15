@@ -23,6 +23,10 @@ class RegisterInvitation extends Model
         
     ];
 
+    protected $casts = [
+        'attachments' => 'array',
+    ];
+
     protected static function boot()
     {
     	parent::boot();
@@ -34,19 +38,19 @@ class RegisterInvitation extends Model
     	});
     }
 
-    public function findByCode($code)
+    public static function findByCode($code)
     {
         return self::where('registration_code', $code)->first();;
     }
 
     public function setAttachmentsAttribute(array $attachments)
     {
-        $this->attributes['attachments_json'] = json_encode($attachments);
+        $this->attributes['attachments'] = json_encode($attachments);
     }
 
     public function getAttachmentsAttribute()
     {
-        $rawAttachments = $this->attributes['attachments_json'];
+        $rawAttachments = $this->attributes['attachments'];
         $attachments = json_decode($rawAttachments);
 
         return $attachments ?: [];

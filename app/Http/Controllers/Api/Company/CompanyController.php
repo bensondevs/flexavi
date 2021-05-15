@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Resources\Users\UserCompanyResource;
 
+use App\Http\Requests\Companies\PopulateCompaniesRequest;
 use App\Http\Requests\Companies\StoreCompanyRequest;
 use App\Http\Requests\Companies\UpdateCompanyRequest;
 
@@ -21,13 +22,13 @@ class CompanyController extends Controller
     	$this->company = $company;
     }
 
-    public function userCompanies()
+    public function userCompanies(PopulateCompaniesRequest $request)
     {
-        $companies = $this->company->ofUser(auth()->user());
+        $companies = $this->company->all($request->options());
+        $companies = $this->company->paginate();
+        $companies->data = UserCompanyResource::collection($companies);
 
-        return response()->json([
-            'companies' => ($companies)
-        ]);
+        return response()->json(['companies' => $companies]);
     }
 
     public function registerCompany(RegisterCompanyRequest $request)

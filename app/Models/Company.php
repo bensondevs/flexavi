@@ -44,7 +44,7 @@ class Company extends Model
     {
         return $this->belongsTo(
             'App\Models\Owner', 
-            'user_id', 
+            'owner_id', 
             'id'
         );
     }

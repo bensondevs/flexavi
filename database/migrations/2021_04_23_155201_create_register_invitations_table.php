@@ -18,7 +18,7 @@ class CreateRegisterInvitationsTable extends Migration
 
             $table->string('registration_code');
             $table->string('invited_email');
-            $table->json('attachments_json')->nullable();
+            $table->json('attachments')->nullable();
             $table->string('invitation_url');
             $table->datetime('expiry_time');
 

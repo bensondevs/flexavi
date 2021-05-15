@@ -34,11 +34,8 @@ class CreateQuotationsTable extends Migration
                 ->on('customers')
                 ->onDelete('CASCADE');
 
-            $table->uuid('appoinment_id');
-            $table->foreign('appoinment_id')
-                ->references('id')
-                ->on('appointments')
-                ->onDelete('CASCADE');
+            $table->uuid('quotable_id')->nullable();
+            $table->string('quotable_type')->nullable();
 
             $table->string('subject');
             $table->string('quotation_number');
