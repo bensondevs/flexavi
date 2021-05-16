@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Http\Requests\Appointments;
+namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
-use App\Models\Appointment;
-
-class PopulateCompanyAppointmentsRequest extends FormRequest
+class PopulateCompanyCarsRequest extends FormRequest
 {
     use CompanyPopulateRequestOptions;
+
+    private $car;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -29,9 +29,7 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            
-        ];
+        return [];
     }
 
     public function options()

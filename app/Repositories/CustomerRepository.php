@@ -43,7 +43,6 @@ class CustomerRepository extends BaseRepository
 			$force ?
 				$customer->forceDelete() :
 				$customer->delete();
-
 			$this->destroyModel();
 
 			$this->setSuccess('Successully delete customer data.');

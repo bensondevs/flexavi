@@ -6,7 +6,7 @@ trait ModelEnums
 {
 	public function getEnum(string $enumName)
 	{
-		return collect(self::{$enumName});
+		return collect(constant(get_class($this) . '::' . $enumName));
 	}
 
 	public function getEnumAttribute(string $enumName, $attribute =  'value')
@@ -16,8 +16,21 @@ trait ModelEnums
 
     public function findByValue(string $enumName, $value)
     {
-    	$options = collect(self::{$enumName});
-    	$options = $options->where('value', $value)
+    	$options = collect(constant(get_class($this) . '::' . $enumName));
+    	$options = $options->where('value', $value);
     	return $options->first();
+    }
+
+    public function findFromAttributes(string $enumName, $key)
+    {
+    	$options = collect(constant(get_class($this) . '::' . $enumName));
+    	$results = $options->filter(function ($option) use ($key) {
+            return (
+                strstr($option['label'], $key) || 
+                strstr($option['value'], $key)
+            );
+        });
+    	return isset($results[0]) ? 
+            $results[0] : $options[0];
     }
 }

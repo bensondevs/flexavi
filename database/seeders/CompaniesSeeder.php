@@ -34,8 +34,7 @@ class CompaniesSeeder extends Seeder
     public function run()
     {
         $ownerRole = Role::findByName('owner');
-    	$owners = $ownerRole->users()
-            ->get();
+    	$owners = $ownerRole->users()->get();
 
     	foreach ($owners as $index => $userOwner) {
             $owner = [

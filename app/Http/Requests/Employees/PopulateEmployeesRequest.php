@@ -4,17 +4,13 @@ namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Traits\CompanyPopulateRequestOptions;
+
 use App\Models\Company;
 
 class PopulateEmployeesRequest extends FormRequest
 {
-    private $company;
-
-    public function getCompany()
-    {
-        return $this->company = $this->company ?:
-            Company::findOrFail($this->get('company_id'));
-    }
+    use CompanyPopulateRequestOptions;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -36,36 +32,13 @@ class PopulateEmployeesRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'company_id' => ['required', 'string'];
-        ];
+        return [];
     }
 
     public function options()
     {
-        /*
-            Relations
-        */
-        $withs = [];
+        $this->addWith('user');
 
-        /*
-            Conditions
-        */
-        $wheres = [];
-        array_push($wheres, [
-            'column' => 'company_id', 
-            'value' => $this->getCompany()->id
-        ]);
-
-        /*
-            Condition Relations
-        */
-        $whereHases = [];
-
-        return [
-            'withs' => $withs,
-            'wheres' => $wheres,
-            'where_hases' => $whereHases,
-        ];
+        return $this->collectCompanyOptions();
     }
 }

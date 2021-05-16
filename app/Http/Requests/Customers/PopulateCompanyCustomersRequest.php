@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Appointments;
+namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
-use App\Models\Appointment;
-
-class PopulateCompanyAppointmentsRequest extends FormRequest
+class PopulateCompanyCustomersRequest extends FormRequest
 {
     use CompanyPopulateRequestOptions;
 
@@ -30,7 +28,7 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
     public function rules()
     {
         return [
-            
+            //
         ];
     }
 

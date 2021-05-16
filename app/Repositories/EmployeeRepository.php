@@ -45,6 +45,8 @@ class EmployeeRepository extends BaseRepository
 				$qe->getMessage()
 			);
 		}
+
+		return $this->getModel();
 	}
 
 	public function delete($force = false)
@@ -66,6 +68,6 @@ class EmployeeRepository extends BaseRepository
 			);
 		}
 
-		return $this->returResponse();
+		return $this->returnResponse();
 	}
 }

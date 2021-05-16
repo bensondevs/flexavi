@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use DB;
+
 use App\Http\Requests\Customers\SaveCustomerRequest;
 use App\Http\Requests\Customers\FindCustomerRequest;
+use App\Http\Requests\Customers\PopulateCompanyCustomersRequest;
 
 use App\Http\Resources\CustomerResource;
 
@@ -21,13 +24,13 @@ class CustomerController extends Controller
     	$this->customer = $customer;
     }
 
-    public function companyCustomer()
+    public function companyCustomers(PopulateCompanyCustomersRequest $request)
     {
-    	$customers = $this->customer->all();
+    	$customers = $this->customer->all($request->options());
+        $customers = $this->customer->paginate();
+        $customers->data = CustomerResource::collection($customers);
 
-    	return response()->json([
-    		'customers' => CustomerResource::collection($customers),
-    	]);
+    	return response()->json(['customers' => $customers]);
     }
 
     public function store(SaveCustomerRequest $request)

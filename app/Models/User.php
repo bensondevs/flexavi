@@ -110,10 +110,38 @@ class User extends Authenticatable
         return $this->attributes['profile_picture_url'];
     }
 
-    public function hasCompanyPermission($companyId)
+    public function ownedCompanies()
     {
-        //
+        return $this->hasManyThrough(
+            Company::class, 
+            Owner::class
+        );
+    }
 
-        return true;
+    public function hasCompanyPermission($companyId, string $doAction = '')
+    {
+        // Allow Administrators
+        if ($this->hasRole('admin')) return true;
+
+        // Allow Owner
+        if ($this->hasRole('owner')) {
+            $owners = $this->owners;
+            $company = Company::findOrFail($companyId);
+            foreach ($owners as $key => $owner)
+                if ($owner->id === $company->owner_id)
+                    return true;
+        }
+
+        // Allow Employee
+        if ($this->hasRole('employee')) {
+            $employees = $this->employees;
+            foreach ($employees as $key => $employee)
+                if ($employee->company_id == $companyId)
+                    if ($employee->hasPermissionTo($doAction))
+                        return true;
+        }
+
+        // Disallow, because pass none
+        return false;
     }
 }

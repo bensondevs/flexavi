@@ -10,8 +10,12 @@ use App\Models\Company;
 use App\Rules\AmongStrings;
 use App\Rules\UniqueWithConditions;
 
+use App\Traits\InputRequest;
+
 class SaveCarRequest extends FormRequest
 {
+    use InputRequest;
+
     private $car;
 
     /**
@@ -26,7 +30,8 @@ class SaveCarRequest extends FormRequest
 
     public function getCar()
     {
-        return $this->car;
+        return $this->car = $this->model = $this->car ?:
+            Car::findOrFail($this->input('id'));
     }
 
     /**
@@ -36,53 +41,22 @@ class SaveCarRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
+        $this->setRules([
             'company_id' => ['required', 'string', 'exists:companies,id'],
             'brand' => ['required', 'string'],
             'model' => ['required', 'string'],
             'year' => ['required', 'integer', 'max:' . carbon()->now()->year],
-        ];
+            'status' => ['required', 'string', new AmongStrings(['free', 'out'])],
+            'insured' => ['required', 'boolean'],
+            'car_name' => ['required', 'string', new UniqueWithConditions(
+                new Car, 
+                [
+                    'company_id' => $this->input('company_id'),
+                ]
+            )],
+            'car_license' => ['required', 'string', 'unique:cars,car_license'],
+        ]);
 
-        if (request()->input('status'))
-            $rules['status'] = ['required', 'string', new AmongStrings(['free', 'out'])];
-
-        if (request()->input('insured'))
-            $rules['insured'] = ['required', 'boolean'];
-
-        /*
-            If on update
-        */
-        if (request()->isMethod('PUT') || request()->isMethod('PATCH')) {
-            $this->car = Car::findOrFail(request()->input('id'));
-
-            if ($this->car->car_name == request()->input('car_name'))
-                $rules['car_name'] = ['required', 'string'];
-
-            if ($this->car->car_license == request()->input('car_license'))
-                $rules['car_license'] = ['required', 'string'];
-
-            return $rules;
-        }
-
-        $rules['car_name'] = [
-            'required', 
-            'string', 
-            new UniqueWithConditions(new Car, [
-                'company_id' => request()->input('company_id'),
-
-            ])
-        ];
-        $rules['car_license'] = [
-            'required', 
-            'string', 
-            'unique:cars,car_license'
-        ];
-
-        return $rules;
-    }
-
-    public function onlyInRules()
-    {
-        return $this->only(array_keys($this->rules()));
+        return $this->returnRules();
     }
 }

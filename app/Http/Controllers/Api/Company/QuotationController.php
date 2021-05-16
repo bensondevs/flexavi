@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\PopulateQuotationRequest;
-use App\Http\Requests\SaveQuotationRequest;
+use App\Http\Requests\Quotations\PopulateCompanyQuotationRequest;
+use App\Http\Requests\Quotations\SaveQuotationRequest;
 
 use App\Http\Resources\QuotationResource;
 
@@ -21,7 +21,7 @@ class QuotationController extends Controller
     	$this->quotation = $quotation;
     }
 
-    public function companyQutations(PopulateQuotationRequest $request)
+    public function companyQuotations(PopulateCompanyQuotationRequest $request)
     {
     	$quotations = $this->quotation->all($request->options());
         $quotations = $this->quotation->paginate();

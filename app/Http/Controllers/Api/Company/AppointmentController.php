@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use DB;
+
+use App\Http\Requests\Appointments\SaveAppointmentRequest;
+use App\Http\Requests\Appointments\FindAppointmentRequest;
 use App\Http\Requests\Appointments\AssignAppointmentTypeRequest;
 use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest;
 
@@ -27,11 +31,11 @@ class AppointmentController extends Controller
     	PopulateCompanyAppointmentsRequest $request
     )
     {
-    	$appointments = $this->appointment->companyAppointments(
-    		$request->getCompany()
-    	);
+        $options = $request->options();
+    
+        $appointments = $this->appointment->all($options);
         $appointments = $this->appointment->paginate();
-        $appointments->data = AppoiintmentResource::collection($appointments);
+        $appointments->data = AppointmentResource::collection($appointments);
 
     	return response()->json(['appointments' => $appointments]);
     }
@@ -67,9 +71,9 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment, $appointment);
     }
 
-    public function delete(Request $request)
+    public function delete(FindAppointmentRequest $request)
     {
-        $this->appointment->find($request->id);
+        $this->appointment->setModel($request->getAppointment());
         $this->appointment->delete();
 
         return apiResponse($this->appointment);

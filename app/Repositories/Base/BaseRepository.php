@@ -17,6 +17,7 @@ class BaseRepository
 
 	protected $defaultModel = null;
 	protected $model = null;
+	protected $parentModel = null;
 	protected $collection = null;
 	protected $paginations = null;
 
@@ -28,7 +29,7 @@ class BaseRepository
 
 	public function setModel(Model $model)
 	{
-		$this->model = $model;
+		return $this->model = $model;
 	}
 
 	public function getModel()
@@ -40,6 +41,16 @@ class BaseRepository
 	{
 		$this->model = null;
 		$this->model = $this->defaultModel;
+	}
+
+	public function setParentModel(Model $parentModel)
+	{
+		return $this->parentModel = $parentModel;
+	}
+
+	public function getParentModel()
+	{
+		return $this->parentModel;
 	}
 
 	public function setCollection(Collection $collection)
@@ -77,49 +88,56 @@ class BaseRepository
 		$models = $this->getModel();
 
 		if (isset($options['search'])) {
-			$columns = $models->getFillable();
-			foreach ($columns as $key => $column) {
-				$models = ($key == 0) ?
-					$models->where($column, 'like', '%' . $options['search'] . '%') :
-					$models->orWhere($column, 'like', '%' . $options['search'] . '%');
+			if ($options['search']) {
+				$columns = $models->getFillable();
+				foreach ($columns as $key => $column) {
+					$models = ($key == 0) ?
+						$models->where($column, 'like', '%' . $options['search'] . '%') :
+						$models->orWhere($column, 'like', '%' . $options['search'] . '%');
+				}
 			}
 		}
 
 		if (isset($options['wheres'])) {
-			foreach ($options['wheres'] as $condition) {
-				$operator = isset($condition['operator']) ? 
-					$condition['operator'] : 
-					'=';
+			if ($options['wheres']) {
+				foreach ($options['wheres'] as $condition) {
+					$operator = isset($condition['operator']) ? 
+						$condition['operator'] : 
+						'=';
 
-				$models = $models->where(
-					$condition['column'], 
-					$operator, 
-					$condition['value']
-				);
+					$models = $models->where(
+						$condition['column'], 
+						$operator, 
+						$condition['value']
+					);
+				}
 			}
 		}
 
 		if (isset($options['where_hases'])) {
-			foreach ($options['where_hases'] as $relation => $conditions) {
-				$models = $models->whereHas($relation, function ($query) use ($conditions) {
-					foreach ($conditions as $condition) {
-						$operator = isset($condition['operator']) ? 
-							$condition['operator'] : 
-							'=';
-						
-						$query->where(
-							$condition['column'], 
-							$operator, 
-							$condition['value']
-						);
-					}
-				});
+			if ($options['where_hases']) {
+				foreach ($options['where_hases'] as $relation => $conditions) {
+					$models = $models->whereHas($relation, function ($query) use ($conditions) {
+						foreach ($conditions as $condition) {
+							$operator = isset($condition['operator']) ? 
+								$condition['operator'] : 
+								'=';
+							
+							$query->where(
+								$condition['column'], 
+								$operator, 
+								$condition['value']
+							);
+						}
+					});
+				}
 			}
 		}
 
 		if (isset($options['withs']))
-			foreach ($options['withs'] as $relation)
-				$models = $models->with($relation);
+			if ($options['withs'])
+				foreach ($options['withs'] as $relation)
+					$models = $models->with($relation);
 
 		$models = $models->get();
 		$this->setCollection($models);

@@ -43,4 +43,13 @@ class Customer extends Model
             $customer->id = Uuid::generate()->string;
     	});
     }
+
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company', 
+            'company_id', 
+            'id'
+        );
+    }
 }

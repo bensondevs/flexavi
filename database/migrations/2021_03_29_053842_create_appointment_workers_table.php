@@ -16,6 +16,12 @@ class CreateAppointmentWorkersTable extends Migration
         Schema::create('appointment_workers', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->uuid('company_id');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('CASCADE');
+
             $table->uuid('appointment_id');
             $table->foreign('appointment_id')
                 ->references('id')

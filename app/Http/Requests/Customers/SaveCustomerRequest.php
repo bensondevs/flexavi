@@ -4,16 +4,25 @@ namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Customer;
+
+use App\Rules\NotEqual;
+use App\Rules\AmongStrings;
+use App\Rules\CompanyOwned;
+
+use App\Traits\InputRequest;
+
 class SaveCustomerRequest extends FormRequest
 {
+    use InputRequest;
+
     private $customer;
 
     public function getCustomer()
     {
-        return $this->customer = $this->customer ?: 
-            Customer::findOrFail(
-                request()->input('id')
-            );
+        return $this->customer = $this->model = ($this->customer) ?
+            $this->customer : 
+            Customer::findOrFail($this->input('id'));
     }
 
     /**
@@ -23,9 +32,12 @@ class SaveCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->hasCompanyPermission(
-            request()->input('company_id')
-        );
+        if ($this->isMethod('POST'))
+            return true;
+    
+        $customer = $this->getCustomer();
+        return auth()->user()
+            ->hasCompanyPermission($customer->company_id);
     }
 
     /**
@@ -35,37 +47,20 @@ class SaveCustomerRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'company_id' => ['required', 'string'],
-            'fullname' => ['required', 'string', 'alpha'],
-            'salutation' => ['required', 'string', 'alpha'],
-            'address' => ['required', 'string', 'alpha_num'],
+        $this->setRules([
+            'company_id' => ['required', 'string', new CompanyOwned()],
+            'fullname' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
+            'salutation' => ['required', 'string', new AmongStrings(['Mr.', 'Mrs.'])],
+            'address' => ['required', 'string'],
             'house_number' => ['required', 'numeric'],
-            'zipcode' => ['required', 'string', 'alpha'],
-            'city' => ['required', 'string', 'alpha'],
-            'province' => ['required', 'string', 'alpha'],
+            'zipcode' => ['required', 'string', 'numeric'],
+            'city' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
+            'province' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
             'email' => ['required', 'string', 'email', 'unique:customers,email'],
             'phone' => ['required', 'numeric', 'unique:customers,phone'],
-        ];
+            'second_phone' => ['numeric', new NotEqual('phone')],
+        ]);
 
-        if (request()->input('second_phone'))
-            $rules['second_phone'] = ['required', 'numeric'];
-
-        if (request()->isMethod('PUT') || request()->isMethod('PATCH')) {
-            $customer = $this->getCustomer();
-
-            if ($customer->email == request()->input('email'))
-                $rules['email'] = ['required', 'email'];
-
-            if ($customer->phone == request()->input('phone'))
-                $rules['phone'] = ['required', 'numeric'];
-        }
-
-        return $rules;
-    }
-
-    public function onlyInRules()
-    {
-        return $this->only(array_keys($this->rules()));
+        return $this->returnRules();
     }
 }

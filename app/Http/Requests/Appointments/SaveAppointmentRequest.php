@@ -6,16 +6,20 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\Appointment;
 
+use App\Traits\InputRequest;
+
+use App\Rules\AmongStrings;
+
 class SaveAppointmentRequest extends FormRequest
 {
+    use InputRequest;
+
     private $appointment;
 
     public function getAppointment()
     {
-        return $this->appointment = $this->appointment ?:
-            Appointment::findOrFail(
-                request()->input('id')
-            );
+        return $this->appointment = $this->model = $this->appointment ?:
+            Appointment::findOrFail($this->input('id'));
     }
 
     /**
@@ -25,8 +29,15 @@ class SaveAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->hasCompanyPermission(
-            $this->appointment->company_id
+        $user = auth()->user();
+
+        if ($this->isMethod('POST')) {
+            return $user->hasCompanyPermission($this->input('company_id'));
+        }
+
+        $appointment = $this->getAppointment();
+        return $user->hasCompanyPermission(
+            $appointment->company_id
         );
     }
 
@@ -37,7 +48,7 @@ class SaveAppointmentRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
+        $this->setRules([
             'company_id' => ['required', 'string'],
             'customer_id' => ['required', 'string', 'exists:customers,id'],
             'start' => ['required', 'date'],
@@ -53,11 +64,9 @@ class SaveAppointmentRequest extends FormRequest
                 'string',
                 new AmongStrings(Appointment::getStatuses())  
             ],
-        ];
+            'note' => ['string'],
+        ]);
 
-        if (request()->input('note'))
-            $rules['note'] = ['string', 'alpha_dash'];
-
-        return $rules;
+        return $this->returnRules();
     }
 }

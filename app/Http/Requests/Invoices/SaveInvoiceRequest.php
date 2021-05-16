@@ -29,7 +29,6 @@ class SaveInvoiceRequest extends FormRequest
                 'string', 
                 'exists:work_contracts,id'
             ],
-            
         ];
     }
 }

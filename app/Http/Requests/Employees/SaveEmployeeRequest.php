@@ -4,14 +4,22 @@ namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Rules\UniqueWithConditions;
+
+use App\Models\Employee;
+
+use App\Traits\InputRequest;
+
 class SaveEmployeeRequest extends FormRequest
 {
+    use InputRequest;
+
     private $employee;
 
     public function getEmployee()
     {
-        return $this->employee = $this->employee ?: 
-            Employee::findOrFail(request()->input('id'));
+        return $this->employee = $this->model = $this->employee ?: 
+            Employee::findOrFail($this->input('id'));
     }
 
     /**
@@ -21,9 +29,12 @@ class SaveEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        $employee = $this->getEmployee();
         $currentUser = auth()->user();
 
+        if ($this->isMethod('POST'))
+            return $currentUser->hasCompanyPermission($this->input('company_id'));
+
+        $employee = $this->getEmployee();
         return $currentUser->hasCompanyPermission($employee->company_id);
     }
 
@@ -34,23 +45,21 @@ class SaveEmployeeRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'user_id' => ['required', 'string', 'exists:users,id'],
+        $this->setRules([
             'company_id' => ['required', 'string', 'exists:companies,id'],
+            'user_id' => [
+                'required', 
+                'string', 
+                'exists:users,id', 
+                new UniqueWithConditions(
+                    new Employee,
+                    ['company_id' => $this->input('company_id')] 
+                )],
             'title' => ['required', 'string'],
             'employee_type' => ['required', 'string'],
-            'employee_status' => ['required', 'string'],
-        ];
+            'employment_status' => ['required', 'string'],
+        ]);
 
-        if (request()->isMethod('PUT') || request()->isMethod('PATCH')) {
-            $employee = $this->getEmployee();
-        }
-
-        return $rules;
-    }
-
-    public function onlyInRules()
-    {
-        return $this->only(array_keys($this->rules()));
+        return $this->returnRules();
     }
 }

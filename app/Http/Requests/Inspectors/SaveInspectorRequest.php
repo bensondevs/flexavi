@@ -4,14 +4,18 @@ namespace App\Http\Requests\Inspectors;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Traits\InputRequest;
+
 class SaveInspectorRequest extends FormRequest
 {
+    use InputRequest;
+
     private $inspector;
     private $inspection;
 
     public function getInspector()
     {
-        return $this->inspector = $this->inspector ?:
+        return $this->inspector = $this->model = $this->inspector ?:
             Inspector::findOrFail($this->input('id'));
     }
 
@@ -32,12 +36,20 @@ class SaveInspectorRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'inspection_id' => ['required', 'string', 'exists:inspections,id'],
-            'user_id' => ['required', 'string', 'exists:users,id'],
-        ];
+        $this->setRules([
+            'inspection_id' => [
+                'required', 
+                'string', 
+                'exists:inspections,id'
+            ],
+            'user_id' => [
+                'required', 
+                'string', 
+                'exists:users,id'
+            ],
+        ]);
 
-        return $rules;
+        return $this->returnRules();
     }
 
     public function onlyInRules()

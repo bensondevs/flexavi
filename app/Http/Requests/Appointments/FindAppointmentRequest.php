@@ -4,13 +4,17 @@ namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Traits\CompanyPopulateRequestOptions;
-
 use App\Models\Appointment;
 
-class PopulateCompanyAppointmentsRequest extends FormRequest
+class FindAppointmentRequest extends FormRequest
 {
-    use CompanyPopulateRequestOptions;
+    private $appointment;
+
+    public function getAppointment()
+    {
+        return $this->appointment = $this->appointment ?:
+            Appointment::findOrFail($this->input('id'));
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +23,12 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = $this->user();
+        $appointment = $this->getAppointment();
+
+        return $user->hasCompanyPermission(
+            $appointment->company_id
+        );
     }
 
     /**
@@ -30,12 +39,7 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
     public function rules()
     {
         return [
-            
+            //
         ];
-    }
-
-    public function options()
-    {
-        return $this->collectCompanyOptions();
     }
 }

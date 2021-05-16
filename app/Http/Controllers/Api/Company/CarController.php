@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Cars\SaveCarRequest;
 use App\Http\Requests\Cars\FindCarRequest;
 use App\Http\Requests\Cars\SetCarImageRequest;
-use App\Http\Requests\Cars\PopulateCarsRequest;
+use App\Http\Requests\Cars\PopulateCompanyCarsRequest;
 
 use App\Http\Resources\CarResource;
 
@@ -25,12 +25,9 @@ class CarController extends Controller
     	$this->car = $car;
     }
 
-    public function companyCars(PopulateCarsRequest $request)
+    public function companyCars(PopulateCompanyCarsRequest $request)
     {
-    	$cars = $this->car->companyCars(
-    		$request->input('company_id'),
-    		$request->input('free_only')
-    	);
+    	$cars = $this->car->all($request->options());
         $cars = $this->car->paginate();
         $cars->data = CarResource::collection($cars);
 

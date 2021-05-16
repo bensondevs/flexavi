@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Traits\ModelEnums;
+
 class Car extends Model
 {
     use SoftDeletes;
+    use ModelEnums;
 
     protected $table = 'cars';
     protected $primaryKey = 'id';
@@ -60,13 +63,23 @@ class Car extends Model
 
     public function getStatusLabelAttribute()
     {
-        $statuses = self::CAR_STATUSES;
+        $status = $this->findByValue(
+            'CAR_STATUSES',
+            $this->attributes['status'] 
+        );
 
-        foreach ($statuses as $status)
-            if ($status['value'] == $this->attributes['status'])
-                return $status['label'];
+        return $status['label'];
+    }
 
-        return $statuses[0]['label'];
+    public function setStatusAttribute($_status)
+    {
+        $status = $this->findFromAttributes(
+            'CAR_STATUSES',
+            $_status
+        );
+        if (! $status) $status = self::CAR_STATUSES[0];
+
+        $this->status = $status['value'];
     }
 
     public function setCarImageAttribute($carImageFile)

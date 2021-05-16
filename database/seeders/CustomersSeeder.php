@@ -31,24 +31,31 @@ class CustomersSeeder extends Seeder
      */
     public function run()
     {
-        $companies = $this->company->all()->toArray();
-        $totalCompanies = count($companies);
-        for ($index = 0; $index < ($totalCompanies * 10); $index++) {
-            $company = $companies[rand(0, ($totalCompanies - 1))];
-        	$this->customer->save([
-                'company_id' => $company['id'],
-        
-                'fullname' => 'Customer ' . $company['company_name'],
-                'salutation' => 'Mr.',
-                'address' => 'Customer Address Road',
-                'house_number' => rand(1, 100),
-                'zipcode' => rand(100, 999) . rand(100, 999),
-                'city' => 'Anycity',
-                'province' => 'Anyprovince',
-                'email' => 'customer' . ($index + 1) . '@' . $company['company_name'] . '.com',
-                'phone' => '890123456789',
-            ]);
-            $this->customer->setModel(new Customer);
+        $companies = $this->company->all();
+
+        $rawCustomers = [];
+        foreach ($companies as $key => $company) {
+            for ($index = 0; $index < 100; $index++) {
+                array_push($rawCustomers, [
+                    'id' => generateUuid(),
+
+                    'company_id' => $company->id,
+            
+                    'fullname' => 'Customer ' . ($index + 1) . ' of ' . $company->company_name,
+                    'salutation' => 'Mr.',
+                    'address' => 'Customer Address Road',
+                    'house_number' => rand(1, 100),
+                    'zipcode' => rand(100, 999) . rand(100, 999),
+                    'city' => 'Anycity',
+                    'province' => 'Anyprovince',
+                    'email' => 'customer' . ($index + 1) . '@' . $company->company_name . '.com',
+                    'phone' => rand(111111111, 999999999),
+
+                    'created_at' => carbon()->now(),
+                    'updated_at' => carbon()->now(),
+                ]);
+            }
         }
+        Customer::insert($rawCustomers);
     }
 }

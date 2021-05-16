@@ -14,9 +14,7 @@ class RegisterCompanyRequest extends FormRequest
 
     public function getCompany()
     {
-        return new Company([
-            'owner_id' => request()->user()
-        ]);
+        return new Company(['owner_id' => $this->user()->id]);
     }
 
     /**

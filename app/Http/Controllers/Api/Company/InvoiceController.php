@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Invoices\SaveInvoiceRequest;
 use App\Http\Requests\Invoices\PopulateInvoicesRequest;
 
+use App\Http\Resources\InvoiceResource;
+
 class InvoiceController extends Controller
 {
     private $invoice;
@@ -21,6 +23,7 @@ class InvoiceController extends Controller
     {
         $invoices = $this->invoice->all($request->options());
         $invoices = $this->invoice->paginate();
+        $invoices->data = InvoiceResource::collection($invoices);
 
         return response()->json(['invoices' => $invoices]);
     }

@@ -5,6 +5,7 @@ namespace App\Http\Requests\Quotations;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Rules\AmongStrings;
+use App\Rules\CompanyOwned;
 
 use App\Models\Quotation;
 
@@ -14,8 +15,8 @@ class SaveQuotationRequest extends FormRequest
 
     public function getQuotation()
     {
-        return $this->quotation = $this->quotation ?:
-            Quotation::findOrFail(request()->input('id'));
+        return $this->quotation = $this->model = $this->quotation ?:
+            Quotation::findOrFail($this->input('id'));
     }
 
     /**
@@ -26,7 +27,7 @@ class SaveQuotationRequest extends FormRequest
     public function authorize()
     {
         $user = auth()->user();
-        request()->merge(['creator_id' => $user->id]);
+        $this->merge(['creator_id' => $user->id]);
         return $user->hasCompanyPermission(
             $this->getQuotation()->company_id
         );
@@ -39,9 +40,9 @@ class SaveQuotationRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'company_id' => ['required', 'string'],
-            'customer_id' => ['required', 'string', 'exists:customers'],
+        $this->setRules([
+            'company_id' => ['required', 'string', new CompanyOwned],
+            'customer_id' => ['required', 'string', 'exists:customers,id'],
             
             'subject' => ['required', 'string'],
             'quotation_number' => ['required', 'string', 'alpha_num'],
@@ -59,8 +60,8 @@ class SaveQuotationRequest extends FormRequest
                 new AmongStrings(Quotation::getStatuses())
             ],
             'payment_method' => ['required', 'string'],
-        ];
+        ]);
 
-        return $rules;
+        return $this->returnRules();
     }
 }

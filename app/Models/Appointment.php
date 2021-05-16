@@ -75,8 +75,10 @@ class Appointment extends Model
         'note',
     ];
 
-    protected $hidden = [
-        
+    protected $casts = [
+        'include_weekend' => 'boolean',
+        'start' => 'datetime',
+        'end' => 'datetime',
     ];
 
     protected static function boot()
@@ -108,15 +110,15 @@ class Appointment extends Model
 
     public static function getTypes()
     {
-        return collect(static::TYPES)
-            ->only('value')
-            ->toArray();
+        $value = collect(self::TYPES)->pluck('value');
+            
+        return $value->all();
     }
 
     public static function getStatuses()
     {
-        return collect(static::STATUSES)
-            ->only('value')
-            ->toArray();
+        $value = collect(self::STATUSES)->pluck('value');
+            
+        return $value->all();
     }
 }

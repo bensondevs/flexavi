@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Admin\Companies;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Cars\PopulateCarsRequest;
+use App\Http\Requests\Cars\PopulateCompanyCarsRequest;
 
 use App\Repositories\CarRepository;
 
@@ -17,7 +17,7 @@ class CarController extends Controller
     	$this->car = $car;
     }
 
-    public function companyCars(PopulateCarsRequest $request)
+    public function companyCars(PopulateCompanyCarsRequest $request)
     {
     	$cars = $this->car->companyCars();
     }

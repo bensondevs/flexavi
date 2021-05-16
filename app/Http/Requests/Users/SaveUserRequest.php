@@ -8,14 +8,18 @@ use App\Rules\AmongStrings;
 
 use App\Models\User;
 
+use App\Traits\InputRequest;
+
 class SaveUserRequest extends FormRequest
 {
+    use InputRequest;
+
     private $user;
 
     public function getUser()
     {
-        return $this->user ?: 
-            User::findOrFail(request()->input('id'));
+        return $this->user = $this->model = $this->user ?: 
+            User::findOrFail($this->input('id'));
     }
 
     /**
@@ -35,7 +39,7 @@ class SaveUserRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
+        $this->setRules([
             'fullname' => ['required', 'string'],
             'salutation' => ['required', 'string', new AmongStrings(['Mr.', 'Mrs.', 'Ms.'])],
             'birth_date' => ['required', 'date'],
@@ -52,30 +56,8 @@ class SaveUserRequest extends FormRequest
             'phone' => ['required', 'string', 'unique:users,phone'],
             'address' => ['required', 'string', 'unique:users,address'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
-            
-        ];
+        ]);
 
-        if (request()->isMethod('PUT') || request()->isMethod('PATCH')) {
-            $user = $this->getUser();
-
-            if (request()->input('id_card_number') == $user->id_card_number)
-                unset($rules['id_card_number']);
-
-            if (request()->input('phone') == $user->phone)
-                unset($rules['phone']);
-
-            if (request()->input('address') == $user->address)
-                unset($rules['address']);
-
-            if (request()->input('email') == $user->email) 
-                unset($rules['email']);
-        }
-
-        return $rules;
-    }
-
-    public function onlyInRules()
-    {
-        return $this->only(array_keys($this->rules()));
+        return $this->returnRules();
     }
 }

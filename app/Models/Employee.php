@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Traits\ModelEnums;
+
 class Employee extends Model
 {
+    use ModelEnums;
     use SoftDeletes;
 
     protected $table = 'employees';
@@ -16,12 +19,27 @@ class Employee extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const EMPLOYEE_STATUSES = [
+        [
+            'label' => 'Active',
+            'value' => 'active',
+        ],
+        [
+            'label' => 'Inactive',
+            'value' => 'inactive',
+        ],
+        [
+            'label' => 'Fired',
+            'value' => 'fired',
+        ]
+    ];
+
     protected $fillable = [
         'user_id',
         'company_id',
         'title',
         'employee_type',
-        'employee_status',
+        'employment_status',
     ];
 
     protected $hidden = [
@@ -60,5 +78,18 @@ class Employee extends Model
         // Upload Photo
         $url = uploadFile($photoFile, 'storage/uploads/employees');
         $this->attributes['photo_url'] = $url;
+    }
+
+    public function setStatusAttribute($_status)
+    {
+        $status = $this->findFromAttributes('EMPLOYEE_STATUSES', $_status);
+        $this->attributes['status'] = $status['value'];
+    }
+
+    public function getEmploymentStatusLabelAttribute()
+    {
+        $_status = $this->attributes['employment_status'];
+        $status = $this->findFromAttributes('EMPLOYEE_STATUSES', $_status);
+        return $status['label'];
     }
 }

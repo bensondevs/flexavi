@@ -10,7 +10,10 @@ use App\Http\Controllers\Api\Company\CarController;
 use App\Http\Controllers\Api\Company\InvoiceController;
 use App\Http\Controllers\Api\Company\CompanyController;
 use App\Http\Controllers\Api\Company\EmployeeController;
+use App\Http\Controllers\Api\Company\CustomerController as CompanyCustomerController;
+use App\Http\Controllers\Api\Company\QuotationController;
 use App\Http\Controllers\Api\Company\AppointmentController;
+use App\Http\Controllers\Api\Company\AppointmentWorkerController;
 
 use App\Http\Controllers\Api\Customer\CustomerController;
 
@@ -86,8 +89,15 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 		Route::group(['prefix' => 'appointments'], function () {
 			Route::get('/', [AppointmentController::class, 'companyAppointments']);
 			Route::post('store', [AppointmentController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class]);
-			Route::delete('delete', [AppointmentController::class]);
+			Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
+			Route::delete('delete', [AppointmentController::class, 'delete']);
+
+			Route::group(['prefix' => 'workers'], function () {
+				Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
+				Route::post('store', [AppointmentWorkerController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
+				Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
+			});
 		});
 
 		/*
@@ -108,6 +118,16 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			Route::post('store', [EmployeeController::class, 'store']);
 			Route::match(['PUT', 'PATCH'], 'update', [EmployeeController::class, 'update']);
 			Route::delete('delete', [EmployeeController::class, 'delete']);
+		});
+
+		/*
+			Company Customer Module
+		*/
+		Route::group(['prefix' => 'customers'], function () {
+			Route::get('/', [CompanyCustomerController::class, 'companyCustomers']);
+			Route::post('store', [CompanyCustomerController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
+			Route::delete('delete', [CompanyCustomerController::class, 'delete']);
 		});
 
 		/*

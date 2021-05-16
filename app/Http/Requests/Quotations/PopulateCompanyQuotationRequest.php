@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Appointments;
+namespace App\Http\Requests\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Company;
+
 use App\Traits\CompanyPopulateRequestOptions;
 
-use App\Models\Appointment;
-
-class PopulateCompanyAppointmentsRequest extends FormRequest
+class PopulateCompanyQuotationRequest extends FormRequest
 {
     use CompanyPopulateRequestOptions;
 
@@ -19,7 +19,10 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = $this->user();
+        $company = $this->getCompany();
+
+        return $user->hasCompanyPermission($company->id);
     }
 
     /**
@@ -29,9 +32,7 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            
-        ];
+        return [];
     }
 
     public function options()

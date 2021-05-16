@@ -1,11 +1,21 @@
 <?php
 
-namespace App\Http\Requests\Cars;
+namespace App\Http\Requests\AppointmentWorkers;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PopulateCarsRequest extends FormRequest
+use App\Models\AppointmentWorker;
+
+class FindAppointmentWorkerRequest extends FormRequest
 {
+    private $worker;
+
+    public function getWorker()
+    {
+        return $this->worker = $this->model = $this->worker ?:
+            AppointmentWorker::findOrFail($this->input('id'));
+    }
+    
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -23,14 +33,8 @@ class PopulateCarsRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
-            'company_id' => ['required', 'string', 'exists:companies,id'],
+        return [
+            //
         ];
-
-        if (request()->input('free_only')) {
-            $rules['free_only'] = ['required', 'boolean'];
-        }
-
-        return $rules;
     }
 }

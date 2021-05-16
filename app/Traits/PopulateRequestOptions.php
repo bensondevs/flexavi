@@ -2,8 +2,9 @@
 
 namespace App\Traits;
 
-trait RequestOptionTrait 
+trait PopulateRequestOptions
 {
+	private $search = '';
 	private $withs = [];
 	private $wheres = [];
 	private $whereHases = [];
@@ -22,7 +23,8 @@ trait RequestOptionTrait
 	{
 		array_push($this->wheres, [
 			'column' => $condition['column'],
-			'operator' => $condition['operator'],
+			'operator' => isset($condition['operator']) ?
+				$condition['operator'] : '=',
 			'value' => $condition['value'],
 		]);
 	}
@@ -43,7 +45,8 @@ trait RequestOptionTrait
 	{
 		$this->whereHases[$relation] = [
 			'column' => $condition['column'],
-			'operator' => $condition['operator'],
+			'operator' => isset($condition['operator']) ?
+				$condition['operator'] : '=',
 			'value' => $condition['value'],
 		];
 	}
@@ -60,12 +63,23 @@ trait RequestOptionTrait
 		}
 	}
 
+	public function setSearch(string $search)
+	{
+		$this->search = $search;
+	}
+
     public function collectOptions()
     {
-        return [
+    	if ($search = $this->input('search'))
+    		$this->setSearch($search);
+
+        $options = [
+        	'search' => $this->search,
             'withs' => $this->withs,
             'wheres' => $this->wheres,
             'where_hases' => $this->whereHases,
         ];
+
+        return $options;
     }
 }

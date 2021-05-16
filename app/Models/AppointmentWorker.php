@@ -15,6 +15,7 @@ class AppointmentWorker extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'company_id',
         'appointment_id',
         'employee_type',
         'employee_id',
@@ -31,6 +32,15 @@ class AppointmentWorker extends Model
     	self::creating(function ($appointmentWorker) {
             $appointmentWorker->id = Uuid::generate()->string;
     	});
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company',
+            'company_id',
+            'id'
+        );
     }
 
     public function appointment()

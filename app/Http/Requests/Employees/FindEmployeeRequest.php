@@ -1,16 +1,20 @@
 <?php
 
-namespace App\Http\Requests\Appointments;
+namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Traits\CompanyPopulateRequestOptions;
+use App\Models\Employee;
 
-use App\Models\Appointment;
-
-class PopulateCompanyAppointmentsRequest extends FormRequest
+class FindEmployeeRequest extends FormRequest
 {
-    use CompanyPopulateRequestOptions;
+    private $employee;
+
+    public function getEmployee()
+    {
+        return $this->employee = $this->employee ?:
+            Employee::findOrFail($this->input('id'));
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -30,12 +34,7 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
     public function rules()
     {
         return [
-            
+            //
         ];
-    }
-
-    public function options()
-    {
-        return $this->collectCompanyOptions();
     }
 }

@@ -12,8 +12,8 @@ class FindCustomerRequest extends FormRequest
 
     public function getCustomer()
     {
-        return $this->customer ?: 
-            Customer::findOrFail(request()->input('id'));
+        return $this->customer = $this->customer ?: 
+            Customer::findOrFail($this->input('id'));
     }
 
     /**
@@ -23,8 +23,11 @@ class FindCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->hasCompanyPermission(
-            $this->getCustomer()->company_id
+        $requestingUser = auth()->user();
+        $targetedCustomer = $this->getCustomer();
+
+        return $requestingUser->hasCompanyPermission(
+            $targetedCustomer->company_id
         );
     }
 
@@ -35,8 +38,6 @@ class FindCustomerRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            
-        ];
+        return [];
     }
 }

@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\Employees\SaveEmployeeRequest;
+use App\Http\Requests\Employees\FindEmployeeRequest;
 use App\Http\Requests\Employees\PopulateEmployeesRequest;
+
+use App\Http\Resources\EmployeeResource;
 
 use App\Models\Company;
 
@@ -28,7 +31,7 @@ class EmployeeController extends Controller
     {
         $employees = $this->employee->all($request->options());
         $employees = $this->employee->paginate();
-        $employess->data = EmployeeResource::collection($employees);
+        $employees->data = EmployeeResource::collection($employees);
 
     	return response()->json(['employees' => $employees]);
     }
