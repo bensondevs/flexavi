@@ -30,7 +30,8 @@ class InvoiceController extends Controller
 
     public function store(SaveInvoiceRequest $request)
     {
-        $invoice = $this->invoice->save($request->onlyInRules());
+        $input = $request->ruleWithCompany();
+        $invoice = $this->invoice->save($input);
 
         return apiResponse($this->invoice, $invoice);
     }
@@ -38,7 +39,7 @@ class InvoiceController extends Controller
     public function update(SaveInvoiceRequest $request)
     {
         $this->invoice->setModel($request->getInvoice());
-        $invoice = $this->invoice->save($request->onlyInRules());
+        $invoice = $this->invoice->save($request->ruleWithCompany());
 
         return apiResponse($this->invoice, $invoice);
     }

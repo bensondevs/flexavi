@@ -10,19 +10,23 @@ use Socialite;
 use App\Models\User;
 use App\Models\Customer;
 
+use App\Repositories\EmployeeRepository;
 use App\Repositories\Base\BaseRepository;
 
 class AuthRepository extends BaseRepository
 {
-	protected $customer;
+	private $customer;
+	private $employee;
+	private $owner;
 
 	public function __construct()
 	{
 		$this->setInitModel(new User);
 		$this->customer = new Customer();
+		$this->employee = new EmployeeRepository;
 	}
 
-	public function register($registerData)
+	public function register($registerData, $attachments = [])
 	{
 		try {
 			$user = $this->getModel();
@@ -30,11 +34,41 @@ class AuthRepository extends BaseRepository
 			$user->unhashed_password = $registerData['password'];
 			$user->save();
 
+			// Attachment exist
+			if (isset($attachments['data'])) {
+				$attachmentsData = $attachments['data'];
+
+				if ($attachments['role'] == 'employee') {
+					$employee = $this->employee->save([
+						'user_id' => $user->id,
+						'company_id' => $attachmentsData['company_id'],
+
+						'title' => $attachmentsData['title'],
+						'employee_type' => $attachmentsData['employee_type'],
+						'employee_status' => $attachmentsData['employee_status'],
+					]);
+				} else if ($attachments['role'] == 'owner') {
+					$owner = $this->owner->save([
+						'user_id' => $user->id,
+						'is_prime_owner' => false,
+						'company_id' => $attachmentsData['company_id'],
+
+						'bank_name' => $attachmentsData['bank_name'],
+						'bic_code' => $attachmentsData['bic_code'],
+						'bank_account' => $attachmentsData['bank_account'],
+						'bank_holder_name' => $attachmentsData['bank_holder_name'],
+					]);
+				}
+			}
+
 			$this->setModel($user);
 
 			$this->setSuccess('Successfully register as user.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to register as user.', $qe->getMessage());
+			$this->setError(
+				'Failed to register as user.', 
+				$qe->getMessage()
+			);
 		}
 
 		return $this->getModel();

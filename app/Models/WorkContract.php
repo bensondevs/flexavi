@@ -16,15 +16,36 @@ class WorkContract extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const CONTRACT_STATUSES = [
+        [
+            'label' => 'Created',
+            'value' => 'created',
+        ],
+        [
+            'label' => 'Send',
+            'value' => 'send',
+        ],
+        [
+            'label' => 'Signed',
+            'value' => 'signed',
+        ]
+    ];
+
     protected $fillable = [
         'company_id',
+
         'customer_id',
+        
         'contract_date_start',
         'contract_date_end',
         'include_weekend',
         'price',
         'payment_method',
         'status',
+
+        'is_signed',
+        'content',
+        'pdf_url',
     ];
 
     protected $hidden = [
@@ -38,6 +59,15 @@ class WorkContract extends Model
     	self::creating(function ($workContract) {
             $workContract->id = Uuid::generate()->string;
     	});
+    }
+
+    public function setPdfUrlAttribute($fileRequest)
+    {
+        $path = 'storage/uploads/work_contracts/pdfs';
+        $uploadedFileName = uploadFile($fileRequest, $path);
+        $fileUrl = asset($uploadedFileName);
+        
+        return $this->attributes['pdf_url'] = $fileUrl;   
     }
 
     public function inspection()

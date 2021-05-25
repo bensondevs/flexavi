@@ -16,12 +16,6 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('owner_id');
-            $table->foreign('owner_id')
-                ->references('id')
-                ->on('owners')
-                ->onDelete('CASCADE');
-
             $table->string('company_name');
 
             $table->json('visiting_address');

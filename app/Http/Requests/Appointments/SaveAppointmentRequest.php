@@ -6,13 +6,13 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\Appointment;
 
-use App\Traits\InputRequest;
+use App\Traits\CompanyInputRequest;
 
 use App\Rules\AmongStrings;
 
 class SaveAppointmentRequest extends FormRequest
 {
-    use InputRequest;
+    use CompanyInputRequest;
 
     private $appointment;
 
@@ -29,16 +29,7 @@ class SaveAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = auth()->user();
-
-        if ($this->isMethod('POST')) {
-            return $user->hasCompanyPermission($this->input('company_id'));
-        }
-
-        $appointment = $this->getAppointment();
-        return $user->hasCompanyPermission(
-            $appointment->company_id
-        );
+        return $this->authorizeCompanyAction('appointments');
     }
 
     /**
@@ -49,7 +40,6 @@ class SaveAppointmentRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'company_id' => ['required', 'string'],
             'customer_id' => ['required', 'string', 'exists:customers,id'],
             'start' => ['required', 'date'],
             'end' => ['required', 'date'],

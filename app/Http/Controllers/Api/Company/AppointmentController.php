@@ -43,7 +43,7 @@ class AppointmentController extends Controller
     public function store(SaveAppointmentRequest $request)
     {
         $appointment = $this->appointment->save(
-            $request->onlyInRules()
+            $request->ruleWithCompany()
         );
 
         return apiResponse($this->appointment, $appointment);
@@ -53,7 +53,7 @@ class AppointmentController extends Controller
     {
         $this->appointment->setModel($request->getAppointment());
         $appointment = $this->appointment->assignType(
-            $request->onlyInRules()
+            $request->ruleWithCompany()
         );
 
         return apiResponse($this->appointment, $appointment);
@@ -65,7 +65,7 @@ class AppointmentController extends Controller
             $request->getAppointment()
         );
         $appointment = $this->appointment->save(
-            $request->onlyInRules()
+            $request->ruleWithCompany()
         );
 
         return apiResponse($this->appointment, $appointment);

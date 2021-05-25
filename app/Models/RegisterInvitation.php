@@ -14,6 +14,8 @@ class RegisterInvitation extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const ATTACHMENTS = [];
+
     protected $fillable = [
         'invited_email',
         'expiry_time',

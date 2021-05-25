@@ -28,8 +28,9 @@ class AuthController extends Controller
     {
     	$input = $request->onlyInRules();
     	$user = $this->auth->login($input);
+        $user->role = $user->user_role;
 
-    	return apiResponse($this->auth, $user); 
+    	return apiResponse($this->auth, ['user' => $user]); 
     }
 
     public function customerLogin(CustomerLoginRequest $request)
@@ -69,7 +70,10 @@ class AuthController extends Controller
 			$request->file('profile_picture'), 
 			'storage/profile_pictures/'
 		);
-    	$user = $this->auth->register($input);
+    	$user = $this->auth->register(
+            $input, 
+            $request->getInvitation()
+        );
 
     	return apiResponse($this->auth, $user);     
     }

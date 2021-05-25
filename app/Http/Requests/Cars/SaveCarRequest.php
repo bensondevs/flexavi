@@ -10,11 +10,11 @@ use App\Models\Company;
 use App\Rules\AmongStrings;
 use App\Rules\UniqueWithConditions;
 
-use App\Traits\InputRequest;
+use App\Traits\CompanyInputRequest;
 
 class SaveCarRequest extends FormRequest
 {
-    use InputRequest;
+    use CompanyInputRequest;
 
     private $car;
 
@@ -42,12 +42,11 @@ class SaveCarRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'company_id' => ['required', 'string', 'exists:companies,id'],
             'brand' => ['required', 'string'],
             'model' => ['required', 'string'],
             'year' => ['required', 'integer', 'max:' . carbon()->now()->year],
             'status' => ['required', 'string', new AmongStrings(['free', 'out'])],
-            'insured' => ['required', 'boolean'],
+            'insured' => ['boolean'],
             'car_name' => ['required', 'string', new UniqueWithConditions(
                 new Car, 
                 [

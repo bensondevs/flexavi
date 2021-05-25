@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 
 use App\Repositories\PermissionRepository;
 
-class RolesPermissionsSeeder extends Seeder
+class RolesSeeder extends Seeder
 {
 	protected $permission;
 
@@ -26,20 +26,5 @@ class RolesPermissionsSeeder extends Seeder
         $this->permission->createRole('owner');
         $this->permission->createRole('employee');
         $this->permission->createRole('customer');
-
-        // Create Permissions
-        $permissionNames = [
-            // User
-            'view users',
-            'create users',
-            'edit users',
-            'delete users',
-
-            // Company
-            'view companies',
-            'create companies',
-            'edit companies',
-            'delete companies',
-        ];
     }
 }

@@ -39,7 +39,7 @@ class EmployeeController extends Controller
     public function store(SaveEmployeeRequest $request)
     {
     	$employee = $this->employee->save(
-    		$request->onlyInRules()
+    		$request->ruleWithCompany()
     	);
 
     	return apiResponse($this->employee, $employee);
@@ -47,7 +47,7 @@ class EmployeeController extends Controller
 
     public function update(SaveEmployeeRequest $request)
     {
-        $input = $request->onlyInRules();
+        $input = $request->ruleWithCompany();
     	$employee = $this->employee->setModel($request->getEmployee());
     	$employee = $this->employee->save($input);
 

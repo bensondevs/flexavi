@@ -32,7 +32,7 @@ class QuotationController extends Controller
 
     public function store(SaveQuotationRequest $request)
     {
-        $input = $request->onlyInRules();
+        $input = $request->ruleWithCompany();
     	$quotation = $this->quotation->save($input);
 
     	return apiResponse($this->quotation, $quotation);
@@ -41,7 +41,7 @@ class QuotationController extends Controller
     public function update(SaveQuotationRequest $request)
     {
     	$this->quotation->setModel($request->getQuotation());
-    	$quotation = $this->quotation->save($request->onlyInRules());
+    	$quotation = $this->quotation->save($request->ruleWithCompany());
 
     	return apiResponse($this->quotation, $quotation);
     }

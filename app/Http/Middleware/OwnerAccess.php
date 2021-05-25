@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class OwnerAccess
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        return ($request->user()->hasRole('owner')) ? 
+            $next($request) : 
+            response()->json([
+                'status' => 'error',
+                'message' => 'This access is only available for owner.',
+            ], 403);
+    }
+}

@@ -14,7 +14,7 @@ use App\Traits\InputRequest;
 
 class SaveCustomerRequest extends FormRequest
 {
-    use InputRequest;
+    use CompanyInputRequest;
 
     private $customer;
 
@@ -32,12 +32,13 @@ class SaveCustomerRequest extends FormRequest
      */
     public function authorize()
     {
+        $user = $this->user();
+
         if ($this->isMethod('POST'))
-            return true;
+            return $user->hasCompanyPermission('create customers');
     
         $customer = $this->getCustomer();
-        return auth()->user()
-            ->hasCompanyPermission($customer->company_id);
+        return $user->hasCompanyPermission('edit customers');
     }
 
     /**
@@ -48,7 +49,6 @@ class SaveCustomerRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'company_id' => ['required', 'string', new CompanyOwned()],
             'fullname' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
             'salutation' => ['required', 'string', new AmongStrings(['Mr.', 'Mrs.'])],
             'address' => ['required', 'string'],

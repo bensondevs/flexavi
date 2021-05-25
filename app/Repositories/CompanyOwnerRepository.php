@@ -32,13 +32,4 @@ class CompanyOwnerRepository extends BaseRepository
 
 		return $this->getModel();
 	}
-
-	public function validateBankInformation()
-	{
-		try {
-			
-		} catch (QueryException $qe) {
-			
-		}
-	}
 }

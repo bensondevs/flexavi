@@ -14,14 +14,10 @@ trait CompanyPopulateRequestOptions
 
     public function getCompany()
     {
-        $companyId = $this->get('company_id') ?:
-            auth()->user()
-                ->owners()
-                ->first()
-                ->company
-                ->id;
+        $user = $this->user();
+
         return $this->company = $this->model = $this->company ?:
-            Company::findOrFail($companyId);
+            $user->{$user->roles->first()->name}->company;
     }
 
     public function collectCompanyOptions()

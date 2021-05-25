@@ -8,37 +8,40 @@ use Illuminate\Http\Request;
 use App\Http\Resources\Users\UserCompanyResource;
 
 use App\Http\Requests\Companies\PopulateCompaniesRequest;
-use App\Http\Requests\Companies\StoreCompanyRequest;
-use App\Http\Requests\Companies\UpdateCompanyRequest;
+use App\Http\Requests\Companies\SaveCompanyRequest;
+use App\Http\Requests\Companies\RegisterCompanyRequest;
 
 use App\Repositories\CompanyRepository;
+use App\Repositories\CompanyOwnerRepository;
 
 class CompanyController extends Controller
 {
     protected $company;
+    protected $owner;
 
-    public function __construct(CompanyRepository $company)
+    public function __construct(
+        CompanyRepository $company,
+        CompanyOwnerRepository $owner
+    )
     {
     	$this->company = $company;
+        $this->owner = $owner;
     }
 
-    public function userCompanies(PopulateCompaniesRequest $request)
+    public function userCompany()
     {
-        $companies = $this->company->all($request->options());
-        $companies = $this->company->paginate();
-        $companies->data = UserCompanyResource::collection($companies);
+        $user = auth()->user();
+        $company = $user->owner->company;
 
-        return response()->json(['companies' => $companies]);
+        return response()->json(['company' => $company]);
     }
 
     public function registerCompany(RegisterCompanyRequest $request)
     {
-        $input = $request->onlyInRules();
-        
-        $this->company->setModel($request->getCompany());
-        $this->company->save($request->onlyInRules());
+        $input = $request->registerData();
+        $company = $this->company->register($input);
 
-        return apiResponse($this->company, $this->company->getModel());
+        return apiResponse($this->company, $company);
     }
 
     public function store(StoreCompanyRequest $request)
@@ -52,7 +55,7 @@ class CompanyController extends Controller
     public function update(SaveCompanyRequest $request)
     {
         $input = $request->onlyInRules();
-        $this->company->find($request->input('id'));
+        $this->company->setModel($request->getCompany());
         $this->company->save($input);
 
         return apiResponse(

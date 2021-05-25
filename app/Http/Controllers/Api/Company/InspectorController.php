@@ -22,7 +22,7 @@ class InspectorController extends Controller
     	$this->inspector = $inspectorRepository;
     }
 
-    public function inspectors(PopulateInspectorsRequest $request)
+    public function companyInspectors(PopulateInspectorsRequest $request)
     {
     	$inspectors = $this->inspector->all($request->options());
     	$inspectors = $this->inspector->paginate();
@@ -34,7 +34,7 @@ class InspectorController extends Controller
     public function add(SaveInspectorRequest $request)
     {
     	$inspector = $this->inspector->save(
-    		$request->onlyInRules()
+    		$request->ruleWithCompany()
     	);
 
     	return apiResponse($this->inspector, $inspector);

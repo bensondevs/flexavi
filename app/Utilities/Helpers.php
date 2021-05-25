@@ -177,14 +177,16 @@ function viewResponse($viewName, $response, $repositoryObject)
     return $view;
 }
 
-function apiResponse($repositoryObject, $responseData = false)
+function apiResponse($repositoryObject, $responseData = null)
 {
     $response = [];
 
-    if ($responseData)
+    if (is_array($responseData)) {
+        $attribute = array_keys($responseData)[0];
+        $response[$attribute] = $responseData[$attribute];
+    } else {
         $response['data'] = $responseData;
-    else if ($repositoryObject)
-        $response['data'] = true;
+    }
     
     if ($repositoryObject->status)
         $response['status'] = $repositoryObject->status;

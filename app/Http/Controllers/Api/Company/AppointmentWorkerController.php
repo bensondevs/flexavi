@@ -39,7 +39,7 @@ class AppointmentWorkerController extends Controller
 
     public function store(SaveAppointmentWorkerRequest $request)
     {
-    	$input = $request->onlyInRules();
+    	$input = $request->ruleWithCompany();
     	$worker = $this->worker->save($input);
 
     	return apiResponse($this->worker, $worker);
@@ -47,7 +47,7 @@ class AppointmentWorkerController extends Controller
 
     public function update(SaveAppointmentWorkerRequest $request)
     {
-    	$input = $request->onlyInRules();
+    	$input = $request->ruleWithCompany();
     	$worker = $this->worker->setModel($request->getWorker());
     	$worker = $this->worker->save($input);
 

@@ -51,6 +51,8 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -72,18 +74,18 @@ class User extends Authenticatable
         });
     }
 
-    public function owners()
+    public function owner()
     {
-        return $this->hasMany(
+        return $this->hasOne(
             'App\Models\Owner', 
             'user_id',
             'id'
         );
     }
 
-    public function employees()
+    public function employee()
     {
-        return $this->hasMany(
+        return $this->hasOne(
             'App\Models\Employee', 
             'user_id', 
             'id'
@@ -98,7 +100,7 @@ class User extends Authenticatable
     public function setProfilePictureAttribute($imageFile)
     {
         // Upload Profile Picture
-        $path = 'storage/uploads/profile_pictures/';
+        $path = 'storage/uploads/users/profile_pictures/';
         $uploadedImageName = uploadFile($imageFile, $path);
         $imageUrl = asset($uploadedImageName);
 
@@ -110,35 +112,34 @@ class User extends Authenticatable
         return $this->attributes['profile_picture_url'];
     }
 
-    public function ownedCompanies()
+    public function getUserRoleAttribute()
     {
-        return $this->hasManyThrough(
-            Company::class, 
-            Owner::class
-        );
+        $roleName = $this->roles->first()->name;
+        unset($this->roles);
+        return $roleName;
     }
 
     public function hasCompanyPermission($companyId, string $doAction = '')
     {
+        $role = $this->roles->first();
+
         // Allow Administrators
-        if ($this->hasRole('admin')) return true;
+        if ($role->name == 'admin') return true;
 
         // Allow Owner
-        if ($this->hasRole('owner')) {
-            $owners = $this->owners;
-            $company = Company::findOrFail($companyId);
-            foreach ($owners as $key => $owner)
-                if ($owner->id === $company->owner_id)
-                    return true;
+        if ($role->name == 'owner') {
+            $owner = $this->owner;
+            $company = $owner->company;
+
+            return ($company->id === $companyId);
         }
 
         // Allow Employee
-        if ($this->hasRole('employee')) {
-            $employees = $this->employees;
-            foreach ($employees as $key => $employee)
-                if ($employee->company_id == $companyId)
-                    if ($employee->hasPermissionTo($doAction))
-                        return true;
+        if ($role->name == 'employee') {
+            $employee = $this->employee;
+            if ($employee->company_id == $companyId)
+                if ($employee->hasPermissionTo($doAction ?: 'any action'))
+                    return true;
         }
 
         // Disallow, because pass none

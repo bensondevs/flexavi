@@ -4,28 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Role;
 use App\Models\User;
 use App\Models\Owner;
 use App\Models\Company;
 
-use App\Repositories\CompanyRepository;
-use App\Repositories\CompanyOwnerRepository;
-
 class CompaniesSeeder extends Seeder
 {
-    private $owner;
-	private $company;
-
-	public function __construct(
-        CompanyRepository $company,
-        CompanyOwnerRepository $owner
-    )
-	{
-        $this->owner = $owner;
-		$this->company = $company;
-	}
-
     /**
      * Run the database seeds.
      *
@@ -33,50 +17,54 @@ class CompaniesSeeder extends Seeder
      */
     public function run()
     {
-        $ownerRole = Role::findByName('owner');
-    	$owners = $ownerRole->users()->get();
+        $users = User::where('email', 'like', 'owner%')->get();
 
-    	foreach ($owners as $index => $userOwner) {
-            $owner = [
-                'user_id' => $userOwner->id,
-                'bank_name' => 'FLEXAVIBANK',
-                'bic_code' => 'DUMMYBICCODE',
-                'bank_account' => '098912361352',
-                'bank_holder_name' => 'Bank Holder',
-            ];
-            $this->owner->save($owner);
-
-            $company = [
-                'owner_id' => $this->owner->getModel()->id,
-
+        $rawCompanies = [];
+        $rawOwners = [];
+        foreach ($users as $index => $user) {
+            $companyId = generateUuid(); 
+            array_push($rawCompanies, [
+                'id' => $companyId,
                 'company_name' => 'Company ' . ($index + 1),
+                'email' => 'company' . ($index + 1) . '@flexavi.com',
+                'phone_number' => rand(1000, 9999) * rand(1000, 9999),
+                'vat_number' => rand(1000, 9999) * rand(1000, 9999),
+                'commerce_chamber_number' => rand(1, 100),
+                'company_logo_url' => asset('storage/uploads/cars/20210503070400pp.jpeg'),
+                'company_website_url' => 'www.randomwebsite.com',
 
-                'visiting_address' => [
-                    'street' => ($index + 1) . ' Random Street',
-                    'house_number' => rand(1, 100),
-                    'house_number_suffix' => 'Random Suffix',
-                    'zip_code' => rand(10000, 99999),
-                    'city' => 'Semarang',
-                ],
-                'invoicing_address' => [
-                    'street' => ($index + 1) . ' Random Street',
-                    'house_number' => rand(1, 100),
-                    'house_number_suffix' => 'Random Suffix',
-                    'zip_code' => rand(10000, 99999),
-                    'city' => 'Semarang',
-                ],
+                'visiting_address' => json_encode([
+                    'street' => 'Custom Road',
+                    'house_number' => rand(1, 300),
+                    'house_number_suffix' => 'X',
+                    'zip_code' => '67312',
+                    'city' => 'Random City',
+                ]),
+                'invoicing_address' => json_encode([
+                    'street' => 'Custom Street',
+                    'house_number' => rand(1, 250),
+                    'house_number_suffix' => 'X',
+                    'zip_code' => '65123',
+                    'city' => 'Random City',
+                ]),
+                'created_at' => carbon()->now(),
+                'updated_at' => carbon()->now(),
+            ]);
 
-                'email' => 'email' . ($index + 1) . '@company.com',
-                'phone_number' => '1010101010101',
-                'vat_number' => 'FLEXAVITESTVAT007',
-                'commerce_chamber_number' => 'CN001',
-                'company_logo_url' => 'https://dummyimage.com/300/09f/fff.png',
-                'company_website_url' => 'web.company' . ($index + 1) . '.com',
-            ];
-    		$this->company->save($company);
-
-            $this->owner->setModel(new Owner);
-            $this->company->setModel(new Company);
+            array_push($rawOwners, [
+                'id' => generateUuid(),
+                'user_id' => $user->id,
+                'company_id' => $companyId,
+                'is_prime_owner' => true,
+                'bank_name' => 'FLEXAVIBANK',
+                'bic_code' => '9213',
+                'bank_account' => '83271221',
+                'bank_holder_name' => $user->fullname,
+                'created_at' => carbon()->now(),
+                'updated_at' => carbon()->now(),
+            ]);
         }
+        Company::insert($rawCompanies);
+        Owner::insert($rawOwners);
     }
 }

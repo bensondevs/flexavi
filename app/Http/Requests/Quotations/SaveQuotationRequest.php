@@ -9,8 +9,12 @@ use App\Rules\CompanyOwned;
 
 use App\Models\Quotation;
 
+use App\Traits\CompanyInputRequest;
+
 class SaveQuotationRequest extends FormRequest
 {
+    use CompanyInputRequest;
+
     private $quotation;
 
     public function getQuotation()
@@ -41,7 +45,6 @@ class SaveQuotationRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'company_id' => ['required', 'string', new CompanyOwned],
             'customer_id' => ['required', 'string', 'exists:customers,id'],
             
             'subject' => ['required', 'string'],

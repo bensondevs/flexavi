@@ -5,22 +5,31 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\Owners\CurrentOwnerRequest;
+use App\Http\Requests\RegisterInvitations\SendInvitationRequest;
+
 use App\Repositories\OwnerRepository;
 
 class OwnerController extends Controller
 {
     private $owner;
+    private $invitation;
 
     public function __construct(OwnerRepository $owner)
     {
     	$this->owner = $owner;
     }
 
-    public function owners()
+    public function owner(CurrentOwnerRequest $request)
     {
-    	$owners = $this->owner->ofUser(auth()->user());
+        $owner = $request->getOwner();
 
-    	return response()->json(['owners' => $owners]);
+    	return response()->json(['owner' => $owner]);
+    }
+
+    public function inviteUser(SendInvitationRequest $request)
+    {
+
     }
 
     public function validateBankAccount(Request $request)

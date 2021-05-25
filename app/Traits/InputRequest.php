@@ -4,8 +4,20 @@ namespace App\Traits;
 
 trait InputRequest 
 {
+	private $user;
+
 	private $model;
 	private $rules;
+
+	public function getUser()
+	{
+		$this->user = ($this->user) ?: $this->user();
+
+		if (! $this->user->role)
+			$this->user->role = $this->user->roles->first();
+
+		return $this->user;
+	}
 
 	public function setRules(array $rules)
 	{

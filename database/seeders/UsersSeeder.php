@@ -37,7 +37,7 @@ class UsersSeeder extends Seeder
     		'email' => 'admin@flexavi.nl',
     		'password' => 'admin',
     	]);
-    	$user->assignRole('admin');
+        $this->user->getModel()->assignRole('admin');
 
         for ($index = 0; $index < 50; $index++) {
         	$this->user->setModel(new User);

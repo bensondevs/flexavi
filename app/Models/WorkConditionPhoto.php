@@ -35,6 +35,11 @@ class WorkConditionPhoto extends Model
     	});
     }
 
+    public function setPhotoAttribute($fileRequest)
+    {
+
+    }
+
     public function uploader()
     {
         return $this->hasOne(

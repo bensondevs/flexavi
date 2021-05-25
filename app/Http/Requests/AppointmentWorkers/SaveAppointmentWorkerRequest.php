@@ -6,11 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\AppointmentWorker;
 
-use App\Traits\InputRequest;
+use App\Traits\CompanyInputRequest;
 
 class SaveAppointmentWorkerRequest extends FormRequest
 {
-    use InputRequest;
+    use CompanyInputRequest;
 
     private $worker;
 
@@ -27,16 +27,7 @@ class SaveAppointmentWorkerRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = auth()->user();
-
-        if ($this->isMethod('POST')) {
-            return $user->hasCompanyPermission($this->input('company_id'));
-        }
-
-        $worker = $this->getWorker();
-        return $user->hasCompanyPermission(
-            $worker->company_id
-        );
+        return $this->authorizeCompanyAction('appointment workers');
     }
 
     /**
@@ -47,7 +38,6 @@ class SaveAppointmentWorkerRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'company_id' => ['required', 'string'],
             'appointment_id' => ['required', 'string', 'exists:appointments,id'],
             'employee_type' => ['required', 'string'],
             'employee_id' => ['required', 'string', 'exists:employees,id'],

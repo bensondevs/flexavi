@@ -17,8 +17,6 @@ class Company extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'owner_id',
-
         'company_name',
 
         'email',
@@ -40,11 +38,11 @@ class Company extends Model
         'deleted_at',
     ];
 
-    public function owner()
+    public function owners()
     {
-        return $this->belongsTo(
+        return $this->hasMany(
             'App\Models\Owner', 
-            'owner_id', 
+            'company_id', 
             'id'
         );
     }
@@ -175,6 +173,13 @@ class Company extends Model
     	});
     }
 
+    public function getPrimeOwnerAttribute()
+    {
+        return $this->owners
+            ->where('is_prime_owner', true)
+            ->first();
+    }
+
     public function getVisitingAddressAttribute()
     {
         return json_decode(
@@ -188,7 +193,8 @@ class Company extends Model
         $_address = [
             'street' => $value['street'],
             'house_number' => $value['house_number'],
-            'house_number_suffix' => $value['house_number_suffix'],
+            'house_number_suffix' => isset($value['house_number_suffix']) ?
+                $value['house_number_suffix'] : null,
             'zip_code' => $value['zip_code'],
             'city' => $value['city'],
         ];
@@ -209,7 +215,8 @@ class Company extends Model
         $_address = [
             'street' => $value['street'],
             'house_number' => $value['house_number'],
-            'house_number_suffix' => $value['house_number_suffix'],
+            'house_number_suffix' => isset($value['house_number_suffix']) ?
+                $value['house_number_suffix'] : null,
             'zip_code' => $value['zip_code'],
             'city' => $value['city'],
         ];

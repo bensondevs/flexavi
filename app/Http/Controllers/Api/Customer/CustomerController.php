@@ -18,13 +18,6 @@ class CustomerController extends Controller
 
     public function current(Request $request)
     {
-    	return response()->json([
-    		'customer' => $request->user()
-    	]);
-    }
-
-    public function invoice()
-    {
-    	
+    	return response()->json(['customer' => $request->user()]);
     }
 }

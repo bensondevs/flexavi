@@ -36,7 +36,7 @@ class CustomerController extends Controller
     public function store(SaveCustomerRequest $request)
     {
     	$customer = $this->customer->save(
-    		$request->onlyInRules()
+    		$request->ruleWithCompany()
     	);
 
     	return apiResponse($this->customer, $customer);
@@ -46,7 +46,7 @@ class CustomerController extends Controller
     {
     	$this->customer->setModel($request->getCustomer());
     	$customer = $this->customer->save(
-    		$request->onlyInRules()
+    		$request->ruleWithCompany()
     	);
 
     	return apiResponse($this->customer, $customer);

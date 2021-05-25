@@ -7,14 +7,19 @@ use \Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
+use App\Repositories\CompanyOwnerRepository;
+
 use App\Models\User;
 use App\Models\Company; 
 
 class CompanyRepository extends BaseRepository
 {
+	private $owner;
+
 	public function __construct()
 	{
 		$this->setInitModel(new Company);
+		$this->owner = new CompanyOwnerRepository();
 	}
 
 	public function ofUser(User $user)
@@ -43,6 +48,26 @@ class CompanyRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$this->setError(
 				'Failed to save company data.', 
+				$qe->getMessage()
+			);
+		}
+
+		return $this->getModel();
+	}
+
+	public function register(array $registerData)
+	{
+		try {
+			$company = $this->getModel();
+			$company = $this->save($registerData['company']);
+			$company->owner = $this->owner->save($registerData['owner']);
+
+			$this->setModel($company);
+
+			$this->setSuccess('Successfully register a company.');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to register a company.', 
 				$qe->getMessage()
 			);
 		}

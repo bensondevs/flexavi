@@ -15,7 +15,9 @@ class InvoiceItem extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'company_id',
         'invoice_id',
+
         'item_name',
         'item_description',
         'item_quantity',

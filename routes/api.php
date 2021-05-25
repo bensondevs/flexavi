@@ -12,8 +12,13 @@ use App\Http\Controllers\Api\Company\CompanyController;
 use App\Http\Controllers\Api\Company\EmployeeController;
 use App\Http\Controllers\Api\Company\CustomerController as CompanyCustomerController;
 use App\Http\Controllers\Api\Company\QuotationController;
+use App\Http\Controllers\Api\Company\InspectorController;
 use App\Http\Controllers\Api\Company\AppointmentController;
 use App\Http\Controllers\Api\Company\AppointmentWorkerController;
+use App\Http\Controllers\Api\Company\WorkController;
+use App\Http\Controllers\Api\Company\WorkContractController;
+use App\Http\Controllers\Api\Company\WorkActivityController;
+use App\Http\Controllers\Api\Company\WorkConditionPhotoController;
 
 use App\Http\Controllers\Api\Customer\CustomerController;
 
@@ -77,10 +82,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 	});
 
 	/*
-		Company Information
+		Company Access for Owner
 	*/
-	Route::group(['prefix' => 'companies'], function () {
-		Route::get('user', [CompanyController::class, 'userCompanies']);
+	Route::group(['prefix' => 'companies', 'middleware' => ['owner']], function () {
+		Route::get('user', [CompanyController::class, 'userCompany']);
 		Route::post('update', [CompanyController::class, 'update']);
 
 		/*
@@ -142,6 +147,15 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 		});
 
 		/*
+			Company Inspector Module
+		*/
+		Route::group(['prefix' => 'inspectors'], function () {
+			Route::get('/', [InspectorController::class, 'companyInspectors']);
+			Route::post('add', [InspectorController::class, 'add']);
+			Route::delete('remove', [InspectorController::class, 'remove']);
+		});
+
+		/*
 			Company Invoice Module
 		*/
 		Route::group(['prefix' => 'invoices'], function () {
@@ -150,13 +164,99 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
 			Route::delete('delete', [InvoiceController::class, 'delete']);
 		});
+
+		/*
+			Company Quotation Module
+		*/
+		Route::group(['prefix' => 'quotations'], function () {
+			Route::get('/', [QuotationController::class, 'companyQuotations']);
+			Route::post('store', [QuotationController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
+			Route::delete('delete', [QuotationController::class, 'delete']);
+		});
+
+		/*
+			Schedule Module
+		*/
+		Route::group(['prefix' => 'schedules'], function () {
+			Route::get('/', [ScheduleController::class, 'companyWorks']);
+			Route::post('store', [ScheduleController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [ScheduleController::class, 'update']);
+			Route::delete('delete', [ScheduleController::class, 'delete']);
+
+			/*
+				Schedule Car Module
+			*/
+			Route::group(['prefix' => 'cars'], function () {
+				Route::get('/', [ScheduleCarController::class, 'companyScheduleCars']);
+				Route::post('store', [ScheduleCarController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [ShceduleCarController::class, 'update']);
+				Route::delete('delete', [ScheduleCarController::class, 'delete']);
+			});
+
+			/*
+				Schedule Employee Module
+			*/
+			Route::group(['prefix' => 'employees'], function () {
+				Route::get('/', [ScheduleEmployeeController::class, 'companyScheduleEmployees']);
+				Route::post('store', [ScheduleEmployeeController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [ScheduleEmployeeController::class, 'update']);
+				Route::delete('delete', [ScheduleEmployeeController::class, 'delete']);
+			});
+		});
+
+		/*
+			Company Work Module
+		*/
+		Route::group(['prefix' => 'works'], function () {
+			Route::get('/', [WorkController::class, 'companyWorks']);
+			Route::post('store', [WorkController::class, 'store']);
+			Route::match(['PUT', 'PATCH'], 'update', [WorkController::class, 'update']);
+			Route::delete('delete', [WorkController::class, 'delete']);
+
+			/*
+				Company Work Contract Module
+			*/
+			Route::group(['prefix' => 'contract'], function () {
+				Route::get('/', [WorkContractController::class, 'companyWorkContracts']);
+				Route::post('store', [WorkContractController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [WorkContractController::class, 'update']);
+				Route::delete('delete', [WorkContractController::class, 'delete']);
+			});
+
+			/*
+				Company Work Activity Module
+			*/
+			Route::group(['prefix' => 'activities'], function () {
+				Route::get('/', [WorkActivityController::class, 'companyWorkActivities']);
+				Route::post('store', [WorkActivityController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [WorkActivityController::class, 'update']);
+				Route::delete('delete', [WorkActivityController::class, 'delete']);
+			});
+
+			/*
+				Company Work Condition Photo Module
+			*/
+			Route::group(['prefix' => 'condition_photos'], function () {
+				Route::get('/', [WorkConditionPhotoController::class, 'companyWorkConditionPhotos']);
+				Route::post('store', [WorkConditionPhoto::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [WorkConditionPhotoController::class, 'update']);
+				Route::delete('delete', [WorkConditionPhotoController::class, 'delete']);
+			});
+		});
 	});
 
-	Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
+	/*
+		Admin Access
+	*/
+	Route::group(['prefix' => 'admin', 'middleware' => ['admin']], function () {
 
 	});
 
-	Route::group(['prefix' => 'customer', 'middleware' => 'auth:sanctum'], function () {
+	/*
+		Customer Access
+	*/
+	Route::group(['prefix' => 'customer'], function () {
 		Route::get('current', [CustomerController::class, 'current']);
 	});
 });

@@ -27,7 +27,7 @@ class BaseRepository
 		$this->defaultModel = $model;
 	}
 
-	public function setModel(Model $model)
+	public function setModel($model)
 	{
 		return $this->model = $model;
 	}
@@ -104,8 +104,11 @@ class BaseRepository
 					$operator = isset($condition['operator']) ? 
 						$condition['operator'] : 
 						'=';
+					$clause = isset($condition['clause']) ?
+						$condition['clause'] :
+						'where';
 
-					$models = $models->where(
+					$models = $models->${$clause}(
 						$condition['column'], 
 						$operator, 
 						$condition['value']
@@ -122,8 +125,11 @@ class BaseRepository
 							$operator = isset($condition['operator']) ? 
 								$condition['operator'] : 
 								'=';
+							$clause = isset($condition['clause']) ?
+								$condition['clause'] :
+								'where';
 							
-							$query->where(
+							$query->{$clause}(
 								$condition['column'], 
 								$operator, 
 								$condition['value']

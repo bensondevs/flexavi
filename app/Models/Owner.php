@@ -16,6 +16,9 @@ class Owner extends Model
 
     protected $fillable = [
         'user_id',
+        'company_id',
+
+        'is_prime_owner',
 
         'bank_name',
         'bic_code',
@@ -49,8 +52,8 @@ class Owner extends Model
     {
         return $this->hasOne(
             'App\Models\Company',
-            'owner_id',
-            'id'
+            'id',
+            'company_id'
         );
     }
 }

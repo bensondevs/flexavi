@@ -4,8 +4,25 @@ namespace App\Http\Requests\RegisterInvitations;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Traits\InputRequest;
+
+use App\Models\RegisterInvitation;
+
 class SendInvitationRequest extends FormRequest
 {
+    use InputRequest;
+
+    private $invitation;
+
+    public function getInvitation()
+    {
+        $user = $this->user();
+        $company = $user->owner->company;
+
+        return $this->invitation = $this->model = ($this->invitation) ?:
+            new RegisterInvitation(['company_id' => $company->id]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +30,9 @@ class SendInvitationRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = $this->user(); 
+
+        return $user->hasRole('owner');
     }
 
     /**
@@ -23,18 +42,26 @@ class SendInvitationRequest extends FormRequest
      */
     public function rules()
     {
-        $rules = [
+        $this->setRules([
+            // Invitation Data
             'invited_email' => ['required', 'string', 'email'],
-        ];
+            'expiry_time' => ['datetime'],
+        ]);
 
-        if (request()->input('expiry_time'))
-            $rules['expiry_time'] = ['required', 'datetime'];
+        $this->addRule([
+            'attached_role' => ['required', 'string', 'exists:']
+        ]);
 
-        return $rules;
+        return $this->returnRules();
     }
 
-    public function onlyInRules()
+    public function invitationData()
     {
-        return $this->only(array_keys($this->rules()));
+
+    }
+
+    public function attachmentsData()
+    {
+
     }
 }
