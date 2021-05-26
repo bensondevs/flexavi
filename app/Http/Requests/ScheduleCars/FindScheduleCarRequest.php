@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Requests\Schedules;
+namespace App\Http\Requests\ScheduleCars;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Schedule;
+use App\Models\ScheduleCar;
 
-class FindScheduleRequest extends FormRequest
+class FindScheduleCarRequest extends FormRequest
 {
-    private $schedule;
+    private $scheduleCar;
 
-    public function getSchedule()
+    public function getScheduleCar()
     {
-        return $this->schedule = ($this->schedule) ?:
-            Schedule::findOrFail($this->input('id'));
+        return $this->scheduleCar = $this->scheduleCar ?:
+            ScheduleCar::findOrFail($this->input('id'));
     }
 
     /**
@@ -24,16 +24,16 @@ class FindScheduleRequest extends FormRequest
     public function authorize()
     {
         $user = $this->user();
-        $schedule = $this->getSchedule();
+        $scheduleCar = $this->getScheduleCar();
 
         $actionName = ($this->isMethod('GET')) ? 'view' : 'delete';
-        $actionObject = 'schedules';
+        $actionObject = 'schedule cars';
         $action = $actionName . ' ' . $actionObject;
-        $authorizeAction = $user->hasCompanyPermission(
-            $schedule->company_id, $action
+        $authorizedAction = $user->hasCompanyPermission(
+            $scheduleCar->schedule->company_id, $action
         );
-        
-        return $authorizeAction;
+
+        return $authorizedAction;
     }
 
     /**

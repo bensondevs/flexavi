@@ -23,6 +23,7 @@ class WorkController extends Controller
     public function companyWorks(PopulateRequest $request)
     {
     	$options = $request->options();
+        
     	$works = $this->work->all($options);
     	$works = $this->work->paginate();
     	$works->data = WorkResource::collection($works);

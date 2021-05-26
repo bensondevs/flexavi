@@ -4,7 +4,7 @@ namespace App\Http\Requests\Inspectors;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PopulateInspectorsRequest extends FormRequest
+class PopulateCoInspectorsRequest extends FormRequest
 {
     private $withs = [];
     private $wheres = [];

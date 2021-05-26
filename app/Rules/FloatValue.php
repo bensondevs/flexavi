@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class IsFloat implements Rule
+class FloatValue implements Rule
 {
     protected $allowInteger;
 

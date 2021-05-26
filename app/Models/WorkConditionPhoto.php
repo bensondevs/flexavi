@@ -35,9 +35,13 @@ class WorkConditionPhoto extends Model
     	});
     }
 
-    public function setPhotoAttribute($fileRequest)
+    public function setPhotoAttribute($photoFile)
     {
+        $path = 'storage/uploads/works/conditions/';
+        $uploadedPhotoName = uploadFile($photoFile, $path);
+        $photoUrl = asset($uploadedPhotoName);
 
+        $this->attribute['photo_url'] = $photoUrl;
     }
 
     public function uploader()
@@ -46,6 +50,15 @@ class WorkConditionPhoto extends Model
             'App\Models\User', 
             'id', 
             'uploader_id'
+        );
+    }
+
+    public function work()
+    {
+        return $this->belongsTo(
+            'App\Models\Work', 
+            'work_id', 
+            'id'
         );
     }
 }

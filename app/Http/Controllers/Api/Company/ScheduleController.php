@@ -34,7 +34,7 @@ class ScheduleController extends Controller
 
     public function store(SaveRequest $request)
     {
-    	$input = $request->onlyInRules();
+    	$input = $request->ruleWithCompany();
     	$schedule = $this->schedule->save($input);
 
     	return apiResponse($this->schedule, ['schedule' => $schedule]);
@@ -45,7 +45,7 @@ class ScheduleController extends Controller
     	$schedule = $request->getSchedule();
     	$this->schedule->setModel($schedule);
 
-    	$input = $request->onlyInRules();
+    	$input = $request->ruleWithCompany();
     	$this->schedule->save($input);
 
     	return apiResponse($this->schedule, ['schedule' => $schedule]);

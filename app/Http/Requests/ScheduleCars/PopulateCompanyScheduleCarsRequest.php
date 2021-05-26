@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Cars;
+namespace App\Http\Requests\ScheduleCars;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Traits\CompanyPopulateRequestOptions;
+use App\Traits\PopulateCompanyRequestOptions;
 
-class PopulateCompanyCarsRequest extends FormRequest
+class PopulateCompanyScheduleCarsRequest extends FormRequest
 {
-    use CompanyPopulateRequestOptions;
+    use PopulateCompanyRequestOptions;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +27,20 @@ class PopulateCompanyCarsRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            //
+        ];
     }
 
     public function options()
     {
+        $this->addWhere([
+            'column' => 'schedule_id',
+            'value' => $this->input('schedule_id'),
+        ]);
+
+        $this->addWith('car');
+
         return $this->collectCompanyOptions();
     }
 }

@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Cars;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Traits\CompanyPopulateRequestOptions;
-
-class PopulateCompanyCarsRequest extends FormRequest
+class ScheduleCars extends FormRequest
 {
-    use CompanyPopulateRequestOptions;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -17,7 +13,7 @@ class PopulateCompanyCarsRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**
@@ -27,11 +23,8 @@ class PopulateCompanyCarsRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
-    }
-
-    public function options()
-    {
-        return $this->collectCompanyOptions();
+        return [
+            //
+        ];
     }
 }

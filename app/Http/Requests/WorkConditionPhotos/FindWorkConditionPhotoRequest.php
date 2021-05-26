@@ -12,7 +12,7 @@ class FindWorkConditionPhotoRequest extends FormRequest
 
     public function getWorkConditionPhoto()
     {
-        return $this->contract = $this->model = ($this->contract) ?:
+        return $this->contract = ($this->contract) ?:
             WorkConditionPhoto::findOrFail($this->input('id'));
     }
 
@@ -25,19 +25,15 @@ class FindWorkConditionPhotoRequest extends FormRequest
     {
         $user = $this->user();
         $contract = $this->getWorkConditionPhoto();
-        $company = $contract->company;
 
         $actionName = ($this->isMethod('GET')) ? 'view' : 'delete';
         $actionObject = 'work condition photos';
         $action = $actionName . ' ' . $actionObject;
         $authorizeAction = $user->hasCompanyPermission(
-            $company->id, $action
+            $contract->company_id, $action
         );
         
-        if ($this->isMethod('GET')) return $authorizeAction;
-
-        $authorizeRecord = ($company->id == $contract->company_id);
-        return ($authorizeAction && $authorizeRecord);
+        return $authorizeAction;
     }
 
     /**

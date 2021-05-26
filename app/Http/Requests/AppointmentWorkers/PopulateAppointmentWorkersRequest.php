@@ -52,6 +52,8 @@ class PopulateAppointmentWorkersRequest extends FormRequest
             'value' => $this->input('appointment_id'),
         ]);
 
+        $this->addWith('employee');
+
         return $this->collectCompanyOptions();
     }
 }

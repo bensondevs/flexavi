@@ -4,8 +4,12 @@ namespace App\Http\Requests\WorkConditionPhotos;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Traits\CompanyPopulateRequestOptions;
+
 class PopulateCompanyWorkConditionPhotosRequest extends FormRequest
 {
+    use CompanyPopulateRequestOptions;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,5 +30,10 @@ class PopulateCompanyWorkConditionPhotosRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    public function options()
+    {
+        return $this->collectCompanyOptions();
     }
 }

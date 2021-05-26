@@ -4,8 +4,12 @@ namespace App\Http\Requests\Works;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Traits\CompanyPopulateRequestOptions;
+
 class PopulateCompanyWorksRequest extends FormRequest
 {
+    use CompanyPopulateRequestOptions;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,5 +30,10 @@ class PopulateCompanyWorksRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    public function options()
+    {
+        return $this->collectCompanyOptions();
     }
 }

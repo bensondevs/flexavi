@@ -18,6 +18,12 @@ class SaveCarRequest extends FormRequest
 
     private $car;
 
+    public function getCar()
+    {
+        return $this->car = $this->model = $this->car ?:
+            Car::findOrFail($this->input('id'));
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,13 +31,7 @@ class SaveCarRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
-    }
-
-    public function getCar()
-    {
-        return $this->car = $this->model = $this->car ?:
-            Car::findOrFail($this->input('id'));
+        return $this->authorizeCompanyAction('cars');
     }
 
     /**

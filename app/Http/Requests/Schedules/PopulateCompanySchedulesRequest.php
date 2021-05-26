@@ -4,8 +4,12 @@ namespace App\Http\Requests\Schedules;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Traits\CompanyPopulateRequestOptions;
+
 class PopulateCompanySchedulesRequest extends FormRequest
 {
+    use CompanyPopulateRequestOptions;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +17,7 @@ class PopulateCompanySchedulesRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -26,5 +30,10 @@ class PopulateCompanySchedulesRequest extends FormRequest
         return [
             //
         ];
+    }
+
+    public function options()
+    {
+        return $this->collectCompanyOptions();
     }
 }
