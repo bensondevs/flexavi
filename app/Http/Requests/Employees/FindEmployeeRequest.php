@@ -23,7 +23,10 @@ class FindEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = $this->user();
+        $employee = $this->getEmployee();
+
+        return $user->hasCompanyPermission($employee->company_id, 'view employees');
     }
 
     /**

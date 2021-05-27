@@ -1,11 +1,17 @@
 <?php
 
-namespace App\Http\Requests\WorkContracts;
+namespace App\Http\Requests\Warranties;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FindWorkContractRequest extends FormRequest
+use App\Traits\PopulateRequestOptions;
+
+use App\Models\WorkContract;
+
+class PopulateWarrantiesRequest extends FormRequest
 {
+    use PopulateRequestOptions;
+
     private $contract;
 
     public function getWorkContract()
@@ -23,17 +29,11 @@ class FindWorkContractRequest extends FormRequest
     {
         $user = $this->user();
         $contract = $this->getWorkContract();
-        $company = $contract->company;
 
-        $actionName = ($this->isMethod('GET')) ? 'view' : 'delete';
-        $actionObject = 'work contracts';
-        $action = $actionName . ' ' . $actionObject;
-        $authorizeAction = $user->hasCompanyPermission($company->id, $action);
-        
-        if ($this->isMethod('GET')) return $authorizeAction;
-
-        $authorizeRecord = ($company->id == $contract->company_id);
-        return ($authorizeAction && $authorizeRecord);
+        return $user->hasCompanyPermission(
+            $contract->company_id, 
+            'view warranties'
+        );
     }
 
     /**
@@ -43,8 +43,11 @@ class FindWorkContractRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return [];
+    }
+
+    public function options()
+    {
+        return $this->collectOptions();
     }
 }

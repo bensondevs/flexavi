@@ -41,7 +41,7 @@ class CreateQuotationsTable extends Migration
             $table->string('quotation_number');
             $table->string('quotation_type');
             $table->text('quotation_description');
-            $table->text('pdf_url');
+            $table->text('quotation_document_url');
 
             $table->date('expiry_date');
             $table->char('status');

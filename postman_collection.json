@@ -1,13 +1,90 @@
 {
 	"info": {
 		"_postman_id": "4ba340c8-ea91-4e45-950f-945ca6517797",
-		"name": "Daksysteem",
+		"name": "Flexavi",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Auth",
 			"item": [
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "zipcode",
+											"value": "128760",
+											"type": "text"
+										},
+										{
+											"key": "house_number",
+											"value": "59",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/auth/customer/login",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"customer",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{CUSTOMER_API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/auth/customer/logout",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"customer",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
 				{
 					"name": "Register",
 					"request": {
@@ -22,6 +99,11 @@
 						"body": {
 							"mode": "formdata",
 							"formdata": [
+								{
+									"key": "invitation_code",
+									"value": "register1",
+									"type": "text"
+								},
 								{
 									"key": "fullname",
 									"value": "User Full Name",
@@ -64,17 +146,17 @@
 								},
 								{
 									"key": "email",
-									"value": "test@email.com",
+									"value": "register1@flexavi.com",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "12345678",
+									"value": "Password123!",
 									"type": "text"
 								},
 								{
 									"key": "confirm_password",
-									"value": "12345678",
+									"value": "Password123!",
 									"type": "text"
 								}
 							]
@@ -109,12 +191,12 @@
 							"formdata": [
 								{
 									"key": "email",
-									"value": "test@email.com",
+									"value": "owner1@flexavi.nl",
 									"type": "text"
 								},
 								{
 									"key": "password",
-									"value": "12345678",
+									"value": "owner1",
 									"type": "text"
 								}
 							]
@@ -164,6 +246,1609 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Admin",
+					"item": []
+				},
+				{
+					"name": "Company",
+					"item": [
+						{
+							"name": "Appointment",
+							"item": [
+								{
+									"name": "Worker",
+									"item": [
+										{
+											"name": "Appointment Workers",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": []
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/workers?appointment_id=8473e510-bbdb-11eb-a7df-bf6dbbb311e6",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"workers"
+													],
+													"query": [
+														{
+															"key": "appointment_id",
+															"value": "8473e510-bbdb-11eb-a7df-bf6dbbb311e6"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Store Worker",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "appointment_id",
+															"value": "8473e510-bbdb-11eb-a7df-bf6dbbb311e6",
+															"type": "text"
+														},
+														{
+															"key": "employee_type",
+															"value": "roofers",
+															"type": "text"
+														},
+														{
+															"key": "employee_id",
+															"value": "824a1e00-bbdb-11eb-82b7-bfc28376e741",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/workers/store",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"workers",
+														"store"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Worker",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "6906a800-b60d-11eb-8c66-d1ed04af2873",
+															"type": "text"
+														},
+														{
+															"key": "appointment_id",
+															"value": "b65dc6b0-b609-11eb-afe3-53e0d9508de2",
+															"type": "text"
+														},
+														{
+															"key": "company_id",
+															"value": "b33ab510-b609-11eb-bc8b-037301ced500",
+															"type": "text"
+														},
+														{
+															"key": "employee_type",
+															"value": "roofers",
+															"type": "text"
+														},
+														{
+															"key": "employee_id",
+															"value": "b42c7170-b609-11eb-89e2-83faa5efc70d",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/workers/update",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"workers",
+														"update"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Worker",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "6f8bfdc0-b60d-11eb-8e51-0710c99c8caf",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/workers/delete",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"workers",
+														"delete"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Company Appointments",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "leak",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Appointment",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "81abf8c0-bbdb-11eb-a38d-bbc695b88be9",
+													"type": "text"
+												},
+												{
+													"key": "start",
+													"value": "2021-05-15",
+													"type": "text"
+												},
+												{
+													"key": "end",
+													"value": "2021-05-18",
+													"type": "text"
+												},
+												{
+													"key": "include_weekend",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "appointment_type",
+													"value": "inspection",
+													"type": "text"
+												},
+												{
+													"key": "appointment_status",
+													"value": "processed",
+													"type": "text"
+												},
+												{
+													"key": "note",
+													"value": "Fixing leaking rooftop",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Appointment",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "402d4950-b596-11eb-9dd1-6732e058f436",
+													"type": "text"
+												},
+												{
+													"key": "company_id",
+													"value": "fe165410-b592-11eb-88fb-d1dfaaac0126",
+													"type": "text"
+												},
+												{
+													"key": "customer_id",
+													"value": "fe7f0620-b592-11eb-aa19-0392457fc11f",
+													"type": "text"
+												},
+												{
+													"key": "start",
+													"value": "2021-05-15",
+													"type": "text"
+												},
+												{
+													"key": "end",
+													"value": "2021-05-18",
+													"type": "text"
+												},
+												{
+													"key": "include_weekend",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "appointment_type",
+													"value": "inspection",
+													"type": "text"
+												},
+												{
+													"key": "appointment_status",
+													"value": "processed",
+													"type": "text"
+												},
+												{
+													"key": "note",
+													"value": "Fixing leaked",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Appointment",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "5025ca70-b596-11eb-950b-21bb18f21308",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Employee",
+							"item": [
+								{
+									"name": "Company Employees",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees?company_id=b33ab510-b609-11eb-bc8b-037301ced500&search=administrative",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees"
+											],
+											"query": [
+												{
+													"key": "company_id",
+													"value": "b33ab510-b609-11eb-bc8b-037301ced500"
+												},
+												{
+													"key": "search",
+													"value": "administrative"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Employee",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "user_id",
+													"value": "b11bd1c0-b609-11eb-9f27-0be23b04ed70",
+													"type": "text"
+												},
+												{
+													"key": "company_id",
+													"value": "b33ab510-b609-11eb-bc8b-037301ced500",
+													"type": "text"
+												},
+												{
+													"key": "title",
+													"value": "Another Employee",
+													"type": "text"
+												},
+												{
+													"key": "employee_type",
+													"value": "administrative",
+													"type": "text"
+												},
+												{
+													"key": "employment_status",
+													"value": "active",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Employee",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "2ce51fc0-b64b-11eb-8492-079d1208446c",
+													"type": "text"
+												},
+												{
+													"key": "user_id",
+													"value": "b11bd1c0-b609-11eb-9f27-0be23b04ed70",
+													"type": "text"
+												},
+												{
+													"key": "company_id",
+													"value": "b33ab510-b609-11eb-bc8b-037301ced500",
+													"type": "text"
+												},
+												{
+													"key": "title",
+													"value": "Another Employee",
+													"type": "text"
+												},
+												{
+													"key": "employee_type",
+													"value": "administrative",
+													"type": "text"
+												},
+												{
+													"key": "employment_status",
+													"value": "active",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Employee",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "b42c7ff0-b609-11eb-b4b6-97ec8e29fb6b",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Car",
+							"item": [
+								{
+									"name": "Company Cars",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars?company_id=fcf99570-ab59-11eb-a32a-1f260f88b98f&free_only=0",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars"
+											],
+											"query": [
+												{
+													"key": "company_id",
+													"value": "fcf99570-ab59-11eb-a32a-1f260f88b98f"
+												},
+												{
+													"key": "free_only",
+													"value": "0"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Car",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "brand",
+													"value": "Suzuki",
+													"type": "text"
+												},
+												{
+													"key": "model",
+													"value": "BX",
+													"type": "text"
+												},
+												{
+													"key": "year",
+													"value": "2012",
+													"type": "text"
+												},
+												{
+													"key": "car_name",
+													"value": "Suzuki BX 2012 Bulldozer",
+													"type": "text"
+												},
+												{
+													"key": "car_license",
+													"value": "143862813",
+													"type": "text"
+												},
+												{
+													"key": "status",
+													"value": "free",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Set Car Image",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "car_image",
+													"type": "file",
+													"src": "/home/benson/Downloads/pp.jpeg"
+												},
+												{
+													"key": "id",
+													"value": "ffa7c790-ab59-11eb-b742-c328c1e0f2ee",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars/set_image",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars",
+												"set_image"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Car",
+									"protocolProfileBehavior": {
+										"disabledSystemHeaders": {}
+									},
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "ffa7c790-ab59-11eb-b742-c328c1e0f2ee",
+													"type": "text"
+												},
+												{
+													"key": "company_id",
+													"value": "fcf99570-ab59-11eb-a32a-1f260f88b98f",
+													"type": "text"
+												},
+												{
+													"key": "brand",
+													"value": "Suzuki",
+													"type": "text"
+												},
+												{
+													"key": "model",
+													"value": "SZG",
+													"type": "text"
+												},
+												{
+													"key": "year",
+													"value": "2012",
+													"type": "text"
+												},
+												{
+													"key": "car_name",
+													"value": "Suzuki BX 2012 Bulldozer",
+													"type": "text"
+												},
+												{
+													"key": "car_license",
+													"value": "143862813",
+													"type": "text"
+												},
+												{
+													"key": "status",
+													"value": "out",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Car",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "ffa7c790-ab59-11eb-b742-c328c1e0f2ee",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Customer",
+							"item": [
+								{
+									"name": "Company Customers",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers"
+											],
+											"query": [
+												{
+													"key": "company_id",
+													"value": "b33ab510-b609-11eb-bc8b-037301ced500",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Customer",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "fullname",
+													"value": "John Doe",
+													"type": "text"
+												},
+												{
+													"key": "salutation",
+													"value": "Mr.",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Another Road 11",
+													"type": "text"
+												},
+												{
+													"key": "house_number",
+													"value": "11",
+													"type": "text"
+												},
+												{
+													"key": "zipcode",
+													"value": "12345",
+													"type": "text"
+												},
+												{
+													"key": "city",
+													"value": "Another City",
+													"type": "text"
+												},
+												{
+													"key": "province",
+													"value": "Province",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "john@doe.com",
+													"type": "text"
+												},
+												{
+													"key": "phone",
+													"value": "1234567890",
+													"type": "text"
+												},
+												{
+													"key": "second_phone",
+													"value": "1329891621",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Customer",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "e05dbd00-b576-11eb-a86a-bd809c0ae758",
+													"type": "text"
+												},
+												{
+													"key": "fullname",
+													"value": "John Doe",
+													"type": "text"
+												},
+												{
+													"key": "salutation",
+													"value": "Mrs.",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Another Road 11",
+													"type": "text"
+												},
+												{
+													"key": "house_number",
+													"value": "11",
+													"type": "text"
+												},
+												{
+													"key": "zipcode",
+													"value": "12345",
+													"type": "text"
+												},
+												{
+													"key": "city",
+													"value": "Just A City",
+													"type": "text"
+												},
+												{
+													"key": "province",
+													"value": "Another Province",
+													"type": "text"
+												},
+												{
+													"key": "email",
+													"value": "john@doe.com",
+													"type": "text"
+												},
+												{
+													"key": "phone",
+													"value": "1234567890",
+													"type": "text"
+												},
+												{
+													"key": "second_phone",
+													"value": "1231231231",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Customer",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "fdc7aef0-ab59-11eb-9892-bd74d7e178b4",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Quotation",
+							"item": [
+								{
+									"name": "Company Quotations",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Quotation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "customer_id",
+													"value": "645a04f0-beb0-11eb-b81f-9150f45a8bcf",
+													"type": "text"
+												},
+												{
+													"key": "subject",
+													"value": "Quotation Subject Example",
+													"type": "text"
+												},
+												{
+													"key": "quotation_number",
+													"value": "112233445566",
+													"type": "text"
+												},
+												{
+													"key": "quotation_type",
+													"value": "renovation",
+													"type": "text"
+												},
+												{
+													"key": "quotation_description",
+													"value": "Description Example",
+													"type": "text"
+												},
+												{
+													"key": "quotation_document",
+													"type": "file",
+													"src": "/home/benson/Downloads/dummy.pdf"
+												},
+												{
+													"key": "expiry_date",
+													"value": "2021-06-21",
+													"type": "text"
+												},
+												{
+													"key": "status",
+													"value": "draft",
+													"type": "text"
+												},
+												{
+													"key": "payment_method",
+													"value": "cash",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Quotation",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "7140cfb0-bf03-11eb-98ce-83d8bb970ca1",
+													"type": "text"
+												},
+												{
+													"key": "customer_id",
+													"value": "645a04f0-beb0-11eb-b81f-9150f45a8bcf",
+													"type": "text"
+												},
+												{
+													"key": "subject",
+													"value": "Quotation Subject Example Updated",
+													"type": "text"
+												},
+												{
+													"key": "quotation_number",
+													"value": "223344556677",
+													"type": "text"
+												},
+												{
+													"key": "quotation_type",
+													"value": "reparation",
+													"type": "text"
+												},
+												{
+													"key": "quotation_description",
+													"value": "Description Example",
+													"type": "text"
+												},
+												{
+													"key": "expiry_date",
+													"value": "2021-06-26",
+													"type": "text"
+												},
+												{
+													"key": "status",
+													"value": "send",
+													"type": "text"
+												},
+												{
+													"key": "payment_method",
+													"value": "cash",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"update"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "User Companies",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/dashboard/companies/user",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"companies",
+										"user"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Customer",
+					"item": [
+						{
+							"name": "Current",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{CUSTOMER_API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/dashboard/customer/current",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"customer",
+										"current"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Employee",
+					"item": []
+				},
+				{
+					"name": "Current User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/dashboard/user/current",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"user",
+								"current"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set Profile Picture",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profile_picture",
+									"type": "file",
+									"src": "/home/benson/Downloads/pp.jpeg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/dashboard/user/set_profile_picture",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"user",
+								"set_profile_picture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{API_TOKEN}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/dashboard/user/update",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"user",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
@@ -193,6 +1878,10 @@
 		},
 		{
 			"key": "API_TOKEN",
+			"value": ""
+		},
+		{
+			"key": "CUSTOMER_API_TOKEN",
 			"value": ""
 		}
 	]

@@ -53,7 +53,7 @@ class PopulateCompanyInvoicesRequest extends FormRequest
             ]);
         }
 
-        $this->setWiths(['workContract', 'items', 'paymentTerms']);
+        // $this->setWiths(['workContract', 'items', 'paymentTerms']);
 
         return $this->collectCompanyOptions();
     }

@@ -69,7 +69,7 @@ class Quotation extends Model
         'quotation_type',
         'quotation_description',
 
-        'pdf_url',
+        'quotation_document_url',
         'expiry_date',
         'status',
         'payment_method',
@@ -94,7 +94,16 @@ class Quotation extends Model
             'STATUSES', 
             $this->attributes['status']
         ); 
-    }  
+    }
+
+    public function setDocumentAttribute($document)
+    {
+        $path = 'storage/uploads/quotations/files/';
+        $documentPath = uploadFile($document, $path);
+        $pdfUrl = asset($documentPath);
+
+        return $this->attributes['quotation_document_url'] = $pdfUrl;
+    }
 
     public function inspection()
     {
@@ -108,8 +117,8 @@ class Quotation extends Model
     {
         return $this->hasOne(
             'App\Models\Customer', 
-            'customer_id', 
-            'id'
+            'id',
+            'customer_id'
         );
     }
 
@@ -140,17 +149,28 @@ class Quotation extends Model
         );
     }
 
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company', 
+            'company_id', 
+            'id'
+        );
+    }
+
     public static function getTypes()
     {
-        return collect(static::TYPES)
-            ->only('value')
-            ->toArray();
+        $collection = collect(static::TYPES);
+        $types = $collection->pluck(['value']);
+
+        return $types->toArray();
     }
 
     public static function getStatuses()
     {
-        return collect(static::STATUSES)
-            ->only('value')
-            ->toArray();
+        $collection = collect(static::STATUSES);
+        $statuses = $collection->pluck(['value']);
+
+        return $statuses->toArray();
     }
 }

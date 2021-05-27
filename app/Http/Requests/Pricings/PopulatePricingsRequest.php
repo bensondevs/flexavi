@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Invoices;
+namespace App\Http\Requests\Pricings;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveInvoiceRequest extends FormRequest
+use App\Traits\PopulateRequestOptions;
+
+class PopulatePricingsRequest extends FormRequest
 {
-    use CompanyInputRequest;
+    use PopulateRequestOptions;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +28,12 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_contract_id' => [
-                'required', 
-                'string', 
-                'exists:work_contracts,id'
-            ],
+            //
         ];
+    }
+
+    public function options()
+    {
+        return $this->collectOptions();
     }
 }

@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Invoices;
+namespace App\Http\Requests\WarrantyClaims;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveInvoiceRequest extends FormRequest
+class FindWarrantyClaimRequest extends FormRequest
 {
-    use CompanyInputRequest;
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,11 +24,7 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_contract_id' => [
-                'required', 
-                'string', 
-                'exists:work_contracts,id'
-            ],
+            //
         ];
     }
 }

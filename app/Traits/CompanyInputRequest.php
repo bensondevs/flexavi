@@ -12,10 +12,16 @@ trait CompanyInputRequest
 
     public function getCompany()
     {
-        return $this->company = $this->model = $this->company ?:
-            $this->getUser()
-                ->{$this->getUser()->role->name}
-                ->company;
+        // Company already exist
+        if ($this->company) return $this->company;
+
+        // ID is already set
+        $id = $this->input('company_id');
+        if ($id) return Company::findOrFail($id);
+
+        // None exist
+        $user = $this->user();
+        return $user->{$user->user_role}->company;
     }
 
     public function authorizeCompanyAction(
@@ -27,15 +33,10 @@ trait CompanyInputRequest
         $company = $this->getCompany();
 
         $actionName = ($this->isMethod('POST')) ? 'create' : 'edit';
-        $authorizeAction = $user->hasCompanyPermission(
-            $company->id, 
+        return $user->hasCompanyPermission(
+            $this->model->{$companyColumn} ?: $this->input($companyColumn), 
             $actionName . ' ' . $actionObject
         );
-
-        if ($this->isMethod('POST')) return $authorizeAction;
-
-        $authorizeRecord = ($company->id == $this->model->{$companyColumn});
-        return $authorizeAction && $authorizeRecord;
     }
 
     public function ruleWithCompany()

@@ -38,8 +38,8 @@ class WorkConditionPhoto extends Model
     public function setPhotoAttribute($photoFile)
     {
         $path = 'storage/uploads/works/conditions/';
-        $uploadedPhotoName = uploadFile($photoFile, $path);
-        $photoUrl = asset($uploadedPhotoName);
+        $uploadedPhotoPath = uploadFile($photoFile, $path);
+        $photoUrl = asset($uploadedPhotoPath);
 
         $this->attribute['photo_url'] = $photoUrl;
     }

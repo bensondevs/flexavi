@@ -4,9 +4,17 @@ namespace App\Http\Requests\Invoices;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveInvoiceRequest extends FormRequest
+use App\Models\Invoice;
+
+class FindInvoiceRequest extends FormRequest
 {
-    use CompanyInputRequest;
+    private $invoice;
+
+    public function getInvoice()
+    {
+        return $this->invoice = $this->invoice ?: 
+            Invoice::findOrFail($this->input('id'));
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +23,10 @@ class SaveInvoiceRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = $this->user();
+        $invoice = $this->getInvoice();
+
+        return $user->hasCompanyPermission($invoice, 'view invoices');
     }
 
     /**
@@ -26,11 +37,7 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_contract_id' => [
-                'required', 
-                'string', 
-                'exists:work_contracts,id'
-            ],
+            //
         ];
     }
 }

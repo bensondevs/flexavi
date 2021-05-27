@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Requests\WorkContracts;
+namespace App\Http\Requests\Warranties;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FindWorkContractRequest extends FormRequest
-{
-    private $contract;
+use App\Models\Warranty;
 
-    public function getWorkContract()
+class FindWarrantyRequest extends FormRequest
+{
+    private $warranty;
+
+    public function getWarranty()
     {
-        return $this->contract = ($this->contract) ?:
-            WorkContract::findOrFail($this->input('id'));
+        return $this->warranty = $this->warranty ?:
+            Warranty::findOrFail($this->input('id'));
     }
 
     /**
@@ -22,14 +24,15 @@ class FindWorkContractRequest extends FormRequest
     public function authorize()
     {
         $user = $this->user();
-        $contract = $this->getWorkContract();
+        $warranty = $this->getWarranty();
+        $contract = $warranty->workContract;
         $company = $contract->company;
 
         $actionName = ($this->isMethod('GET')) ? 'view' : 'delete';
-        $actionObject = 'work contracts';
+        $actionObject = 'warranties';
         $action = $actionName . ' ' . $actionObject;
         $authorizeAction = $user->hasCompanyPermission($company->id, $action);
-        
+
         if ($this->isMethod('GET')) return $authorizeAction;
 
         $authorizeRecord = ($company->id == $contract->company_id);

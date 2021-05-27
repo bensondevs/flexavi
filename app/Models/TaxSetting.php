@@ -32,4 +32,13 @@ class TaxSetting extends Model
             $taxSetting->id = Uuid::generate()->string;
     	});
     }
+
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company', 
+            'company_id', 
+            'id'
+        );
+    }
 }

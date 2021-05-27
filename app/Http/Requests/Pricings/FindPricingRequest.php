@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Pricings;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ScheduleCars extends FormRequest
+class FindPricingRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class ScheduleCars extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**

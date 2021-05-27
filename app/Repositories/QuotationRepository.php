@@ -16,6 +16,25 @@ class QuotationRepository extends BaseRepository
 		$this->setInitModel(new Quotation);
 	}
 
+	public function uploadDocument($documentUpload)
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->document = $documentUpload;
+
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully upload quotation document');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to delete quotation document',
+				$qe->getMessage()
+			);
+		}
+
+		return $this->getModel();
+	}
+
 	public function save(array $quotationData)
 	{
 		try {

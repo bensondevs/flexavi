@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Invoices;
+namespace App\Http\Requests\Pricings;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SaveInvoiceRequest extends FormRequest
-{
-    use CompanyInputRequest;
+use App\Rules\FloatValue;
 
+class SavePricingRequest extends FormRequest
+{
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,11 +26,9 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_contract_id' => [
-                'required', 
-                'string', 
-                'exists:work_contracts,id'
-            ],
+            'service_name' => ['required', 'string'],
+            'price' => ['required', new FloatValue(true)],
+            'description' => ['required', 'string'],
         ];
     }
 }

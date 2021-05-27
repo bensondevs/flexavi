@@ -32,4 +32,13 @@ class QuotationPhoto extends Model
             $quotationPhoto->id = Uuid::generate()->string;
     	});
     }
+
+    public function quotation()
+    {
+        return $this->belongsTo(
+            'App\Models\Quotation',
+            'quotation_id',
+            'id'
+        );
+    }
 }

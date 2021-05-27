@@ -95,4 +95,13 @@ class Car extends Model
 
         return $carImageUrl ?: env('BLANK_IMAGE_URL');
     }
+
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company', 
+            'company_id', 
+            'id'
+        );
+    }
 }

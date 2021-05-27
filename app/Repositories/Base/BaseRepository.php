@@ -108,7 +108,7 @@ class BaseRepository
 						$condition['clause'] :
 						'where';
 
-					$models = $models->${$clause}(
+					$models = $models->{$clause}(
 						$condition['column'], 
 						$operator, 
 						$condition['value']

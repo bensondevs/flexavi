@@ -70,6 +70,15 @@ class WorkContract extends Model
         return $this->attributes['pdf_url'] = $fileUrl;   
     }
 
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company', 
+            'company_id', 
+            'id'
+        );
+    }
+
     public function inspection()
     {
         return $this->morphOne(

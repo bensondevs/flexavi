@@ -14,6 +14,12 @@ class ScheduleResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'activity_name' => $this->activity_name,
+            'start' => carbon($this->start)->format('M d, Y; H:i:s'),
+            'end' => carbon($this->end)->format('M d, Y; H:i:s'),
+            'include_weekend' => (bool) $this->include_weekend,
+            'start_money' => number_format($this->start_money, 2),
+        ];
     }
 }

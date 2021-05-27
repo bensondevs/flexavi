@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\Company\EmployeeController;
 use App\Http\Controllers\Api\Company\CustomerController as CompanyCustomerController;
 use App\Http\Controllers\Api\Company\QuotationController;
 use App\Http\Controllers\Api\Company\InspectorController;
+use App\Http\Controllers\Api\Company\PaymentTermController;
 use App\Http\Controllers\Api\Company\AppointmentController;
 use App\Http\Controllers\Api\Company\AppointmentWorkerController;
 use App\Http\Controllers\Api\Company\WorkController;
@@ -163,6 +164,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			Route::post('store', [InvoiceController::class, 'store']);
 			Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
 			Route::delete('delete', [InvoiceController::class, 'delete']);
+
+			Route::group(['prefix' => 'payment_terms'], function () {
+				Route::get('/', [PaymentTermController::class, 'paymentTerms']);
+				Route::post('store', [PaymentTermController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [PaymentTermController::class, 'update']);
+				Route::delete('delete', [PaymentTermController::class, 'delete']);
+			});
 		});
 
 		/*

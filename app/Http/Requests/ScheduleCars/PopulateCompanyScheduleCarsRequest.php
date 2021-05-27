@@ -41,6 +41,6 @@ class PopulateCompanyScheduleCarsRequest extends FormRequest
 
         $this->addWith('car');
 
-        return $this->collectCompanyOptions();
+        return $this->collectOptions();
     }
 }

@@ -44,4 +44,13 @@ class PaymentTerm extends Model
             'invoice_id'
         );
     }
+
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company', 
+            'company_id', 
+            'id'
+        );
+    }
 }

@@ -99,10 +99,9 @@ class User extends Authenticatable
 
     public function setProfilePictureAttribute($imageFile)
     {
-        // Upload Profile Picture
         $path = 'storage/uploads/users/profile_pictures/';
-        $uploadedImageName = uploadFile($imageFile, $path);
-        $imageUrl = asset($uploadedImageName);
+        $uploadedImagePath = uploadFile($imageFile, $path);
+        $imageUrl = asset($uploadedImagePath);
 
         $this->attributes['profile_picture_url'] = $imageUrl;
     }

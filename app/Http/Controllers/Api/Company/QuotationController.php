@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Quotations\PopulateCompanyQuotationRequest;
-use App\Http\Requests\Quotations\SaveQuotationRequest;
+use App\Http\Requests\Quotations\SaveQuotationRequest as SaveRequest;
+use App\Http\Requests\Quotations\FindQuotationRequest as FindRequest;
+use App\Http\Requests\Quotations\PopulateCompanyQuotationRequest as PopulateRequest;
 
 use App\Http\Resources\QuotationResource;
 
@@ -21,34 +22,50 @@ class QuotationController extends Controller
     	$this->quotation = $quotation;
     }
 
-    public function companyQuotations(PopulateCompanyQuotationRequest $request)
+    public function companyQuotations(PopulateRequest $request)
     {
-    	$quotations = $this->quotation->all($request->options());
+        $options = $request->options();
+
+    	$quotations = $this->quotation->all($options);
         $quotations = $this->quotation->paginate();
         $quotations->data = QuotationResource::collection($quotations);
 
     	return response()->json(['quotations' => $quotations]);
     }
 
-    public function store(SaveQuotationRequest $request)
+    public function store(SaveRequest $request)
     {
-        $input = $request->ruleWithCompany();
+        $documentUpload = $request->file('quotation_document');
+        $quotation = $this->quotation->uploadDocument($documentUpload);
+
+        $input = $request->quotationData();
+        $input['creator_id'] = $request->user()->id;
     	$quotation = $this->quotation->save($input);
 
-    	return apiResponse($this->quotation, $quotation);
+    	return apiResponse($this->quotation, ['quotation' => $quotation]);
     }
 
-    public function update(SaveQuotationRequest $request)
+    public function update(SaveRequest $request)
     {
-    	$this->quotation->setModel($request->getQuotation());
-    	$quotation = $this->quotation->save($request->ruleWithCompany());
+        $quotation = $request->getQuotation();
+    	$quotation = $this->quotation->setModel($quotation);
 
-    	return apiResponse($this->quotation, $quotation);
+        $input = $request->quotationData();
+    	$quotation = $this->quotation->save($input);
+
+    	return apiResponse($this->quotation, ['quotation' => $quotation]);
     }
 
-    public function delete(Request $request)
+    public function changeDocument()
     {
-    	$this->quotation->find($request->input('id'));
+        
+    }
+
+    public function delete(FindRequest $request)
+    {
+        $quotation = $request->getQuotation();
+
+    	$this->quotation->setModel($quotation);
     	$this->quotation->delete();
 
     	return apiResponse($this->quotation);

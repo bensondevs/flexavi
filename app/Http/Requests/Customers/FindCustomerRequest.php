@@ -23,12 +23,10 @@ class FindCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        $requestingUser = auth()->user();
-        $targetedCustomer = $this->getCustomer();
+        $user = $this->user();
+        $customer = $this->getCustomer();
 
-        return $requestingUser->hasCompanyPermission(
-            $targetedCustomer->company_id
-        );
+        return $user->hasCompanyPermission($customer->company_id, 'view customers');
     }
 
     /**

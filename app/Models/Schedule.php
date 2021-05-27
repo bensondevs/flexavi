@@ -51,4 +51,13 @@ class Schedule extends Model
             ScheduleCar::class
         );
     }
+
+    public function company()
+    {
+        return $this->belongsTo(
+            'App\Models\Company', 
+            'company_id', 
+            'id'
+        );
+    }
 }

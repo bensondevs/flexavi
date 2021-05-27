@@ -5,8 +5,9 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Invoices\SaveInvoiceRequest;
-use App\Http\Requests\Invoices\PopulateInvoicesRequest;
+use App\Http\Requests\Invoices\PopulateInvoicesRequest as PopulateRequest;
+use App\Http\Requests\Invoices\SaveInvoiceRequest as SaveRequest;
+use App\Http\Requests\Invoices\FindInvoiceRequest as FindRequest;
 
 use App\Http\Resources\InvoiceResource;
 
@@ -19,7 +20,7 @@ class InvoiceController extends Controller
     	$this->invoice = $invoice;
     }
 
-    public function companyInvoices(PopulateInvoicesRequest $request)
+    public function companyInvoices(PopulateRequest $request)
     {
         $invoices = $this->invoice->all($request->options());
         $invoices = $this->invoice->paginate();
@@ -28,7 +29,7 @@ class InvoiceController extends Controller
         return response()->json(['invoices' => $invoices]);
     }
 
-    public function store(SaveInvoiceRequest $request)
+    public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
         $invoice = $this->invoice->save($input);
@@ -36,7 +37,7 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice, $invoice);
     }
 
-    public function update(SaveInvoiceRequest $request)
+    public function update(SaveRequest $request)
     {
         $this->invoice->setModel($request->getInvoice());
         $invoice = $this->invoice->save($request->ruleWithCompany());

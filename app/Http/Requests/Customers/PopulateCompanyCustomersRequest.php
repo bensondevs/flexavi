@@ -17,7 +17,10 @@ class PopulateCompanyCustomersRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        $user = $this->user();
+        $company = $this->getCompany();
+
+        return $user->hasCompanyPermission($company->id, 'view customers');
     }
 
     /**

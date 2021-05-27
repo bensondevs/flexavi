@@ -25,13 +25,12 @@ class FindScheduleCarRequest extends FormRequest
     {
         $user = $this->user();
         $scheduleCar = $this->getScheduleCar();
+        $schedule = $scheduleCar->schedule;
 
         $actionName = ($this->isMethod('GET')) ? 'view' : 'delete';
         $actionObject = 'schedule cars';
         $action = $actionName . ' ' . $actionObject;
-        $authorizedAction = $user->hasCompanyPermission(
-            $scheduleCar->schedule->company_id, $action
-        );
+        $authorizedAction = $user->hasCompanyPermission($schedule->company_id, $action);
 
         return $authorizedAction;
     }

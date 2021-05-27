@@ -12,7 +12,7 @@ use App\Traits\InputRequest;
 
 class SaveEmployeeRequest extends FormRequest
 {
-    use InputRequest;
+    use CompanyInputRequest;
 
     private $employee;
 
@@ -29,13 +29,7 @@ class SaveEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        $currentUser = auth()->user();
-
-        if ($this->isMethod('POST'))
-            return $currentUser->hasCompanyPermission($this->input('company_id'));
-
-        $employee = $this->getEmployee();
-        return $currentUser->hasCompanyPermission($employee->company_id);
+        return $this->authorizeCompanyAction('employees');
     }
 
     /**
@@ -46,7 +40,6 @@ class SaveEmployeeRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'company_id' => ['required', 'string', 'exists:companies,id'],
             'user_id' => [
                 'required', 
                 'string', 

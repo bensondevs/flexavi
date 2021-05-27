@@ -37,6 +37,8 @@ class PopulateCompanyQuotationRequest extends FormRequest
 
     public function options()
     {
+        $this->setWiths(['creator', 'customer', 'photos']);
+
         return $this->collectCompanyOptions();
     }
 }
