@@ -4,20 +4,22 @@ namespace App\Http\Requests\Auths;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Traits\InputRules;
+use App\Traits\InputRequest;
 
 use App\Rules\HasUpperCase;
 use App\Rules\HasLowerCase;
 use App\Rules\HasNumerical;
 use App\Rules\HasSpecialCharacter;
 
+use App\Models\Owner;
 use App\Models\RegisterInvitation;
 
 class RegisterRequest extends FormRequest
 {
-    use InputRules;
+    use InputRequest;
 
     private $invitation;
+
 
     public function getInvitation()
     {
@@ -74,6 +76,46 @@ class RegisterRequest extends FormRequest
             'confirm_password' => ['required', 'string', 'same:password'],
         ]);
 
+        // Has no invitation, then it must be owner
+        if (! $this->input('invitation_code')) {
+            $this->addRule('bank_name', ['required', 'string']);
+            $this->addRule('bic_code', ['required', 'string']);
+            $this->addRule('bank_account', ['required', 'string']);
+            $this->addRule('bank_holder_name', ['required', 'string']);
+        }
+
         return $this->returnRules();
+    }
+
+    public function userData()
+    {
+        return $this->except([
+            'profile_picture',
+
+            'confirm_password',
+
+            'bank_name',
+            'bic_code',
+            'bank_account',
+            'bank_holder_name',
+        ]);
+    }
+
+    public function getOwnerData()
+    {
+        return $this->only([
+            'bank_name',
+            'bic_code',
+            'bank_account',
+            'bank_holder_name',
+        ]);
+    }
+
+    public function getAttachments()
+    {
+        $invitation = $this->getInvitation();
+
+        return $invitation ? 
+            $invitation->attachments : [];
     }
 }

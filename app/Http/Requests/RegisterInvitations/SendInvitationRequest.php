@@ -49,7 +49,7 @@ class SendInvitationRequest extends FormRequest
         ]);
 
         $this->addRule([
-            'attached_role' => ['required', 'string', 'exists:']
+            'attached_role' => ['required', 'string', 'exists:roles,name']
         ]);
 
         return $this->returnRules();

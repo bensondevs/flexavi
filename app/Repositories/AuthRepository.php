@@ -35,30 +35,13 @@ class AuthRepository extends BaseRepository
 			$user->save();
 
 			// Attachment exist
-			if (isset($attachments['data'])) {
-				$attachmentsData = $attachments['data'];
+			if ($attachments) {
+				$roleModel = $attachments['model'];
+				$roleModel = $roleModel::findOrFail($attachments['model_id']);
+				$roleModel->{$attachments['related_column']} = $user->id;
+				$roleModel->save();
 
-				if ($attachments['role'] == 'employee') {
-					$employee = $this->employee->save([
-						'user_id' => $user->id,
-						'company_id' => $attachmentsData['company_id'],
-
-						'title' => $attachmentsData['title'],
-						'employee_type' => $attachmentsData['employee_type'],
-						'employee_status' => $attachmentsData['employee_status'],
-					]);
-				} else if ($attachments['role'] == 'owner') {
-					$owner = $this->owner->save([
-						'user_id' => $user->id,
-						'is_prime_owner' => false,
-						'company_id' => $attachmentsData['company_id'],
-
-						'bank_name' => $attachmentsData['bank_name'],
-						'bic_code' => $attachmentsData['bic_code'],
-						'bank_account' => $attachmentsData['bank_account'],
-						'bank_holder_name' => $attachmentsData['bank_holder_name'],
-					]);
-				}
+				$user->assignRole($attachments['role']);
 			}
 
 			$this->setModel($user);
@@ -150,16 +133,13 @@ class AuthRepository extends BaseRepository
 				->first();
 
 			if (! $user) {
-				return $this->setNotFound(
-					'This user is not yet registered.'
-				);
+				return $this->setNotFound('This user is not yet registered.');
 			}
 
 			/*
 				Login the found user
 			*/
 			$user->token = $user->createToken(time())->plainTextToken;
-			$user->{$driver . 'Login'}->setCallbackResponse($socialiteUser);
 
 			$this->setModel($user);
 

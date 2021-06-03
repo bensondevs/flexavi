@@ -182,10 +182,9 @@ class Company extends Model
 
     public function getVisitingAddressAttribute()
     {
-        return json_decode(
-            $this->attributes['visiting_address'], 
-            true
-        );
+        $address = $this->attributes['visiting_address'];
+        
+        return json_decode($address, true);
     }
 
     public function setVisitingAddressAttribute(array $value)
@@ -204,10 +203,9 @@ class Company extends Model
 
     public function getInvoicingAddressAttribute()
     {
-        return json_decode(
-            $this->attributes['invoicing_address'], 
-            true
-        );
+        $address = $this->attributes['invoicing_address'];
+
+        return json_decode($address, true);
     }
 
     public function setInvoicingAddressAttribute(array $value)
@@ -222,5 +220,14 @@ class Company extends Model
         ];
 
         $this->attributes['invoicing_address'] = json_encode($_address);
+    }
+
+    public function setCompanyLogoAttribute($logoFile)
+    {
+        $path = 'storage/companies/logos/';
+        $uploadedLogoPath = uploadFile($logoFile, $path);
+        $logoUrl = asset($uploadedLogoPath);
+
+        $this->attributes['company_logo_url'] = $logoUrl;
     }
 }

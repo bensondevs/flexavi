@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Controllers\Api\Company;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+use App\Http\Requests\RegisterInvitations\InviteOnwerRequest;
+use App\Http\Requests\RegisterInvitations\InviteEmployeeRequest;
+
+use App\Repositories\RegisterInvitationRepository;
+
+class RegisterInvitationController extends Controller
+{
+    private $invitation;
+
+    public function __construct(RegisterInvitationRepository $invitation)
+    {
+        $this->invitation = $invitation;
+    }
+
+    public function inviteEmployee(InviteEmployeeRequest $request)
+    {
+        $input = $request->invitationData();
+        $invitation = $this->invitation->sendInvitation($input);
+
+        return response()->json(['invitation' => $invitation]);
+    }
+
+    public function inviteOwner(InviteOwnerRequest $request)
+    {
+        $input = $request->invitationData();
+        $invitation = $this->invitation->sendInvitation($input);
+
+        return response()->json(['invitation' => $invitation]);
+    }
+}

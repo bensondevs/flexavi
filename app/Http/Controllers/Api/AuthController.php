@@ -7,21 +7,28 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Auths\LoginRequest;
 use App\Http\Requests\Auths\RegisterRequest;
+use App\Http\Requests\Auths\VerifyEmailRequest;
 use App\Http\Requests\Auths\CustomerLoginRequest;
 
 use Socialite;
 
+use App\Models\User;
+
 use App\Repositories\AuthRepository;
+use App\Repositories\CompanyOwnerRepository as OwnerRepository;
 
 class AuthController extends Controller
 {
-    protected $auth;
+    private $auth;
+    private $owner;
 
     public function __construct(
-    	AuthRepository $authRepository
+    	AuthRepository $auth,
+        OwnerRepository $owner
     )
     {
-    	$this->auth = $authRepository;
+    	$this->auth = $auth;
+        $this->owner = $owner;
     }
 
     public function login(LoginRequest $request)
@@ -39,7 +46,7 @@ class AuthController extends Controller
             $request->onlyInRules()
         );
 
-        return apiResponse($this->auth, $customer);
+        return apiResponse($this->auth, ['customer' => $customer]);
     }
 
     public function socialMediaLoginRedirect(Request $request, $driver)
@@ -55,37 +62,42 @@ class AuthController extends Controller
         $socialiteUser = Socialite::driver($driver)
             ->stateless()
             ->user();
-        $this->auth->socialiteLogin($socialiteUser);
+        $user = $this->auth->socialiteLogin($socialiteUser);
 
-        return apiResponse(
-            $this->auth, 
-            $this->auth->getModel()
-        );
+        return apiResponse($this->auth, ['user' => $user]);
     }
 
     public function register(RegisterRequest $request)
     {
-    	$input = $request->onlyInRules();
-    	$input['profile_picture_url'] = uploadFile(
-			$request->file('profile_picture'), 
-			'storage/profile_pictures/'
-		);
-    	$user = $this->auth->register(
-            $input, 
-            $request->getInvitation()
-        );
+    	$input = $request->userData();
+        if (! $attachments = $request->getAttachments()) {
+            $owner = $this->owner->save($request->getOwnerData());
+            $attachments = [
+                'model' => 'App\Models\Owner',
+                'model_id' => $owner->id,
+                'related_column' => 'user_id',
+                'role' => 'owner',
+            ];
+        }
 
-    	return apiResponse($this->auth, $user);     
+    	$user = new User();
+        $user->profile_picture = $request->file('profile_picture');
+        $user = $this->auth->setModel($user);
+    	$user = $this->auth->register($input, $attachments);
+
+    	return apiResponse($this->auth, ['user' => $user]);
+    }
+
+    public function verifyEmail(VerifyEmailRequest $request)
+    {
+
     }
 
     public function socialMediaRegister(Request $request, $driver)
     {
         $metaUser = $this->auth->socialiteRegister($driver);
 
-        return apiResponse(
-            $this->auth, 
-            $metaUser
-        );
+        return apiResponse($this->auth, ['meta_user' => $metaUser]);
     }
 
     public function logout()
@@ -93,19 +105,13 @@ class AuthController extends Controller
     	$this->auth->setModel(auth()->user());
     	$this->auth->logout();
 
-    	return response()->json([
-    		'status' => $this->auth->status,
-    		'message' => $this->auth->message,
-    	]);
+    	return apiResponse($this->auth);
     }
 
     public function customerLogout()
     {
         $this->auth->customerLogout(auth()->user());
 
-        return response()->json([
-            'status' => $this->auth->status,
-            'message' => $this->auth->message,
-        ]);
+        return apiResponse($this->auth);
     }
 }

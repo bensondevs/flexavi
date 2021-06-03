@@ -158,6 +158,26 @@
 									"key": "confirm_password",
 									"value": "Password123!",
 									"type": "text"
+								},
+								{
+									"key": "bank_name",
+									"value": "Another Bank",
+									"type": "text"
+								},
+								{
+									"key": "bic_code",
+									"value": "012",
+									"type": "text"
+								},
+								{
+									"key": "bank_account",
+									"value": "08361232113",
+									"type": "text"
+								},
+								{
+									"key": "bank_holder_name",
+									"value": "Another User",
+									"type": "text"
 								}
 							]
 						},
@@ -1669,7 +1689,7 @@
 							]
 						},
 						{
-							"name": "User Companies",
+							"name": "User Company",
 							"request": {
 								"method": "GET",
 								"header": [
@@ -1694,6 +1714,238 @@
 										"dashboard",
 										"companies",
 										"user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register Company",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{API_TOKEN}}"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "visiting_address_street",
+											"value": "11, Visited Address Street",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_house_number",
+											"value": "11",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_house_number_suffix",
+											"value": "A",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_zip_code",
+											"value": "111111",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_city",
+											"value": "Visited City",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_street",
+											"value": "22, Invoiced Address Street",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_house_number",
+											"value": "22",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_house_number_suffix",
+											"value": "B",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_zip_code",
+											"value": "22222",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_city",
+											"value": "Invoiced City",
+											"type": "text"
+										},
+										{
+											"key": "company_name",
+											"value": "Another Company",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "company@flexavi.com",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "333111222000",
+											"type": "text"
+										},
+										{
+											"key": "vat_number",
+											"value": "111000222111",
+											"type": "text"
+										},
+										{
+											"key": "commerce_chamber_number",
+											"value": "121",
+											"type": "text"
+										},
+										{
+											"key": "company_website_url",
+											"value": "https://company.test.com/",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/dashboard/companies/register",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"companies",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Company",
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "visiting_address_street",
+											"value": "11, Visited Address Street",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_house_number",
+											"value": "11",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_house_number_suffix",
+											"value": "A",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_zip_code",
+											"value": "111111",
+											"type": "text"
+										},
+										{
+											"key": "visiting_address_city",
+											"value": "Visited City",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_street",
+											"value": "22, Invoiced Address Street",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_house_number",
+											"value": "22",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_house_number_suffix",
+											"value": "B",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_zip_code",
+											"value": "22222",
+											"type": "text"
+										},
+										{
+											"key": "invoicing_address_city",
+											"value": "Invoiced City",
+											"type": "text"
+										},
+										{
+											"key": "company_name",
+											"value": "Another Company",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "company@flexavi.com",
+											"type": "text"
+										},
+										{
+											"key": "phone_number",
+											"value": "333111222000",
+											"type": "text"
+										},
+										{
+											"key": "vat_number",
+											"value": "111000222111",
+											"type": "text"
+										},
+										{
+											"key": "commerce_chamber_number",
+											"value": "121",
+											"type": "text"
+										},
+										{
+											"key": "company_website_url",
+											"value": "https://company.test.com/",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/dashboard/companies/update",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"companies",
+										"update"
 									]
 								}
 							},

@@ -36,6 +36,8 @@ class Owner extends Model
 
     	self::creating(function ($owner) {
             $owner->id = Uuid::generate()->string;
+
+            if (! $owner->company_id) $owner->is_prime_owner = true;
     	});
     }
 

@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-class CompanySubscription extends Model
+class Subscription extends Model
 {
-    protected $table = 'company_subscriptions';
+    protected $table = 'subscriptions';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;

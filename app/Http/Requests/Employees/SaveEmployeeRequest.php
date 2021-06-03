@@ -40,14 +40,7 @@ class SaveEmployeeRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'user_id' => [
-                'required', 
-                'string', 
-                'exists:users,id', 
-                new UniqueWithConditions(
-                    new Employee,
-                    ['company_id' => $this->input('company_id')] 
-                )],
+            'user_id' => ['string', 'exists:users,id'],
             'title' => ['required', 'string'],
             'employee_type' => ['required', 'string'],
             'employment_status' => ['required', 'string'],

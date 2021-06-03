@@ -6,6 +6,7 @@ use \Illuminate\Support\Facades\DB;
 use \Illuminate\Database\QueryException;
 
 use App\Models\Owner;
+use App\Models\Company;
 
 use App\Repositories\Base\BaseRepository;
 
@@ -28,6 +29,26 @@ class CompanyOwnerRepository extends BaseRepository
 			$this->setSuccess('Successfully create owner.');
 		} catch (QueryException $qe) {
 			$this->setError('Failed to create owner.');
+		}
+
+		return $this->getModel();
+	}
+
+	public function assignCompany(Company $company)
+	{
+		try {
+			$owner = $this->getModel();
+			$owner->company_id = $company->id;
+			$owner->save();
+
+			$this->setModel($owner);
+
+			$this->setSuccess('Successfully assign company to owner.');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to assign company to owner.', 
+				$qe->getMessage()
+			);
 		}
 
 		return $this->getModel();

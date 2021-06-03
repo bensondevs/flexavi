@@ -118,6 +118,16 @@ class User extends Authenticatable
         return $roleName;
     }
 
+    public function generateToken()
+    {
+        // Delete old tokens
+        $this->tokens()->delete();
+
+        // Create Token
+        $plainTextToken = $this->createToken(time())->plainTextToken;
+        return $this->token = $plainTextToken;
+    }
+
     public function hasCompanyPermission($companyId, string $doAction = '')
     {
         $role = $this->roles->first();

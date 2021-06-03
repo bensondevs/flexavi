@@ -22,6 +22,7 @@ class CreateCompaniesTable extends Migration
             $table->json('invoicing_address');
 
             $table->string('email');
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('phone_number');
 
             $table->string('vat_number'); // Need validation from API

@@ -16,12 +16,17 @@ trait CompanyInputRequest
         if ($this->company) return $this->company;
 
         // ID is already set
-        $id = $this->input('company_id');
-        if ($id) return Company::findOrFail($id);
+        if ($id = $this->input('company_id')) 
+            return $this->company = Company::findOrFail($id);
 
         // None exist
         $user = $this->user();
-        return $user->{$user->user_role}->company;
+        if (! $company = $user->{$user->user_role}->company) {
+            $message = 'This user has no company yet, please register.';
+            return response()->json(['message' => $message], 403);
+        }
+
+        return $this->company = $company;
     }
 
     public function authorizeCompanyAction(

@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Requests\Employees;
+namespace App\Http\Requests\Companies;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Traits\CompanyPopulateRequestOptions;
+use App\Traits\CompanyInputRequest;
 
-class PopulateEmployeesRequest extends FormRequest
+class UploadCompanyLogoRequest extends FormRequest
 {
-    use CompanyPopulateRequestOptions;
+    use CompanyInputRequest;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -20,7 +20,7 @@ class PopulateEmployeesRequest extends FormRequest
         $user = $this->user();
         $company = $this->getCompany();
 
-        return $user->hasCompanyPermission($company->id);
+        return $this->authorizeCompanyAction($company->id, 'edit companies');
     }
 
     /**
@@ -30,13 +30,10 @@ class PopulateEmployeesRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
-    }
+        $this->setRules([
+            'company_logo' => ['required', 'file', 'mimes:png,svg,jpeg,jpg', 'max:1000'],
+        ]);
 
-    public function options()
-    {
-        $this->addWith('user');
-
-        return $this->collectCompanyOptions();
+        return $this->returnRules();
     }
 }

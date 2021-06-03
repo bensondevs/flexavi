@@ -92,8 +92,14 @@ Accept | `application/json`
 `email` | Required | string | Unique email of user
 `password` | Required | string, min: 8 characters, has uppercase, has lowercase, has numerical, has special characters | The password of the user, needs to be having minimal 8 characters, with uppercase, lowercase, numberical value and special characters
 `confirm_password` | Required | string, strictly same as `password` | The password confirmation, needs to be EXACTLY the same as password value
+`invitation_code` | Optional | string, exists in database | string | Invitation code for the user, this may contain certain data to be attached and claimed to newly registered user to start with given role by the owner of company.
+`bank_name` | Required, if no `invitation_code` | string | Bank name of the user  
+`bank_code` | Required, if no `invitation_code` | string | Code of the bank inserted by the user
+`bank_account` | Required, if no `invitation_code` | string | Bank account number or ID
+`bank_holder_name` | Required, if no `invitation_code` | string | The bank account holder name
 
 **Request Body Example:**
+- For Owner
 ```json
 {
     "invitation_code": "register1",
@@ -108,6 +114,31 @@ Accept | `application/json`
     "email": "register1@flexavi.com",
     "password": "#Password123",
     "confirm_password": "#Password123",
+
+    "bank_name": "Bank of Testing Purpose",
+    "bic_code": "016",
+    "bank_account": "087318231",
+    "bank_holder_name": "John Michael Doe"
+}
+```
+
+- For Invited User (Owner and Employee)
+```json
+{
+    "invitation_code": "register1",
+    "fullname": "User Full Name",
+    "salutation": "Mr",
+    "birth_date": "1998-12-29",
+    "id_card_type": "id",
+    "id_card_number": "331511328312",
+    "phone": "61238172212",
+    "address": "Another Address Example 123",
+    "profile_picture": "<FILE>",
+    "email": "register1@flexavi.com",
+    "password": "#Password123",
+    "confirm_password": "#Password123",
+    
+    "invitation_code": "c0d3EX4mpl3"
 }
 ```
 

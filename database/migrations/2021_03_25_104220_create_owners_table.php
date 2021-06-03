@@ -18,17 +18,17 @@ class CreateOwnersTable extends Migration
 
             $table->boolean('is_prime_owner')->default(0);
 
-            $table->uuid('user_id');
+            $table->uuid('user_id')->nullable();
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('CASCADE');
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->string('bank_name')->nullable();
             $table->string('bic_code')->nullable();

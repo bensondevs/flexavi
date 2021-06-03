@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Employees;
+namespace App\Http\Requests\Subscriptions;
 
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
-class PopulateEmployeesRequest extends FormRequest
+class PopulateCompanySubscriptionsRequest extends FormRequest
 {
     use CompanyPopulateRequestOptions;
 
@@ -20,7 +20,7 @@ class PopulateEmployeesRequest extends FormRequest
         $user = $this->user();
         $company = $this->getCompany();
 
-        return $user->hasCompanyPermission($company->id);
+        return $user->hasCompanyPermission($company->id, 'view subscriptions');
     }
 
     /**
@@ -30,13 +30,8 @@ class PopulateEmployeesRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
-    }
-
-    public function options()
-    {
-        $this->addWith('user');
-
-        return $this->collectCompanyOptions();
+        return [
+            //
+        ];
     }
 }

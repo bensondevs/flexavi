@@ -24,6 +24,9 @@ class RegisterInvitationRepository extends BaseRepository
 			$invitation->attachments = $invitationData['attachments'];
 			$invitation->save();
 
+			// Send email
+			//
+
 			$this->setModel($invitation);
 
 			$this->setSuccess('Successfully invite user to register');

@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\Company\InspectorController;
 use App\Http\Controllers\Api\Company\PaymentTermController;
 use App\Http\Controllers\Api\Company\AppointmentController;
 use App\Http\Controllers\Api\Company\AppointmentWorkerController;
+use App\Http\Controllers\Api\Company\RegisterInvitationController;
 use App\Http\Controllers\Api\Company\WorkController;
 use App\Http\Controllers\Api\Company\WorkContractController;
 use App\Http\Controllers\Api\Company\WorkActivityController;
@@ -86,170 +87,182 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 		Company Access for Owner
 	*/
 	Route::group(['prefix' => 'companies', 'middleware' => ['owner']], function () {
-		Route::get('user', [CompanyController::class, 'userCompany']);
-		Route::post('update', [CompanyController::class, 'update']);
+		Route::post('register', [CompanyController::class, 'register']);
 
-		/*
-			Company Appointment Module
-		*/
-		Route::group(['prefix' => 'appointments'], function () {
-			Route::get('/', [AppointmentController::class, 'companyAppointments']);
-			Route::post('store', [AppointmentController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
-			Route::delete('delete', [AppointmentController::class, 'delete']);
-
-			Route::group(['prefix' => 'workers'], function () {
-				Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
-				Route::post('store', [AppointmentWorkerController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
-				Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
-			});
-		});
-
-		/*
-			Company Quotations Module
-		*/
-		Route::group(['prefix' => 'quotations'], function () {
-			Route::get('/', [QuotationController::class, 'companyQuotations']);
-			Route::post('store', [QuotationController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
-			Route::delete('delete', [QuotationController::class, 'delete']);
-		});
-
-		/*
-			Company Employee Module
-		*/
-		Route::group(['prefix' => 'employees'], function () {
-			Route::get('/', [EmployeeController::class, 'companyEmployees']);
-			Route::post('store', [EmployeeController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [EmployeeController::class, 'update']);
-			Route::delete('delete', [EmployeeController::class, 'delete']);
-		});
-
-		/*
-			Company Customer Module
-		*/
-		Route::group(['prefix' => 'customers'], function () {
-			Route::get('/', [CompanyCustomerController::class, 'companyCustomers']);
-			Route::post('store', [CompanyCustomerController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
-			Route::delete('delete', [CompanyCustomerController::class, 'delete']);
-		});
-
-		/*
-			Company Car Module
-		*/
-		Route::group(['prefix' => 'cars'], function () {
-			Route::get('/', [CarController::class, 'companyCars']);
-			Route::post('store', [CarController::class, 'store']);
-			Route::post('set_image', [CarController::class, 'setCarImage']);
-			Route::match(['PUT', 'PATCH'], 'update', [CarController::class, 'update']);
-			Route::delete('delete', [CarController::class, 'delete']);
-		});
-
-		/*
-			Company Inspector Module
-		*/
-		Route::group(['prefix' => 'inspectors'], function () {
-			Route::get('/', [InspectorController::class, 'companyInspectors']);
-			Route::post('add', [InspectorController::class, 'add']);
-			Route::delete('remove', [InspectorController::class, 'remove']);
-		});
-
-		/*
-			Company Invoice Module
-		*/
-		Route::group(['prefix' => 'invoices'], function () {
-			Route::get('/', [InvoiceController::class, 'companyInvoices']);
-			Route::post('store', [InvoiceController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
-			Route::delete('delete', [InvoiceController::class, 'delete']);
-
-			Route::group(['prefix' => 'payment_terms'], function () {
-				Route::get('/', [PaymentTermController::class, 'paymentTerms']);
-				Route::post('store', [PaymentTermController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [PaymentTermController::class, 'update']);
-				Route::delete('delete', [PaymentTermController::class, 'delete']);
-			});
-		});
-
-		/*
-			Company Quotation Module
-		*/
-		Route::group(['prefix' => 'quotations'], function () {
-			Route::get('/', [QuotationController::class, 'companyQuotations']);
-			Route::post('store', [QuotationController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
-			Route::delete('delete', [QuotationController::class, 'delete']);
-		});
-
-		/*
-			Schedule Module
-		*/
-		Route::group(['prefix' => 'schedules'], function () {
-			Route::get('/', [ScheduleController::class, 'companyWorks']);
-			Route::post('store', [ScheduleController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [ScheduleController::class, 'update']);
-			Route::delete('delete', [ScheduleController::class, 'delete']);
+		Route::group(['middleware' => ['has_company']], function () {
+			Route::get('user', [CompanyController::class, 'userCompany']);
+			Route::match(['PUT', 'PATCH'], 'update', [CompanyController::class, 'update']);
 
 			/*
-				Schedule Car Module
+				Company Appointment Module
 			*/
-			Route::group(['prefix' => 'cars'], function () {
-				Route::get('/', [ScheduleCarController::class, 'companyScheduleCars']);
-				Route::post('store', [ScheduleCarController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [ShceduleCarController::class, 'update']);
-				Route::delete('delete', [ScheduleCarController::class, 'delete']);
+			Route::group(['prefix' => 'appointments'], function () {
+				Route::get('/', [AppointmentController::class, 'companyAppointments']);
+				Route::post('store', [AppointmentController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
+				Route::delete('delete', [AppointmentController::class, 'delete']);
+
+				Route::group(['prefix' => 'workers'], function () {
+					Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
+					Route::post('store', [AppointmentWorkerController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
+					Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
+				});
 			});
 
 			/*
-				Schedule Employee Module
+				Company Quotations Module
+			*/
+			Route::group(['prefix' => 'quotations'], function () {
+				Route::get('/', [QuotationController::class, 'companyQuotations']);
+				Route::post('store', [QuotationController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
+				Route::delete('delete', [QuotationController::class, 'delete']);
+			});
+
+			/*
+				Company Employee Module
 			*/
 			Route::group(['prefix' => 'employees'], function () {
-				Route::get('/', [ScheduleEmployeeController::class, 'companyScheduleEmployees']);
-				Route::post('store', [ScheduleEmployeeController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [ScheduleEmployeeController::class, 'update']);
-				Route::delete('delete', [ScheduleEmployeeController::class, 'delete']);
-			});
-		});
-
-		/*
-			Company Work Module
-		*/
-		Route::group(['prefix' => 'works'], function () {
-			Route::get('/', [WorkController::class, 'companyWorks']);
-			Route::post('store', [WorkController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [WorkController::class, 'update']);
-			Route::delete('delete', [WorkController::class, 'delete']);
-
-			/*
-				Company Work Contract Module
-			*/
-			Route::group(['prefix' => 'contract'], function () {
-				Route::get('/', [WorkContractController::class, 'companyWorkContracts']);
-				Route::post('store', [WorkContractController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [WorkContractController::class, 'update']);
-				Route::delete('delete', [WorkContractController::class, 'delete']);
+				Route::get('/', [EmployeeController::class, 'companyEmployees']);
+				Route::post('store', [EmployeeController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [EmployeeController::class, 'update']);
+				Route::delete('delete', [EmployeeController::class, 'delete']);
 			});
 
 			/*
-				Company Work Activity Module
+				Company Customer Module
 			*/
-			Route::group(['prefix' => 'activities'], function () {
-				Route::get('/', [WorkActivityController::class, 'companyWorkActivities']);
-				Route::post('store', [WorkActivityController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [WorkActivityController::class, 'update']);
-				Route::delete('delete', [WorkActivityController::class, 'delete']);
+			Route::group(['prefix' => 'customers'], function () {
+				Route::get('/', [CompanyCustomerController::class, 'companyCustomers']);
+				Route::post('store', [CompanyCustomerController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
+				Route::delete('delete', [CompanyCustomerController::class, 'delete']);
 			});
 
 			/*
-				Company Work Condition Photo Module
+				Company Car Module
 			*/
-			Route::group(['prefix' => 'condition_photos'], function () {
-				Route::get('/', [WorkConditionPhotoController::class, 'companyWorkConditionPhotos']);
-				Route::post('store', [WorkConditionPhoto::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [WorkConditionPhotoController::class, 'update']);
-				Route::delete('delete', [WorkConditionPhotoController::class, 'delete']);
+			Route::group(['prefix' => 'cars'], function () {
+				Route::get('/', [CarController::class, 'companyCars']);
+				Route::post('store', [CarController::class, 'store']);
+				Route::post('set_image', [CarController::class, 'setCarImage']);
+				Route::match(['PUT', 'PATCH'], 'update', [CarController::class, 'update']);
+				Route::delete('delete', [CarController::class, 'delete']);
+			});
+
+			/*
+				Company Inspector Module
+			*/
+			Route::group(['prefix' => 'inspectors'], function () {
+				Route::get('/', [InspectorController::class, 'companyInspectors']);
+				Route::post('add', [InspectorController::class, 'add']);
+				Route::delete('remove', [InspectorController::class, 'remove']);
+			});
+
+			/*
+				Company Invoice Module
+			*/
+			Route::group(['prefix' => 'invoices'], function () {
+				Route::get('/', [InvoiceController::class, 'companyInvoices']);
+				Route::post('store', [InvoiceController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
+				Route::delete('delete', [InvoiceController::class, 'delete']);
+
+				Route::group(['prefix' => 'payment_terms'], function () {
+					Route::get('/', [PaymentTermController::class, 'paymentTerms']);
+					Route::post('store', [PaymentTermController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [PaymentTermController::class, 'update']);
+					Route::delete('delete', [PaymentTermController::class, 'delete']);
+				});
+			});
+
+			/*
+				Company Quotation Module
+			*/
+			Route::group(['prefix' => 'quotations'], function () {
+				Route::get('/', [QuotationController::class, 'companyQuotations']);
+				Route::post('store', [QuotationController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
+				Route::delete('delete', [QuotationController::class, 'delete']);
+			});
+
+			/*
+				Schedule Module
+			*/
+			Route::group(['prefix' => 'schedules'], function () {
+				Route::get('/', [ScheduleController::class, 'companyWorks']);
+				Route::post('store', [ScheduleController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [ScheduleController::class, 'update']);
+				Route::delete('delete', [ScheduleController::class, 'delete']);
+
+				/*
+					Schedule Car Module
+				*/
+				Route::group(['prefix' => 'cars'], function () {
+					Route::get('/', [ScheduleCarController::class, 'companyScheduleCars']);
+					Route::post('store', [ScheduleCarController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [ShceduleCarController::class, 'update']);
+					Route::delete('delete', [ScheduleCarController::class, 'delete']);
+				});
+
+				/*
+					Schedule Employee Module
+				*/
+				Route::group(['prefix' => 'employees'], function () {
+					Route::get('/', [ScheduleEmployeeController::class, 'companyScheduleEmployees']);
+					Route::post('store', [ScheduleEmployeeController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [ScheduleEmployeeController::class, 'update']);
+					Route::delete('delete', [ScheduleEmployeeController::class, 'delete']);
+				});
+			});
+
+			/*
+				Company Work Module
+			*/
+			Route::group(['prefix' => 'works'], function () {
+				Route::get('/', [WorkController::class, 'companyWorks']);
+				Route::post('store', [WorkController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [WorkController::class, 'update']);
+				Route::delete('delete', [WorkController::class, 'delete']);
+
+				/*
+					Company Work Contract Module
+				*/
+				Route::group(['prefix' => 'contract'], function () {
+					Route::get('/', [WorkContractController::class, 'companyWorkContracts']);
+					Route::post('store', [WorkContractController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [WorkContractController::class, 'update']);
+					Route::delete('delete', [WorkContractController::class, 'delete']);
+				});
+
+				/*
+					Company Work Activity Module
+				*/
+				Route::group(['prefix' => 'activities'], function () {
+					Route::get('/', [WorkActivityController::class, 'companyWorkActivities']);
+					Route::post('store', [WorkActivityController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [WorkActivityController::class, 'update']);
+					Route::delete('delete', [WorkActivityController::class, 'delete']);
+				});
+
+				/*
+					Company Work Condition Photo Module
+				*/
+				Route::group(['prefix' => 'condition_photos'], function () {
+					Route::get('/', [WorkConditionPhotoController::class, 'companyWorkConditionPhotos']);
+					Route::post('store', [WorkConditionPhoto::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [WorkConditionPhotoController::class, 'update']);
+					Route::delete('delete', [WorkConditionPhotoController::class, 'delete']);
+				});
+			});
+
+			/*
+				Company Register Invitation Module
+			*/
+			Route::group(['prefix' => 'invitations', 'as' => 'invitations.'], function () {
+				Route::post('invite_employee', [RegisterInvitationController::class, 'inviteEmployee']);
+				Route::post('invite_owner', [RegisterInvitationController::class, 'inviteOwner']);
 			});
 		});
 	});

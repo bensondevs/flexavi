@@ -33,6 +33,25 @@ class CompanyRepository extends BaseRepository
 		return $this->setCollection($companies);
 	}
 
+	public function uploadCompanyLogo($logoFile)
+	{
+		try {
+			$company = $this->getModel();
+			$company->company_logo = $logoFile;
+
+			$this->setModel($company);
+
+			$this->setSuccess('Successfully upload company logo');
+		} catch (Exception $e) {
+			$this->setError(
+				'Failed to upload company logo.', 
+				$e->getMessage()
+			);
+		}
+
+		return $this->getModel();
+	}
+
 	public function save(array $companyData)
 	{
 		try {
@@ -48,26 +67,6 @@ class CompanyRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$this->setError(
 				'Failed to save company data.', 
-				$qe->getMessage()
-			);
-		}
-
-		return $this->getModel();
-	}
-
-	public function register(array $registerData)
-	{
-		try {
-			$company = $this->getModel();
-			$company = $this->save($registerData['company']);
-			$company->owner = $this->owner->save($registerData['owner']);
-
-			$this->setModel($company);
-
-			$this->setSuccess('Successfully register a company.');
-		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to register a company.', 
 				$qe->getMessage()
 			);
 		}

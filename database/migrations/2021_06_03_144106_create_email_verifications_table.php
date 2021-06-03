@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCompanySubscriptionsTable extends Migration
+class CreateEmailVerificationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,17 @@ class CreateCompanySubscriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('company_subscriptions', function (Blueprint $table) {
+        Schema::create('email_verifications', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('company_id');
 
-            $table->char('status');
+            $table->string('model');
+            $table->uuid('model_id');
+            $table->string('model_verification_column')
+                ->default('email_verified_at');
 
-            $table->datetime('subscription_start');
-            $table->datetime('subscription_end');
+            $table->string('verification_status')->default('waiting');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -34,6 +34,6 @@ class CreateCompanySubscriptionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('company_subscriptions');
+        Schema::dropIfExists('email_verifications');
     }
 }
