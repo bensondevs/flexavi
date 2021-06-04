@@ -1,4 +1,5 @@
 # Owner API Documentation Index
 
-- [Company](docs/Owner/Company.md)
-- [Register Invitation](docs/Owner/RegisterInvitation.md)
+- [Company](Company.md)
+- [Employee](Employee.md)
+- [Register Invitation](RegisterInvitation.md)
