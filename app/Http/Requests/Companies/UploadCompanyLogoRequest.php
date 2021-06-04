@@ -20,7 +20,7 @@ class UploadCompanyLogoRequest extends FormRequest
         $user = $this->user();
         $company = $this->getCompany();
 
-        return $this->authorizeCompanyAction($company->id, 'edit companies');
+        return $user->hasCompanyPermission($company->id, 'edit companies');
     }
 
     /**
@@ -31,7 +31,7 @@ class UploadCompanyLogoRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'company_logo' => ['required', 'file', 'mimes:png,svg,jpeg,jpg', 'max:1000'],
+            'company_logo' => ['required', 'file', 'mimes:png,svg,jpeg,jpg', 'max:1024'],
         ]);
 
         return $this->returnRules();

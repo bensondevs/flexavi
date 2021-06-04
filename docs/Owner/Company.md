@@ -9,8 +9,8 @@
 **Method:** `POST`
 
 **Headers:**
-Header Name | Value 
-------------|--------------
+ Header Name | Value 
+------------|-------
 Accept | `application/json`
 Authorization | `Bearer {token}`
 
@@ -84,7 +84,7 @@ Attribute Name  | Type  | Description
 **Method:** `GET`
 
 **Headers:**
-Header Name | Value 
+ Header Name | Value 
 ------------|--------------
 Accept | `application/json`
 Authorization | `Bearer {token}`
@@ -220,5 +220,66 @@ Attribute Name  | Type  | Description
     },
     "status": "success",
     "message": "Successfully save company data."
+}
+```
+
+-------------------------------------------------------
+### 3. Upload Company Logo
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/upload_logo`
+
+**Method:** `POST`
+
+**Headers:**
+
+ Header Name | Value
+-------------|------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+ Payload name | Required | Validation | Description    
+--------------|----------|------------|-------------
+`company_logo` | Required | Image (PNG, SVG, JPEG, JPG), Max 1MB | Uploaded company logo
+
+**Response Attributes:**
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`company` | Object | Object data of updated company
+`status` | String | Request Processing status
+`message` | String | Message response for the user
+
+**Success Response Example:**
+```json
+{
+    "company": {
+        "id": "13b96bc0-c496-11eb-b40f-fb944d91988d",
+        "company_name": "Another Company",
+        "visiting_address": {
+            "city": "Visited City",
+            "street": "11, Visited Address Street",
+            "zip_code": "111111",
+            "house_number": "11",
+            "house_number_suffix": "A"
+        },
+        "invoicing_address": {
+            "city": "Invoiced City",
+            "street": "22, Invoiced Address Street",
+            "zip_code": "22222",
+            "house_number": "22",
+            "house_number_suffix": "A"
+        },
+        "email": "company@flexavi.com",
+        "email_verified_at": null,
+        "phone_number": "333111222000",
+        "vat_number": "111000222111",
+        "commerce_chamber_number": "121",
+        "company_logo_url": "http://localhost:8000/storage/companies/logos/20210604040318pp.jpeg",
+        "company_website_url": "https://company.test.com/"
+    },
+    "status": "success",
+    "message": "Successfully upload company logo"
 }
 ```

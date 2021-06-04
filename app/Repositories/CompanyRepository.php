@@ -38,6 +38,7 @@ class CompanyRepository extends BaseRepository
 		try {
 			$company = $this->getModel();
 			$company->company_logo = $logoFile;
+			$company->save();
 
 			$this->setModel($company);
 

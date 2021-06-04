@@ -44,7 +44,7 @@ class CompanyController extends Controller
         $company = $this->company->setModel($company);
         $company = $this->company->uploadCompanyLogo($logo);
 
-        return response()->json(['company' => $company]);
+        return apiResponse($this->company, ['company' => $company]);
     }
 
     public function register(SaveRequest $request)

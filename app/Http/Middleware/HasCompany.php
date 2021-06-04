@@ -20,10 +20,12 @@ class HasCompany
         $companyRole = $user->{$user->user_role};
 
         if (! $company = $companyRole->company) {
-            return response()->json([
-                'message' => 'This user has no company, please register a company',
-            ], 403);
+            $message = 'This user has no company, please register a company';
+
+            return response()->json(['message' => $message], 403);
         }
+
+        $request->attributes->add(['_company' => $company]);
 
         return $next($request);
     }

@@ -20,7 +20,7 @@ class PopulateEmployeesRequest extends FormRequest
         $user = $this->user();
         $company = $this->getCompany();
 
-        return $user->hasCompanyPermission($company->id);
+        return $user->hasCompanyPermission($company->id, 'view employees');
     }
 
     /**

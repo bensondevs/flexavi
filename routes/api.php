@@ -91,6 +91,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 
 		Route::group(['middleware' => ['has_company']], function () {
 			Route::get('user', [CompanyController::class, 'userCompany']);
+			Route::post('upload_logo', [CompanyController::class, 'uploadCompanyLogo']);
 			Route::match(['PUT', 'PATCH'], 'update', [CompanyController::class, 'update']);
 
 			/*

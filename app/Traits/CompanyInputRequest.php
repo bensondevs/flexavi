@@ -15,6 +15,11 @@ trait CompanyInputRequest
         // Company already exist
         if ($this->company) return $this->company;
 
+        // If middleware has company
+        if ($requestCompany = request()->get('_company')) {
+            return $this->company = $requestCompany;
+        }
+
         // ID is already set
         if ($id = $this->input('company_id')) 
             return $this->company = Company::findOrFail($id);

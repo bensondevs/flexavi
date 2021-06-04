@@ -15,12 +15,15 @@ class OwnerAccess
      * @return mixed
      */
     public function handle(Request $request, Closure $next)
-    {
-        return ($request->user()->hasRole('owner')) ? 
-            $next($request) : 
-            response()->json([
-                'status' => 'error',
-                'message' => 'This access is only available for owner.',
-            ], 403);
+    {   
+        $user = $request->user();
+
+        if (! $user->hasRole('owner')) {
+            $message = 'Current user is not an owner of a company';
+
+            return response()->json(['message' => $message], 403);
+        }
+
+        return $next($request);
     }
 }

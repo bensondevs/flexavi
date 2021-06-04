@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Employees\SaveEmployeeRequest;
-use App\Http\Requests\Employees\FindEmployeeRequest;
-use App\Http\Requests\Employees\PopulateEmployeesRequest;
+use App\Http\Requests\Employees\SaveEmployeeRequest as SaveRequest;
+use App\Http\Requests\Employees\FindEmployeeRequest as FindRequest;
+use App\Http\Requests\Employees\PopulateEmployeesRequest as PopulateRequest;
 
 use App\Http\Resources\EmployeeResource;
 
@@ -27,7 +27,7 @@ class EmployeeController extends Controller
     	$this->employee = $employeeRepository;
     }
 
-    public function companyEmployees(PopulateEmployeesRequest $request)
+    public function companyEmployees(PopulateRequest $request)
     {
         $employees = $this->employee->all($request->options());
         $employees = $this->employee->paginate();
@@ -36,15 +36,15 @@ class EmployeeController extends Controller
     	return response()->json(['employees' => $employees]);
     }
 
-    public function store(SaveEmployeeRequest $request)
+    public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
     	$employee = $this->employee->save($input);
 
-    	return apiResponse($this->employee, $employee);
+    	return apiResponse($this->employee, ['employee' => $employee]);
     }
 
-    public function update(SaveEmployeeRequest $request)
+    public function update(SaveRequest $request)
     {
         $employee = $request->getEmployee();
     	$employee = $this->employee->setModel($employee);
@@ -52,17 +52,15 @@ class EmployeeController extends Controller
         $input = $request->ruleWithCompany();
     	$employee = $this->employee->save($input);
 
-    	return apiResponse($this->employee, $employee);
+    	return apiResponse($this->employee, ['employee' => $employee]);
     }
 
-    public function delete(FindEmployeeRequest $request)
+    public function delete(FindRequest $request)
     {
-    	$this->employee->setModel($request->getEmployee());
+        $employee = $request->getEmployee();
+    	$this->employee->setModel($employee);
     	$this->employee->delete($request->input('force'));
 
-    	return apiResponse(
-    		$this->employee, 
-    		$this->employee->getModel()
-    	);
+    	return apiResponse($this->employee);
     }
 }

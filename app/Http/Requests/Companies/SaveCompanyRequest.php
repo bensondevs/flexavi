@@ -20,7 +20,8 @@ class SaveCompanyRequest extends FormRequest
     public function authorize()
     {
         $user = $this->user();
-        $company = $user->{$user->user_role}->company;
+        $company = request()->get('_company') ?: 
+            $user->{$user->user_role}->company;
 
         if (! $company) {
             $this->company = new Company();
