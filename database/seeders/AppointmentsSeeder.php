@@ -23,7 +23,10 @@ class AppointmentsSeeder extends Seeder
         $rawAppointments = [];
         for ($index = 0; $index < 1000; $index++) {
         	$company = $companies->random();
-        	$customer = $company->customers->random();
+            $customers = $company->customers;
+
+            if (count($customers) < 1) continue;
+        	$customer = $customers->random();
 
         	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
         	$end = ($start->copy())->addDays(rand(0, 7));

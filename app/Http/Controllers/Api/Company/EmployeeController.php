@@ -29,7 +29,9 @@ class EmployeeController extends Controller
 
     public function companyEmployees(PopulateRequest $request)
     {
-        $employees = $this->employee->all($request->options());
+        $options = $request->options();
+
+        $employees = $this->employee->all($options);
         $employees = $this->employee->paginate();
         $employees->data = EmployeeResource::collection($employees);
 

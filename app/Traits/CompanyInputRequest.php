@@ -43,6 +43,14 @@ trait CompanyInputRequest
         $company = $this->getCompany();
 
         $actionName = ($this->isMethod('POST')) ? 'create' : 'edit';
+
+        if (! $this->model) {
+            return $user->hasCompanyPermission(
+                $company->id, 
+                $actionName . ' ' . $actionObject
+            );
+        }
+
         return $user->hasCompanyPermission(
             $this->model->{$companyColumn} ?: $this->input($companyColumn), 
             $actionName . ' ' . $actionObject

@@ -69,6 +69,11 @@ class AuthController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        if ($invitation = $request->getInvitation()) {
+            if ($invitation->invited_email !== $request->input('email'))
+                return response()->json(['message' => 'This invitation is not for this email'], 403);
+        }
+
     	$input = $request->userData();
         if (! $attachments = $request->getAttachments()) {
             $owner = $this->owner->save($request->getOwnerData());

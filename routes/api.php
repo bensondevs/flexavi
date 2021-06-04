@@ -261,7 +261,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			/*
 				Company Register Invitation Module
 			*/
-			Route::group(['prefix' => 'invitations', 'as' => 'invitations.'], function () {
+			Route::group(['prefix' => 'register_invitations', 'as' => 'register_invitations.'], function () {
 				Route::post('invite_employee', [RegisterInvitationController::class, 'inviteEmployee']);
 				Route::post('invite_owner', [RegisterInvitationController::class, 'inviteOwner']);
 			});

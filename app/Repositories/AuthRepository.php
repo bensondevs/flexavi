@@ -9,6 +9,7 @@ use Socialite;
 
 use App\Models\User;
 use App\Models\Customer;
+use App\Models\RegisterInvitation;
 
 use App\Repositories\EmployeeRepository;
 use App\Repositories\Base\BaseRepository;
@@ -26,7 +27,7 @@ class AuthRepository extends BaseRepository
 		$this->employee = new EmployeeRepository;
 	}
 
-	public function register($registerData, $attachments = [])
+	public function register(array $registerData, array $attachments = [])
 	{
 		try {
 			$user = $this->getModel();
@@ -36,10 +37,21 @@ class AuthRepository extends BaseRepository
 
 			// Attachment exist
 			if ($attachments) {
-				$roleModel = $attachments['model'];
-				$roleModel = $roleModel::findOrFail($attachments['model_id']);
+				$roleModel = $attachments['model']::findOrFail($attachments['model_id']);
 				$roleModel->{$attachments['related_column']} = $user->id;
 				$roleModel->save();
+
+				if (isset($attachments['registration_code'])) {
+					$code = $attachments['registration_code'];
+
+					$user->registration_code = $code;
+					$user->save();
+
+					// Invalidate the invitation
+					$invitation = RegisterInvitation::findByCode($code);
+					$invitation->status = 'expired';
+					$invitation->save();
+				}
 
 				$user->assignRole($attachments['role']);
 			}

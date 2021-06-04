@@ -8,7 +8,7 @@ use App\Rules\UniqueWithConditions;
 
 use App\Models\Employee;
 
-use App\Traits\InputRequest;
+use App\Traits\CompanyInputRequest;
 
 class SaveEmployeeRequest extends FormRequest
 {

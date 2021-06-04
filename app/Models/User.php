@@ -70,7 +70,7 @@ class User extends Authenticatable
 
         self::creating(function ($user) {
             $user->incrementing = false;
-            $user->id = Uuid::generate()->string;
+            $user->id = ($user->id) ?: Uuid::generate()->string;
         });
     }
 

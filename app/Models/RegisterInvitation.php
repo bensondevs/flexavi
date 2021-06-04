@@ -33,16 +33,37 @@ class RegisterInvitation extends Model
     {
     	parent::boot();
 
+        self::retrieved(function ($invitation) {
+            // Check expired whenever retrieved
+            $invitation->checkExpired();
+        });
+
     	self::creating(function ($invitation) {
             $invitation->registration_code = $invitation->registration_code ?
                 $invitation->registration_code :
                 randomString(6);
+            $invitation->expiry_time = $invitation->expiry_time ?:
+                carbon()->now()->addDays(3);
     	});
     }
 
     public static function findByCode($code)
     {
-        return self::where('registration_code', $code)->first();;
+        return self::where('registration_code', $code)->first();
+    }
+
+    public function checkExpired()
+    {
+        $status = $this->attributes['status'];
+        if ($status == 'expired') return true;
+
+        $expiryTime = $this->attributes['expiry_time'];
+        if (carbon()->now() >= carbon()->parse($expiryTime)) {
+            $this->attributes['status'] = 'expired';
+            return $this->save();
+        }
+
+        return false;
     }
 
     public function setAttachmentsAttribute(array $attachments)
@@ -53,8 +74,13 @@ class RegisterInvitation extends Model
     public function getAttachmentsAttribute()
     {
         $rawAttachments = $this->attributes['attachments'];
-        $attachments = json_decode($rawAttachments);
+        $attachments = json_decode($rawAttachments, true);
 
-        return $attachments ?: [];
+        if (! $attachments) return [];
+
+        $registrationCode = $this->attributes['registration_code'];
+        $attachments['registration_code'] = $registrationCode;
+
+        return $attachments;
     }
 }

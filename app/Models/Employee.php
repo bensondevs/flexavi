@@ -19,6 +19,17 @@ class Employee extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const EMPLOYEE_TYPE = [
+        [
+            'label' => 'Administrative',
+            'value' => 'administrative',
+        ],
+        [
+            'label' => 'Roofer',
+            'value' => 'roofer',
+        ]
+    ];
+
     const EMPLOYEE_STATUSES = [
         [
             'label' => 'Active',

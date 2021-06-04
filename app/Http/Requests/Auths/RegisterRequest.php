@@ -20,7 +20,6 @@ class RegisterRequest extends FormRequest
 
     private $invitation;
 
-
     public function getInvitation()
     {
         $invitationCode = $this->input('invitation_code');
@@ -38,13 +37,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        /* Invited email */
-        $insertedEmail = request()->input('email');
-        $invitation = $this->getInvitation();
-
-        if (! $invitation) return true;
-
-        return ($invitation->invited_email == $insertedEmail);
+        return true;
     }
 
     /**
