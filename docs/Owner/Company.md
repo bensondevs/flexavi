@@ -9,7 +9,8 @@
 **Method:** `POST`
 
 **Headers:**
- Header Name | Value 
+
+Header Name | Value 
 ------------|-------
 Accept | `application/json`
 Authorization | `Bearer {token}`
@@ -84,6 +85,7 @@ Attribute Name  | Type  | Description
 **Method:** `GET`
 
 **Headers:**
+
  Header Name | Value 
 ------------|--------------
 Accept | `application/json`
