@@ -13,6 +13,8 @@ class PopulateCompaniesRequest extends FormRequest
      */
     public function authorize()
     {
+        $user = $this->user();
+        
         return true;
     }
 

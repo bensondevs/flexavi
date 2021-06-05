@@ -34,6 +34,12 @@ class PermissionsSeeder extends Seeder
         	'edit companies',
         	'close companies',
 
+            // Owners
+            'view owners',
+            'create owners',
+            'edit owners',
+            'delete owners',
+
         	// Customer
         	'view customers',
         	'create customers',

@@ -30,6 +30,10 @@ class Owner extends Model
         
     ];
 
+    protected $casts = [
+        'is_prime_owner' => 'boolean',
+    ];
+
     protected static function boot()
     {
     	parent::boot();
@@ -44,7 +48,7 @@ class Owner extends Model
     public function user()
     {
         return $this->belongsTo(
-            'App\Model\User', 
+            'App\Models\User', 
             'user_id', 
             'id'
         );

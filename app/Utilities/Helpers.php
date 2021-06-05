@@ -184,7 +184,7 @@ function apiResponse($repositoryObject, $responseData = null)
     if (is_array($responseData)) {
         $attribute = array_keys($responseData)[0];
         $response[$attribute] = $responseData[$attribute];
-    } else {
+    } else if ($responseData) {
         $response['data'] = $responseData;
     }
     

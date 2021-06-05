@@ -14,10 +14,49 @@ trait CompanyPopulateRequestOptions
 
     public function getCompany()
     {
-        $user = $this->user();
+        // Company already exist
+        if ($this->company) return $this->company;
 
-        return $this->company = $this->model = $this->company ?:
-            $user->{$user->roles->first()->name}->company;
+        // If middleware has company
+        if ($requestCompany = request()->get('_company')) {
+            return $this->company = $requestCompany;
+        }
+
+        // ID is already set
+        if ($id = $this->input('company_id')) 
+            return $this->company = Company::findOrFail($id);
+
+        // None exist
+        $user = $this->user();
+        if (! $company = $user->{$user->user_role}->company) {
+            $message = 'This user has no company yet, please register.';
+            return response()->json(['message' => $message], 403);
+        }
+
+        return $this->company = $company;
+    }
+
+    public function authorizeCompanyAction(
+        string $actionObject, 
+        $companyColumn = 'company_id'
+    )
+    {
+        $user = $this->user();
+        $company = $this->getCompany();
+
+        $actionName = ($this->isMethod('POST')) ? 'create' : 'edit';
+
+        if (! $this->model) {
+            return $user->hasCompanyPermission(
+                $company->id, 
+                $actionName . ' ' . $actionObject
+            );
+        }
+
+        return $user->hasCompanyPermission(
+            $this->model->{$companyColumn} ?: $this->input($companyColumn), 
+            $actionName . ' ' . $actionObject
+        );
     }
 
     public function collectCompanyOptions()

@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 use DB;
 
-use App\Http\Requests\Customers\SaveCustomerRequest;
-use App\Http\Requests\Customers\FindCustomerRequest;
-use App\Http\Requests\Customers\PopulateCompanyCustomersRequest;
+use App\Http\Requests\Customers\SaveCustomerRequest as SaveRequest;
+use App\Http\Requests\Customers\FindCustomerRequest as FindRequest;
+use App\Http\Requests\Customers\PopulateCompanyCustomersRequest as PopulateRequest;
 
 use App\Http\Resources\CustomerResource;
 
@@ -24,7 +24,7 @@ class CustomerController extends Controller
     	$this->customer = $customer;
     }
 
-    public function companyCustomers(PopulateCompanyCustomersRequest $request)
+    public function companyCustomers(PopulateRequest $request)
     {
     	$customers = $this->customer->all($request->options());
         $customers = $this->customer->paginate();
@@ -33,28 +33,30 @@ class CustomerController extends Controller
     	return response()->json(['customers' => $customers]);
     }
 
-    public function store(SaveCustomerRequest $request)
+    public function store(SaveRequest $request)
     {
-    	$customer = $this->customer->save(
-    		$request->ruleWithCompany()
-    	);
+        $input = $request->ruleWithCompany();
+    	$customer = $this->customer->save($input);
 
-    	return apiResponse($this->customer, $customer);
+    	return apiResponse($this->customer, ['customer' => $customer]);
     }
 
-    public function update(SaveCustomerRequest $request)
+    public function update(SaveRequest $request)
     {
-    	$this->customer->setModel($request->getCustomer());
-    	$customer = $this->customer->save(
-    		$request->ruleWithCompany()
-    	);
+        $customer = $request->getCustomer();
+    	$this->customer->setModel($customer);
 
-    	return apiResponse($this->customer, $customer);
+        $input = $request->ruleWithCompany();
+    	$customer = $this->customer->save($input);
+
+    	return apiResponse($this->customer, ['customer' => $customer]);
     }
 
-    public function delete(FindCustomerRequest $request)
+    public function delete(FindRequest $request)
     {
-    	$this->customer->setModel($request->getCustomer());
+        $customer = $request->getCustomer();
+
+    	$this->customer->setModel($customer);
     	$this->customer->delete();
 
     	return apiResponse($this->customer);

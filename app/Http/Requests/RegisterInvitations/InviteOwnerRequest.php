@@ -28,12 +28,7 @@ class InviteOwnerRequest extends FormRequest
     public function authorize()
     {
         $user = $this->user();
-        $owner = $this->getOwner();
-
-        return $this->authorizeCompanyAction(
-            $owner->company_id,
-            'send register invitations'
-        );
+        return $this->getOwner();
     }
 
     /**
@@ -43,10 +38,12 @@ class InviteOwnerRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'invited_email' => ['required', 'string'],
-            'expiry_time' => ['required', 'datetime'],
-        ];
+        $this->setRules([
+            'invited_email' => ['required', 'string', 'email'],
+            'expiry_time' => ['datetime'],
+        ]);
+
+        return $this->returnRules();
     }
 
     public function invitationData()
@@ -56,6 +53,7 @@ class InviteOwnerRequest extends FormRequest
             'model' => 'App\Models\Owner',
             'model_id' => $this->getOwner()->id,
             'related_column' => 'user_id',
+            'role' => 'owner',
         ];
 
         return $data;

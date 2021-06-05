@@ -7,9 +7,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Resources\Users\UserCompanyResource;
 
-use App\Http\Requests\Companies\UploadCompanyLogoRequest as UploadLogoRequest;
 use App\Http\Requests\Companies\SaveCompanyRequest as SaveRequest;
+use App\Http\Requests\Companies\PopulateCompanyOwnersRequest as PopulateOwnersRequest;
 use App\Http\Requests\Companies\RegisterCompanyRequest as RegisterRequest;
+use App\Http\Requests\Companies\UploadCompanyLogoRequest as UploadLogoRequest;
 
 use App\Repositories\CompanyRepository;
 use App\Repositories\CompanyOwnerRepository;

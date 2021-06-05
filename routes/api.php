@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Company\CompanyController;
 use App\Http\Controllers\Api\Company\EmployeeController;
 use App\Http\Controllers\Api\Company\CustomerController as CompanyCustomerController;
 use App\Http\Controllers\Api\Company\QuotationController;
+use App\Http\Controllers\Api\Company\OwnerController;
 use App\Http\Controllers\Api\Company\InspectorController;
 use App\Http\Controllers\Api\Company\PaymentTermController;
 use App\Http\Controllers\Api\Company\AppointmentController;
@@ -93,6 +94,16 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			Route::get('user', [CompanyController::class, 'userCompany']);
 			Route::post('upload_logo', [CompanyController::class, 'uploadCompanyLogo']);
 			Route::match(['PUT', 'PATCH'], 'update', [CompanyController::class, 'update']);
+
+			/*
+				Company Owners Module
+			*/
+			Route::group(['prefix' => 'owners'], function () {
+				Route::get('/', [OwnerController::class, 'companyOwners']);
+				Route::post('store', [OwnerController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [OwnerController::class, 'update']);
+				Route::delete('delete', [OwnerController::class, 'delete']);
+			});
 
 			/*
 				Company Appointment Module

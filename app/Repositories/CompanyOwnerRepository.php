@@ -53,4 +53,23 @@ class CompanyOwnerRepository extends BaseRepository
 
 		return $this->getModel();
 	}
+
+	public function delete(bool $force = false)
+	{
+		try {
+			$owner = $this->getModel();
+			$force ? $owner->forceDelete() : $owner->delete();
+
+			$this->destroyModel();
+
+			$this->setSuccess('Successfully delete owner from company');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to delete owner from company', 
+				$qe->getMessage()
+			);
+		}
+
+		return $this->returnResponse();
+	}
 }
