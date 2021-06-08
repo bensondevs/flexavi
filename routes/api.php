@@ -149,9 +149,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			*/
 			Route::group(['prefix' => 'customers'], function () {
 				Route::get('/', [CompanyCustomerController::class, 'companyCustomers']);
+				Route::get('deleted', [CompanyCustomerController::class, 'deletedCustomers']);
 				Route::post('store', [CompanyCustomerController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
 				Route::delete('delete', [CompanyCustomerController::class, 'delete']);
+				Route::patch('restore', [CompanyCustomerController::class, 'restore']);
 			});
 
 			/*

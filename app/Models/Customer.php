@@ -11,6 +11,7 @@ use Webpatser\Uuid\Uuid;
 class Customer extends Model
 {
     use HasApiTokens;
+    use SoftDeletes;
 
     protected $table = 'customers';
     protected $primaryKey = 'id';

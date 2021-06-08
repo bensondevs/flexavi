@@ -154,6 +154,15 @@ class BaseRepository
 		return $models;
 	}
 
+	public function allDeleted(array $options = [], bool $pagination = false)
+	{
+		$model = $this->getModel();
+		$model = $model->onlyTrashed();
+		$this->setModel($model);
+
+		return $this->all($options, $pagination);
+	}
+
 	public function paginate($perPage = 10, $page = null, $options = [])
 	{
 	    $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);

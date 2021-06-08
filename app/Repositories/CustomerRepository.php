@@ -55,4 +55,23 @@ class CustomerRepository extends BaseRepository
 
 		return $this->returnResponse();
 	}
+
+	public function restore()
+	{
+		try {
+			$customer = $this->getModel();
+			$customer->restore();
+
+			$this->setModel($customer);
+
+			$this->setSuccess('Successfully restore customer data.');
+		} catch (QueryException $qe) {
+			$this->setError(
+				'Failed to restore customer data.', 
+				$qe->getMessage()
+			);
+		}
+
+		return $this->getModel();
+	}
 }

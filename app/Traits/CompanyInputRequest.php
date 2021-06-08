@@ -34,6 +34,21 @@ trait CompanyInputRequest
         return $this->company = $company;
     }
 
+    public function checkCompanyPermission(
+        $permission, 
+        $model, 
+        $companyColumn = 'company_id'
+    )
+    {
+        $user = $this->user();
+        $company = $this->getCompany();
+
+        return $user->hasCompanyPermission(
+            $model->{$companyColumn}, 
+            $permission
+        );
+    }
+
     public function authorizeCompanyAction(
         string $actionObject, 
         $companyColumn = 'company_id'
