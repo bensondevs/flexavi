@@ -72,4 +72,13 @@ class OwnerController extends Controller
 
         return apiResponse($this->owner);
     }
+
+    public function restore(RestoreRequest $request)
+    {
+        $owner = $request->getDeletedOwner();
+        $owner = $this->owner->setModel($owner);
+        $owner = $this->owner->restore();
+
+        return apiResponse($this->owner, ['owner' => $owner]);
+    }
 }
