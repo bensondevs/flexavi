@@ -4,7 +4,7 @@ namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Rules\UniqueWithConditions;
+use App\Rules\AmongStrings;
 
 use App\Models\Employee;
 
@@ -39,11 +39,14 @@ class SaveEmployeeRequest extends FormRequest
      */
     public function rules()
     {
+        $types = Employee::getTypes();
+        $statuses = Employee::getStatuses();
+
         $this->setRules([
             'user_id' => ['string', 'exists:users,id'],
             'title' => ['required', 'string'],
-            'employee_type' => ['required', 'string'],
-            'employment_status' => ['required', 'string'],
+            'employee_type' => ['required', 'string', new AmongStrings($types)],
+            'employment_status' => ['string', new AmongStrings($statuses)],
         ]);
 
         return $this->returnRules();

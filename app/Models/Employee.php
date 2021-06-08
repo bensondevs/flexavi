@@ -19,7 +19,7 @@ class Employee extends Model
     public $timestamps = true;
     public $incrementing = false;
 
-    const EMPLOYEE_TYPE = [
+    const EMPLOYEE_TYPES = [
         [
             'label' => 'Administrative',
             'value' => 'administrative',
@@ -102,5 +102,21 @@ class Employee extends Model
         $_status = $this->attributes['employment_status'];
         $status = $this->findFromAttributes('EMPLOYEE_STATUSES', $_status);
         return $status['label'];
+    }
+
+    public static function getTypes()
+    {
+        $types = collect(self::EMPLOYEE_TYPES);
+        $values = $types->pluck('value');
+
+        return $values->toArray();
+    }
+
+    public static function getStatuses()
+    {
+        $types = collect(self::EMPLOYEE_STATUSES);
+        $values = $types->pluck('value');
+
+        return $values->toArray();
     }
 }

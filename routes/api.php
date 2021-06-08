@@ -137,6 +137,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			*/
 			Route::group(['prefix' => 'employees'], function () {
 				Route::get('/', [EmployeeController::class, 'companyEmployees']);
+				Route::get('inviteables', [EmployeeController::class, 'inviteableEmployees']);
 				Route::post('store', [EmployeeController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [EmployeeController::class, 'update']);
 				Route::delete('delete', [EmployeeController::class, 'delete']);

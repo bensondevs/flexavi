@@ -38,6 +38,17 @@ class EmployeeController extends Controller
     	return response()->json(['employees' => $employees]);
     }
 
+    public function inviteableEmployees(PopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $employees = $this->employee->inviteables($options);
+        $employees = $this->employee->paginate();
+        $employees->data = EmployeeResource::collection($employees);
+
+        return response()->json(['employees' => $employees]);
+    }
+
     public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();

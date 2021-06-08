@@ -22,9 +22,18 @@ class EmployeeRepository extends BaseRepository
 			->where('company_id', $companyId)
 			->get();
 
-		$this->setCollection($employees);
+		return $this->setCollection($employees);
+	}
 
-		return $this->getCollection();
+	public function inviteables(array $options = [])
+	{
+		array_push($options['wheres'], [
+			'column' => 'user_id',
+			'value' => null,
+		]);
+
+		$employees = $this->all($options);
+		return $this->setCollection($employees);
 	}
 
 	public function save(array $employeeData)

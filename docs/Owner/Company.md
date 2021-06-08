@@ -39,6 +39,7 @@ Authorization | `Bearer {token}`
 
 
 **Response Attributes:**
+
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
 `company` | Object | Object data of updated company
@@ -46,6 +47,7 @@ Attribute Name  | Type  | Description
 `message` | String | Message response for the user
 
 **Success Response Example:**
+
 ```json
 {
     "company": {
@@ -134,7 +136,7 @@ Attribute Name  | Type  | Description
 
 **Endpoint:** `/api/dashboard/companies/update`
 
-**Method:** `POST`
+**Method:** `PUT` or `PATCH`
 
 **Headers:**
 
@@ -142,6 +144,7 @@ Attribute Name  | Type  | Description
 -------------|------
 Accept | `application/json`
 Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
 
 **Parameters:**
 
@@ -166,6 +169,7 @@ Authorization | `Bearer {token}`
 `company_website_url` | Required | string, unique | Valid address of the user
 
 **Request Body Example:**
+
 ```json
 {
     "visiting_addresss_street": "11, Visited Address Street",
@@ -188,6 +192,7 @@ Authorization | `Bearer {token}`
 ```
 
 **Response Attributes:**
+
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
 `company` | Object | Object data of updated company
@@ -247,6 +252,7 @@ Authorization | `Bearer {token}`
 `company_logo` | Required | Image (PNG, SVG, JPEG, JPG), Max 1MB | Uploaded company logo
 
 **Response Attributes:**
+
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
 `company` | Object | Object data of updated company
@@ -254,6 +260,7 @@ Attribute Name  | Type  | Description
 `message` | String | Message response for the user
 
 **Success Response Example:**
+
 ```json
 {
     "company": {
