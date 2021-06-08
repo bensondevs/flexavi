@@ -67,10 +67,6 @@ class Customer extends Model
     {
     	parent::boot();
 
-        self::retrieved(function ($customer) {
-            $customer->salutation = $customer->salutation_label;
-        });
-
     	self::creating(function ($customer) {
             $customer->id = Uuid::generate()->string;
     	});
