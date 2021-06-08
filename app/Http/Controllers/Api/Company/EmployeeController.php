@@ -33,7 +33,7 @@ class EmployeeController extends Controller
 
         $employees = $this->employee->all($options);
         $employees = $this->employee->paginate();
-        $employees->data = EmployeeResource::collection($employees);
+        $employees = EmployeeResource::apiCollection($employees);
 
     	return response()->json(['employees' => $employees]);
     }
@@ -44,7 +44,7 @@ class EmployeeController extends Controller
 
         $employees = $this->employee->inviteables($options);
         $employees = $this->employee->paginate();
-        $employees->data = EmployeeResource::collection($employees);
+        $employees = EmployeeResource::apiCollection($employees);
 
         return response()->json(['employees' => $employees]);
     }

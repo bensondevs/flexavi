@@ -4,7 +4,7 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class AlphaSpace implements Rule
+class ZipCode implements Rule
 {
     private $message;
 
@@ -27,12 +27,19 @@ class AlphaSpace implements Rule
      */
     public function passes($attribute, $value)
     {
-        if (preg_match('/[a-z]/i')) {
-            $this->message = 'The value must have alphabeth characters';
+        $zipcode = (string) $value;
+
+        if (strlen($zipcode) != 5) {
+            $this->message = 'The length of zipccode must be exactly 5 characters.';
             return false;
         }
 
-        return preg_match('/^[\p{L} ]+$/u', $value);
+        if (! is_numeric($zipcode)) {
+            $this->message = 'The zipcode must only contains numbers.';
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -42,6 +49,6 @@ class AlphaSpace implements Rule
      */
     public function message()
     {
-        return $this->message ?: 'The value must be alphabeth and spaces only.';
+        return $this->message ?: 'Wrong zipcode input format.';
     }
 }

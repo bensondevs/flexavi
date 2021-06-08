@@ -61,6 +61,10 @@ class Employee extends Model
     {
     	parent::boot();
 
+        self::retrieved(function ($employee) {
+            $employee->employment_status_label = $employee->employment_status_label;
+        });
+
     	self::creating(function ($employee) {
             $employee->id = Uuid::generate()->string;
     	});
@@ -91,20 +95,16 @@ class Employee extends Model
         $this->attributes['photo_url'] = $url;
     }
 
-    public function setStatusAttribute($_status)
-    {
-        $status = $this->findFromAttributes('EMPLOYEE_STATUSES', $_status);
-        $this->attributes['status'] = $status['value'];
-    }
-
     public function getEmploymentStatusLabelAttribute()
     {
-        $_status = $this->attributes['employment_status'];
-        $status = $this->findFromAttributes('EMPLOYEE_STATUSES', $_status);
+        $statuses = collect(self::EMPLOYEE_STATUSES);
+        $statuses = $statuses->where('value', $this->attributes['employment_status']);
+        $status = $statuses->first();
+
         return $status['label'];
     }
 
-    public static function getTypes()
+    public static function getTypeValues()
     {
         $types = collect(self::EMPLOYEE_TYPES);
         $values = $types->pluck('value');
@@ -112,7 +112,7 @@ class Employee extends Model
         return $values->toArray();
     }
 
-    public static function getStatuses()
+    public static function getStatusValues()
     {
         $types = collect(self::EMPLOYEE_STATUSES);
         $values = $types->pluck('value');

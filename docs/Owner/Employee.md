@@ -17,7 +17,7 @@ Authorization | `Bearer {token}`
 
 **Parameters:**
 
- Payload name | Required | Validation | Description    
+Payload name | Required | Validation | Description    
 --------------|----------|------------|-------------
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through all attribute of employee
@@ -132,7 +132,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 2. Populate Company Employees
+### 2. Populate Inviteable Employees
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/employees/inviteable`
@@ -305,7 +305,7 @@ Content-Type | `application/x-www-form-urlencoded`
 
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
-`employee` | Object | Object data of stored employee
+`employee` | Object | Object data of updated employee
 `status` | String | Request Processing status
 `message` | String | Message response for the user
 

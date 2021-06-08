@@ -6,11 +6,12 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\Customer;
 
+use App\Rules\ZipCode;
 use App\Rules\NotEqual;
 use App\Rules\AmongStrings;
 use App\Rules\CompanyOwned;
 
-use App\Traits\InputRequest;
+use App\Traits\CompanyInputRequest;
 
 class SaveCustomerRequest extends FormRequest
 {
@@ -33,12 +34,13 @@ class SaveCustomerRequest extends FormRequest
     public function authorize()
     {
         $user = $this->user();
+        $company = $this->getCompany();
 
         if ($this->isMethod('POST'))
-            return $user->hasCompanyPermission('create customers');
+            return $user->hasCompanyPermission($company->id, 'create customers');
     
         $customer = $this->getCustomer();
-        return $user->hasCompanyPermission('edit customers');
+        return $user->hasCompanyPermission($customer->company_id, 'edit customers');
     }
 
     /**
@@ -48,12 +50,14 @@ class SaveCustomerRequest extends FormRequest
      */
     public function rules()
     {
+        $salutations = Customer::salutationValues();
+
         $this->setRules([
             'fullname' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
-            'salutation' => ['required', 'string', new AmongStrings(['Mr.', 'Mrs.'])],
+            'salutation' => ['string', new AmongStrings($salutations)],
             'address' => ['required', 'string'],
             'house_number' => ['required', 'numeric'],
-            'zipcode' => ['required', 'string', 'numeric'],
+            'zipcode' => ['required', new ZipCode],
             'city' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
             'province' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
             'email' => ['required', 'string', 'email', 'unique:customers,email'],

@@ -23,7 +23,7 @@ class CreateCustomersTable extends Migration
                 ->onDelete('CASCADE');
 
             $table->string('fullname');
-            $table->string('salutation');
+            $table->string('salutation')->default('dear');
 
             $table->string('email')->unique();
             

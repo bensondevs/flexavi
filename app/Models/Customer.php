@@ -17,6 +17,33 @@ class Customer extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const CUSTOMER_SALUTATIONS = [
+        [
+            'label' => 'Mister',
+            'value' => 'mr',
+        ],
+        [
+            'label' => 'Mistress',
+            'value' => 'mrs',
+        ],
+        [
+            'label' => 'Miss',
+            'value' => 'ms',
+        ],
+        [
+            'label' => 'Sir',
+            'value' => 'sir',
+        ],
+        [
+            'label' => 'Madam',
+            'value' => 'madam',
+        ],
+        [
+            'label' => 'Dear',
+            'value' => 'dear',
+        ]
+    ];
+
     protected $fillable = [
         'company_id',
         
@@ -39,6 +66,10 @@ class Customer extends Model
     {
     	parent::boot();
 
+        self::retrieved(function ($customer) {
+            $customer->salutation = $customer->salutation_label;
+        });
+
     	self::creating(function ($customer) {
             $customer->id = Uuid::generate()->string;
     	});
@@ -51,5 +82,23 @@ class Customer extends Model
             'company_id', 
             'id'
         );
+    }
+
+    public function getSalutationLabelAttribute()
+    {
+        $salutations = collect(self::CUSTOMER_SALUTATIONS);
+
+        $salutations = $salutations->where('value', $this->attributes['salutation']);
+        $salutation = $salutations->first();
+
+        return $salutation['label'];
+    }
+
+    public static function salutationValues()
+    {
+        $salutations = collect(self::CUSTOMER_SALUTATIONS);
+        $values = $salutations->pluck('value');
+        
+        return $values->toArray();
     }
 }

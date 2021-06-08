@@ -29,7 +29,7 @@ class CarController extends Controller
     {
     	$cars = $this->car->all($request->options());
         $cars = $this->car->paginate();
-        $cars->data = CarResource::collection($cars);
+        $cars = CarResource::apiCollection($cars);
 
     	return response()->json(['cars' => $cars]);
     }

@@ -5,6 +5,8 @@ namespace App\Repositories;
 use \Illuminate\Support\Facades\DB;
 use \Illuminate\Database\QueryException;
 
+use App\Http\Resources\EmployeeResource;
+
 use App\Models\Employee;
 
 use App\Repositories\Base\BaseRepository;

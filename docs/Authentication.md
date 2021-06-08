@@ -22,6 +22,7 @@ Accept | application/json
 `password` | Required | string | Password of logging in user
 
 **Request Body Example:**
+
 ```json
 {
     "email": "owner1@flexavi.com",
@@ -30,6 +31,7 @@ Accept | application/json
 ```
 
 **Response Attributes:**
+
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
 `data` | Object | Object of user data with `token` to authenticte request in authenticated API endpoint
@@ -99,6 +101,7 @@ Accept | `application/json`
 `bank_holder_name` | Required, if no `invitation_code` | string | The bank account holder name
 
 **Request Body Example:**
+
 - For Owner
 ```json
 {
@@ -143,6 +146,7 @@ Accept | `application/json`
 ```
 
 **Response Attributes:**
+
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
 `data` | Object | Object of new registered user
@@ -188,6 +192,7 @@ Authorization | `Bearer {token}`
 **Parameters:** N/A
 
 **Response Attributes:**
+
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
 `status` | String | Request Processing status

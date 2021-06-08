@@ -42,13 +42,13 @@ class CustomersSeeder extends Seeder
                     'company_id' => $company->id,
             
                     'fullname' => 'Customer ' . ($index + 1) . ' of ' . $company->company_name,
-                    'salutation' => 'Mr.',
+                    'salutation' => 'dear',
                     'address' => 'Customer Address Road',
                     'house_number' => rand(1, 100),
                     'zipcode' => rand(100, 999) . rand(100, 999),
                     'city' => 'Anycity',
                     'province' => 'Anyprovince',
-                    'email' => 'customer' . ($index + 1) . '@' . $company->company_name . '.com',
+                    'email' => 'customer' . ($index + 1) . '@' . strtolower(str_replace(' ', '', $company->company_name)) . '.com',
                     'phone' => rand(111111111, 999999999),
 
                     'created_at' => carbon()->now(),

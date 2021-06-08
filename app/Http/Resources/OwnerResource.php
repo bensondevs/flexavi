@@ -4,8 +4,12 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Traits\ApiCollectionResource;
+
 class OwnerResource extends JsonResource
 {
+    use ApiCollectionResource;
+
     /**
      * Transform the resource into an array.
      *

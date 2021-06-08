@@ -39,8 +39,8 @@ class SaveEmployeeRequest extends FormRequest
      */
     public function rules()
     {
-        $types = Employee::getTypes();
-        $statuses = Employee::getStatuses();
+        $types = Employee::getTypeValues();
+        $statuses = Employee::getStatusValues();
 
         $this->setRules([
             'user_id' => ['string', 'exists:users,id'],

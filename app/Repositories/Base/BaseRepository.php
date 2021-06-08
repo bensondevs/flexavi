@@ -6,6 +6,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\QueryException;
 
+use Illuminate\Http\Resources\Json\JsonResource;
+
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -17,6 +19,7 @@ class BaseRepository
 
 	protected $defaultModel = null;
 	protected $model = null;
+	protected $resource;
 	protected $parentModel = null;
 	protected $collection = null;
 	protected $paginations = null;

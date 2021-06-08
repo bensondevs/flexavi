@@ -24,8 +24,7 @@ Authorization | `Bearer {token}`
 `visiting_addresss_house_number_suffix` | Optional | string | Visiting address house number suffix
 `visiting_addresss_zip_code` | Required | string | Visiting address zip code
 `visiting_addresss_city` | Required | string | Visiting address city
-
-`invoicing_addresss_street` | Required | string | Invoicing address street  
+`invoicing_addresss_street` | Required | string | Invoicing address street
 `invoicing_addresss_house_number` | Required | string | Invoicing address house number
 `invoicing_addresss_house_number_suffix` | Optional | string | Invoicing address house number suffix
 `invoicing_addresss_zip_code` | Required | string | Invoicing address zip code
@@ -94,6 +93,7 @@ Accept | `application/json`
 Authorization | `Bearer {token}`
 
 **Response Attributes:**
+
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
 `company` | Object | Object of company data
@@ -101,6 +101,7 @@ Attribute Name  | Type  | Description
 `message` | String | Message response for the user
 
 **Success Response Example:**
+
 ```json
 {
     "company": {
@@ -140,7 +141,7 @@ Attribute Name  | Type  | Description
 
 **Headers:**
 
- Header Name | Value
+Header Name | Value
 -------------|------
 Accept | `application/json`
 Authorization | `Bearer {token}`
@@ -161,7 +162,6 @@ Content-Type | `application/x-www-form-urlencoded`
 `invoicing_addresss_house_number_suffix` | Optional | string | Invoicing address house number suffix
 `invoicing_addresss_zip_code` | Required | string | Invoicing address zip code
 `invoicing_addresss_city` | Required | string | Invoicing address city
-
 `email` | Required | string, unique | Email of the company
 `phone_number` | Required | string, unique, numeric | The phone number of the company
 `vat_number` | Required | string, unique | VAT number of the company
@@ -194,7 +194,7 @@ Content-Type | `application/x-www-form-urlencoded`
 **Response Attributes:**
 
 Attribute Name  | Type  | Description   
-----------------|-----------|---------------
+----------------|-------|---------------
 `company` | Object | Object data of updated company
 `status` | String | Request Processing status
 `message` | String | Message response for the user
@@ -240,8 +240,8 @@ Attribute Name  | Type  | Description
 
 **Headers:**
 
- Header Name | Value
--------------|------
+Header Name | Value
+------------|------
 Accept | `application/json`
 Authorization | `Bearer {token}`
 
