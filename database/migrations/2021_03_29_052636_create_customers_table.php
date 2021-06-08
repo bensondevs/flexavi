@@ -22,10 +22,12 @@ class CreateCustomersTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
+            $table->string('registered_from')->default('web');
+
             $table->string('fullname');
             $table->string('salutation')->default('dear');
 
-            $table->string('email')->unique();
+            $table->string('email')->nullable();
             
             $table->text('address');
             $table->char('house_number');

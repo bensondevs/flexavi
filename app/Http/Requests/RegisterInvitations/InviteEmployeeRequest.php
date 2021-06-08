@@ -45,7 +45,7 @@ class InviteEmployeeRequest extends FormRequest
     {
         $this->setRules([
             'invited_email' => ['required', 'string', 'email'],
-            'expiry_time' => ['datetime'],
+            'expiry_time' => ['date'],
         ]);
 
         return $this->returnRules();

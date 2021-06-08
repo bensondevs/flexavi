@@ -27,8 +27,19 @@ class OwnerController extends Controller
         $options = $request->options();
 
         $owners = $this->owner->all($options);
-        $owners = $this->owner->paginate();
-        $owners->data = OwnerResource::collection($owners);
+        $owners = $this->owner->paginate($options['per_page']);
+        $owners = OwnerResource::apiCollection($owners);
+
+        return response()->json(['owners' => $owners]);
+    }
+
+    public function inviteableOwners(PopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $owners = $this->owner->inviteables($options);
+        $owners = $this->owner->paginate($options['per_page']);
+        $owners = OwnerResource::apiCollection($owners);
 
         return response()->json(['owners' => $owners]);
     }

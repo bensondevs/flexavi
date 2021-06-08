@@ -27,8 +27,10 @@ class CarController extends Controller
 
     public function companyCars(PopulateCompanyCarsRequest $request)
     {
-    	$cars = $this->car->all($request->options());
-        $cars = $this->car->paginate();
+        $options = $request->options();
+
+    	$cars = $this->car->all($options);
+        $cars = $this->car->paginate($options['per_page']);
         $cars = CarResource::apiCollection($cars);
 
     	return response()->json(['cars' => $cars]);

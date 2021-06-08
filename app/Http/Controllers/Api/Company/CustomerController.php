@@ -24,8 +24,10 @@ class CustomerController extends Controller
 
     public function companyCustomers(PopulateRequest $request)
     {
+        $options = $request->options();
+
     	$customers = $this->customer->all($request->options());
-        $customers = $this->customer->paginate();
+        $customers = $this->customer->paginate($options['per_page']);
         $customers = CustomerResource::apiCollection($customers);
 
     	return response()->json(['customers' => $customers]);

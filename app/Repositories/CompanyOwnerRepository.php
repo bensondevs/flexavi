@@ -17,6 +17,16 @@ class CompanyOwnerRepository extends BaseRepository
 		$this->setInitModel(new Owner);
 	}
 
+	public function inviteables(array $options = [])
+	{
+		array_push($options['wheres'], [
+			'column' => 'user_id',
+			'value' => null,
+		]);
+
+		return $this->all($options);
+	}
+
 	public function save(array $ownerData)
 	{
 		try {
@@ -26,9 +36,9 @@ class CompanyOwnerRepository extends BaseRepository
 
 			$this->setModel($owner);
 
-			$this->setSuccess('Successfully create owner.');
+			$this->setSuccess('Successfully save owner.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to create owner.');
+			$this->setError('Failed to save owner.');
 		}
 
 		return $this->getModel();

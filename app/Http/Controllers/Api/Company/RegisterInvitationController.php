@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\RegisterInvitations\InviteOnwerRequest;
+use App\Http\Requests\RegisterInvitations\InviteOwnerRequest;
 use App\Http\Requests\RegisterInvitations\InviteEmployeeRequest;
 
 use App\Repositories\RegisterInvitationRepository;

@@ -18,15 +18,6 @@ class EmployeeRepository extends BaseRepository
 		$this->setInitModel(new Employee);
 	}
 
-	public function ofCompany($companyId)
-	{
-		$employees = $this->getModel()
-			->where('company_id', $companyId)
-			->get();
-
-		return $this->setCollection($employees);
-	}
-
 	public function inviteables(array $options = [])
 	{
 		array_push($options['wheres'], [
@@ -34,8 +25,7 @@ class EmployeeRepository extends BaseRepository
 			'value' => null,
 		]);
 
-		$employees = $this->all($options);
-		return $this->setCollection($employees);
+		return $this->all($options);
 	}
 
 	public function save(array $employeeData)

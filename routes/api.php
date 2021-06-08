@@ -100,6 +100,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			*/
 			Route::group(['prefix' => 'owners'], function () {
 				Route::get('/', [OwnerController::class, 'companyOwners']);
+				Route::get('inviteables', [OwnerController::class, 'inviteableOwners']);
 				Route::post('store', [OwnerController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [OwnerController::class, 'update']);
 				Route::delete('delete', [OwnerController::class, 'delete']);

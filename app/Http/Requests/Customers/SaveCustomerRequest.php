@@ -60,7 +60,7 @@ class SaveCustomerRequest extends FormRequest
             'zipcode' => ['required', new ZipCode],
             'city' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
             'province' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
-            'email' => ['required', 'string', 'email', 'unique:customers,email'],
+            'email' => ['string', 'email', 'unique:customers,email'],
             'phone' => ['required', 'numeric', 'unique:customers,phone'],
             'second_phone' => ['numeric', new NotEqual('phone')],
         ]);

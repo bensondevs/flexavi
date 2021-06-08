@@ -21,6 +21,7 @@ Payload name | Required | Validation | Description
 -------------|----------|------------|-------------
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through all attribute of customer
+`per_page` | Optional | number | Amount of data per page, default amount is 10
 
 **Response Attributes:**
 
@@ -237,6 +238,23 @@ Payload name | Required | Validation | Description
 `phone` | Required | string, phone number | Unique phone number of customer
 `second_phone` | Optional | string, phone number | Second phone number of customer, cannot be equal to `phone` but not unique, can be using other user's phone number.
 
+**Request Body Example:**
+
+```json
+{
+    "fullname": "John Doe",
+    "salutation": "mrs",
+    "address": "Another Road 11",
+    "house_number": "11",
+    "zipcode": "12345",
+    "city": "Just A City",
+    "province": "Another Province",
+    "email": "john@doe.com",
+    "phone": "1234567890",
+    "second_phone": "1231231231"
+}
+```
+
 **Response Attributes:**
 
 Attribute Name  | Type  | Description   
@@ -301,6 +319,24 @@ Payload name | Required | Validation | Description
 `phone` | Required | string, phone number | Unique phone number of customer
 `second_phone` | Optional | string, phone number | Second phone number of customer, cannot be equal to `phone` but not unique, can be using other user's phone number.
 
+**Request Body Example:**
+
+```json
+{
+    "id": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6",
+    "fullname": "John Doe",
+    "salutation": "mrs",
+    "address": "Another Road 11",
+    "house_number": "11",
+    "zipcode": "12345",
+    "city": "Just A City",
+    "province": "Another Province",
+    "email": "john@doe.com",
+    "phone": "1234567890",
+    "second_phone": "1231231231"
+}
+```
+
 **Response Attributes:**
 
 Attribute Name  | Type  | Description   
@@ -356,6 +392,14 @@ Content-Type | `application/x-www-form-urlencoded`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `id` | Required | string | ID of deleted customer
+
+**Request Body Example:**
+
+```json
+{
+    "id": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6"
+}
+```
 
 **Response Attributes:**
 

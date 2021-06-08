@@ -21,6 +21,7 @@ Payload name | Required | Validation | Description
 --------------|----------|------------|-------------
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through all attribute of employee
+`per_page` | Optional | number | Amount of data per page, default amount is 10
 
 **Response Attributes:**
 

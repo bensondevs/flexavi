@@ -7,10 +7,10 @@ use Illuminate\Http\Request;
 
 use DB;
 
-use App\Http\Requests\Appointments\SaveAppointmentRequest;
-use App\Http\Requests\Appointments\FindAppointmentRequest;
-use App\Http\Requests\Appointments\AssignAppointmentTypeRequest;
-use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest;
+use App\Http\Requests\Appointments\SaveAppointmentRequest as SaveRequest;
+use App\Http\Requests\Appointments\FindAppointmentRequest as FindRequest;
+use App\Http\Requests\Appointments\AssignAppointmentTypeRequest as AssignTypeRequest;
+use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest as PopulateRequest;
 
 use App\Http\Resources\AppointmentResource;
 
@@ -27,53 +27,52 @@ class AppointmentController extends Controller
     	$this->appointment = $appointment;
     }
 
-    public function companyAppointments(
-    	PopulateCompanyAppointmentsRequest $request
-    )
+    public function companyAppointments(PopulateRequest $request)
     {
         $options = $request->options();
     
         $appointments = $this->appointment->all($options);
-        $appointments = $this->appointment->paginate();
-        $appointments->data = AppointmentResource::collection($appointments);
+        $appointments = $this->appointment->paginate($options['per_page']);
+        $appointments = AppointmentResource::apiCollection($appointments);
 
     	return response()->json(['appointments' => $appointments]);
     }
 
-    public function store(SaveAppointmentRequest $request)
+    public function store(SaveRequest $request)
     {
-        $appointment = $this->appointment->save(
-            $request->ruleWithCompany()
-        );
+        $input = $request->ruleWithCompany();
+        $appointment = $this->appointment->save($input);
 
-        return apiResponse($this->appointment, $appointment);
+        return apiResponse($this->appointment, ['appointment' => $appointment]);
     }
 
-    public function assignType(AssignAppointmentTypeRequest $requesr)
+    public function assignType(AssignTypeRequest $requesr)
     {
-        $this->appointment->setModel($request->getAppointment());
-        $appointment = $this->appointment->assignType(
-            $request->ruleWithCompany()
-        );
+        $appointment = $request->getAppointment();
+        $appointment = $this->appointment->setModel($appointment);
 
-        return apiResponse($this->appointment, $appointment);
+        $input = $request->ruleWithCompany();
+        $appointment = $this->appointment->assignType($input);
+
+        return apiResponse($this->appointment, ['appointment' => $appointment]);
     }
 
-    public function update(SaveAppointmentRequest $request)
+    public function update(SaveRequest $request)
     {
-        $this->appointment->setModel(
-            $request->getAppointment()
-        );
-        $appointment = $this->appointment->save(
-            $request->ruleWithCompany()
-        );
+        $appointment = $request->getAppointment();
+        $appointment = $this->appointment->setModel($appointment);
 
-        return apiResponse($this->appointment, $appointment);
+        $input = $request->ruleWithCompany();
+        $appointment = $this->appointment->save($input);
+
+        return apiResponse($this->appointment, ['appointment' => $appointment]);
     }
 
-    public function delete(FindAppointmentRequest $request)
+    public function delete(FindRequest $request)
     {
-        $this->appointment->setModel($request->getAppointment());
+        $appointment = $request->getAppointment();
+
+        $this->appointment->setModel($appointment);
         $this->appointment->delete();
 
         return apiResponse($this->appointment);

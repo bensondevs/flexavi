@@ -19,6 +19,7 @@ class OwnerResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'user' => $this->user,
             'is_prime_owner' => $this->is_prime_owner,
             'bank_name' => $this->bank_name,

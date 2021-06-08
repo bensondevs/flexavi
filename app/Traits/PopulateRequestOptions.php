@@ -73,7 +73,10 @@ trait PopulateRequestOptions
     	if ($search = $this->input('search'))
     		$this->setSearch($search);
 
+    	$perPage = is_numeric($this->input('per_page')) ?
+    		$this->input('per_page') : 10;
         $options = [
+        	'per_page' => $perPage,
         	'search' => $this->search,
             'withs' => $this->withs,
             'wheres' => $this->wheres,
