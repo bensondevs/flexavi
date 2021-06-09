@@ -41,10 +41,8 @@ class EmployeeRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save employee data.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save employee data.', 
-				$qe->getMessage()
-			);
+			$queryError = $qe->getMessage();
+			$this->setError('Failed to save employee data.', $queryError);
 		}
 
 		return $this->getModel();
@@ -63,12 +61,27 @@ class EmployeeRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete employee.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete employee.', 
-				$qe->getMessage()
-			);
+			$queryError = $qe->getMessage();
+			$this->setError('Failed to delete employee.', $queryError);
 		}
 
 		return $this->returnResponse();
+	}
+
+	public function restore()
+	{
+		try {
+			$employee = $this->getModel();
+			$employee->restore();
+
+			$this->setModel($employee);
+
+			$this->setSuccess('Successfully restore employee.');
+		} catch (QueryException $qe) {
+			$queryError = $qe->getMessage();
+			$this->setError('Failed to restore employee', $queryError);
+		}
+
+		return $this->getModel();
 	}
 }

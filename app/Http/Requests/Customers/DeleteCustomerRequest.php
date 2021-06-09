@@ -4,6 +4,8 @@ namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Customer;
+
 class DeleteCustomerRequest extends FormRequest
 {
     private $customer;

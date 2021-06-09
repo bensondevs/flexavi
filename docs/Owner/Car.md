@@ -462,6 +462,7 @@ Content-Type | `application/x-www-form-urlencoded`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `id` | Required | string | ID of deleted car
+`force` | Optional | boolean | Force status, set to `true` to delete permanently
 
 **Request Body Example:**
 

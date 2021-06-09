@@ -6,14 +6,14 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\Appointment;
 
-class FindAppointmentRequest extends FormRequest
+class DeleteAppointmentRequest extends FormRequest
 {
     private $appointment;
 
     public function getAppointment()
     {
         return $this->appointment = $this->appointment ?:
-            Appointment::findOrFail($this->input('id'));
+            Appointment::withTrashed()->findOrFail($this->input('id'));
     }
 
     /**
@@ -26,7 +26,7 @@ class FindAppointmentRequest extends FormRequest
         $user = $this->user();
         $appointment = $this->getAppointment();
 
-        return $user->hasCompanyPermission($appointment->company_id, 'view appointments');
+        return $user->hasCompanyPermission($appointment->company_id, 'delete appointments');
     }
 
     /**
@@ -37,7 +37,7 @@ class FindAppointmentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'force' => ['boolean'],
         ];
     }
 }

@@ -27,7 +27,7 @@ class RestoreCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        $customer = $this->getDeletedCustomer();
+        $customer = $this->getTrashedCustomer();
         return $this->checkCompanyPermission('restore customers', $customer);
     }
 

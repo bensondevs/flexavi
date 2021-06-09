@@ -10,6 +10,8 @@ use App\Models\Employee;
 
 class RestoreEmployeeRequest extends FormRequest
 {
+    use CompanyInputRequest;
+
     private $trashedEmployee;
 
     public function getTrashedEmployee()

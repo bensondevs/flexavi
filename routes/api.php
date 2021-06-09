@@ -107,6 +107,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::post('store', [OwnerController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [OwnerController::class, 'update']);
 				Route::delete('delete', [OwnerController::class, 'delete']);
+				Route::patch('restore', [OwnerController::class, 'restore']);
 			});
 
 			/*

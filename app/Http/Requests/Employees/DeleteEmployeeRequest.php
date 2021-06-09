@@ -24,7 +24,7 @@ class DeleteEmployeeRequest extends FormRequest
     public function authorize()
     {
         $user = $this->user();
-        $employee = $this->getCustomer();
+        $employee = $this->getEmployee();
 
         return $user->hasCompanyPermission($employee->company_id, 'delete employees');
     }

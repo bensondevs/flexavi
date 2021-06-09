@@ -416,3 +416,150 @@ Attribute Name  | Type  | Description
     "message": "Successully delete customer data."
 }
 ```
+
+-------------------------------------------------------
+### 5. Populate Trashed Customers
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/customers/trasheds`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through all attribute of customer
+`per_page` | Optional | number | Amount of data per page, default amount is 10
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`customers` | Object | The customer object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "customers": {
+        "current_page": 1,
+        "data": [
+            {
+                "id": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
+                "fullname": "Customer 1 of Company 1",
+                "salutation": "dear",
+                "address": "Customer Address Road",
+                "house_number": "25",
+                "zipcode": "395665",
+                "city": "Anycity",
+                "province": "Anyprovince",
+                "email": "customer1@company1.com",
+                "phone": "654721355",
+                "second_phone": null
+            }
+        ],
+        "first_page_url": "/?page=1",
+        "from": 1,
+        "last_page": 1,
+        "last_page_url": "/?page=1",
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": null,
+        "path": "/",
+        "per_page": 10,
+        "prev_page_url": null,
+        "to": 1,
+        "total": 1
+    }
+}
+```
+
+-------------------------------------------------------
+### 6. Restore Customer
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/customers/restore`
+
+**Method:** `DELETE`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` | Required | string | ID of deleted customer
+
+**Request Body Example:**
+
+```json
+{
+    "id": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6"
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`customer` | Object | Object of restored customer
+`status` | String | Request Processing status
+`message` | String | Message response for the user
+
+**Success Response Example:**
+
+```json
+{
+    "customer": {
+        "id": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
+        "company_id": "c8844320-c922-11eb-8153-c71677def74d",
+        "registered_from": "web",
+        "fullname": "Customer 1 of Company 1",
+        "salutation": "dear",
+        "email": "customer1@company1.com",
+        "address": "Customer Address Road",
+        "house_number": "25",
+        "house_number_suffix": null,
+        "zipcode": "395665",
+        "city": "Anycity",
+        "province": "Anyprovince",
+        "phone": "654721355",
+        "second_phone": null,
+        "created_at": "2021-06-09T13:01:19.000000Z",
+        "updated_at": "2021-06-09T16:54:35.000000Z",
+        "deleted_at": null
+    },
+    "status": "success",
+    "message": "Successfully restore customer."
+}
+```

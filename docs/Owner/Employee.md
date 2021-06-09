@@ -583,3 +583,163 @@ Attribute Name  | Type  | Description
     "message": "Successfully delete employee."
 }
 ```
+
+-------------------------------------------------------
+### 6. Populate Trashed Employees
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/employees/trasheds`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through all attribute of customer
+`per_page` | Optional | number | Amount of data per page, default amount is 10
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`employees` | Object | The customer object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "employees": {
+        "current_page": 1,
+        "data": [
+            {
+                "id": "c90c1a80-c922-11eb-b1dc-51d432414c57",
+                "title": "Employee Title",
+                "employee_type": "administrative",
+                "employment_status": "inactive",
+                "employment_status_label": "Inactive",
+                "user": {
+                    "id": "c66433c0-c922-11eb-816b-8517c5c75b56",
+                    "fullname": "Flexavi Employee 1",
+                    "salutation": "Mr.",
+                    "birth_date": "1996-06-09",
+                    "id_card_type": "id_card",
+                    "id_card_number": "135270112",
+                    "phone": "999999999999",
+                    "phone_verified_at": null,
+                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "registration_code": null,
+                    "email": "employee1@flexavi.nl",
+                    "email_verified_at": null,
+                    "deleted_at": null
+                },
+                "address": "Address Test",
+                "house_number": "11",
+                "house_number_suffix": "A",
+                "zipcode": "117177",
+                "city": "Any City",
+                "province": "Any Province"
+            }
+        ],
+        "first_page_url": "/?page=1",
+        "from": 1,
+        "last_page": 1,
+        "last_page_url": "/?page=1",
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": null,
+        "path": "/",
+        "per_page": 10,
+        "prev_page_url": null,
+        "to": 1,
+        "total": 1
+    }
+}
+```
+
+-------------------------------------------------------
+### 7. Restore Employee
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/employees/restore`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description
+-------------|----------|------------|-------------
+`id` | Required | string | ID of deleted employee
+
+**Request Body Example:**
+
+```json
+{
+    "id": "b42c7ff0-b609-11eb-b4b6-97ec8e29fb6b"
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`status` | String | Request Processing status
+`message` | String | Message response for the user
+
+**Success Response Example:**
+
+```json
+{
+    "employee": {
+        "id": "c90c1a80-c922-11eb-b1dc-51d432414c57",
+        "user_id": "c66433c0-c922-11eb-816b-8517c5c75b56",
+        "company_id": "c8844320-c922-11eb-8153-c71677def74d",
+        "photo_url": "https://dummyimage.com/300/09f/fff.png",
+        "title": "Employee Title",
+        "employee_type": "administrative",
+        "employment_status": "inactive",
+        "address": "Address Test",
+        "house_number": "11",
+        "house_number_suffix": "A",
+        "zipcode": "117177",
+        "city": "Any City",
+        "province": "Any Province",
+        "created_at": "2021-06-09T13:01:20.000000Z",
+        "updated_at": "2021-06-09T16:49:48.000000Z",
+        "deleted_at": null
+    },
+    "status": "success",
+    "message": "Successfully restore employee."
+}
+```

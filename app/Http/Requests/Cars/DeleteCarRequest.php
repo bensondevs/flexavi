@@ -4,6 +4,8 @@ namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Car;
+
 class DeleteCarRequest extends FormRequest
 {
     private $car;
