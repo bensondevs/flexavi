@@ -51,6 +51,13 @@ class Employee extends Model
         'title',
         'employee_type',
         'employment_status',
+
+        'address',
+        'house_number',
+        'house_number_suffix',
+        'zipcode',
+        'city',
+        'province',
     ];
 
     protected $hidden = [
@@ -60,10 +67,6 @@ class Employee extends Model
     protected static function boot()
     {
     	parent::boot();
-
-        self::retrieved(function ($employee) {
-            $employee->employment_status_label = $employee->employment_status_label;
-        });
 
     	self::creating(function ($employee) {
             $employee->id = Uuid::generate()->string;

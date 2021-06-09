@@ -41,7 +41,6 @@ trait CompanyInputRequest
     )
     {
         $user = $this->user();
-        $company = $this->getCompany();
 
         return $user->hasCompanyPermission(
             $model->{$companyColumn}, 

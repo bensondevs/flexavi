@@ -32,9 +32,15 @@ class CreateEmployeesTable extends Migration
 
             $table->char('title');
             $table->string('employee_type');
-
             $table->char('employment_status')->default('active');
 
+            $table->text('address');
+            $table->char('house_number');
+            $table->char('house_number_suffix')->nullable();
+            $table->char('zipcode');
+            $table->char('city');
+            $table->char('province');
+            
             $table->timestamps();
             $table->softDeletes();
         });

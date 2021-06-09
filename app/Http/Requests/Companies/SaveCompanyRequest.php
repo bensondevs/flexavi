@@ -44,14 +44,14 @@ class SaveCompanyRequest extends FormRequest
             'visiting_address_street' => ['required', 'string'],
             'visiting_address_house_number' => ['required', 'string'],
             'visiting_address_house_number_suffix' => ['string'],
-            'visiting_address_zip_code' => ['required', 'string'],
+            'visiting_address_zipcode' => ['required', 'string'],
             'visiting_address_city' => ['required', 'string'],
 
             // Invoicing Address
             'invoicing_address_street' => ['required', 'string'],
             'invoicing_address_house_number' => ['required', 'string'],
             'invoicing_address_house_number_suffix' => ['string'],
-            'invoicing_address_zip_code' => ['required', 'string'],
+            'invoicing_address_zipcode' => ['required', 'string'],
             'invoicing_address_city' => ['required', 'string'],
             
             'email' => ['required', 'string', 'unique:companies,email'],

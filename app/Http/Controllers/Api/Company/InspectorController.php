@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\PopulateInspectorsRequest;
+use App\Http\Requests\SaveInspectorRequest as SaveRequest;
+use App\Http\Requests\RemoveInspectorRequest as RemoveRequest;
+use App\Http\Requests\PopulateInspectorsRequest as PopulateRequest;
 
 use App\Models\Inspector;
 
@@ -22,7 +24,7 @@ class InspectorController extends Controller
     	$this->inspector = $inspectorRepository;
     }
 
-    public function companyInspectors(PopulateInspectorsRequest $request)
+    public function companyInspectors(PopulateRequest $request)
     {
     	$inspectors = $this->inspector->all($request->options());
     	$inspectors = $this->inspector->paginate();
@@ -31,18 +33,19 @@ class InspectorController extends Controller
     	return response()->json(['inspectors' => $inspectors]);
     }
 
-    public function add(SaveInspectorRequest $request)
+    public function add(SaveRequest $request)
     {
-    	$inspector = $this->inspector->save(
-    		$request->ruleWithCompany()
-    	);
+        $input = $request->ruleWithCompany();
+    	$inspector = $this->inspector->save($input);
 
-    	return apiResponse($this->inspector, $inspector);
+    	return apiResponse($this->inspector, ['inspector' => $inspector]);
     }
 
-    public function remove(Request $request)
+    public function remove(RemoveRequest $request)
     {
-    	$this->inspector->find($request->input('id'));
+        $inspector = $request->getInspector();
+
+    	$this->inspector->setModel($inspector);
     	$this->inspector->delete();
 
     	return apiResponse($this->inspector);

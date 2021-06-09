@@ -37,7 +37,6 @@ class User extends Authenticatable
         'id_card_type',
         'id_card_number',
         'phone',
-        'address',
 
         // Authentication
         'email',

@@ -1,7 +1,7 @@
 ## Customer
 
 -------------------------------------------------------
-### 1. Populate Company Customer
+### 1. Populate Company Customers
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/customers`

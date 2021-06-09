@@ -29,36 +29,34 @@ class UserController extends Controller
 
     public function setProfilePicture(SetProfilePictureRequest $request)
     {
-        $this->user->setModel($request->user());
-        $user = $this->user->setProfilePicture(
-            $request->file('profile_picture')
-        );
+        $user = $request->user();
+        $this->user->setModel($user);
 
-        return apiResponse(
-            $this->user, 
-            ['profile_picture' => $user->profile_picture]
-        );
+        $picture = $request->file('profile_picture');
+        $user = $this->user->setProfilePicture($picture);
+
+        return apiResponse($this->user, ['profile_picture' => $user->profile_picture]);
     }
 
     public function update(SaveUserRequest $request)
     {
-        $this->user->setModel($request->user());
-        $this->user->save($request->onlyInRules());
+        $user = $request->user();
+        $user = $this->user->setModel($user);
 
-        return apiResponse(
-            $this->user, 
-            $this->user->getModel()
-        );
+        $input = $request->onlyInRules();
+        $user = $this->user->save($input);
+
+        return apiResponse($this->user, ['user' => $user]);
     }
 
     public function changePassword(ChangePasswordRequest $request)
     {
-        $this->user->setModel($request->user());
-        $this->user->changePassword($request->password);
+        $user = $request->user();
+        $user = $this->user->setModel($user);
 
-        return apiResponse(
-            $this->user, 
-            $this->user->getModel()
-        );
+        $password = $request->input('password');
+        $user = $this->user->changePassword($password);
+
+        return apiResponse($this->user, ['user' => $user]);
     }
 }

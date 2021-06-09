@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 
 class Owner extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'owners';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -24,6 +26,13 @@ class Owner extends Model
         'bic_code',
         'bank_account',
         'bank_holder_name',
+
+        'address',
+        'house_number',
+        'house_number_suffix',
+        'zipcode',
+        'city',
+        'province',
     ];
 
     protected $hidden = [

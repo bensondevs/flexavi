@@ -38,7 +38,8 @@ class CompanyOwnerRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save owner.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to save owner.');
+			$queryError = $qe->getMessage();
+			$this->setError('Failed to save owner.', $queryError);
 		}
 
 		return $this->getModel();
@@ -55,10 +56,8 @@ class CompanyOwnerRepository extends BaseRepository
 
 			$this->setSuccess('Successfully assign company to owner.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to assign company to owner.', 
-				$qe->getMessage()
-			);
+			$queryError = $qe->getMessage();
+			$this->setError('Failed to assign company to owner.', $queryError);
 		}
 
 		return $this->getModel();
@@ -81,5 +80,21 @@ class CompanyOwnerRepository extends BaseRepository
 		}
 
 		return $this->returnResponse();
+	}
+
+	public function restore()
+	{
+		try {
+			$owner = $this->getModel();
+			$owner->restore();
+
+			$this->setModel($owner);
+
+			$this->setSuccess('Successfully restored owner.');
+		} catch (QueryException $qe) {
+			$this->setError('Failed to restore owner.', $qe->getMessage());
+		}
+
+		return $this->getModel();
 	}
 }

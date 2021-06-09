@@ -1,23 +1,23 @@
 <?php
 
-namespace App\Http\Requests\Customers;
+namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Customer;
-
 use App\Traits\CompanyInputRequest;
 
-class RestoreCustomerRequest extends FormRequest
+use App\Models\Car;
+
+class RestoreCarRequest extends FormRequest
 {
     use CompanyInputRequest;
 
-    private $trashedCustomer;
+    private $trashedCar;
 
-    public function getTrashedCustomer()
+    public function getTrashedCar()
     {
-        return $this->trashedCustomer = $this->model = $this->trashedCustomer ?:
-            Customer::withTrashed()->findOrFail($this->input('id'));
+        return $this->trashedCar = $this->trashedCar ?:
+            Car::withTrashed()->findOrFail($this->input('id'));
     }
 
     /**
@@ -27,8 +27,8 @@ class RestoreCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        $customer = $this->getDeletedCustomer();
-        return $this->checkCompanyPermission('restore customers', $customer);
+        $car = $this->getTrashedCar();
+        return $this->checkCompanyPermission('restore cars', $car);
     }
 
     /**

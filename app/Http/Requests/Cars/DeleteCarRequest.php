@@ -4,16 +4,14 @@ namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Car;
-
-class FindCarRequest extends FormRequest
+class DeleteCarRequest extends FormRequest
 {
     private $car;
 
     public function getCar()
     {
-        return $this->car = $this->car ?: 
-            Car::findOrFail($this->input('id'));
+        return $this->car = $this->car ?:
+            Car::withTrashed()->findOrFail($this->input('id'));
     }
 
     /**
@@ -26,7 +24,7 @@ class FindCarRequest extends FormRequest
         $user = $this->user();
         $car = $this->getCar();
 
-        return $user->hasCompanyPermission($car->company_id, 'view cars');
+        return $user->hasCompanyPermission($car->company_id, 'delete cars');
     }
 
     /**
@@ -36,6 +34,8 @@ class FindCarRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            //
+        ];
     }
 }

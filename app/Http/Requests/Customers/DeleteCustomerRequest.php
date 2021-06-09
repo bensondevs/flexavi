@@ -4,19 +4,13 @@ namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Customer;
-
-use App\Traits\CompanyInputRequest;
-
-class RestoreCustomerRequest extends FormRequest
+class DeleteCustomerRequest extends FormRequest
 {
-    use CompanyInputRequest;
+    private $customer;
 
-    private $trashedCustomer;
-
-    public function getTrashedCustomer()
+    public function getCustomer()
     {
-        return $this->trashedCustomer = $this->model = $this->trashedCustomer ?:
+        return $this->customer = $this->customer ?:
             Customer::withTrashed()->findOrFail($this->input('id'));
     }
 
@@ -27,8 +21,10 @@ class RestoreCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        $customer = $this->getDeletedCustomer();
-        return $this->checkCompanyPermission('restore customers', $customer);
+        $user = $this->user();
+        $customer = $this->getCustomer();
+
+        return $user->hasCompanyPermission($customer->company_id, 'delete customers');
     }
 
     /**

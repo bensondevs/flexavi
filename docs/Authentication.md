@@ -74,14 +74,14 @@ Attribute Name  | Type  | Description
 
 **Headers:**
 
- Header Name | Value
--------------|------
+Header Name | Value
+------------|------
 Accept | `application/json`
 
 **Parameters:**
 
- Payload name | Required | Validation | Description    
---------------|----------|------------|-------------
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
 `invitation_code` | optional | string | Invitation code sent by admin to register
 `fullname` | Required | string | Full name of new user
 `salutation` | Required | string | Salutation coule be `Mr`, `Mrs` or anything
@@ -154,6 +154,7 @@ Attribute Name  | Type  | Description
 `message` | String | Message response for the user
 
 **Success Response Example:**
+
 ```json
 {
     "data": {
@@ -175,7 +176,63 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. Logout
+### 3. Check Email Used
+-------------------------------------------------------
+
+**Endpoint:** `/api/auth/check_email_used`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|-------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`email` | Required | string | Email checked
+
+**Request Body Example:**
+
+```json
+{
+    "email": "owner1@flexavi.com"
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`status` | String | Email availability status
+`message` | String | Message response for the user
+
+**Success Response Example:**
+
+- Available
+
+```json
+{
+    "status": "available",
+    "message": "This email is available"
+}
+```
+
+- Unvailable
+
+```json
+{
+    "status": "unavailable",
+    "message": "This email has been used by other user"
+}
+```
+
+-------------------------------------------------------
+### 4. Logout
 -------------------------------------------------------
 
 **Endpoint:** `/api/auth/logout`
@@ -184,8 +241,8 @@ Attribute Name  | Type  | Description
 
 **Headers:**
 
- Header Name | Value 
--------------|-------
+Header Name | Value 
+------------|-------
 Accept | `application/json`
 Authorization | `Bearer {token}`
 

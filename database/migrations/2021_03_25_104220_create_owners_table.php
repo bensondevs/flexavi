@@ -35,6 +35,13 @@ class CreateOwnersTable extends Migration
             $table->string('bank_account')->nullable();
             $table->string('bank_holder_name')->nullable();
 
+            $table->text('address');
+            $table->char('house_number');
+            $table->char('house_number_suffix')->nullable();
+            $table->char('zipcode');
+            $table->char('city');
+            $table->char('province');
+
             $table->timestamps();
             $table->softDeletes();
         });

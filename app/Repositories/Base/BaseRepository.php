@@ -154,7 +154,7 @@ class BaseRepository
 		return $models;
 	}
 
-	public function allDeleted(array $options = [], bool $pagination = false)
+	public function trasheds(array $options = [], bool $pagination = false)
 	{
 		$model = $this->getModel();
 		$model = $model->onlyTrashed();

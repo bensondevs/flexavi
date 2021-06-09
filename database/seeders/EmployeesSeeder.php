@@ -37,6 +37,13 @@ class EmployeesSeeder extends Seeder
                     
                     'photo_url' => 'https://dummyimage.com/300/09f/fff.png',
 
+                    'address' => 'Address Test',
+                    'house_number' => '11',
+                    'house_number_suffix' => 'A',
+                    'zipcode' => '117177',
+                    'city' => 'Any City',
+                    'province' => 'Any Province',
+
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
                 ]);

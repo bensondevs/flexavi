@@ -37,7 +37,7 @@ class UserRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save user data.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to save user data', $qe->getMessage);
+			$this->setError('Failed to save user data', $qe->getMessage());
 		}
 
 		return $this->getModel();

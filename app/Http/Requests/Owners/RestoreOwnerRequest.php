@@ -4,13 +4,20 @@ namespace App\Http\Requests\Owners;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use App\Models\Owner;
+
+use App\Traits\CompanyInputRequest;
+
 class RestoreOwnerRequest extends FormRequest
 {
-    private $deletedOwner;
+    use CompanyInputRequest;
+
+    private $trashedOwner;
 
     public function getDeletedOwner()
     {
-        
+        return $this->trashedOwner = $this->trashedOwner ?:
+            Owner::withTrashed()->findOrFail($this->input('id'));
     }
 
     /**
@@ -20,7 +27,8 @@ class RestoreOwnerRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $owner = $this->getDeletedOwner();
+        return $this->checkCompanyPermission('restore owners', $owner);
     }
 
     /**

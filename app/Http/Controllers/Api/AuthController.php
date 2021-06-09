@@ -31,6 +31,24 @@ class AuthController extends Controller
         $this->owner = $owner;
     }
 
+    public function checkEmailUsed(Request $request)
+    {
+        $request->validate(['email' => ['required', 'email']]);
+
+        $email = $request->input('email');
+        if (db('users')->where('email', $email)->count() > 0) {
+            return response()->json([
+                'status' => 'unavailable',
+                'message' => 'This email has been used by other user',
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'available',
+            'message' => 'This email is available',
+        ]);
+    }
+
     public function login(LoginRequest $request)
     {
     	$input = $request->onlyInRules();
@@ -42,9 +60,8 @@ class AuthController extends Controller
 
     public function customerLogin(CustomerLoginRequest $request)
     {
-        $customer = $this->auth->customerLogin(
-            $request->onlyInRules()
-        );
+        $input = $request->onlyInRules();
+        $customer = $this->auth->customerLogin($input);
 
         return apiResponse($this->auth, ['customer' => $customer]);
     }
@@ -105,17 +122,19 @@ class AuthController extends Controller
         return apiResponse($this->auth, ['meta_user' => $metaUser]);
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-    	$this->auth->setModel(auth()->user());
+        $user = $request->user();
+    	$this->auth->setModel($user);
     	$this->auth->logout();
 
     	return apiResponse($this->auth);
     }
 
-    public function customerLogout()
+    public function customerLogout(Request $request)
     {
-        $this->auth->customerLogout(auth()->user());
+        $user = $request->user();
+        $this->auth->customerLogout($user);
 
         return apiResponse($this->auth);
     }

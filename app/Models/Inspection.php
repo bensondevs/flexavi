@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 
 class Inspection extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'inspections';
     protected $primaryKey = 'id';
     public $timestamps = true;

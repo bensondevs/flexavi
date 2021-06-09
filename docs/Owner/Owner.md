@@ -37,17 +37,16 @@ Attribute Name  | Type  | Description
         "current_page": 1,
         "data": [
             {
-                "id": "59324cb0-c819-11eb-bb0a-23892e37ab27",
+                "id": "c8846360-c922-11eb-ada5-1fae3baae23b",
                 "user": {
-                    "id": "5509f450-c819-11eb-b99e-1d7a7bdf5522",
+                    "id": "c43d7c80-c922-11eb-9f02-9b031a502c59",
                     "fullname": "Flexavi Owner 1",
                     "salutation": "Mr.",
-                    "birth_date": "1999-06-08",
+                    "birth_date": "1997-06-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "281492675",
+                    "id_card_number": "379218581",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "address": "11, A Road Name",
                     "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
                     "registration_code": null,
                     "email": "owner1@flexavi.nl",
@@ -58,16 +57,43 @@ Attribute Name  | Type  | Description
                 "bank_name": "FLEXAVIBANK",
                 "bic_code": "9213",
                 "bank_account": "83271221",
-                "bank_holder_name": "Flexavi Owner 1"
+                "bank_holder_name": "Flexavi Owner 1",
+                "address": "Address Test",
+                "house_number": "11",
+                "house_number_suffix": "A",
+                "zipcode": "117177",
+                "city": "Any City",
+                "province": "Any Province"
             },
             {
-                "id": "77e48ce0-c82e-11eb-ba37-c990286d2c1c",
+                "id": "cfdbe8d0-c922-11eb-b50d-6b48abca3839",
                 "user": null,
                 "is_prime_owner": false,
-                "bank_name": "Added Bank",
+                "bank_name": "Invited Bank",
+                "bic_code": "001",
+                "bank_account": "1010101010",
+                "bank_holder_name": "Invited User",
+                "address": "Address Test",
+                "house_number": "11",
+                "house_number_suffix": "A",
+                "zipcode": "117177",
+                "city": "Any City",
+                "province": "Any Province"
+            },
+            {
+                "id": "d5d62150-c925-11eb-8487-d73d292448de",
+                "user": null,
+                "is_prime_owner": false,
+                "bank_name": "Added Banks",
                 "bic_code": "911",
                 "bank_account": "9988776655",
-                "bank_holder_name": "Added Holder"
+                "bank_holder_name": "Added Holder",
+                "address": "Another street",
+                "house_number": "11",
+                "house_number_suffix": "A",
+                "zipcode": "11178",
+                "city": "Another City",
+                "province": "Another Province"
             }
         ],
         "first_page_url": "/?page=1",
@@ -95,8 +121,8 @@ Attribute Name  | Type  | Description
         "path": "/",
         "per_page": 10,
         "prev_page_url": null,
-        "to": 2,
-        "total": 2
+        "to": 3,
+        "total": 3
     }
 }
 ```

@@ -16,15 +16,14 @@ class CarRepository extends BaseRepository
 		$this->setInitModel(new Car);
 	}
 
-	public function companyCars(
-		string $comparyId, 
-		bool $freeOnly = false
-	)
+	public function freeCars(array $options = [])
 	{
-		$cars = $this->getModel()->where('company_id', $comparyId);
-		if ($freeOnly) $cars = $cars->free();
-		
-		return $this->setCollection($cars = $cars->get());
+		array_push($options['wheres'], [
+			'column' => 'status',
+			'value' => 'free',
+		]);
+
+		return $this->all($options);
 	}
 
 	public function save(array $carData)
@@ -98,7 +97,7 @@ class CarRepository extends BaseRepository
 
 			$this->destroyModel();
 
-			$this->setSuccess('Successfully delete car.');
+			$this->setSuccess('Successfully ' . ($forceDelete ? 'permanent ' : '') . 'delete car.');
 		} catch (QueryException $qe) {
 			$this->setError(
 				'Failed to delete car.', 
@@ -107,5 +106,21 @@ class CarRepository extends BaseRepository
 		}
 
 		return $this->returnResponse();
+	}
+
+	public function restore()
+	{
+		try {
+			$car = $this->getModel();
+			$car->restore();
+
+			$this->setModel($car);
+
+			$this->setSuccess('Successfully restore car.');
+		} catch (QueryException $qe) {
+			$this->setError('Failed to restore car.', $qe->getMessage());
+		}
+
+		return $this->getModel();
 	}
 }

@@ -31,6 +31,7 @@ class CreateCustomersTable extends Migration
             
             $table->text('address');
             $table->char('house_number');
+            $table->char('house_number_suffix')->nullable();
             $table->char('zipcode');
             $table->char('city');
             $table->char('province');

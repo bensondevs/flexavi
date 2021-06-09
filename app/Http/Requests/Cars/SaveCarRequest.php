@@ -45,7 +45,6 @@ class SaveCarRequest extends FormRequest
             'brand' => ['required', 'string'],
             'model' => ['required', 'string'],
             'year' => ['required', 'integer', 'max:' . carbon()->now()->year],
-            'status' => ['required', 'string', new AmongStrings(['free', 'out'])],
             'insured' => ['boolean'],
             'car_name' => ['required', 'string', new UniqueWithConditions(
                 new Car, 

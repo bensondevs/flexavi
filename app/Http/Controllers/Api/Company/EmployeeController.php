@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Employees\SaveEmployeeRequest as SaveRequest;
 use App\Http\Requests\Employees\FindEmployeeRequest as FindRequest;
+use App\Http\Requests\Employees\DeleteEmployeeRequest as DeleteRequest;
+use App\Http\Requests\Employees\RestoreEmployeeRequest as RestoreRequest;
 use App\Http\Requests\Employees\PopulateEmployeesRequest as PopulateRequest;
 
 use App\Http\Resources\EmployeeResource;
@@ -20,11 +22,9 @@ class EmployeeController extends Controller
     protected $employee;
     protected $company;
 
-    public function __construct(
-    	EmployeeRepository $employeeRepository
-    )
+    public function __construct(EmployeeRepository $employee)
     {
-    	$this->employee = $employeeRepository;
+    	$this->employee = $employee;
     }
 
     public function companyEmployees(PopulateRequest $request)
@@ -32,7 +32,7 @@ class EmployeeController extends Controller
         $options = $request->options();
 
         $employees = $this->employee->all($options);
-        $employees = $this->employee->paginate();
+        $employees = $this->employee->paginate($options['per_page']);
         $employees = EmployeeResource::apiCollection($employees);
 
     	return response()->json(['employees' => $employees]);
@@ -43,7 +43,18 @@ class EmployeeController extends Controller
         $options = $request->options();
 
         $employees = $this->employee->inviteables($options);
-        $employees = $this->employee->paginate();
+        $employees = $this->employee->paginate($options['per_page']);
+        $employees = EmployeeResource::apiCollection($employees);
+
+        return response()->json(['employees' => $employees]);
+    }
+
+    public function trashedEmployees(PopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $employees = $this->employee->trasheds($options);
+        $employees = $this->employee->paginate($options['per_page']);
         $employees = EmployeeResource::apiCollection($employees);
 
         return response()->json(['employees' => $employees]);
@@ -68,12 +79,23 @@ class EmployeeController extends Controller
     	return apiResponse($this->employee, ['employee' => $employee]);
     }
 
-    public function delete(FindRequest $request)
+    public function delete(DeleteRequest $request)
     {
         $employee = $request->getEmployee();
     	$this->employee->setModel($employee);
-    	$this->employee->delete($request->input('force'));
+
+        $force = strtobool($request->input('force'));
+    	$this->employee->delete($force);
 
     	return apiResponse($this->employee);
+    }
+
+    public function restore(RestoreRequest $request)
+    {
+        $employee = $request->getTrashedEmployee();
+        $employee = $this->employee->setModel($employee);
+        $employee = $this->employee->restore();
+
+        return apiResponse($this->employee, ['employee' => $employee]);
     }
 }

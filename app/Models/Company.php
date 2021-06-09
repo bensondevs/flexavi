@@ -194,7 +194,7 @@ class Company extends Model
             'house_number' => $value['house_number'],
             'house_number_suffix' => isset($value['house_number_suffix']) ?
                 $value['house_number_suffix'] : null,
-            'zip_code' => $value['zip_code'],
+            'zipcode' => $value['zipcode'],
             'city' => $value['city'],
         ];
 
@@ -215,7 +215,7 @@ class Company extends Model
             'house_number' => $value['house_number'],
             'house_number_suffix' => isset($value['house_number_suffix']) ?
                 $value['house_number_suffix'] : null,
-            'zip_code' => $value['zip_code'],
+            'zipcode' => $value['zipcode'],
             'city' => $value['city'],
         ];
 

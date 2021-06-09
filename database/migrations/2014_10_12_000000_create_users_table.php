@@ -24,7 +24,6 @@ class CreateUsersTable extends Migration
             $table->char('id_card_number');
             $table->char('phone');
             $table->timestamp('phone_verified_at')->nullable();
-            $table->text('address');
             $table->string('profile_picture_url')->nullable();
 
             $table->string('registration_code')->nullable();

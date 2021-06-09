@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Customers\SaveCustomerRequest as SaveRequest;
 use App\Http\Requests\Customers\FindCustomerRequest as FindRequest;
+use App\Http\Requests\Customers\DeleteCustomerRequest as DeleteRequest;
 use App\Http\Requests\Customers\RestoreCustomerRequest as RestoreRequest;
 use App\Http\Requests\Customers\PopulateCompanyCustomersRequest as PopulateRequest;
 
@@ -34,11 +35,11 @@ class CustomerController extends Controller
     	return response()->json(['customers' => $customers]);
     }
 
-    public function deletedCustomers(PopulateRequest $request)
+    public function trashedCustomers(PopulateRequest $request)
     {
         $options = $request->options();
 
-        $customers = $this->customer->allDeleted($options);
+        $customers = $this->customer->trasheds($options);
         $customers = $this->customer->paginate($options['per_page']);
         $customers = CustomerResource::apiCollection($customers);
 
@@ -64,19 +65,20 @@ class CustomerController extends Controller
     	return apiResponse($this->customer, ['customer' => $customer]);
     }
 
-    public function delete(FindRequest $request)
+    public function delete(DeleteRequest $request)
     {
         $customer = $request->getCustomer();
-
     	$this->customer->setModel($customer);
-    	$this->customer->delete();
+
+        $force = strtobool($request->input('force'));
+    	$this->customer->delete($force);
 
     	return apiResponse($this->customer);
     }
 
     public function restore(RestoreRequest $request)
     {
-        $customer = $request->getDeletedCustomer();
+        $customer = $request->getTrashedCustomer();
         $customer = $this->customer->setModel($customer);
         $customer = $this->customer->restore();
 

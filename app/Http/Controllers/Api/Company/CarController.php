@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Cars\SaveCarRequest;
-use App\Http\Requests\Cars\FindCarRequest;
-use App\Http\Requests\Cars\SetCarImageRequest;
-use App\Http\Requests\Cars\PopulateCompanyCarsRequest;
+use App\Http\Requests\Cars\SaveCarRequest as SaveRequest;
+use App\Http\Requests\Cars\FindCarRequest as FindRequest;
+use App\Http\Requests\Cars\RestoreCarRequest as RestoreRequest;
+use App\Http\Requests\Cars\SetCarImageRequest as SetImageRequest;
+use App\Http\Requests\Cars\PopulateCompanyCarsRequest as PopulateRequest;
 
 use App\Http\Resources\CarResource;
 
@@ -25,7 +26,7 @@ class CarController extends Controller
     	$this->car = $car;
     }
 
-    public function companyCars(PopulateCompanyCarsRequest $request)
+    public function companyCars(PopulateRequest $request)
     {
         $options = $request->options();
 
@@ -36,7 +37,29 @@ class CarController extends Controller
     	return response()->json(['cars' => $cars]);
     }
 
-    public function store(SaveCarRequest $request)
+    public function freeCars(PopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $cars = $this->car->freeCars($options);
+        $cars = $this->car->paginate($options['per_page']);
+        $cars = CarResource::apiCollection($cars);
+
+        return response()->json(['cars' => $cars]);
+    }
+
+    public function trashedCars(PopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $cars = $this->car->trasheds($options);
+        $cars = $this->car->paginate($options['per_page']);
+        $cars = CarResource::apiCollection($cars);
+
+        return response()->json(['cars' => $cars]);
+    }
+
+    public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
     	$car = $this->car->save($input);
@@ -44,45 +67,60 @@ class CarController extends Controller
     	return apiResponse($this->car, ['car' => $car]);
     }
 
-    public function view(FindCarRequest $request)
+    public function view(FindRequest $request)
     {
-        $car = $this->car->find($request->input('id'));
-
+        $car = $request->getCar();
         return response()->json(['car' => $car]);
     }
 
-    public function validateInsurance(FindCarRequest $request)
+    public function validateInsurance(FindRequest $request)
     {
-        $this->car->setModel($request->getCar());
+        $car = $request->getCar();
+        $car = $this->car->setModel($car);
         $car = $this->car->validateInsurance();
 
         return apiResponse($this->car, ['car' => $car]);
     }
 
-    public function update(SaveCarRequest $request)
+    public function update(SaveRequest $request)
     {
-    	$this->car->setModel($request->getCar());
-    	$car = $this->car->save($request->onlyInRules());
+        $car = $request->getCar();
+    	$car = $this->car->setModel($car);
+
+        $input = $request->onlyInRules();
+    	$car = $this->car->save($input);
 
     	return apiResponse($this->car, ['car' => $car]);
     }
 
-    public function setCarImage(SetCarImageRequest $request)
+    public function setCarImage(SetImageRequest $request)
     {
-        $this->car->setModel($request->getCar());
-        $this->car->setCarImage($request->file('car_image'));
+        $car = $request->getCar();
+        $car = $this->car->setModel($car);
 
-        return apiResponse(
-            $this->car, 
-            $this->car->getModel()
-        );
+        $image = $request->file('car_image');
+        $car = $this->car->setCarImage($image);
+
+        return apiResponse($this->car, ['car' => $car]);
     }
 
-    public function delete(FindCarRequest $request)
+    public function delete(FindRequest $request)
     {
-    	$this->car->setModel($request->getCar());
-    	$this->car->delete();
+        $car = $request->getCar();
+    	$this->car->setModel($car);
 
-    	return apiResponse($this->car, ['car' => $this->car->getModel()]);
+        $force = strtobool($request->input('force'));
+    	$this->car->delete($force);
+
+    	return apiResponse($this->car);
+    }
+
+    public function restore(RestoreRequest $request)
+    {
+        $car = $request->getTrashedCar();
+        $car = $this->car->setModel($car);
+        $car = $this->car->restore();
+
+        return apiResponse($this->car, ['car' => $car]);
     }
 }

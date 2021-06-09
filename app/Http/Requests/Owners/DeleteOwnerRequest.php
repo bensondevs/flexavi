@@ -12,8 +12,8 @@ class DeleteOwnerRequest extends FormRequest
 
     public function getTargetedOwner()
     {
-        return $this->targetedOwner = ($this->targetedOwner) ?:
-            Owner::findOrFail($this->input('id'));
+        return $this->targetedOwner = $this->targetedOwner ?:
+            Owner::withTrashed()->findOrFail($this->input('id'));
     }
 
     /**

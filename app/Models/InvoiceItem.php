@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 
 class InvoiceItem extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'invoice_items';
     protected $primaryKey = 'id';
     public $timestamps = true;

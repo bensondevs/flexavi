@@ -105,6 +105,16 @@ function executor()
         'SYSTEM';
 }
 
+function strtobool($string = null)
+{   
+    if (! $string) return false;
+
+    if ($string == 'true' || $string == 'false')
+        return filter_var($string, FILTER_VALIDATE_BOOLEAN);
+
+    return true;
+}
+
 function random_string($length = 4)
 {
     return randomString($length);

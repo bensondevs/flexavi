@@ -26,6 +26,12 @@ class OwnerResource extends JsonResource
             'bic_code' => $this->bic_code,
             'bank_account' => $this->bank_account,
             'bank_holder_name' => $this->bank_holder_name,
+            'address' => $this->address,
+            'house_number' => $this->house_number,
+            'house_number_suffix' => $this->house_number_suffix,
+            'zipcode' => $this->zipcode,
+            'city' => $this->city,
+            'province' => $this->province,
         ];
     }
 }

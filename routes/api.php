@@ -37,6 +37,8 @@ use App\Http\Controllers\Api\Customer\CustomerController;
 */
 
 Route::group(['prefix' => 'auth'], function () {
+	Route::get('check_email_used', [AuthController::class, 'checkEmailUsed']);
+
 	/*
 		Conventional Login
 	*/
@@ -101,6 +103,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			Route::group(['prefix' => 'owners'], function () {
 				Route::get('/', [OwnerController::class, 'companyOwners']);
 				Route::get('inviteables', [OwnerController::class, 'inviteableOwners']);
+				Route::get('trasheds', [OwnerController::class, 'trashedOwners']);
 				Route::post('store', [OwnerController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [OwnerController::class, 'update']);
 				Route::delete('delete', [OwnerController::class, 'delete']);
@@ -139,9 +142,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			Route::group(['prefix' => 'employees'], function () {
 				Route::get('/', [EmployeeController::class, 'companyEmployees']);
 				Route::get('inviteables', [EmployeeController::class, 'inviteableEmployees']);
+				Route::get('trasheds', [EmployeeController::class, 'trashedEmployees']);
 				Route::post('store', [EmployeeController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [EmployeeController::class, 'update']);
 				Route::delete('delete', [EmployeeController::class, 'delete']);
+				Route::patch('restore', [EmployeeController::class, 'restore']);
 			});
 
 			/*
@@ -149,7 +154,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			*/
 			Route::group(['prefix' => 'customers'], function () {
 				Route::get('/', [CompanyCustomerController::class, 'companyCustomers']);
-				Route::get('deleted', [CompanyCustomerController::class, 'deletedCustomers']);
+				Route::get('trasheds', [CompanyCustomerController::class, 'trashedCustomers']);
 				Route::post('store', [CompanyCustomerController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
 				Route::delete('delete', [CompanyCustomerController::class, 'delete']);
@@ -161,10 +166,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			*/
 			Route::group(['prefix' => 'cars'], function () {
 				Route::get('/', [CarController::class, 'companyCars']);
+				Route::get('frees', [CarController::class, 'freeCars']);
+				Route::get('trasheds', [CarController::class, 'trashedCars']);
 				Route::post('store', [CarController::class, 'store']);
 				Route::post('set_image', [CarController::class, 'setCarImage']);
 				Route::match(['PUT', 'PATCH'], 'update', [CarController::class, 'update']);
 				Route::delete('delete', [CarController::class, 'delete']);
+				Route::patch('restore', [CarController::class, 'restore']);
 			});
 
 			/*

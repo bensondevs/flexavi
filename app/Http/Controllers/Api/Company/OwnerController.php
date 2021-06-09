@@ -44,6 +44,17 @@ class OwnerController extends Controller
         return response()->json(['owners' => $owners]);
     }
 
+    public function trashedOwners(PopoulateRequest $request)
+    {
+        $options = $request->options();
+
+        $owners = $this->owner->trasheds($options);
+        $owners = $this->owner->paginate($options['per_page']);
+        $owners = OwnerResource::apiCollection($owners);
+
+        return response()->json(['owners' => $owners]);
+    }
+
     public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
@@ -66,16 +77,17 @@ class OwnerController extends Controller
     public function delete(DeleteRequest $request)
     {
         $owner = $request->getTargetedOwner();
-
         $this->owner->setModel($owner);
-        $this->owner->delete();
+
+        $force = strtobool($request->input('force'));
+        $this->owner->delete($force);
 
         return apiResponse($this->owner);
     }
 
     public function restore(RestoreRequest $request)
     {
-        $owner = $request->getDeletedOwner();
+        $owner = $request->getTrashedOwner();
         $owner = $this->owner->setModel($owner);
         $owner = $this->owner->restore();
 
