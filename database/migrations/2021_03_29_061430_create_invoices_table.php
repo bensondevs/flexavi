@@ -20,13 +20,13 @@ class CreateInvoicesTable extends Migration
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('work_contract_id');
             $table->foreign('work_contract_id')
                 ->references('id')
                 ->on('work_contracts')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->double('total', 10, 2);
 

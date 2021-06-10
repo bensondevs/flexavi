@@ -20,19 +20,19 @@ class CreateQuotationsTable extends Migration
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('creator_id');
             $table->foreign('creator_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('customer_id');
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('quotable_id')->nullable();
             $table->string('quotable_type')->nullable();

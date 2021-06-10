@@ -20,7 +20,7 @@ class CreatePaymentTermsTable extends Migration
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('invoice_id');
             $table->foreign('invoice_id')

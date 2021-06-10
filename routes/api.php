@@ -111,23 +111,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			});
 
 			/*
-				Company Appointment Module
-			*/
-			Route::group(['prefix' => 'appointments'], function () {
-				Route::get('/', [AppointmentController::class, 'companyAppointments']);
-				Route::post('store', [AppointmentController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
-				Route::delete('delete', [AppointmentController::class, 'delete']);
-
-				Route::group(['prefix' => 'workers'], function () {
-					Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
-					Route::post('store', [AppointmentWorkerController::class, 'store']);
-					Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
-					Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
-				});
-			});
-
-			/*
 				Company Quotations Module
 			*/
 			Route::group(['prefix' => 'quotations'], function () {
@@ -160,6 +143,23 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
 				Route::delete('delete', [CompanyCustomerController::class, 'delete']);
 				Route::patch('restore', [CompanyCustomerController::class, 'restore']);
+
+				/*
+					Company Appointment Module
+				*/
+				Route::group(['prefix' => 'appointments'], function () {
+					Route::get('/', [AppointmentController::class, 'customerAppointments']);
+					Route::post('store', [AppointmentController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
+					Route::delete('delete', [AppointmentController::class, 'delete']);
+
+					Route::group(['prefix' => 'workers'], function () {
+						Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
+						Route::post('store', [AppointmentWorkerController::class, 'store']);
+						Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
+						Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
+					});
+				});
 			});
 
 			/*

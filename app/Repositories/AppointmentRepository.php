@@ -20,12 +20,6 @@ class AppointmentRepository extends BaseRepository
 		$this->setModel(new Appointment);
 	}
 
-	public function companyAppointments(Company $company)
-	{
-		$appointments = $company->appointments;
-		return $this->setCollection($appointments);
-	}
-
 	public function save(array $appointmentData)
 	{
 		try {
@@ -64,6 +58,20 @@ class AppointmentRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function cancel()
+	{
+		try {
+			$appointment = $this->getModel();
+		} catch (QueryException $qe) {
+			
+		}
+	}
+
+	public function reschedule()
+	{
+		
 	}
 
 	public function delete(bool $force = false)

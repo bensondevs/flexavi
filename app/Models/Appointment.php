@@ -48,16 +48,16 @@ class Appointment extends Model
             'value' => 'created',
         ],
         [
-            'label' => 'Updated',
-            'value' => 'updated',
+            'label' => 'In Process',
+            'value' => 'in_process',
         ],
         [
             'label' => 'Processed',
             'value' => 'processed',
         ],
         [
-            'label' => 'Finished',
-            'value' => 'finished',
+            'label' => 'Calculated',
+            'value' => 'calculated',
         ]
     ];
 
@@ -108,17 +108,28 @@ class Appointment extends Model
         );
     }
 
-    public static function getTypes()
+    public function getTypeLabelAttribute()
     {
-        $value = collect(self::TYPES)->pluck('value');
-            
-        return $value->all();
+        $types = collect(self::TYPES);
+        $type = $this->attributes['type'];
+        
+        if (! $_type = $types->where('value', $type)->first())
+            return null;
+
+        return $_type['label'];
     }
 
-    public static function getStatuses()
+    public static function getTypeValues()
     {
-        $value = collect(self::STATUSES)->pluck('value');
+        $types = collect(self::TYPES);
             
-        return $value->all();
+        return $type->pluck('value');
+    }
+
+    public static function getStatusValues()
+    {
+        $statuses = collect(self::STATUSES);
+            
+        return $statuses->pluck('value');
     }
 }

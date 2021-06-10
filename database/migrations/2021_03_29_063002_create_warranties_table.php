@@ -20,7 +20,7 @@ class CreateWarrantiesTable extends Migration
             $table->foreign('work_contract_id')
                 ->references('id')
                 ->on('work_contracts')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->date('warranty_due');
             $table->text('internal_note')->nullable();

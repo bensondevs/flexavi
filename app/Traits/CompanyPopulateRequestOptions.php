@@ -36,6 +36,20 @@ trait CompanyPopulateRequestOptions
         return $this->company = $company;
     }
 
+    public function checkCompanyPermission(
+        $permission, 
+        $model, 
+        $companyColumn = 'company_id'
+    )
+    {
+        $user = $this->user();
+
+        return $user->hasCompanyPermission(
+            $model->{$companyColumn}, 
+            $permission
+        );
+    }
+
     public function authorizeCompanyAction(
         string $actionObject, 
         $companyColumn = 'company_id'

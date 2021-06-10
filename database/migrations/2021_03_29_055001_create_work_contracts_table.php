@@ -26,7 +26,7 @@ class CreateWorkContractsTable extends Migration
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->date('contract_date_start');
             $table->date('contract_date_end');

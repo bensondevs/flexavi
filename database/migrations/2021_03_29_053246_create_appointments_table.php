@@ -26,7 +26,11 @@ class CreateAppointmentsTable extends Migration
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
+
+            // Reschedule cancel
+            $table->boolean('canceled')->default(false);
+            $table->uuid('reschedule_appointment_id')->nullable();
 
             $table->datetime('start');
             $table->datetime('end');

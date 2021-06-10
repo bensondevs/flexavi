@@ -20,25 +20,25 @@ class CreateSubscriptionPaymentsTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('company_id');
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('subscription_id');
             $table->foreign('subscription_id')
                 ->references('id')
                 ->on('subscriptions')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('pricing_id');
             $table->foreign('pricing_id')
                 ->references('id')
                 ->on('pricings')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->char('payment_method');
             $table->json('bank_information_json');

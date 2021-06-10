@@ -20,7 +20,7 @@ class CreateCustomersTable extends Migration
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->string('registered_from')->default('web');
 
