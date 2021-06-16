@@ -22,6 +22,12 @@ class CreateWorksTable extends Migration
                 ->on('work_contracts')
                 ->onDelete('CASCADE');
 
+            $table->uuid('appointment_id')->nullable();
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('SET NULL');
+
             $table->string('name');
             $table->text('description');
             $table->double('price', 10, 2);

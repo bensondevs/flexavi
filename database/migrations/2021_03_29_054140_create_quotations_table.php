@@ -34,6 +34,12 @@ class CreateQuotationsTable extends Migration
                 ->on('customers')
                 ->onDelete('SET NULL');
 
+            $table->uuid('appointment_id')->nullable();
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('SET NULL');
+
             $table->uuid('quotable_id')->nullable();
             $table->string('quotable_type')->nullable();
 

@@ -60,18 +60,28 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function cancel()
+	public function assign(string $type, $model)
 	{
 		try {
 			$appointment = $this->getModel();
+			$appointment->appointment_type = $type;
+			$appointment->appointment_type_id = $model->id;
+			$appointment->save();
+
+			$this->setModel($appointment);
 		} catch (QueryException $qe) {
 			
 		}
 	}
 
+	public function cancel()
+	{
+		// 
+	}
+
 	public function reschedule()
 	{
-		
+		// 
 	}
 
 	public function delete(bool $force = false)

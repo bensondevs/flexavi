@@ -143,22 +143,75 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
 				Route::delete('delete', [CompanyCustomerController::class, 'delete']);
 				Route::patch('restore', [CompanyCustomerController::class, 'restore']);
+			});
+
+			/*
+				Company Appointment Module
+			*/
+			Route::group(['prefix' => 'appointments'], function () {
+				Route::get('/', [AppointmentController::class, 'customerAppointments']);
+				Route::post('store', [AppointmentController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
+				Route::delete('delete', [AppointmentController::class, 'delete']);
+
+				Route::get('payment_reminder', [AppointmentController::class, 'paymentReminder']);
 
 				/*
-					Company Appointment Module
+					Appointment Quotation Module
 				*/
-				Route::group(['prefix' => 'appointments'], function () {
-					Route::get('/', [AppointmentController::class, 'customerAppointments']);
-					Route::post('store', [AppointmentController::class, 'store']);
-					Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
-					Route::delete('delete', [AppointmentController::class, 'delete']);
+				Route::group(['prefix' => 'quotation'], function () {
+					Route::get('/', [AppointmentController::class, 'quotation']);
+					Route::post('assign', [AppointmentController::class, 'assignQuotation']);
+				});
 
-					Route::group(['prefix' => 'workers'], function () {
-						Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
-						Route::post('store', [AppointmentWorkerController::class, 'store']);
-						Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
-						Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
-					});
+				/*
+					Appointment Inspection Module
+				*/
+				Route::group(['prefix' => 'inspection'], function () {
+					Route::get('/', [AppointmentController::class, 'inspection']);
+					Route::post('assign', [AppointmentController::class, 'assignInspection']);
+				});
+
+				/*
+					Appointment Work Module
+				*/
+				Route::group(['prefix' => 'work'], function () {
+					Route::get('/', [AppointmentController::class, 'work']);
+					Route::post('assign', [AppointmentController::class, 'assignWork']);
+				});
+
+				/*
+					Appointment Warranty Module
+				*/
+				Route::group(['prefix' => 'warranty'], function () {
+					Route::get('/', [AppointmentController::class, 'warranty']);
+					Route::post('assign', [AppointmentController::class, 'assignWarranty']);
+				});
+
+				/*
+					Appointment Payment Pickup Module
+				*/
+				Route::group(['prefix' => 'payment_pickup'], function () {
+					Route::get('/', [AppointmentController::class, 'paymentPickup']);
+					Route::post('assign', [AppointmentController::class, 'assignPaymentPickup']);
+				});
+
+				/*
+					Appointment Payment Reminder Module
+				*/
+				Route::group(['prefix' => 'payment_reminder'], function () {
+					Route::get('/', [AppointmentController::class, 'paymentReminder']);
+					Route::post('assign', [AppointmentController::class, 'assignPaymentReminder']);
+				});
+
+				/*
+					Appointment Workers Module
+				*/
+				Route::group(['prefix' => 'workers'], function () {
+					Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
+					Route::post('store', [AppointmentWorkerController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
+					Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
 				});
 			});
 

@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Appointments\SaveAppointmentRequest as SaveRequest;
 use App\Http\Requests\Appointments\FindAppointmentRequest as FindRequest;
 use App\Http\Requests\Appointments\DeleteAppointmentRequest as DeleteRequest;
-use App\Http\Requests\Appointments\AssignAppointmentTypeRequest as AssignTypeRequest;
 use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as PopulateRequest;
 
 use App\Http\Resources\AppointmentResource;
@@ -52,17 +51,6 @@ class AppointmentController extends Controller
     {
         $input = $request->ruleWithCompany();
         $appointment = $this->appointment->save($input);
-
-        return apiResponse($this->appointment, ['appointment' => $appointment]);
-    }
-
-    public function assignType(AssignTypeRequest $requesr)
-    {
-        $appointment = $request->getAppointment();
-        $appointment = $this->appointment->setModel($appointment);
-
-        $input = $request->ruleWithCompany();
-        $appointment = $this->appointment->assignType($input);
 
         return apiResponse($this->appointment, ['appointment' => $appointment]);
     }

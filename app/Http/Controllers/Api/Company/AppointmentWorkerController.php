@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\AppointmentWorkers\PopulateAppointmentWorkersRequest;
-use App\Http\Requests\AppointmentWorkers\SaveAppointmentWorkerRequest;
-use App\Http\Requests\AppointmentWorkers\FindAppointmentWorkerRequest;
+use App\Http\Requests\AppointmentWorkers\PopulateAppointmentWorkersRequest as PopulateRequest;
+use App\Http\Requests\AppointmentWorkers\SaveAppointmentWorkerRequest as SaveRequest;
+use App\Http\Requests\AppointmentWorkers\FindAppointmentWorkerRequest as FindRequest;
 
 use App\Http\Resources\AppointmentWorkerResource;
 
-use App\Repositories\AppointmentWorkerRepository;
+use App\Repositories\AppointmentWorkerRepository as WorkerRepository;
 
 use App\Models\AppointmentWorker;
 
@@ -19,44 +19,46 @@ class AppointmentWorkerController extends Controller
 {
     private $worker;
 
-    public function __construct(AppointmentWorkerRepository $worker)
+    public function __construct(WorkerRepository $worker)
     {
     	$this->worker = $worker;
     }
 
-    public function companyAppointmentWorkers(
-    	PopulateAppointmentWorkersRequest $request
-    )
+    public function companyAppointmentWorkers(PopulateRequest $request)
     {
     	$options = $request->options();
     	
     	$workers = $this->worker->all($options);
     	$workers = $this->worker->paginate();
-    	$workers->date = AppointmentWorkerResource::collection($workers);
+    	$workers = AppointmentWorkerResource::apiCollection($workers);
 
     	return response()->json(['workers' => $workers]);
     }
 
-    public function store(SaveAppointmentWorkerRequest $request)
+    public function store(SaveRequest $request)
     {
     	$input = $request->ruleWithCompany();
     	$worker = $this->worker->save($input);
 
-    	return apiResponse($this->worker, $worker);
+    	return apiResponse($this->worker, ['worker' => $worker]);
     }
 
-    public function update(SaveAppointmentWorkerRequest $request)
+    public function update(SaveRequest $request)
     {
+        $worker = $request->getWorker();
+    	$worker = $this->worker->setModel($worker);
+
     	$input = $request->ruleWithCompany();
-    	$worker = $this->worker->setModel($request->getWorker());
     	$worker = $this->worker->save($input);
 
-    	return apiResponse($this->worker, $worker);
+    	return apiResponse($this->worker, ['worker' => $worker]);
     }
 
-    public function delete(FindAppointmentWorkerRequest $request)
+    public function delete(FindRequest $request)
     {
-    	$this->worker->setModel($request->getWorker());
+        $worker = $request->getWorker();
+
+    	$this->worker->setModel($worker);
     	$this->worker->delete();
 
     	return apiResponse($this->worker);

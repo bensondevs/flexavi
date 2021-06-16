@@ -15,6 +15,21 @@ class CreatePaymentRemindersTable extends Migration
     {
         Schema::create('payment_reminders', function (Blueprint $table) {
             $table->uuid('id')->primary();
+
+            $table->uuid('appointment_id')->nullable();
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('SET NULL');
+
+            $table->uuid('payment_term_id')->nullable();
+            $table->foreign('payment_term_id')
+                ->references('id')
+                ->on('payment_terms')
+                ->onDelete('SET NULL');
+
+            $table->integer('reminder_amount')->default(0);
+
             $table->timestamps();
         });
     }

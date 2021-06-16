@@ -22,6 +22,12 @@ class CreateInspectionsTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
+            $table->uuid('appointment_id')->nullable();
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('SET NULL');
+
             $table->string('signable_type')->nullable();
             $table->uuid('signable_id')->nullable();
 

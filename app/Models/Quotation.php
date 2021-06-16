@@ -49,12 +49,16 @@ class Quotation extends Model
             'value' => 'send',
         ],
         [
-            'label' => 'approval',
-            'value' => 'Approval',
+            'label' => 'Revised',
+            'value' => 'revised',
         ],
         [
-            'label' => 'declined',
-            'value' => 'Declined',
+            'label' => 'Honored',
+            'value' => 'honored',
+        ],
+        [
+            'label' => 'Cancelled',
+            'value' => 'cancelled',
         ]
     ];
 

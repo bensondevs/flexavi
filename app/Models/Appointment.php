@@ -26,19 +26,24 @@ class Appointment extends Model
             'model' => 'App\Models\Quotation',
         ],
         [
-            'label' => 'Work',
+            'label' => 'Execute Work',
             'value' => 'work',
             'model' => 'App\Models\Work',
         ],
         [
-            'label' => 'Warranty Claim',
-            'value' => 'warranty_claim',
-            'model' => 'App\Models\WarrantyClaim',
+            'label' => 'Warranty',
+            'value' => 'warranty',
+            'model' => 'App\Models\Warranty',
         ],
         [
-            'label' => 'Payment Term',
-            'value' => 'payment_term',
-            'model' => 'App\Models\PaymentTerm',
+            'label' => 'Payment Pickup',
+            'value' => 'payment_pickup',
+            'model' => 'App\Models\PaymentPickup',
+        ],
+        [
+            'label' => 'Payment Reminder',
+            'value' => 'payment_reminder',
+            'model' => 'App\Models\PaymentReminder',
         ]
     ];
 
@@ -69,8 +74,8 @@ class Appointment extends Model
         'end',
         'include_weekend',
 
-        'appointment_type',
         'appointment_status',
+        'appointment_type',
         
         'note',
     ];
@@ -90,13 +95,14 @@ class Appointment extends Model
     	});
     }
 
-    public function appointmentable()
+    public function assigned()
     {
-        return $this->hasOne(
-            'App\Models\Appointmentable',
-            'id',
-            'appointment_id'
-        );
+        $appointmentType = $this->attributes['appointment_type'];
+        $types = collect(self::TYPES);
+        $type = $types->where('value', $appointmentType)->first();
+        $type = $type->toArray();
+
+        return $this->hasOne($type['model'], 'id', 'appointment_type_id');
     }
 
     public function customer()

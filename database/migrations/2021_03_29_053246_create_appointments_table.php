@@ -36,8 +36,8 @@ class CreateAppointmentsTable extends Migration
             $table->datetime('end');
             $table->boolean('include_weekend');
 
-            $table->string('appointment_type');
             $table->string('appointment_status');
+            $table->string('appointment_type');
 
             $table->text('note')->nullable();
 
