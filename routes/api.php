@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\Company\OwnerController;
 use App\Http\Controllers\Api\Company\InspectorController;
 use App\Http\Controllers\Api\Company\PaymentTermController;
 use App\Http\Controllers\Api\Company\AppointmentController;
+	use App\Http\Controllers\Api\Company\Appointments\WorkController as AppointmentWorkController;
+	use App\Http\Controllers\Api\Company\Appointments\QuotationController as AppointmentQuotationController;
 use App\Http\Controllers\Api\Company\AppointmentWorkerController;
 use App\Http\Controllers\Api\Company\RegisterInvitationController;
 use App\Http\Controllers\Api\Company\WorkController;
@@ -149,60 +151,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Company Appointment Module
 			*/
 			Route::group(['prefix' => 'appointments'], function () {
-				Route::get('/', [AppointmentController::class, 'customerAppointments']);
+				Route::get('/', [AppointmentController::class, 'companyAppointments']);
+				Route::get('of_customer', [AppointmentController::class, 'customerAppointments']);
 				Route::post('store', [AppointmentController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
 				Route::delete('delete', [AppointmentController::class, 'delete']);
 
 				Route::get('payment_reminder', [AppointmentController::class, 'paymentReminder']);
-
-				/*
-					Appointment Quotation Module
-				*/
-				Route::group(['prefix' => 'quotation'], function () {
-					Route::get('/', [AppointmentController::class, 'quotation']);
-					Route::post('assign', [AppointmentController::class, 'assignQuotation']);
-				});
-
-				/*
-					Appointment Inspection Module
-				*/
-				Route::group(['prefix' => 'inspection'], function () {
-					Route::get('/', [AppointmentController::class, 'inspection']);
-					Route::post('assign', [AppointmentController::class, 'assignInspection']);
-				});
-
-				/*
-					Appointment Work Module
-				*/
-				Route::group(['prefix' => 'work'], function () {
-					Route::get('/', [AppointmentController::class, 'work']);
-					Route::post('assign', [AppointmentController::class, 'assignWork']);
-				});
-
-				/*
-					Appointment Warranty Module
-				*/
-				Route::group(['prefix' => 'warranty'], function () {
-					Route::get('/', [AppointmentController::class, 'warranty']);
-					Route::post('assign', [AppointmentController::class, 'assignWarranty']);
-				});
-
-				/*
-					Appointment Payment Pickup Module
-				*/
-				Route::group(['prefix' => 'payment_pickup'], function () {
-					Route::get('/', [AppointmentController::class, 'paymentPickup']);
-					Route::post('assign', [AppointmentController::class, 'assignPaymentPickup']);
-				});
-
-				/*
-					Appointment Payment Reminder Module
-				*/
-				Route::group(['prefix' => 'payment_reminder'], function () {
-					Route::get('/', [AppointmentController::class, 'paymentReminder']);
-					Route::post('assign', [AppointmentController::class, 'assignPaymentReminder']);
-				});
 
 				/*
 					Appointment Workers Module

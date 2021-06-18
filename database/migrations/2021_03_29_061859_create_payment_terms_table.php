@@ -16,17 +16,17 @@ class CreatePaymentTermsTable extends Migration
         Schema::create('payment_terms', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->uuid('invoice_id');
+            $table->uuid('invoice_id')->nullable();
             $table->foreign('invoice_id')
                 ->references('id')
                 ->on('invoices')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->char('term_name');
             $table->double('amount', 10, 2);

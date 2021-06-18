@@ -33,6 +33,7 @@ class PermissionsSeeder extends Seeder
 
         	// Company 
         	'register companies',
+            'manage companies',
         	'edit companies',
         	'close companies',
 

@@ -16,25 +16,25 @@ class CreateSubscriptionPaymentsTable extends Migration
         Schema::create('subscription_payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('user_id');
+            $table->uuid('user_id')->nullable();
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('SET NULL');
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->uuid('subscription_id');
+            $table->uuid('subscription_id')->nullable();
             $table->foreign('subscription_id')
                 ->references('id')
                 ->on('subscriptions')
                 ->onDelete('SET NULL');
 
-            $table->uuid('pricing_id');
+            $table->uuid('pricing_id')->nullable();
             $table->foreign('pricing_id')
                 ->references('id')
                 ->on('pricings')

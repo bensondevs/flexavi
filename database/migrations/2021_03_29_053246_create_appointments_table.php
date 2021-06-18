@@ -16,21 +16,26 @@ class CreateAppointmentsTable extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
-            $table->uuid('customer_id');
+            $table->uuid('customer_id')->nullable();
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')
                 ->onDelete('SET NULL');
 
+            // Reschedule Information
+            $table->uuid('previous_appointment_id')->nullable();
+            $table->uuid('next_appointment_id')->nullable();
+
             // Reschedule cancel
-            $table->boolean('canceled')->default(false);
-            $table->uuid('reschedule_appointment_id')->nullable();
+            $table->boolean('is_late')->default(false);
+            $table->boolean('cancelled')->default(false);
+            $table->text('cancellation_cause')->nullable();
 
             $table->datetime('start');
             $table->datetime('end');

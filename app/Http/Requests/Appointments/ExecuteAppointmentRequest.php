@@ -4,9 +4,7 @@ namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Models\Appointment;
-
-class FindAppointmentRequest extends FormRequest
+class ExecuteAppointmentRequest extends FormRequest
 {
     private $appointment;
 
@@ -14,7 +12,7 @@ class FindAppointmentRequest extends FormRequest
     {
         if ($this->appointment) return $this->appointment;
 
-        $id = $this->input('id') ?: $this->input('appointment_id');
+        $id = $this->input('id');
         return $this->appointment = Appointment::findOrFail($id);
     }
 
@@ -27,8 +25,7 @@ class FindAppointmentRequest extends FormRequest
     {
         $user = $this->user();
         $appointment = $this->getAppointment();
-
-        return $user->hasCompanyPermission($appointment->company_id, 'view appointments');
+        return $user->hasCompanyPermission($appointment->company_id, 'execute appointments');
     }
 
     /**

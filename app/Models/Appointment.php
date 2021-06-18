@@ -74,6 +74,8 @@ class Appointment extends Model
         'end',
         'include_weekend',
 
+        'cancellation_cause',
+
         'appointment_status',
         'appointment_type',
         
@@ -84,6 +86,8 @@ class Appointment extends Model
         'include_weekend' => 'boolean',
         'start' => 'datetime',
         'end' => 'datetime',
+        'is_late' => 'boolean',
+        'cancelled' => 'boolean',
     ];
 
     protected static function boot()
@@ -102,7 +106,7 @@ class Appointment extends Model
         $type = $types->where('value', $appointmentType)->first();
         $type = $type->toArray();
 
-        return $this->hasOne($type['model'], 'id', 'appointment_type_id');
+        return $this->hasOne($type['model'], 'appointment_id', 'id');
     }
 
     public function customer()
@@ -112,6 +116,12 @@ class Appointment extends Model
             'customer_id',
             'id'
         );
+    }
+
+    public function setStatusAttribute($status)
+    {
+        // To be mofidied
+        $this->attributes['appointment_type'] = $status;
     }
 
     public function getTypeLabelAttribute()
@@ -128,14 +138,34 @@ class Appointment extends Model
     public static function getTypeValues()
     {
         $types = collect(self::TYPES);
-            
-        return $type->pluck('value');
+        return $types->pluck('value')->toArray();
     }
 
     public static function getStatusValues()
     {
         $statuses = collect(self::STATUSES);
-            
-        return $statuses->pluck('value');
+        return $statuses->pluck('value')->toArray();
+    }
+
+    public function isLate()
+    {
+        $end = carbon()->parse($this->attributes['end']);
+        $now = carbon()->now();
+        return ($now > $end);
+    }
+
+    public function isOnTime()
+    {
+        $end = carbon()->parse($this->attributes['end']);
+        $now = carbon()->now();
+        return ($now < $end);
+    }
+
+    public function process()
+    {
+        $this->setStatusAttribute('processed');
+        $this->attributes['is_late'] = $this->isLate();
+        $this->attributes['cancelled'] = $this->isLate();
+        return $this->save();
     }
 }

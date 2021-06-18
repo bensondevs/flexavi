@@ -6,11 +6,11 @@ use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\Customer;
 
-use App\Traits\CompanyPopulateRequest;
+use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateCustomerAppointmentsRequest extends FormRequest
 {
-    use CompanyPopulateRequest;
+    use CompanyPopulateRequestOptions;
 
     private $customer;
 

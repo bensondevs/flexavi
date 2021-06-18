@@ -62,10 +62,26 @@ class Quotation extends Model
         ]
     ];
 
+    const PAYMENT_METHODS = [
+        [
+            'label' => 'Cash',
+            'value' => 'cash',
+        ],
+        [
+            'label' => 'Credit Card',
+            'value' => 'credit_card',
+        ],
+        [
+            'label' => 'Paypal',
+            'value' => 'paypal',
+        ]
+    ];
+
     protected $fillable = [
         'company_id',
         'creator_id',
         'customer_id',
+        'appointment_id',
         
         'subject',
         
@@ -92,14 +108,6 @@ class Quotation extends Model
     	});
     }
 
-    public function getStatusLabelAttribute()
-    {
-        return $this->getLabelByValue(
-            'STATUSES', 
-            $this->attributes['status']
-        ); 
-    }
-
     public function setDocumentAttribute($document)
     {
         $path = 'storage/uploads/quotations/files/';
@@ -109,11 +117,12 @@ class Quotation extends Model
         return $this->attributes['quotation_document_url'] = $pdfUrl;
     }
 
-    public function inspection()
+    public function appointment()
     {
-        return $this->morphOne(
-            Inspection::class, 
-            'signable'
+        return $this->hasOne(
+            'App\Models\Appointment', 
+            'appoinment_id', 
+            'id'
         );
     }
 
@@ -131,15 +140,6 @@ class Quotation extends Model
         return $this->belongsTo(
             'App\Models\User', 
             'creator_id', 
-            'id'
-        );
-    }
-
-    public function appointment()
-    {
-        return $this->belongsTo(
-            'App\Models\Appointment', 
-            'appoinment_id', 
             'id'
         );
     }

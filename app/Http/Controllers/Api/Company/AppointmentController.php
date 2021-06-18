@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Appointments\SaveAppointmentRequest as SaveRequest;
 use App\Http\Requests\Appointments\FindAppointmentRequest as FindRequest;
+use App\Http\Requests\Appointments\ExecuteAppointmentRequest as ExecuteRequest;
 use App\Http\Requests\Appointments\DeleteAppointmentRequest as DeleteRequest;
-use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as PopulateRequest;
+use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest as CompanyPopulateRequest;
+use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as CustomerPopulateRequest;
 
 use App\Http\Resources\AppointmentResource;
 
@@ -18,14 +20,23 @@ class AppointmentController extends Controller
 {
     private $appointment;
 
-    public function __construct(
-    	AppointmentRepository $appointment
-    )
+    public function __construct(AppointmentRepository $appointment)
     {
     	$this->appointment = $appointment;
     }
 
-    public function customerAppointments(PopulateRequest $request)
+    public function companyAppointments(CompanyPopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $appointments = $this->appointment->all($options);
+        $appointments = $this->appointment->paginate();
+        $appointments = AppointmentResource::apiCollection($appointments);
+
+        return response()->json(['appointments' => $appointments]);
+    }
+
+    public function customerAppointments(CustomerPopulateRequest $request)
     {
         $options = $request->options();
 
@@ -51,6 +62,15 @@ class AppointmentController extends Controller
     {
         $input = $request->ruleWithCompany();
         $appointment = $this->appointment->save($input);
+
+        return apiResponse($this->appointment, ['appointment' => $appointment]);
+    }
+
+    public function execute(ExecuteRequest $request)
+    {
+        $appointment = $request->getAppointment();
+        $appointment = $this->appointment->setModel($appointment);
+        $appointment = $this->appointment->execute();
 
         return apiResponse($this->appointment, ['appointment' => $appointment]);
     }

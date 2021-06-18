@@ -16,6 +16,54 @@ class InspectionRepository extends BaseRepository
 		$this->setInitModel(new Inspection);
 	}
 
+	public function startInspection()
+	{
+		$question = Inspection::QUESTIONS[0][0];
+		$inspection = new Inspection();
+		return [
+			'inspection_id' => ,
+
+			'number' => 1,
+			'phase' => 1,
+			'question' => $question['question'],
+			'choices' => $question['choices'],
+			'options' => $question['options'],
+		];
+	}
+
+	public function handleNext(array $answer)
+	{
+		$phase = $answer['phase'];
+		$number = $answer['number'];
+		$choice = isset($answer['choice']) ? $answer['choice'] : null;
+		$options = isset($answer['options']) ? $answer['options'] : null;
+		$data = isset($answer['data']) ? $answer['data'] : null;
+		
+		if ($phase == 1) {
+			if ($number == 1) {
+				$answer = $answer['answer'];
+
+				if ($choice == 'yes') {
+					// Upload the image
+				} else if ($choice == 'no') {
+					// 
+				}
+			}
+		}
+
+		if ($phase == 2) {
+			// 
+		}
+
+		if ($phase == 3) {
+			// 
+		}
+
+		if ($phase == 4) {
+			// 
+		}
+	}
+
 	public function save(array $inspectionData)
 	{
 		try {

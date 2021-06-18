@@ -70,7 +70,7 @@ class SaveCompanyRequest extends FormRequest
             'street' => $this->input('visiting_address_street'),
             'house_number' => $this->input('visiting_address_house_number'),
             'house_number_suffix' => $this->input('visiting_address_house_number_suffix'),
-            'zip_code' => $this->input('visiting_address_zip_code'),
+            'zipcode' => $this->input('visiting_address_zip_code'),
             'city' => $this->input('visiting_address_city'),
         ];
     }
@@ -81,7 +81,7 @@ class SaveCompanyRequest extends FormRequest
             'street' => $this->input('invoicing_address_street'),
             'house_number' => $this->input('invoicing_address_house_number'),
             'house_number_suffix' => $this->input('visiting_address_house_number_suffix'),
-            'zip_code' => $this->input('invoicing_address_zip_code'),
+            'zipcode' => $this->input('invoicing_address_zip_code'),
             'city' => $this->input('invoicing_address_city'),
         ];
     }

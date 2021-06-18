@@ -18,17 +18,29 @@ class SaveQuotationRequest extends FormRequest
 
     private $customer;
     private $quotation;
+    private $appointment;
 
     public function getCustomer()
-    {
-        return $this->customer = $this->customer ?:
-            Customer::findOrFail($this->input('customer_id'));
+    {   
+        if ($this->customer) return $this->customer;
+
+        return $this->customer = Customer::findOrFail($this->input('customer_id'));
     }
 
     public function getQuotation()
     {
-        return $this->quotation = $this->model = $this->quotation ?:
-            Quotation::findOrFail($this->input('id'));
+        if ($this->quotation) return $this->quotation;
+        
+        $id = $this->input('id') ?: $this->input('quotation_id');
+        return $this->quotation = Quotation::findOrFail($id);
+    }
+
+    public function getAppointment()
+    {
+        if ($this->appointment) return $this->appointment;
+
+        $id = $this->input('appointment_id');        
+        return $this->appointment = Appointment::findOrFail($id);
     }
 
     /**
@@ -46,11 +58,16 @@ class SaveQuotationRequest extends FormRequest
         if (! $this->isMethod('POST')) $quotation = $this->getQuotation();
         if (! $this->authorizeCompanyAction('quotations')) return false;
 
-
         // Validate Customer
         $customer = $this->getCustomer();
         $authorizeAction = $user->hasCompanyPermission($customer->company_id, 'view customer');
         if (! $authorizeAction) return false;
+
+        // Validate Appointment if assigned
+        if ($this->input('appointment_id')) {
+            $appointment = $this->getAppointment();
+            $authorizeAction = $user->hasCompanyPermission($appointment->company_id, 'view appointments');
+        }
 
         return true;
     }
@@ -63,6 +80,7 @@ class SaveQuotationRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
+            'appointment_id' => ['string'],
             'subject' => ['required', 'string'],
             'quotation_number' => ['required', 'string', 'alpha_num'],
             'quotation_type' => [
@@ -94,6 +112,7 @@ class SaveQuotationRequest extends FormRequest
     public function quotationData()
     {
         $data = $this->ruleWithCompany();
+        $data['creator_id'] = $this->user()->id;
         $data['customer_id'] = $this->getCustomer()->id;
         unset($data['quotation_document']);
         return $data;

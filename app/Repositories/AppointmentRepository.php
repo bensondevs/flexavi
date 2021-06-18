@@ -74,12 +74,38 @@ class AppointmentRepository extends BaseRepository
 		}
 	}
 
-	public function cancel()
+	public function execute()
 	{
-		// 
+		
 	}
 
-	public function reschedule()
+	public function process()
+	{
+		try {
+			$appointment = $this->getModel();
+			$appointment->process();
+
+			$this->setModel($appointment);
+
+			$this->setSuccess('Successfully process appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed process appointment.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function cancel(array $cancellationData)
+	{
+		try {
+			
+		} catch (QueryException $qe) {
+			
+		}
+	}
+
+	public function reschedule(array $rescheduleData)
 	{
 		// 
 	}

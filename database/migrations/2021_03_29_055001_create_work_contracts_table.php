@@ -16,13 +16,13 @@ class CreateWorkContractsTable extends Migration
         Schema::create('work_contracts', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->uuid('customer_id');
+            $table->uuid('customer_id')->nullable();
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')

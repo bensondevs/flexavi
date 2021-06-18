@@ -16,11 +16,11 @@ class CreateInspectionsTable extends Migration
         Schema::create('inspections', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('appointment_id')->nullable();
             $table->foreign('appointment_id')
@@ -28,12 +28,14 @@ class CreateInspectionsTable extends Migration
                 ->on('appointments')
                 ->onDelete('SET NULL');
 
+            $table->json('inspection_answers')->nullable();
+
             $table->string('signable_type')->nullable();
             $table->uuid('signable_id')->nullable();
 
             $table->boolean('is_signed');
 
-            $table->text('sidenote');
+            $table->text('sidenote')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

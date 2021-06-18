@@ -16,13 +16,13 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->uuid('work_contract_id');
+            $table->uuid('work_contract_id')->nullable();
             $table->foreign('work_contract_id')
                 ->references('id')
                 ->on('work_contracts')

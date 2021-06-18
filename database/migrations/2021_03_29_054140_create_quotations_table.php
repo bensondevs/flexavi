@@ -16,19 +16,19 @@ class CreateQuotationsTable extends Migration
         Schema::create('quotations', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->uuid('creator_id');
+            $table->uuid('creator_id')->nullable();
             $table->foreign('creator_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('SET NULL');
 
-            $table->uuid('customer_id');
+            $table->uuid('customer_id')->nullable();
             $table->foreign('customer_id')
                 ->references('id')
                 ->on('customers')

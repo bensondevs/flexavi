@@ -47,12 +47,12 @@ class SaveAppointmentRequest extends FormRequest
             'appointment_type' => [
                 'required', 
                 'string', 
-                new AmongStrings(Appointment::getTypes())
+                new AmongStrings(Appointment::getTypeValues())
             ],
             'appointment_status' => [
                 'required',
                 'string',
-                new AmongStrings(Appointment::getStatuses())  
+                new AmongStrings(Appointment::getStatusValues())  
             ],
             'note' => ['string'],
         ]);
