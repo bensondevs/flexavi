@@ -40,43 +40,21 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function assignType(array $assignData)
+	public function execute()
 	{
 		try {
 			$appointment = $this->getModel();
-			$appointment->pivot()->save([
-				'appointment_id' => $appointment->id,
-				'appointmentable_id' => $assignData['id'],
-				'appointmentable_type' => AppointmentableType::fromKey($assignData['type']),
-			]);
+			$appointment->execute();
 
 			$this->setModel($appointment);
 
-			$this->setSuccess('Successfully assign item to appointment');
+			$this->setSuccess('Successfully execute appointment.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to assign item to appointment');
+			$error = $qe->getMessage();
+			$this->setError('Failed to execute appointment.', $error);
 		}
 
 		return $this->getModel();
-	}
-
-	public function assign(string $type, $model)
-	{
-		try {
-			$appointment = $this->getModel();
-			$appointment->appointment_type = $type;
-			$appointment->appointment_type_id = $model->id;
-			$appointment->save();
-
-			$this->setModel($appointment);
-		} catch (QueryException $qe) {
-			
-		}
-	}
-
-	public function execute()
-	{
-		
 	}
 
 	public function process()
@@ -96,18 +74,38 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function cancel(array $cancellationData)
+	public function cancel(array $cancelData)
 	{
 		try {
-			
-		} catch (QueryException $qe) {
-			
-		}
-	}
+			$appointment = $this->getModel();
+			$appointment->cancelled = true;
+			$appointment->cancellation_cause = $cancelData['cancellation_cause'];
 
-	public function reschedule(array $rescheduleData)
-	{
-		// 
+			if (isset($cancelData['reschedule_data'])) {
+				$reschedule = new Appointment();
+				$reschedule->fill($cancelData['reschedule_data']);
+				$reschedule->previous_appointment_id = $appointment->id;
+				$reschedule->save();
+
+				// Move assigned appointment
+				$assigned = $appointment->assigned;
+				$assigned->appointment_id = $reschedule->id;
+				$assigned->save();
+
+				// Next Appointment assign
+				$appointment->next_appointment_id = $appointment->id;
+			}
+
+			$appointment->save();
+			$this->setModel($appointment);
+
+			$this->setSuccess('Successfully cancel appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to cancel appointment', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	public function delete(bool $force = false)

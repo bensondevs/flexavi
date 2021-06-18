@@ -161,6 +161,14 @@ class Appointment extends Model
         return ($now < $end);
     }
 
+    public function execute()
+    {
+        $this->setStatusAttribute('in_process');
+        $this->attributes['is_late'] = $this->isLate();
+        $this->attributes['cancelled'] = $this->isLate();
+        return $this->save();
+    }
+
     public function process()
     {
         $this->setStatusAttribute('processed');

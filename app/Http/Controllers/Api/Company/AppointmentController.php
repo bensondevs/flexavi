@@ -75,6 +75,15 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment, ['appointment' => $appointment]);
     }
 
+    public function process(ProcessRequest $request)
+    {
+        $appointment = $request->getAppointment();
+        $appointment = $this->appointment->setModel($appointment);
+        $appointment = $this->appointment->process();
+
+        return apiResponse($this->appointment, ['appointment' => $appointment]);
+    }
+
     public function cancel(FindRequest $request)
     {
         $appointment = $request->getAppointment();
