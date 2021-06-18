@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Appointments\SaveAppointmentRequest as SaveRequest;
 use App\Http\Requests\Appointments\FindAppointmentRequest as FindRequest;
 use App\Http\Requests\Appointments\ExecuteAppointmentRequest as ExecuteRequest;
+use App\Http\Requests\Appointments\CancelAppointmentRequest as CancelRequest;
 use App\Http\Requests\Appointments\DeleteAppointmentRequest as DeleteRequest;
 use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest as CompanyPopulateRequest;
 use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as CustomerPopulateRequest;
@@ -84,11 +85,13 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment, ['appointment' => $appointment]);
     }
 
-    public function cancel(FindRequest $request)
+    public function cancel(CancelRequest $request)
     {
         $appointment = $request->getAppointment();
         $appointment = $this->appointment->setModel($appointment);
-        $appointment = $this->appointment->cancel();
+
+        $cancelData = $request->cancelData();
+        $appointment = $this->appointment->cancel($cancelData);
 
         return apiResponse($this->appointment, ['appointment' => $appointment]);
     }
@@ -102,6 +105,14 @@ class AppointmentController extends Controller
         $appointment = $this->appointment->reschedule($input);
 
         return apiResponse($this->appointment, ['appointment' => $appointment]);
+    }
+
+    public function generateInvoice(GenerateInvoiceRequest $request)
+    {
+        $appointment = $request->getAppointment();
+        $invoice = $this->invoice->generate($appointment);
+
+        return apiResponse($this->invoice, ['invoice' => $invoice]);
     }
 
     public function update(SaveRequest $request)

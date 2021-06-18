@@ -157,7 +157,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
 				Route::delete('delete', [AppointmentController::class, 'delete']);
 
-				Route::get('payment_reminder', [AppointmentController::class, 'paymentReminder']);
+				Route::post('cancel', [AppointmentController::class, 'cancel']);
+				Route::post('process', [AppointmentController::class, 'process']);
 
 				/*
 					Appointment Workers Module

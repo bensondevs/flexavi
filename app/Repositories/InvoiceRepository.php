@@ -7,6 +7,7 @@ use \Illuminate\Database\QueryException;
 
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\Appointment;
 
 use App\Repositories\Base\BaseRepository;
 
@@ -18,6 +19,11 @@ class InvoiceRepository extends BaseRepository
 	{
 		$this->setInitModel(new Invoice);
 		$this->item = new InvoiceItem;
+	}
+
+	public function generate(Appointment $appointment)
+	{
+		//
 	}
 
 	public function save(array $invoiceData)

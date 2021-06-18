@@ -16,16 +16,67 @@ class Invoice extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    const STATUSES = [
+        [
+            'id' => 1,
+            'label' => 'Created / Draft',
+        ],
+        [
+            'id' => 2,
+            'label' => 'Send / Definitive',
+        ],
+        [
+            'id' => 3,
+            'label' => 'Paid',
+        ],
+        [
+            'id' => 4,
+            'label' => 'Payment Overdue',
+        ],
+        [
+            'id' => 5,
+            'label' => 'Overdue, send first reminder?',
+        ],
+        [
+            'id' => 6,
+            'label' => 'First Reminder Sent',
+        ],
+        [
+            'id' => 7,
+            'label' => 'First reminder sent, send the second reminder?',
+        ],
+        [
+            'id' => 8,
+            'label' => 'Second reminder sent',
+        ],
+        [
+            'id' => 9,
+            'label' => 'Second reminder sent, send the third reminder?',
+        ],
+        [
+            'id' => 10,
+            'label' => 'Third reminder sent',
+        ],
+        [
+            'id' => 11,
+            'label' => 'Overdue, debt collector?',
+        ],
+        [
+            'id' => 12,
+            'label' => 'Sent to debt collector',
+        ],
+        [
+            'id' => 13,
+            'label' => 'Paid via Debt collector',
+        ]
+    ];
+
     protected $fillable = [
         'company_id',
         'work_contract_id',
         'total',
-        'payment_status',
+        'status_code',
         'payment_method',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()
@@ -35,6 +86,21 @@ class Invoice extends Model
     	self::creating(function ($invoice) {
             $invoice->id = Uuid::generate()->string;
     	});
+    }
+
+    public function getStatusAttribute()
+    {
+        $statusId = $this->attributes['status_code'];
+        $statuses = collect(self::STATUSES);
+        $status = $statuses->where('id', $statusId)->first();
+
+        return $status;
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        $status = $this->getStatusArrayAttribute();
+        return $status['label'];
     }
 
     public function workContract()

@@ -30,7 +30,7 @@ class CreateInvoicesTable extends Migration
 
             $table->double('total', 10, 2);
 
-            $table->char('payment_status');
+            $table->tinyInteger('status_code')->default(1);
             $table->char('payment_method');
 
             $table->timestamps();

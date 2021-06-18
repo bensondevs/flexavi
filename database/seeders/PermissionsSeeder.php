@@ -20,6 +20,8 @@ class PermissionsSeeder extends Seeder
         	// Appointment
         	'view appointments',
         	'create appointments',
+            'process appointments',
+            'cancel appointments',
         	'edit appointments',
         	'delete appointments',
             'restore appointments',

@@ -24,6 +24,8 @@ class AppointmentResource extends JsonResource
             'customer_id' => $this->customer_id,
             'start' => $this->start,
             'end' => $this->end,
+            'cancelled' => $this->cancelled,
+            'is_late' => $this->is_late,
             'include_weekend' => $this->include_weekend,
             'appointment_type' => $this->appointment_type,
             'appointment_status' => $this->appointment_status,

@@ -81,7 +81,7 @@ class AppointmentRepository extends BaseRepository
 			$appointment->cancelled = true;
 			$appointment->cancellation_cause = $cancelData['cancellation_cause'];
 
-			if (isset($cancelData['reschedule_data'])) {
+			if ($cancelData['reschedule']) {
 				$reschedule = new Appointment();
 				$reschedule->fill($cancelData['reschedule_data']);
 				$reschedule->previous_appointment_id = $appointment->id;
@@ -93,7 +93,7 @@ class AppointmentRepository extends BaseRepository
 				$assigned->save();
 
 				// Next Appointment assign
-				$appointment->next_appointment_id = $appointment->id;
+				$appointment->next_appointment_id = $reschedule->id;
 			}
 
 			$appointment->save();
@@ -106,6 +106,11 @@ class AppointmentRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function calculate()
+	{
+		//
 	}
 
 	public function delete(bool $force = false)
