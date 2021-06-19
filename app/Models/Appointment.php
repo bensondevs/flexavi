@@ -63,6 +63,21 @@ class Appointment extends Model
         [
             'label' => 'Calculated',
             'value' => 'calculated',
+        ],
+        [
+            'label' => 'Cancelled',
+            'value' => 'cancelled',
+        ]
+    ];
+
+    const CANCELLATION_VAULTS = [
+        [
+            'label' => 'Roofer',
+            'value' => 'roofer',
+        ],
+        [
+            'label' => 'Customer',
+            'value' => 'customer',
         ]
     ];
 
@@ -74,7 +89,12 @@ class Appointment extends Model
         'end',
         'include_weekend',
 
+        'previous_appointment_id',
+        'next_appointment_id',
+
         'cancellation_cause',
+        'cancellation_vault',
+        'cancellation_note',
 
         'appointment_status',
         'appointment_type',
@@ -86,8 +106,6 @@ class Appointment extends Model
         'include_weekend' => 'boolean',
         'start' => 'datetime',
         'end' => 'datetime',
-        'is_late' => 'boolean',
-        'cancelled' => 'boolean',
     ];
 
     protected static function boot()
@@ -114,6 +132,15 @@ class Appointment extends Model
         return $this->hasOne(
             'App\Models\Customer',
             'customer_id',
+            'id'
+        );
+    }
+
+    public function subs()
+    {
+        return $this->hasMany(
+            'App\Models\SubAppointment', 
+            'appoinment_id', 
             'id'
         );
     }
@@ -147,6 +174,12 @@ class Appointment extends Model
         return $statuses->pluck('value')->toArray();
     }
 
+    public static function getCancellationVaultValues()
+    {
+        $vaults = collect(self::CANCELLATION_VAULTS);
+        return $vaults->pluck('value')->toArray();
+    }
+
     public function isLate()
     {
         $end = carbon()->parse($this->attributes['end']);
@@ -164,16 +197,18 @@ class Appointment extends Model
     public function execute()
     {
         $this->setStatusAttribute('in_process');
-        $this->attributes['is_late'] = $this->isLate();
-        $this->attributes['cancelled'] = $this->isLate();
         return $this->save();
     }
 
     public function process()
     {
         $this->setStatusAttribute('processed');
-        $this->attributes['is_late'] = $this->isLate();
-        $this->attributes['cancelled'] = $this->isLate();
+        return $this->save();
+    }
+
+    public function cancel()
+    {
+        $this->setStatusAttribute('cancelled');
         return $this->save();
     }
 }

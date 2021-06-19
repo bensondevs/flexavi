@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAppointmentLogsTable extends Migration
+class CreateSubAppointmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAppointmentLogsTable extends Migration
      */
     public function up()
     {
-        Schema::create('appointment_logs', function (Blueprint $table) {
+        Schema::create('sub_appointments', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
             $table->uuid('appointment_id');
@@ -22,10 +22,16 @@ class CreateAppointmentLogsTable extends Migration
                 ->on('appointments')
                 ->onDelete('CASCADE');
 
-            $table->integer('day')->default(1);
-            $table->date('date');
+            $table->string('status');
+
             $table->datetime('start');
             $table->datetime('end');
+
+            $table->string('cancellation_cause')->nullable();
+            $table->string('cancellation_vault')->nullable();
+            $table->text('cancellation_note')->nullable();
+
+            $table->text('note')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -39,6 +45,6 @@ class CreateAppointmentLogsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('appointment_logs');
+        Schema::dropIfExists('sub_appointments');
     }
 }

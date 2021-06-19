@@ -26,6 +26,15 @@ class PermissionsSeeder extends Seeder
         	'delete appointments',
             'restore appointments',
 
+            // Sub Appointment
+            'view sub appointments',
+            'create sub appointments',
+            'process sub appointments',
+            'cancel sub appointments',
+            'edit sub appointments',
+            'delete sub appointments',
+            'restore sub appointments',
+
         	// Car
         	'view cars',
         	'create cars',

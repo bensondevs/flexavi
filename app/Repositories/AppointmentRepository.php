@@ -78,25 +78,9 @@ class AppointmentRepository extends BaseRepository
 	{
 		try {
 			$appointment = $this->getModel();
-			$appointment->cancelled = true;
-			$appointment->cancellation_cause = $cancelData['cancellation_cause'];
-
-			if ($cancelData['reschedule']) {
-				$reschedule = new Appointment();
-				$reschedule->fill($cancelData['reschedule_data']);
-				$reschedule->previous_appointment_id = $appointment->id;
-				$reschedule->save();
-
-				// Move assigned appointment
-				$assigned = $appointment->assigned;
-				$assigned->appointment_id = $reschedule->id;
-				$assigned->save();
-
-				// Next Appointment assign
-				$appointment->next_appointment_id = $reschedule->id;
-			}
-
+			$appointment->fill($cancelData);
 			$appointment->save();
+
 			$this->setModel($appointment);
 
 			$this->setSuccess('Successfully cancel appointment.');

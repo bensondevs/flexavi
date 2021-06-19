@@ -33,9 +33,10 @@ class CreateAppointmentsTable extends Migration
             $table->uuid('next_appointment_id')->nullable();
 
             // Reschedule cancel
-            $table->boolean('is_late')->default(false);
-            $table->boolean('cancelled')->default(false);
-            $table->text('cancellation_cause')->nullable();
+            $table->string('cancellation_cause')->nullable();
+            $table->string('cancellation_vault')->nullable();
+            $table->text('cancellation_note')->nullable();
+            $table->json('cancellation_data')->nullable();
 
             $table->datetime('start');
             $table->datetime('end');

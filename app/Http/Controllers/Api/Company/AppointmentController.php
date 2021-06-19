@@ -9,6 +9,7 @@ use App\Http\Requests\Appointments\SaveAppointmentRequest as SaveRequest;
 use App\Http\Requests\Appointments\FindAppointmentRequest as FindRequest;
 use App\Http\Requests\Appointments\ExecuteAppointmentRequest as ExecuteRequest;
 use App\Http\Requests\Appointments\CancelAppointmentRequest as CancelRequest;
+use App\Http\Requests\Appointments\RescheduleAppointmentRequest as RescheduleRequest;
 use App\Http\Requests\Appointments\DeleteAppointmentRequest as DeleteRequest;
 use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest as CompanyPopulateRequest;
 use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as CustomerPopulateRequest;

@@ -24,18 +24,6 @@ class CancelAppointmentRequest extends FormRequest
         return Appointment::findOrFail($id);
     }
 
-    protected function prepareForValidation()
-    {
-        $input = $this->all();
-
-        $reschedule = $this->input('reschedule') ?: false;
-        $input['reschedule'] = filter_var($reschedule, FILTER_VALIDATE_BOOLEAN);
-
-        if ($input['reschedule'])
-            $input['include_weekend'] = filter_var($this->input('include_weekend'), FILTER_VALIDATE_BOOLEAN);
-        $this->replace($input);
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -58,34 +46,17 @@ class CancelAppointmentRequest extends FormRequest
     {   
         $this->setRules([
             'cancellation_cause' => ['required', 'string'],
+            'cancellation_vault' => ['required', 'string', new AmongStrings(Appointment::getCancellationVaultValues())],
+            'cancellation_note' => ['required', 'string'],
+
             'reschedule' => ['boolean'],
         ]);
-
-        if ($this->input('reschedule')) {
-            $this->addRule('customer_id', ['required', 'string', 'exists:customers,id']);
-            $this->addRule('start', ['required', 'date']);
-            $this->addRule('end', ['required', 'date']);
-            $this->addRule('include_weekend', ['required', 'boolean']);
-            $this->addRule('appointment_type', ['required', 'string', new AmongStrings(Appointment::getTypeValues())]);
-            $this->addRule('appointment_status', ['required', 'string', new AmongStrings(Appointment::getStatusValues())]);
-            $this->addRule('note', ['string']);
-        }
 
         return $this->returnRules();
     }
 
     public function cancelData()
     {
-        $data = $this->only(['cancellation_cause', 'reschedule']);
-
-        if ($this->input('reschedule')) {
-            $data['reschedule_data'] = $this->except([
-                'id', 
-                'cancellation_cause', 
-                'reschedule'
-            ]);
-        }
-
-        return $data;
+        return $this->onlyInRules();
     }
 }

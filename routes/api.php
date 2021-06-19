@@ -158,6 +158,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::delete('delete', [AppointmentController::class, 'delete']);
 
 				Route::post('cancel', [AppointmentController::class, 'cancel']);
+				Route::post('reschedule', [AppointmentController::class, 'reschedule']);
 				Route::post('process', [AppointmentController::class, 'process']);
 
 				/*
