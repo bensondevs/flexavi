@@ -26,8 +26,8 @@ class SubAppointmentController extends Controller
         $options = $request->options();
 
         $subAppointments = $this->subAppointment->all($options);
-        $subAppointments = $this->subAppointment->paginate();
-        $subAppointments = SubAppointmentResource::apiCollection($subAppointments);
+        // $subAppointments = $this->subAppointment->paginate();
+        $subAppointments = SubAppointmentResource::collection($subAppointments);
 
         return response()->json(['sub_appointments' => $subAppointments]);
     }
@@ -53,6 +53,11 @@ class SubAppointmentController extends Controller
 
     public function delete(DeleteRequest $request)
     {
-        // 
+        $subAppointment = $request->getSubAppointment();
+
+        $this->subAppointment->setModel($subAppointment);
+        $this->subAppointment->delete();
+
+        return apiResponse($this->subAppointment);
     }
 }

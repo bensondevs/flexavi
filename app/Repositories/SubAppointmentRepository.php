@@ -35,6 +35,60 @@ class SubAppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	public function cancel()
+	{
+		try {
+			$subAppointment = $this->getModel();
+			$subAppointment->status = 'cancelled';
+			$subAppointment->save();
+
+			$this->setModel($subAppointment);
+
+			$this->setSuccess('Successfully cancel sub appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to cancel sub appointment.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function execute()
+	{
+		try {
+			$subAppointment = $this->getModel();
+			$subAppointment->status = 'in_process';
+			$subAppointment->save();
+
+			$this->setModel($subAppointment);
+
+			$this->setSuccess('Successfully execute sub appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to execute sub appointment.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function process()
+	{
+		try {
+			$subAppointment = $this->getModel();
+			$subAppointment->status = 'processed';
+			$subAppointment->save();
+
+			$this->setModel($subAppointment);
+
+			$this->setSuccess('Successfully process sub appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to process sub appointment.', $error);
+		}
+
+		return $this->getModel();
+	}
+
 	public function delete(bool $force = false)
 	{
 		try {

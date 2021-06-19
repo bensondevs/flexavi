@@ -16,8 +16,7 @@ use App\Http\Controllers\Api\Company\OwnerController;
 use App\Http\Controllers\Api\Company\InspectorController;
 use App\Http\Controllers\Api\Company\PaymentTermController;
 use App\Http\Controllers\Api\Company\AppointmentController;
-	use App\Http\Controllers\Api\Company\Appointments\WorkController as AppointmentWorkController;
-	use App\Http\Controllers\Api\Company\Appointments\QuotationController as AppointmentQuotationController;
+	use App\Http\Controllers\Api\Company\SubAppointmentController;
 use App\Http\Controllers\Api\Company\AppointmentWorkerController;
 use App\Http\Controllers\Api\Company\RegisterInvitationController;
 use App\Http\Controllers\Api\Company\WorkController;
@@ -159,7 +158,18 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 
 				Route::post('cancel', [AppointmentController::class, 'cancel']);
 				Route::post('reschedule', [AppointmentController::class, 'reschedule']);
+				Route::post('execute', [AppointmentController::class, 'execute']);
 				Route::post('process', [AppointmentController::class, 'process']);
+
+				/*
+					Sub Appointments Module
+				*/
+				Route::group(['prefix' => 'subs'], function () {
+					Route::get('/', [SubAppointmentController::class, 'subAppointments']);
+					Route::post('store', [SubAppointmentController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [SubAppointmentController::class, 'update']);
+					Route::delete('delete', [SubAppointmentController::class, 'delete']);
+				});
 
 				/*
 					Appointment Workers Module

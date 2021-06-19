@@ -31,15 +31,16 @@ class SubAppointment extends Model
             'label' => 'Cancelled',
             'value' => 'cancelled',
         ]
-    ]
+    ];
 
-    const VAULT = [
+    const VAULTS = [
         [
             'label' => 'Roofer',
             'value' => 'roofer',
         ],
         [
-            ''
+            'label' => 'Customer',
+            'value' => 'customer',
         ]
     ];
 
@@ -85,7 +86,7 @@ class SubAppointment extends Model
 
     public static function getVaultValues()
     {
-        $vaults = collect(self::STATUSES);
+        $vaults = collect(self::VAULTS);
         return $vaults->pluck('value')->toArray();
     }
 }

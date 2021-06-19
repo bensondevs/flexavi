@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             CarsSeeder::class,
             AppointmentsSeeder::class,
             AppointmentWorkersSeeder::class,
+            SubAppointmentsSeeder::class,
             RegisterInvitationsSeeder::class,
         ]);
     }
