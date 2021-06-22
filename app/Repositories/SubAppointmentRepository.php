@@ -35,11 +35,12 @@ class SubAppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function cancel()
+	public function cancel(array $cancellationData = [])
 	{
 		try {
 			$subAppointment = $this->getModel();
 			$subAppointment->status = 'cancelled';
+			$subAppointment->fill($cancellationData);
 			$subAppointment->save();
 
 			$this->setModel($subAppointment);
@@ -48,6 +49,40 @@ class SubAppointmentRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to cancel sub appointment.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function reschedule(array $newSchedule = [])
+	{
+		try {
+			// Old Sub Appointment
+			$subAppointment = $this->getModel();
+
+			// New Sub Appointment
+			$newSubAppointment = $subAppointment->replicate();
+			$newSubAppointment->previous_sub_appointment_id = $subAppointment->id
+			$newSubAppointment->start = $newSchedule['start'];
+			$newSubAppointment->end = $newSchedule['end'];
+			$newSubAppointment->push();
+
+			// Save Sub Appointment
+			$subAppointment->rescheduled_sub_appointment_id = $newSubAppointment->id;
+			$subAppointment->save();
+
+			$appointment = $subAppointment->appointment;
+			if ($appointment->end < $newSubAppointment->end) {
+				$appointment->end = $newSubAppointment->end;
+				$appointment->save();
+			}
+
+			$this->setModel($newSubAppointment);
+
+			$this->setSuccess('Successfully reschedule sub appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to reschedule sub appointment.', $error);
 		}
 
 		return $this->getModel();

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\SubAppointments\SaveSubAppointmentRequest as SaveRequest;
 use App\Http\Requests\SubAppointments\PopulateSubAppointmentsRequest as PopulateRequest;
+use App\Http\Requests\SubAppointments\CancelSubAppointmentRequest as CancelRequest;
+use App\Http\Requests\SubAppointments\RescheduleSubAppointmentRequest as RescheduleRequest;
 
 use App\Http\Resources\SubAppointmentResource;
 
@@ -26,7 +28,6 @@ class SubAppointmentController extends Controller
         $options = $request->options();
 
         $subAppointments = $this->subAppointment->all($options);
-        // $subAppointments = $this->subAppointment->paginate();
         $subAppointments = SubAppointmentResource::collection($subAppointments);
 
         return response()->json(['sub_appointments' => $subAppointments]);
@@ -47,6 +48,28 @@ class SubAppointmentController extends Controller
 
         $input = $request->onlyInRules();
         $subAppointment = $this->subAppointment->save($input);
+
+        return apiResponse($this->subAppointment, ['sub_appointment' => $subAppointment]);
+    }
+
+    public function cancel(CancelRequest $request)
+    {
+        $subAppointment = $request->getSubAppointment();
+        $subAppointment = $this->subAppointment->setModel($subAppointment);
+
+        $input = $request->onlyInRules();
+        $subAppointment = $this->subAppointment->cancel($input);
+
+        return apiResponse($this->subAppointment, ['sub_appointment' => $subAppointment]);
+    }
+
+    public function reschedule(RescheduleRequest $request)
+    {
+        $subAppointment = $request->getSubAppointment();
+        $subAppointment = $this->subAppointment->setModel($subAppointment);
+
+        $newSchedule = $request->scheduleData();
+        $subAppointment = $this->subAppointment->reschedule($newSchedule);
 
         return apiResponse($this->subAppointment, ['sub_appointment' => $subAppointment]);
     }

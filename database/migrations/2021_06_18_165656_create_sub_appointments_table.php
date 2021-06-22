@@ -22,6 +22,9 @@ class CreateSubAppointmentsTable extends Migration
                 ->on('appointments')
                 ->onDelete('CASCADE');
 
+            $table->uuid('previous_sub_appointment_id')->nullable();
+            $table->uuid('rescheduled_sub_appointment_id')->nullable();
+
             $table->string('status');
 
             $table->datetime('start');

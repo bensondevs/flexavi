@@ -31,6 +31,7 @@ class CreatePaymentRemindersTable extends Migration
             $table->integer('reminder_amount')->default(0);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

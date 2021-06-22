@@ -68,12 +68,19 @@ class Quotation extends Model
             'value' => 'cash',
         ],
         [
-            'label' => 'Credit Card',
-            'value' => 'credit_card',
+            'label' => 'Bank Transfer',
+            'value' => 'bank_transfer',
+        ]
+    ];
+
+    const CANCELLERS = [
+        [
+            'label' => 'Company',
+            'value' => 'company',
         ],
         [
-            'label' => 'Paypal',
-            'value' => 'paypal',
+            'label' => 'Customer',
+            'value' => 'customer',
         ]
     ];
 
@@ -93,10 +100,13 @@ class Quotation extends Model
         'expiry_date',
         'status',
         'payment_method',
-    ];
 
-    protected $hidden = [
-        
+        'amount',
+        'discount_amount',
+        'total_amount',
+
+        'canceller',
+        'cancellation_reason',
     ];
 
     protected static function boot()
@@ -106,6 +116,10 @@ class Quotation extends Model
     	self::creating(function ($quotation) {
             $quotation->id = Uuid::generate()->string;
     	});
+
+        self::saving(function ($quotation) {
+            $quotation->total_amount = $quotation->amount - $quotation->discount_amount;
+        });
     }
 
     public function setDocumentAttribute($document)
@@ -115,6 +129,15 @@ class Quotation extends Model
         $pdfUrl = asset($documentPath);
 
         return $this->attributes['quotation_document_url'] = $pdfUrl;
+    }
+
+    public function setDiscountPercentageAttribute(string $percentage)
+    {
+        $percentage = str_replace('%', '', $percentage);
+        $percentage = (float) $percentage;
+
+        $amount = $this->attributes['amount'];
+        $this->attributes['discount_amount'] = $amount * $percentage;
     }
 
     public function appointment()
@@ -162,7 +185,16 @@ class Quotation extends Model
         );
     }
 
-    public static function getTypes()
+    public function revisions()
+    {
+        return $this->hasMany(
+            'App\Models\QuotationRevision',
+            'quotation_id',
+            'id'
+        );
+    }
+
+    public static function getTypeValues()
     {
         $collection = collect(static::TYPES);
         $types = $collection->pluck(['value']);
@@ -170,11 +202,27 @@ class Quotation extends Model
         return $types->toArray();
     }
 
-    public static function getStatuses()
+    public static function getStatusValues()
     {
         $collection = collect(static::STATUSES);
         $statuses = $collection->pluck(['value']);
 
         return $statuses->toArray();
+    }
+
+    public static function getPaymentMethodValues()
+    {
+        $collection = collect(static::PAYMENT_METHODS);
+        $methods = $collection->pluck('value');
+
+        return $methods->toArray();
+    }
+
+    public static function getCancellerValues()
+    {
+        $collection = collect(static::CANCELLERS);
+        $cancellers = $collection->pluck('value');
+
+        return $cancellers->toArray();
     }
 }

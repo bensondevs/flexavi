@@ -86,7 +86,7 @@ class SaveQuotationRequest extends FormRequest
             'quotation_type' => [
                 'required', 
                 'string', 
-                new AmongStrings(Quotation::getTypes())
+                new AmongStrings(Quotation::getTypeValues())
             ],
             'quotation_description' => ['required', 'string'],
             'quotation_document' => ['file', 'mimes:pdf', 'max:10000'],
@@ -94,9 +94,10 @@ class SaveQuotationRequest extends FormRequest
             'status' => [
                 'required', 
                 'string', 
-                new AmongStrings(Quotation::getStatuses())
+                new AmongStrings(Quotation::getStatusValues())
             ],
-            'payment_method' => ['required', 'string'],
+            'amount' => ['required', 'integer'],
+            'payment_method' => ['required', 'string', new AmongStrings(Quotation::getPaymentMethodValues())],
         ]);
 
         if ($this->isMethod('POST')) {

@@ -40,19 +40,23 @@ class CreateQuotationsTable extends Migration
                 ->on('appointments')
                 ->onDelete('SET NULL');
 
-            $table->uuid('quotable_id')->nullable();
-            $table->string('quotable_type')->nullable();
-
             $table->string('subject');
             $table->string('quotation_number');
             $table->string('quotation_type');
             $table->text('quotation_description');
             $table->text('quotation_document_url');
 
+            $table->integer('amount')->default(0);
+            $table->integer('discount_amount')->default(0);
+            $table->integer('total_amount')->default(0);
+
             $table->date('expiry_date');
             $table->char('status');
 
             $table->char('payment_method');
+
+            $table->string('canceller')->nullable();
+            $table->text('cancellation_reason')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

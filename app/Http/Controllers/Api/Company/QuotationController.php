@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Quotations\SaveQuotationRequest as SaveRequest;
 use App\Http\Requests\Quotations\FindQuotationRequest as FindRequest;
+use App\Http\Requests\Quotations\ReviseQuotationRequest as ReviseRequest;
 use App\Http\Requests\Quotations\PopulateCompanyQuotationRequest as PopulateRequest;
 
 use App\Http\Resources\QuotationResource;
@@ -42,7 +43,30 @@ class QuotationController extends Controller
         $input['creator_id'] = $request->user()->id;
     	$quotation = $this->quotation->save($input);
 
-    	return apiResponse($this->quotation, ['quotation' => $quotation]);
+    	return apiResponse($this->quotation);
+    }
+
+    public function revise(ReviseRequest $request)
+    {
+        $quotation = $request->getQuotation();
+        $quotation = $this->quotation->setModel($quotation);
+
+        $revisionData = $request->revisionData();
+        $quotation = $this->quotation->revise($revisionData);
+
+        return apiResponse($this->quotation);
+    }
+
+    public function cancel(CancelRequest $request)
+    {
+        $quotation = $request->getQuotation();
+        $this->quotation->setModel($quotation);
+
+        $cancellationData = $request->cancellationData();
+        $cancellationData['canceller'] = 'company';
+        $this->quotation->cancel($cancellationData);
+
+        return apiResponse($this->quotation);
     }
 
     public function update(SaveRequest $request)
@@ -53,12 +77,7 @@ class QuotationController extends Controller
         $input = $request->quotationData();
     	$quotation = $this->quotation->save($input);
 
-    	return apiResponse($this->quotation, ['quotation' => $quotation]);
-    }
-
-    public function changeDocument()
-    {
-        
+    	return apiResponse($this->quotation);
     }
 
     public function delete(FindRequest $request)

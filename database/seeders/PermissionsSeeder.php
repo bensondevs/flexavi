@@ -118,6 +118,13 @@ class PermissionsSeeder extends Seeder
         	'delete quotations',
             'restore quotations',
 
+            // Quotation Revisions
+            'apply revision quotations',
+            'view quotation revisions',
+            'create quotation revisions',
+            'edit quotation revisions',
+            'delete quotation revisions',
+
         	// Quotation Photo
         	'view quotation photos',
         	'create quotation photos',

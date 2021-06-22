@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePaymentPickupsTable extends Migration
+class CreateQuotationRevisionTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,24 @@ class CreatePaymentPickupsTable extends Migration
      */
     public function up()
     {
-        Schema::create('payment_pickups', function (Blueprint $table) {
+        Schema::create('quotation_revision', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('appointment_id');
-            $table->foreign('appointment_id')
+            $table->uuid('quotation_id');
+            $table->foreign('quotation_id')
                 ->references('id')
-                ->on('appointments')
+                ->on('quotations')
                 ->onDelete('CASCADE');
-            $table->uuid('picker_id')->nullable();
-            $table->foreign('picker_id')
+
+            $table->uuid('revision_requester_id');
+            $table->foreign('revision_requester_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('CASCADE');
 
-            $table->integer('pickup_amount')->default(0);
+            $table->boolean('is_applied')->default(false);
+            $table->datetime('applied_at')->nullable();
+            $table->json('revisions')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -41,6 +44,6 @@ class CreatePaymentPickupsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payment_pickups');
+        Schema::dropIfExists('quotation_revision');
     }
 }

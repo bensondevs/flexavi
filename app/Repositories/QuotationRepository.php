@@ -54,6 +54,29 @@ class QuotationRepository extends BaseRepository
 
 		return $this->getModel();
 	}
+	
+	public function cancel(array $cancellationData = [])
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->fill($cancellationData);
+			$quotation->save();
+
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully cancel quotation data.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to cancel quotation data.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function honor()
+	{
+
+	}
 
 	public function delete(bool $force = false)
 	{

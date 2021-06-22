@@ -47,6 +47,9 @@ class SubAppointment extends Model
     protected $fillable = [
         'appointment_id',
 
+        'previous_sub_appointment_id',
+        'rescheduled_sub_appointment_id',
+
         'status',
         'start',
         'end',
@@ -78,6 +81,15 @@ class SubAppointment extends Model
         );
     }
 
+    public function previousSubAppointment()
+    {
+        return $this->belongsTo(
+            'App\Models\Appointment', 
+            'appoinment_id', 
+            'id'
+        );
+    }
+
     public static function getStatusValues()
     {
         $statuses = collect(self::STATUSES);
@@ -88,5 +100,19 @@ class SubAppointment extends Model
     {
         $vaults = collect(self::VAULTS);
         return $vaults->pluck('value')->toArray();
+    }
+
+    public function isLate()
+    {
+        $end = carbon()->parse($this->attributes['end']);
+        $now = carbon()->now();
+        return ($now > $end);
+    }
+
+    public function isOnTime()
+    {
+        $end = carbon()->parse($this->attributes['end']);
+        $now = carbon()->now();
+        return ($now < $end);
     }
 }

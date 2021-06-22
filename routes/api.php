@@ -167,6 +167,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::group(['prefix' => 'subs'], function () {
 					Route::get('/', [SubAppointmentController::class, 'subAppointments']);
 					Route::post('store', [SubAppointmentController::class, 'store']);
+					Route::post('cancel', [SubAppointmentController::class, 'cancel']);
+					Route::post('reschedule', [SubAppointmentController::class, 'reschedule']);
 					Route::match(['PUT', 'PATCH'], 'update', [SubAppointmentController::class, 'update']);
 					Route::delete('delete', [SubAppointmentController::class, 'delete']);
 				});

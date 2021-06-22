@@ -50,7 +50,7 @@ class SaveSubAppointmentRequest extends FormRequest
         }
 
         if ($this->isMethod('POST')) {
-            $user->hasCompanyPermission($appointment->company_id, 'create sub appointments');
+            return $user->hasCompanyPermission($appointment->company_id, 'create sub appointments');
         }
 
         $subAppointment = $this->getSubAppointment();
