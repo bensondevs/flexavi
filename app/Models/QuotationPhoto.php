@@ -16,12 +16,9 @@ class QuotationPhoto extends Model
 
     protected $fillable = [
         'quotation_id',
+
         'photo_url',
         'photo_description',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()

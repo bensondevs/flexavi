@@ -21,67 +21,28 @@ class Quotation extends Model
     public $incrementing = false;
 
     const TYPES = [
-        [
-            'label' => 'Leakage',
-            'value' => 'leakage',
-        ],
-        [
-            'label' => 'Renovation',
-            'value' => 'renovation',
-        ],
-        [
-            'label' => 'Reparation',
-            'value' => 'reparation',
-        ],
-        [
-            'label' => 'Renewal',
-            'value' => 'renewal',
-        ]
+        'Leakage',
+        'Renovation',
+        'Reparation',
+        'Renewal',
     ];
 
     const STATUSES = [
-        [
-            'label' => 'Draft',
-            'value' => 'draft',
-        ],
-        [
-            'label' => 'Send',
-            'value' => 'send',
-        ],
-        [
-            'label' => 'Revised',
-            'value' => 'revised',
-        ],
-        [
-            'label' => 'Honored',
-            'value' => 'honored',
-        ],
-        [
-            'label' => 'Cancelled',
-            'value' => 'cancelled',
-        ]
+        'Draft',
+        'Send',
+        'Revised',
+        'Honored',
+        'Cancelled',
     ];
 
     const PAYMENT_METHODS = [
-        [
-            'label' => 'Cash',
-            'value' => 'cash',
-        ],
-        [
-            'label' => 'Bank Transfer',
-            'value' => 'bank_transfer',
-        ]
+        'cash',
+        'bank',
     ];
 
     const CANCELLERS = [
-        [
-            'label' => 'Company',
-            'value' => 'company',
-        ],
-        [
-            'label' => 'Customer',
-            'value' => 'customer',
-        ]
+        'company',
+        'customer',
     ];
 
     protected $fillable = [
@@ -105,8 +66,15 @@ class Quotation extends Model
         'discount_amount',
         'total_amount',
 
+        'honor_note',
+        'honored_at',
+
         'canceller',
         'cancellation_reason',
+    ];
+
+    protected $casts = [
+        'works' => 'array'
     ];
 
     protected static function boot()
@@ -204,10 +172,7 @@ class Quotation extends Model
 
     public static function getStatusValues()
     {
-        $collection = collect(static::STATUSES);
-        $statuses = $collection->pluck(['value']);
-
-        return $statuses->toArray();
+        return $statuses;
     }
 
     public static function getPaymentMethodValues()

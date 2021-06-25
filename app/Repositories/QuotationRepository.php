@@ -46,20 +46,51 @@ class QuotationRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save quotation data.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save quotation data.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save quotation data.', $error);
 		}
 
 		return $this->getModel();
 	}
-	
-	public function cancel(array $cancellationData = [])
+
+	public function saveRevision()
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->status = 3;
+			$quotation->save();
+
+			$this->setModel($quotation);
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to save revision.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function honor()
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->status = 4;
+			$quotation->save();
+
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully honor quotation data.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to honor quotation data.');
+		}
+	}
+
+	public function cancel(array $cancellationData)
 	{
 		try {
 			$quotation = $this->getModel();
 			$quotation->fill($cancellationData);
+			$quotation->status = 5;
 			$quotation->save();
 
 			$this->setModel($quotation);
@@ -71,11 +102,6 @@ class QuotationRepository extends BaseRepository
 		}
 
 		return $this->getModel();
-	}
-
-	public function honor()
-	{
-
 	}
 
 	public function delete(bool $force = false)

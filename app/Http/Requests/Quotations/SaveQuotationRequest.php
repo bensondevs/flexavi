@@ -83,21 +83,13 @@ class SaveQuotationRequest extends FormRequest
             'appointment_id' => ['string'],
             'subject' => ['required', 'string'],
             'quotation_number' => ['required', 'string', 'alpha_num'],
-            'quotation_type' => [
-                'required', 
-                'string', 
-                new AmongStrings(Quotation::getTypeValues())
-            ],
+            'quotation_type' => ['required', 'string', 'min:1', 'max:4'],
             'quotation_description' => ['required', 'string'],
             'quotation_document' => ['file', 'mimes:pdf', 'max:10000'],
             'expiry_date' => ['required', 'string', 'date'],
-            'status' => [
-                'required', 
-                'string', 
-                new AmongStrings(Quotation::getStatusValues())
-            ],
+            'status' => ['required', 'integer', 'min:1', 'max:5'],
             'amount' => ['required', 'integer'],
-            'payment_method' => ['required', 'string', new AmongStrings(Quotation::getPaymentMethodValues())],
+            'payment_method' => ['required', 'integer', 'min:1', 'max:2'],
         ]);
 
         if ($this->isMethod('POST')) {

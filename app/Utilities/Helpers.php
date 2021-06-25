@@ -50,11 +50,6 @@ function numbertofloat($number)
     return sprintf('%.2f', $number);
 }
 
-function createLog($logType = 'info', $message = 'Log log log')
-{
-    Log::$logType($message);
-}
-
 function generateUuid()
 {
     return Uuid::generate()->string;

@@ -22,12 +22,6 @@ class CreateQuotationsTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->uuid('creator_id')->nullable();
-            $table->foreign('creator_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('SET NULL');
-
             $table->uuid('customer_id')->nullable();
             $table->foreign('customer_id')
                 ->references('id')
@@ -45,17 +39,21 @@ class CreateQuotationsTable extends Migration
             $table->string('quotation_type');
             $table->text('quotation_description');
             $table->text('quotation_document_url');
+            $table->boolean('is_signed')->default(0);
+
+            $table->json('work')->nullable();
 
             $table->integer('amount')->default(0);
+            $table->integer('tax_amount')->default(0);
             $table->integer('discount_amount')->default(0);
             $table->integer('total_amount')->default(0);
 
             $table->date('expiry_date');
-            $table->char('status');
+            $table->integer('status')->default(1);
 
-            $table->char('payment_method');
+            $table->integer('payment_method')->default(1);
 
-            $table->string('canceller')->nullable();
+            $table->integer('canceller')->nullable();
             $table->text('cancellation_reason')->nullable();
 
             $table->timestamps();
