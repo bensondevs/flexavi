@@ -145,8 +145,8 @@ class BaseRepository
 
 		if (isset($options['withs']))
 			if ($options['withs'])
-				foreach ($options['withs'] as $relation)
-					$models = $models->with($relation);
+				$models = $models->with($options['withs']);
+
 
 		$models = $models->get();
 		$this->setCollection($models);

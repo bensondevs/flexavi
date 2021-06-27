@@ -45,6 +45,9 @@ class AppointmentWorkersSeeder extends Seeder
 	        	]);
         	}
         }
-        AppointmentWorker::insert($rawWorkers);
+
+        foreach (array_chunk($rawWorkers, 500) as $_rawWorkers) {
+            AppointmentWorker::insert($_rawWorkers);
+        }
     }
 }

@@ -32,22 +32,26 @@ class CreateAppointmentsTable extends Migration
             $table->uuid('previous_appointment_id')->nullable();
             $table->uuid('next_appointment_id')->nullable();
 
-            // Reschedule cancel
-            $table->string('cancellation_cause')->nullable();
-            $table->string('cancellation_vault')->nullable();
-            $table->text('cancellation_note')->nullable();
-            $table->json('cancellation_data')->nullable();
-
             $table->datetime('start');
             $table->datetime('end');
             $table->boolean('include_weekend');
 
-            $table->string('appointment_status');
-            $table->string('appointment_type');
+            $table->tinyInteger('status');
+            $table->tinyInteger('type');
 
             $table->text('note')->nullable();
 
+            // Reschedule cancel
+            $table->string('cancellation_cause')->nullable();
+            $table->tinyInteger('cancellation_vault')->nullable();
+            $table->text('cancellation_note')->nullable();
+            $table->json('cancellation_data')->nullable();
+
+            // Time Frames
             $table->timestamps();
+            $table->datetime('in_process_at')->nullable();
+            $table->datetime('calculated_at')->nullable();
+            $table->datetime('cancelled_at')->nullable();
             $table->softDeletes();
         });
     }

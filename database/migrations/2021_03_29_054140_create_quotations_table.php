@@ -34,29 +34,43 @@ class CreateQuotationsTable extends Migration
                 ->on('appointments')
                 ->onDelete('SET NULL');
 
-            $table->string('subject');
-            $table->string('quotation_number');
-            $table->string('quotation_type');
+            $table->tinyInteger('type');
+            $table->date('quotation_date');
+            $table->string('quotation_number')->unique();
+
+            $table->string('contact_person');
+
+            $table->string('address');
+            $table->string('zip_code');
+            $table->string('phone_number')->nullable();
+
+            $table->json('damage_causes');
             $table->text('quotation_description');
+
             $table->text('quotation_document_url');
             $table->boolean('is_signed')->default(0);
 
-            $table->json('work')->nullable();
-
             $table->integer('amount')->default(0);
-            $table->integer('tax_amount')->default(0);
+            $table->integer('vat_percentage')->default(0);
             $table->integer('discount_amount')->default(0);
             $table->integer('total_amount')->default(0);
 
-            $table->date('expiry_date');
+            $table->date('expiry_date')->nullable();
             $table->integer('status')->default(1);
 
-            $table->integer('payment_method')->default(1);
+            $table->tinyInteger('payment_method')->default(1);
 
-            $table->integer('canceller')->nullable();
+            $table->string('honor_note')->nullable();
+
+            $table->tinyInteger('canceller')->nullable();
             $table->text('cancellation_reason')->nullable();
 
             $table->timestamps();
+            $table->datetime('honored_at')->nullable();
+            $table->datetime('first_sent_at')->nullable();
+            $table->datetime('last_sent_at')->nullable();
+            $table->datetime('revised_at')->nullable();
+            $table->datetime('cancelled_at')->nullable();
             $table->softDeletes();
         });
     }

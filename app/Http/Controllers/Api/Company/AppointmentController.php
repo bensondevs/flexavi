@@ -72,13 +72,6 @@ class AppointmentController extends Controller
     {
         $appointment = $request->getAppointment();
 
-        if ($appointment->status != 'created') {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'This appointment can no longer be executed, because the status is already "' . $appointment->status . '"'
-            ], 422);
-        }
-
         $appointment = $this->appointment->setModel($appointment);
         $appointment = $this->appointment->execute();
 

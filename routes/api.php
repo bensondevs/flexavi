@@ -112,16 +112,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			});
 
 			/*
-				Company Quotations Module
-			*/
-			Route::group(['prefix' => 'quotations'], function () {
-				Route::get('/', [QuotationController::class, 'companyQuotations']);
-				Route::post('store', [QuotationController::class, 'store']);
-				Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
-				Route::delete('delete', [QuotationController::class, 'delete']);
-			});
-
-			/*
 				Company Employee Module
 			*/
 			Route::group(['prefix' => 'employees'], function () {
@@ -232,6 +222,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::post('store', [QuotationController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
 				Route::delete('delete', [QuotationController::class, 'delete']);
+
+				/*
+					Quotation Works
+				*/
+				Route::get('works', [WorkController::class, 'quotationWorks']);
 			});
 
 			/*
@@ -265,23 +260,27 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			});
 
 			/*
+				Company Work Contracts
+			*/
+			Route::group(['prefix' => 'work_contracts'], function () {
+				Route::get('/', [WorkContractController::class, 'companyWorkContracts']);
+				Route::post('store', [WorkContractController::class, 'store']);
+				Route::match(['PUT', 'PATCH'], 'update', [WorkContractController::class, 'update']);
+				Route::delete('delete', [WorkContractController::class, 'delete']);
+
+				/*
+					Quotation Works
+				*/
+				Route::get('works', [WorkController::class, 'contractWorks']);
+			});
+
+			/*
 				Company Work Module
 			*/
 			Route::group(['prefix' => 'works'], function () {
-				Route::get('/', [WorkController::class, 'companyWorks']);
 				Route::post('store', [WorkController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [WorkController::class, 'update']);
 				Route::delete('delete', [WorkController::class, 'delete']);
-
-				/*
-					Company Work Contract Module
-				*/
-				Route::group(['prefix' => 'contract'], function () {
-					Route::get('/', [WorkContractController::class, 'companyWorkContracts']);
-					Route::post('store', [WorkContractController::class, 'store']);
-					Route::match(['PUT', 'PATCH'], 'update', [WorkContractController::class, 'update']);
-					Route::delete('delete', [WorkContractController::class, 'delete']);
-				});
 
 				/*
 					Company Work Activity Module

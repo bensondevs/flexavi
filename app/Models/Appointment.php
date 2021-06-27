@@ -7,79 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Enums\Appointment\AppointmentType;
+use App\Enums\Appointment\AppointmentStatus;
+use App\Enums\Appointment\AppointmentCancellationVault;
+
 class Appointment extends Model
 {
+    use SoftDeletes;
+    
     protected $table = 'appointments';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
-
-    const TYPES = [
-        [
-            'label' => 'Inspection',
-            'value' => 'inspection',
-            'model' => 'App\Models\Inspection',
-        ],
-        [
-            'label' => 'Quotation',
-            'value' => 'quotation',
-            'model' => 'App\Models\Quotation',
-        ],
-        [
-            'label' => 'Execute Work',
-            'value' => 'work',
-            'model' => 'App\Models\Work',
-        ],
-        [
-            'label' => 'Warranty',
-            'value' => 'warranty',
-            'model' => 'App\Models\Warranty',
-        ],
-        [
-            'label' => 'Payment Pickup',
-            'value' => 'payment_pickup',
-            'model' => 'App\Models\PaymentPickup',
-        ],
-        [
-            'label' => 'Payment Reminder',
-            'value' => 'payment_reminder',
-            'model' => 'App\Models\PaymentReminder',
-        ]
-    ];
-
-    const STATUSES = [
-        [
-            'label' => 'Created',
-            'value' => 'created',
-        ],
-        [
-            'label' => 'In Process',
-            'value' => 'in_process',
-        ],
-        [
-            'label' => 'Processed',
-            'value' => 'processed',
-        ],
-        [
-            'label' => 'Calculated',
-            'value' => 'calculated',
-        ],
-        [
-            'label' => 'Cancelled',
-            'value' => 'cancelled',
-        ]
-    ];
-
-    const CANCELLATION_VAULTS = [
-        [
-            'label' => 'Roofer',
-            'value' => 'roofer',
-        ],
-        [
-            'label' => 'Customer',
-            'value' => 'customer',
-        ]
-    ];
 
     protected $fillable = [
         'company_id',
@@ -96,8 +35,8 @@ class Appointment extends Model
         'cancellation_vault',
         'cancellation_note',
 
-        'appointment_status',
-        'appointment_type',
+        'status',
+        'type',
         
         'note',
     ];
@@ -106,6 +45,10 @@ class Appointment extends Model
         'include_weekend' => 'boolean',
         'start' => 'datetime',
         'end' => 'datetime',
+
+        'status' => AppointmentStatus::class,
+        'type' => AppointmentType::class,
+        'cancellation_vault' => AppointmentCancellationVault::class,
     ];
 
     protected static function boot()
@@ -117,67 +60,99 @@ class Appointment extends Model
     	});
     }
 
-    public function assigned()
+    public function setAppointmentStatusAttribute($status)
     {
-        $appointmentType = $this->attributes['appointment_type'];
-        $types = collect(self::TYPES);
-        $type = $types->where('value', $appointmentType)->first();
-        $type = $type->toArray();
+        if (! is_int($status)) {
+            $status = AppointmentStatus::getValue($status);
+        }
 
-        return $this->hasOne($type['model'], 'appointment_id', 'id');
+        $this->attributes['status'] = $status;
+    }
+
+    public function setAppointmentTypeAttribute($type)
+    {
+        if (! is_int($type)) {
+            $type = AppointmentType::getValue($type);
+        }
+
+        $this->attributes['type'] = $type;
+    }
+
+    public function setAppointmentCancellationVaultAttribute($vault)
+    {
+        if (! is_int($vault)) {
+            $vault = AppointmentCancellationVault::getValue($vault);
+        }
+
+        $this->attributes['cancellation_vault'] = $vault;
+    }
+
+    public function getTypeDescriptionAttribute()
+    {
+        $typeCode = $this->attributes['type'];
+        return AppointmentType::getValue($typeCode);
+    }
+
+    public function getStatusDescriptionAttribute()
+    {
+        $statusCode = $this->attributes['status'];
+        return AppointmentStatus::getValue($statusCode);
+    }
+
+    public function getCancellationVaultAttribute()
+    {
+        $cancellationVaultCode = $this->attributes['cancellation_vault'];
+        return AppointmentCancellationVault::getValue($cancellationVaultCode);
     }
 
     public function customer()
     {
-        return $this->hasOne(
-            'App\Models\Customer',
-            'customer_id',
-            'id'
-        );
+        return $this->hasOne('App\Models\Customer', 'id', 'customer_id');
     }
 
     public function subs()
     {
-        return $this->hasMany(
-            'App\Models\SubAppointment', 
-            'appoinment_id', 
-            'id'
-        );
+        return $this->hasMany('App\Models\SubAppointment', 'appoinment_id', 'id');
     }
 
-    public function setStatusAttribute($status)
+    public function inspection()
     {
-        // To be mofidied
-        $this->attributes['appointment_type'] = $status;
+        return $this->hasOne('App\Models\Inspection', 'appointment_id', 'id');
     }
 
-    public function getTypeLabelAttribute()
+    public function quotation()
     {
-        $types = collect(self::TYPES);
-        $type = $this->attributes['type'];
-        
-        if (! $_type = $types->where('value', $type)->first())
-            return null;
+        return $this->hasOne('App\Models\Quotation', 'appointment_id', 'id');
+    }
 
-        return $_type['label'];
+    public function executeWork()
+    {
+        return $this->hasOne('App\Models\ExecuteWork', 'appointment_id', 'id');
+    }
+
+    public function warranty()
+    {
+        return $this->hasOne('App\Models\Warranty', 'appointment_id', 'id');
+    }
+
+    public function paymentReminder()
+    {
+        return $this->hasOne('App\Models\Warranty', 'appointment_id', 'id');
     }
 
     public static function getTypeValues()
     {
-        $types = collect(self::TYPES);
-        return $types->pluck('value')->toArray();
+        return AppointmentType::getValues();
     }
 
     public static function getStatusValues()
     {
-        $statuses = collect(self::STATUSES);
-        return $statuses->pluck('value')->toArray();
+        return AppointmentStatus::getValues();
     }
 
     public static function getCancellationVaultValues()
     {
-        $vaults = collect(self::CANCELLATION_VAULTS);
-        return $vaults->pluck('value')->toArray();
+        return AppointmentCancellationVault::getValues();
     }
 
     public function isLate()
@@ -196,19 +171,22 @@ class Appointment extends Model
 
     public function execute()
     {
-        $this->setStatusAttribute('in_process');
+        $this->setStatusAttribute('InProcess');
+        $this->attributes['in_process_at'] = carbon()->now();
         return $this->save();
     }
 
     public function process()
     {
         $this->setStatusAttribute('processed');
+        $this->attributes['processed_at'] = carbon()->now();
         return $this->save();
     }
 
     public function cancel()
     {
         $this->setStatusAttribute('cancelled');
+        $this->attributes['cancelled_at'] = carbon()->now();
         return $this->save();
     }
 }

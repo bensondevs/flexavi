@@ -20,7 +20,7 @@ class CreateWorksTable extends Migration
             $table->foreign('quotation_id')
                 ->references('id')
                 ->on('quotations')
-                ->onDelete('SET NULL')
+                ->onDelete('SET NULL');
 
             $table->uuid('work_contract_id')->nullable();
             $table->foreign('work_contract_id')

@@ -31,9 +31,20 @@ class QuotationController extends Controller
 
     	$quotations = $this->quotation->all($options);
         $quotations = $this->quotation->paginate();
-        $quotations->data = QuotationResource::collection($quotations);
+        $quotations->data = QuotationResource::apiCollection($quotations);
 
     	return response()->json(['quotations' => $quotations]);
+    }
+
+    public function appoitnmentQuotations(AppointmentPopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $quotations = $this->quotation->all($options);
+        $quotations = $this->quotation->paginate();
+        $quotations->data = QuotationResource::apiCollection($quotations);
+
+        return response()->json(['quotations' => $quotations]);
     }
 
     public function store(SaveRequest $request)

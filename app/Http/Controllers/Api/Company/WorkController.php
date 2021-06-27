@@ -7,7 +7,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Works\SaveWorkRequest as SaveRequest;
 use App\Http\Requests\Works\FindWorkRequest as FindRequest;
-use App\Http\Requests\Works\PopulateCompanyWorksRequest as PopulateRequest;
+use App\Http\Requests\Works\PopulateContractWorkRequest as ContractPopulateRequest;
+use App\Http\Requests\Works\PopulateQuotationWorksRequest as QuotationPopulateRequest;
+
+use App\Resources\WorkResource;
 
 use App\Repositories\WorkRepository;
 
@@ -20,15 +23,26 @@ class WorkController extends Controller
     	$this->work = $work;
     }
 
-    public function companyWorks(PopulateRequest $request)
+    public function quotationWorks(QuotationPopulateRequest $request)
     {
-    	$options = $request->options();
-        
-    	$works = $this->work->all($options);
-    	$works = $this->work->paginate();
-    	$works->data = WorkResource::collection($works);
+        $options = $request->options();
 
-    	return response()->json(['works' => $works]);
+        $works = $this->work->all($options);
+        $works = $this->work->paginate();
+        $works = WorkResource::apiCollection($works);
+
+        return response()->json(['works' => $works]);
+    }
+
+    public function contractWorks(ContractPopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $works = $this->work->all($options);
+        $works = $this->work->paginate();
+        $works = WorkResource::apiCollection($works);
+
+        return response()->json(['works' => $works]);
     }
 
     public function store(SaveRequest $request)
@@ -36,7 +50,7 @@ class WorkController extends Controller
     	$input = $request->onlyInRules();
     	$work = $this->work->save($input);
 
-    	return apiResponse($this->work, ['work' => $work]);
+    	return apiResponse($this->work);
     }
 
     public function update(SaveRequest $request)
@@ -47,7 +61,7 @@ class WorkController extends Controller
     	$input = $request->onlyInRules();
     	$this->work->save($input);
 
-    	return apiResponse($this->work, ['work' => $work]);
+    	return apiResponse($this->work);
     }
 
     public function delete(FindRequest $request)

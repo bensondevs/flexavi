@@ -32,12 +32,17 @@ class AppointmentPolicy
 
     public function cancel(User $user, Appointment $appointment)
     {
-        
+        //
     }
 
     public function execute(User $user, Appointment $appointment)
     {
-        //
+        if ($appointment->status > AppointmentStatus::Created) {
+            $currentStatus = AppointmentStatus::getValue($appointment->status);
+            response()->deny('You cannot this appointment. This appointment is already ' . $currentStatus);
+        }
+
+        return $user->hasCompanyPermission($appointment->company_id, 'execute appointments');
     }
 
     public function process(User $user, Appointment $appointment)

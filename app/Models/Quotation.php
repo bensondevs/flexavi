@@ -7,74 +7,72 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-use App\Traits\ModelEnums;
+use BenSampo\Enum\Traits\CastsEnums;
+
+use App\Casts\QuotationDamageCausesCast;
+
+use App\Enums\Quotation\QuotationType;
+use App\Enums\Quotation\QuotationStatus;
+use App\Enums\Quotation\QuotationCanceller;
+use App\Enums\Quotation\QuotationDamageCause;
+use App\Enums\Quotation\QuotationPaymentMethod;
 
 use App\Models\Inspection;
 
 class Quotation extends Model
 {
-    use ModelEnums;
+    use SoftDeletes;
+    use CastsEnums;
 
     protected $table = 'quotations';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
 
-    const TYPES = [
-        'Leakage',
-        'Renovation',
-        'Reparation',
-        'Renewal',
-    ];
-
-    const STATUSES = [
-        'Draft',
-        'Send',
-        'Revised',
-        'Honored',
-        'Cancelled',
-    ];
-
-    const PAYMENT_METHODS = [
-        'cash',
-        'bank',
-    ];
-
-    const CANCELLERS = [
-        'company',
-        'customer',
-    ];
-
     protected $fillable = [
         'company_id',
-        'creator_id',
         'customer_id',
         'appointment_id',
         
-        'subject',
-        
-        'quotation_number',
-        'quotation_type',
-        'quotation_description',
+        'type',
 
+        'quotation_date',
+        'quotation_number',
+        
+        'contact_person',
+
+        'address',
+        'zip_code',
+        'address',
+        'phone_number',
+        
+        'quotation_description',
         'quotation_document_url',
-        'expiry_date',
-        'status',
-        'payment_method',
+        'is_signed',
 
         'amount',
+        'vat_percentage',
         'discount_amount',
         'total_amount',
 
-        'honor_note',
-        'honored_at',
+        'expiry_date',
+        'status',
+
+        'payment_method',
+
+        'honor_note',       
 
         'canceller',
         'cancellation_reason',
     ];
 
-    protected $casts = [
-        'works' => 'array'
+    protected $cast = [
+        'type' => QuotationType::class,
+        'damage_causes' => QuotationDamageCausesCast::class,
+        'payment_method' => QuotationPaymentMethod::class,
+        'is_signed' => 'boolean',
+        'honored_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     protected static function boot()
@@ -88,6 +86,66 @@ class Quotation extends Model
         self::saving(function ($quotation) {
             $quotation->total_amount = $quotation->amount - $quotation->discount_amount;
         });
+    }
+
+    public function getTypeDescriptionAttribute()
+    {
+        return QuotationType::getDescription($this->attributes['type']);
+    }
+
+    public function getFormattedAmountAttribute()
+    {
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $this->attributes['amount']);
+    }
+
+    public function getFormattedVatPercentageAttribute()
+    {
+        return $this->attributes['vat_percentage'] . '%';
+    }
+
+    public function getVatAmountAttribute()
+    {
+        $amount = $this->attributes['amount'];
+        $percentage = $this->attributes['vat_percentage'];
+
+        return ($percentage / 100) * $amount;
+    }
+
+    public function getFormattedVatAmountAttribute()
+    {
+        $vatAmount = $this->getVatAmountAttribute();
+
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $vatAmount);
+    }
+
+    public function getFormattedExpiryDateAttribute()
+    {
+        $expiryDate = $this->attributes['expiry_date'];
+
+        return carbon($expiryDate)->format('M d, Y');
+    }
+
+    public function getStatusDescriptionAttribute()
+    {
+        $status = $this->attributes['status'];
+
+        return QuotationStatus::getDescription($status);
+    }
+
+    public function getPaymentMethodDescriptionAttribute()
+    {
+        $method = $this->attributes['payment_method'];
+
+        return QuotationPaymentMethod::getDescription($method);
+    }
+
+    public function getCancellerDescriptionAttribute()
+    {
+        $canceller = $this->attributes['canceller'];
+
+        return QuotationCanceller::getDescription($canceller);
     }
 
     public function setDocumentAttribute($document)
@@ -110,10 +168,10 @@ class Quotation extends Model
 
     public function appointment()
     {
-        return $this->hasOne(
+        return $this->belongsTo(
             'App\Models\Appointment', 
-            'appoinment_id', 
-            'id'
+            'appointment_id',
+            'id',
         );
     }
 
@@ -123,15 +181,6 @@ class Quotation extends Model
             'App\Models\Customer', 
             'id',
             'customer_id'
-        );
-    }
-
-    public function creator()
-    {
-        return $this->belongsTo(
-            'App\Models\User', 
-            'creator_id', 
-            'id'
         );
     }
 

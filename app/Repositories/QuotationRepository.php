@@ -69,11 +69,13 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function honor()
+	public function honor(array $honorData = [])
 	{
 		try {
 			$quotation = $this->getModel();
+			$quotation->fill($honorData);
 			$quotation->status = 4;
+			$quotation->honored_at = carbon()->now();
 			$quotation->save();
 
 			$this->setModel($quotation);
@@ -91,6 +93,7 @@ class QuotationRepository extends BaseRepository
 			$quotation = $this->getModel();
 			$quotation->fill($cancellationData);
 			$quotation->status = 5;
+			$quotation->cancelled_at = carbon()->now();
 			$quotation->save();
 
 			$this->setModel($quotation);
