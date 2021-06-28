@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
@@ -29,10 +30,9 @@ class RescheduleAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $appointment = $this->getPreviousAppointment();
 
-        return $user->hasCompanyPermission($appointment->company_id, 'reschedule appointments');
+        return Gate::allows('reschedule-appointment', $appointment);
     }
 
     /**

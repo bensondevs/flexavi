@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
@@ -29,7 +30,11 @@ class SaveAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->authorizeCompanyAction('appointments');
+        $appointment = $this->getAppointment();
+
+        return $this->isMethod('POST') ? 
+            Gate::allows('create-appointment', $appointment) :
+            Gate::allows('update-appointment', $appointment);
     }
 
     /**

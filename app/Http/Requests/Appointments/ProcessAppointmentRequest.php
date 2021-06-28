@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Appointments;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Http\FormRequest;
 
 use App\Models\Appointment;
@@ -25,10 +26,9 @@ class ProcessAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $appointment = $this->getAppointment();
 
-        return $user->hasCompanyPermission($appointment->company_id, 'process appointments');
+        return Gate::allows('process-appointment', $appointment);
     }
 
     /**

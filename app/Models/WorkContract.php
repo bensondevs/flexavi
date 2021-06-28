@@ -39,7 +39,8 @@ class WorkContract extends Model
         'contract_date_start',
         'contract_date_end',
         'include_weekend',
-        'price',
+
+        'amount',
         'payment_method',
         'status',
 
@@ -112,5 +113,13 @@ class WorkContract extends Model
             'work_contract_id',
             'id'
         );
+    }
+
+    public function countAmount()
+    {
+        $total = db('works')
+            ->where('quotation_id', $this->attributes['id'])
+            ->sum('works.total_price');
+        $this->attributes['amount'] = $total;
     }
 }

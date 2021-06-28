@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Quotations\SaveQuotationRequest as SaveRequest;
 use App\Http\Requests\Quotations\FindQuotationRequest as FindRequest;
-use App\Http\Requests\Quotations\CancelQuotationRequest as CancelRequest;
+use App\Http\Requests\Quotations\SendQuotationRequest as SendRequest;
 use App\Http\Requests\Quotations\ReviseQuotationRequest as ReviseRequest;
 use App\Http\Requests\Quotations\HonorQuotationRequest as HonorRequest;
-use App\Http\Requests\Quotations\PopulateCompanyQuotationRequest as PopulateRequest;
+use App\Http\Requests\Quotations\DeleteQuotationRequest as DeleteRequest;
+use App\Http\Requests\Quotations\CancelQuotationRequest as CancelRequest;
+use App\Http\Requests\Quotations\PopulateCompanyQuotationsRequest as PopulateRequest;
 
 use App\Http\Resources\QuotationResource;
 
@@ -34,17 +36,6 @@ class QuotationController extends Controller
         $quotations->data = QuotationResource::apiCollection($quotations);
 
     	return response()->json(['quotations' => $quotations]);
-    }
-
-    public function appoitnmentQuotations(AppointmentPopulateRequest $request)
-    {
-        $options = $request->options();
-
-        $quotations = $this->quotation->all($options);
-        $quotations = $this->quotation->paginate();
-        $quotations->data = QuotationResource::apiCollection($quotations);
-
-        return response()->json(['quotations' => $quotations]);
     }
 
     public function store(SaveRequest $request)
@@ -72,6 +63,36 @@ class QuotationController extends Controller
 
         activity()->causedBy($request->user())->performedOn($quotation)
             ->log($request->user()->fullname . ' has done reuploading document quotation with ID: ' . $quotation->id);
+
+        return apiResponse($this->quotation);
+    }
+
+    public function send(SendRequest $request)
+    {
+        $quotation = $request->getQuotation();
+        $quotation = $this->quotation->setModel($quotation);
+
+        $sendData = $request->sendData();
+        $quotation = $this->quotation->send($sendData);
+
+        activity()->causedBy($request->user())
+            ->performedOn($quotation)
+            ->log($request->user()->fullname . ' has sent quotation with ID: ' . $quotation->id . ' now the status of quotation is `Sent`');
+
+        return apiResponse($this->quotation);
+    }
+
+    public function print(PrintRequest $request)
+    {
+        $quotation = $request->getQuotation();
+        $quotation = $this->quotation->setModel($quotation);
+
+        $printData = $request->printData();
+        $quotation = $this->quotation->send($printData);
+
+        activity()->causedBy($request->user())
+            ->performedOn($quotation)
+            ->log($request->user()->fullname . ' has printed quotation with ID: ' . $quotation->id . ' now the status of quotation is `Sent`');
 
         return apiResponse($this->quotation);
     }

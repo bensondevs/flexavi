@@ -58,6 +58,60 @@ class Work extends Model
         return $this->attributes['total_price'] = $total;
     }
 
+    public function getUnitTotalAttribute()
+    {
+        $quantity = $this->attributes['quantity'];
+        $unitPrice = $this->attributes['unit_price'];
+
+        return $quantity * $unitPrice;
+    }
+
+    public function getFormattedUnitTotalAttribute()
+    {
+        $unitTotal = $this->getUnitTotalAttribute();
+
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $unitTotal);
+    }
+
+    public function getFormattedTaxPercentageAttribute()
+    {
+        $percentage = $this->attributes['tax_percentage'];
+
+        return $percentage . '%';
+    }
+
+    public function getTaxAmountAttribute()
+    {
+        /*
+            $taxAmount + ($percentage)% = $totalPrice
+            $taxAmount + ((percentage/100) * $taxAmount) = $totalPrice
+            $taxAmount (1 + (percentage/100)) = $totalPrice
+            (100 + percentage)/100 = $totalPrice / $taxAmount
+            (100 + percentage)$taxAmount = $totalPrice * 100
+            $taxAmount = $totalPrice * 100 / (100 + percentage)
+        */
+        $unitTotal = $this->getUnitTotalAttribute();
+        $taxPercentage = $this->attributes['tax_percentage'];
+        return $unitTotal * ($taxPercentage / 100);
+    }
+
+    public function getFormattedTaxAmountAttribute()
+    {
+        $taxAmount = $this->getTaxAmountAttribute();
+
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $taxAmount);
+    }
+
+    public function getFormattedTotalPriceAttribute()
+    {
+        $totalPrice = $this->attributes['total_price'];
+
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $totalPrice);
+    }
+
     public function conditionPhotos()
     {
         return $this->hasMany('App\Models\WorkConditionPhoto', 'work_id', 'id');
@@ -65,11 +119,11 @@ class Work extends Model
 
     public function quotation()
     {
-        return $this->belongsTo('App\Models\Quotation', 'id', 'quotation_id');
+        return $this->belongsTo('App\Models\Quotation', 'quotation_id', 'id');
     }
 
-    public function workContract()
+    public function contract()
     {
-        return $this->belongsTo('App\Models\WorkContract', 'id', 'work_contract_id');
+        return $this->belongsTo('App\Models\WorkContract', 'work_contract_id', 'id');
     }
 }

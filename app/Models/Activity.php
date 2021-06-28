@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
-use Spatie\Activitylog\Models\Activity;
+use Spatie\Activitylog\Models\Activity as SpatieActivity;
 
-class Activity extends Activity
+class Activity extends SpatieActivity
 {
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -21,6 +21,7 @@ class Activity extends Activity
 
     	self::creating(function ($activity) {
             $activity->id = Uuid::generate()->string;
+            $activity->company_id = auth()->user()->owner->company->id;
     	});
     }
 }

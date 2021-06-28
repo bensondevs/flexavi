@@ -15,6 +15,7 @@ class ScheduleResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'activity_name' => $this->activity_name,
             'start' => carbon($this->start)->format('M d, Y; H:i:s'),
             'end' => carbon($this->end)->format('M d, Y; H:i:s'),

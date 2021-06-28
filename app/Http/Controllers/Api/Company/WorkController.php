@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Works\SaveWorkRequest as SaveRequest;
 use App\Http\Requests\Works\FindWorkRequest as FindRequest;
-use App\Http\Requests\Works\PopulateContractWorkRequest as ContractPopulateRequest;
+use App\Http\Requests\Works\DeleteWorkRequest as DeleteRequest;
+use App\Http\Requests\Works\PopulateContractWorksRequest as ContractPopulateRequest;
 use App\Http\Requests\Works\PopulateQuotationWorksRequest as QuotationPopulateRequest;
 
-use App\Resources\WorkResource;
+use App\Http\Resources\WorkResource;
 
 use App\Repositories\WorkRepository;
 
@@ -64,7 +65,7 @@ class WorkController extends Controller
     	return apiResponse($this->work);
     }
 
-    public function delete(FindRequest $request)
+    public function delete(DeleteRequest $request)
     {
     	$work = $request->getWork();
 

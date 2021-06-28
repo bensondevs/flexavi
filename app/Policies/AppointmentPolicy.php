@@ -2,9 +2,12 @@
 
 namespace App\Policies;
 
-use App\Models\Appointment;
-use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+
+use App\Models\User;
+use App\Models\Invoice;
+use App\Models\Customer;
+use App\Models\Appointment;
 
 class AppointmentPolicy
 {
@@ -12,7 +15,7 @@ class AppointmentPolicy
 
     public function viewAny(User $user)
     {
-        return $user->hasCompanyPermission($appointment->company_id, 'view appointments');
+        return $user->hasPermissionTo('view appointments');
     }
 
     public function view(User $user, Appointment $appointment)
@@ -25,6 +28,16 @@ class AppointmentPolicy
         return $user->hasPermissionTo('create appointments');
     }
 
+    public function generateInvoice(User $user, Invoice $invoice)
+    {
+        return $user->hasCompanyPermission('generate-invoice');
+    }
+
+    public function reschedule(User $user, Appointment $appointment)
+    {
+        return $user->hasCompanyPermission($appointment->company_id, 'reschedule appointments');
+    }
+
     public function update(User $user, Appointment $appointment)
     {
         return $user->hasCompanyPermission($appointment->company_id, 'edit appointments');
@@ -32,14 +45,14 @@ class AppointmentPolicy
 
     public function cancel(User $user, Appointment $appointment)
     {
-        //
+        return $user->hasCompanyPermission($appointment->company_id, 'cancel appointments');
     }
 
     public function execute(User $user, Appointment $appointment)
     {
         if ($appointment->status > AppointmentStatus::Created) {
             $currentStatus = AppointmentStatus::getValue($appointment->status);
-            response()->deny('You cannot this appointment. This appointment is already ' . $currentStatus);
+            return $this->deny('You cannot this appointment. This appointment is already ' . $currentStatus);
         }
 
         return $user->hasCompanyPermission($appointment->company_id, 'execute appointments');
@@ -47,21 +60,41 @@ class AppointmentPolicy
 
     public function process(User $user, Appointment $appointment)
     {
-        //
+        if ($appointment->status != AppointmentStatus::InProcess) {
+            return $this->deny('You can only process appointment that has been in process only');
+        }
+
+        return $user->hasCompanyPermission($appointment->company_id, 'process appointments');
+    }
+
+    public function calculate(User $user, Appointment $appointment) {
+        if ($appointment->status != AppointmentStatus::Processed) {
+            return $this->deny('You can only calculate processed appointment.');
+        }
+
+        return $user->hasCompanyPermission($appointment->company_id, 'calculate appointments');
     }
 
     public function delete(User $user, Appointment $appointment)
     {
-        //
+        if (! $owner = $user->owner) {
+            return $this->deny('Only owner that can delete appointment');
+        }
+
+        return $user->hasCompanyPermission($appointment->company_id, 'delete appointments');
     }
 
     public function restore(User $user, Appointment $appointment)
     {
-        //
+        return $user->hasCompanyPermission($appointment->company_id, 'restore appointments');
     }
 
     public function forceDelete(User $user, Appointment $appointment)
     {
-        //
+        if (! $user->hasRole('admin')) {
+            return $this->deny('Only administrator that has this permission.');
+        }
+
+        return true;
     }
 }

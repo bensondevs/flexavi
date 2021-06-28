@@ -31,10 +31,7 @@ class CancelAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $appointment = $this->getAppointment();
-
-        return $user->hasCompanyPermission($appointment->company_id, 'cancel appointments');
+        return gate()->allows('cancel-appointment', $this->getAppointment());
     }
 
     /**

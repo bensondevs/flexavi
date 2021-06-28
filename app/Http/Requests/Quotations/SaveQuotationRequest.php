@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Rules\AmongStrings;
 use App\Rules\CompanyOwned;
@@ -50,26 +51,29 @@ class SaveQuotationRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        if ($user->hasRole('admin')) return true;
-
-        // Validate Action
-        $company = $this->getCompany();
-        if (! $this->isMethod('POST')) $quotation = $this->getQuotation();
-        if (! $this->authorizeCompanyAction('quotations')) return false;
-
-        // Validate Customer
         $customer = $this->getCustomer();
-        $authorizeAction = $user->hasCompanyPermission($customer->company_id, 'view customer');
-        if (! $authorizeAction) return false;
 
-        // Validate Appointment if assigned
-        if ($this->input('appointment_id')) {
-            $appointment = $this->getAppointment();
-            $authorizeAction = $user->hasCompanyPermission($appointment->company_id, 'view appointments');
+        if ($this->isMethod('POST')) {
+            if ($this->input('appointment_id')) {
+                $appointment = $this->getAppointment();
+                return Gate::allows('create-quotation-with-appointment', $customer, $appointment);
+            }
+
+            return Gate::allows('create-quotation', $customer);
         }
 
-        return true;
+        if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+            $quotation = $this->getQuotation();
+
+            if ($this->input('appointment_id')) {
+                $appointment = $this->getAppointment();
+                return Gate::allows('update-quotation-with-appointment', $quotation, $customer, $appointment);
+            }
+
+            return Gate::allows('update-quotation', $quotation, $customer);
+        }
+
+        return false;
     }
 
     /**

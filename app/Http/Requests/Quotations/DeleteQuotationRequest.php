@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Quotation;
 
-class FindQuotatoinRequest extends FormRequest
+class DeleteQuotationRequest extends FormRequest
 {
     private $quotation;
 
@@ -17,22 +17,17 @@ class FindQuotatoinRequest extends FormRequest
             Quotation::findOrFail($this->input('id'));
     }
 
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
+    protected function prepareForValidation()
+    {
+        $this->merge(['force' => filter_var($this->input('force'), FILTER_VALIDATE_BOOLEAN)]);
+    }
+
     public function authorize()
     {
         $quotation = $this->getQuotation();
-        return Gate::allows('view-appointment', $quotation);
+        return Gate::allows('delete-quotation', $quotation);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [

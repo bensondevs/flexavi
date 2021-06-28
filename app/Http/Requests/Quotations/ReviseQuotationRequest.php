@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Http\Requests\Works;
+namespace App\Http\Requests\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class FindWorkRequest extends FormRequest
+use App\Models\Quotation;
+
+class ReviseQuotationRequest extends FormRequest
 {
-    private $work;
+    private $quotation;
 
-    public function getWork()
+    public function getQuotation()
     {
-        if ($this->work) return $this->work;
+        if ($this->quotation) return $this->quotation;
 
-        return $this->work = Work::findOrFail($this->input('id'));
+        return $this->quotation ?:
+            Quotation::findOrFail($this->input('id'));
     }
 
     /**
@@ -23,8 +26,8 @@ class FindWorkRequest extends FormRequest
      */
     public function authorize()
     {
-        $work = $this->getWork();
-        return Gate::allows('view-work', $work);
+        $quotation = $this->getQuotation();
+        return Gate::allows('revise-quotation', $quotation);
     }
 
     /**

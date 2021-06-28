@@ -90,19 +90,24 @@ class Appointment extends Model
     public function getTypeDescriptionAttribute()
     {
         $typeCode = $this->attributes['type'];
-        return AppointmentType::getValue($typeCode);
+        return AppointmentType::getDescription($typeCode);
     }
 
     public function getStatusDescriptionAttribute()
     {
         $statusCode = $this->attributes['status'];
-        return AppointmentStatus::getValue($statusCode);
+        return AppointmentStatus::getDescription($statusCode);
     }
 
-    public function getCancellationVaultAttribute()
+    public function getCancellationVaultDescriptionAttribute()
     {
         $cancellationVaultCode = $this->attributes['cancellation_vault'];
-        return AppointmentCancellationVault::getValue($cancellationVaultCode);
+        return AppointmentCancellationVault::getDescription($cancellationVaultCode);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo('App\Models\Company', 'company_id', 'id');
     }
 
     public function customer()

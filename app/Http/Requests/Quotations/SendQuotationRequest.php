@@ -1,15 +1,21 @@
 <?php
 
-namespace App\Http\Requests\Appointments;
+namespace App\Http\Requests\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\CompanyPopulateRequestOptions;
+use App\Models\Quotation;
 
-class PopulateCompanyAppointmentsRequest extends FormRequest
+class SendQuotationRequest extends FormRequest
 {
-    use CompanyPopulateRequestOptions;
+    private $quotation;
+
+    public function getQuotation()
+    {
+        return $this->quotation = ($this->quotation) ?:
+            Quotation::findOrFail($this->input('id'));
+    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -18,7 +24,8 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('view-any-appointment');
+        $quotation = $this->getQuotation();
+        return Gate::allows('send-quotation', $quotation);
     }
 
     /**
@@ -31,10 +38,5 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
         return [
             //
         ];
-    }
-
-    public function options()
-    {
-        return $this->collectCompanyOptions();
     }
 }

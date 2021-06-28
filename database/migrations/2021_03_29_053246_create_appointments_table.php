@@ -49,9 +49,10 @@ class CreateAppointmentsTable extends Migration
 
             // Time Frames
             $table->timestamps();
-            $table->datetime('in_process_at')->nullable();
-            $table->datetime('calculated_at')->nullable();
-            $table->datetime('cancelled_at')->nullable();
+            $table->timestamp('in_process_at')->nullable();
+            $table->timestamp('processed_at')->nullable();
+            $table->timestamp('calculated_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
             $table->softDeletes();
         });
     }

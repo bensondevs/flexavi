@@ -35,21 +35,26 @@ class AppointmentsSeeder extends Seeder
         	$type = rand(1, 6);
         	$status = rand(1, 5);
 
-        	array_push($rawAppointments, [
-        		'id' => generateUuid(),
+            $rawAppointment = [
+                'id' => generateUuid(),
 
-        		'company_id' => $company->id,
-        		'customer_id' => $customer->id,
+                'company_id' => $company->id,
+                'customer_id' => $customer->id,
 
-        		'start' => $start,
-        		'end' => $end,
-        		'include_weekend' => rand(0, 1),
+                'start' => $start,
+                'end' => $end,
+                'include_weekend' => rand(0, 1),
 
-        		'type' => $type,
-        		'status' => $status,
+                'status' => $status,
+                'type' => $type,
 
-        		'note' => 'This is seeder appointment',
-        	]);
+                'note' => 'This is seeder appointment',
+
+                'created_at' => carbon()->now(),
+                'updated_at' => carbon()->now(),
+            ];
+
+        	array_push($rawAppointments, $rawAppointment);
         }
 
         $chuckedRawAppontments = array_chunk($rawAppointments, 500);

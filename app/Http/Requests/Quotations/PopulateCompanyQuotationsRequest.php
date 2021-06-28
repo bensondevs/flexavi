@@ -3,12 +3,13 @@
 namespace App\Http\Requests\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Company;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
-class PopulateCompanyQuotationRequest extends FormRequest
+class PopulateCompanyQuotationsRequest extends FormRequest
 {
     use CompanyPopulateRequestOptions;
 
@@ -19,10 +20,7 @@ class PopulateCompanyQuotationRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $company = $this->getCompany();
-
-        return $user->hasCompanyPermission($company->id);
+        return Gate::allows('view-any-appointment');
     }
 
     /**

@@ -5,6 +5,8 @@ namespace App\Repositories;
 use \Illuminate\Support\Facades\DB;
 use \Illuminate\Database\QueryException;
 
+use App\Enums\Quotation\QuotationStatus;
+
 use App\Models\Quotation;
 
 use App\Repositories\Base\BaseRepository;
@@ -26,10 +28,26 @@ class QuotationRepository extends BaseRepository
 
 			$this->setSuccess('Successfully upload quotation document');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete quotation document',
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete quotation document', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function reuploadDocument($documentUpload)
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->document = $documentUpload;
+			$quotation->save();
+
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully reupload quotation document.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to reupload quotation document.', $error);
 		}
 
 		return $this->getModel();
@@ -57,13 +75,58 @@ class QuotationRepository extends BaseRepository
 	{
 		try {
 			$quotation = $this->getModel();
-			$quotation->status = 3;
+			$quotation->status = QuotationStatus::Revised;
 			$quotation->save();
 
 			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully revise the quotation.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to save revision.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function send($email = '')
+	{
+		try {
+			$quotation = $this->getModel();
+			
+			// Send to email
+
+			if ($quotation->status == 1) {
+				$quotation->status = QuotationStatus::Sent;
+				$quotation->save();
+			}
+
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully send quotation to customer.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed send quotation to customer.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function print()
+	{
+		try {
+			$quotation = $this->getModel();
+			if ($quotation->status == 1) {
+				$quotation->status = QuotationStatus::Sent;
+				$quotation->save();
+			}
+			
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully print quotation.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to print quotation.', $error);
 		}
 
 		return $this->getModel();
@@ -74,7 +137,7 @@ class QuotationRepository extends BaseRepository
 		try {
 			$quotation = $this->getModel();
 			$quotation->fill($honorData);
-			$quotation->status = 4;
+			$quotation->status = QuotationStatus::Honored;
 			$quotation->honored_at = carbon()->now();
 			$quotation->save();
 
@@ -102,6 +165,21 @@ class QuotationRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to cancel quotation data.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function revise(array $revisionData = [])
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->fill($revisionData);
+			$this->setModel($quotation);
+			$this->saveRevision();
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to revise quotation.', $error);
 		}
 
 		return $this->getModel();

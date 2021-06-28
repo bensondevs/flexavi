@@ -25,7 +25,12 @@ class WorkRepository extends BaseRepository
 
 			$this->setModel($work);
 
-			$this->setSuccess('Successfully created work.');
+			// Update quotation
+			$quotation = $work->quotation;
+            $quotation->countAmount();
+            $quotation->save();
+
+			$this->setSuccess('Successfully save work.');
 		} catch (QueryException $qe) {
 			$this->setError(
 				'Failed to create work.', 
@@ -40,9 +45,14 @@ class WorkRepository extends BaseRepository
 	{
 		try {
 			$work = $this->getModel();
+			$quotation = $work->quotation;
 			$force ? 
 				$work->forceDelete() : 
 				$work->delete();
+
+			// Update quotation
+			$quotation->countAmount();
+			$quotation->save();
 
 			$this->destroyModel();
 

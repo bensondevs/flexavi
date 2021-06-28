@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Quotation;
 
@@ -25,10 +26,8 @@ class CancelQuotationRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $quotation = $this->getQuotation();
-
-        return $user->hasCompanyPermission($quotation->company_id, 'cancel quotations');
+        return Gate::allows('cancel-quotation', $quotation);
     }
 
     /**

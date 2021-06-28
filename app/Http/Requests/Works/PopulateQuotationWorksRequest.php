@@ -3,12 +3,13 @@
 namespace App\Http\Requests\Works;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\PopulateRequestOptions;
 
 use App\Models\Quotation;
 
-class PopulateQuotationWorkRequest extends FormRequest
+class PopulateQuotationWorksRequest extends FormRequest
 {
     use PopulateRequestOptions;
 
@@ -29,10 +30,8 @@ class PopulateQuotationWorkRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $quotation = $this->getQuotation();
-
-        return $user->hasCompanyPermission($quotation->company_id, 'view works');
+        return Gate::allows('view-any-work', $quotation);
     }
 
     /**
@@ -54,6 +53,8 @@ class PopulateQuotationWorkRequest extends FormRequest
             'operator' => '=',
             'value' => $this->getQuotation()->id,
         ]);
+
+        $this->setWiths(['quotation', 'contract']);
 
         return $this->collectOptions();
     }

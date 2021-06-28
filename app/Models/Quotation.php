@@ -81,10 +81,15 @@ class Quotation extends Model
 
     	self::creating(function ($quotation) {
             $quotation->id = Uuid::generate()->string;
+
+            if (! $quotation->expiry_date) {
+                $expiryDate = carbon()->now()->addDays(14);
+                $quotation->expiry_date = $expiryDate;
+            }
     	});
 
         self::saving(function ($quotation) {
-            $quotation->total_amount = $quotation->amount - $quotation->discount_amount;
+            $quotation->countAmount();
         });
     }
 
@@ -166,6 +171,16 @@ class Quotation extends Model
         $this->attributes['discount_amount'] = $amount * $percentage;
     }
 
+    public function setTotalAmountAttribute($amount)
+    {
+        $this->attributes['amount'] = $amount;
+        $vatAmount = $this->getVatAmountAttribute();
+        $discountAmount = $this->attributes['discount_amount'];
+        $total = $amount + $vatAmount - $discountAmount;
+
+        $this->attributes['total_amount'] = $total;
+    }
+
     public function appointment()
     {
         return $this->belongsTo(
@@ -213,30 +228,29 @@ class Quotation extends Model
 
     public static function getTypeValues()
     {
-        $collection = collect(static::TYPES);
-        $types = $collection->pluck(['value']);
-
-        return $types->toArray();
+        return QuotationType::getValues();
     }
 
     public static function getStatusValues()
     {
-        return $statuses;
+        return QuotationStatus::getValues();
     }
 
     public static function getPaymentMethodValues()
     {
-        $collection = collect(static::PAYMENT_METHODS);
-        $methods = $collection->pluck('value');
-
-        return $methods->toArray();
+        return QuotationPaymentMethod::getValues();
     }
 
     public static function getCancellerValues()
     {
-        $collection = collect(static::CANCELLERS);
-        $cancellers = $collection->pluck('value');
+        return QuotationCanceller::getValues();
+    }
 
-        return $cancellers->toArray();
+    public function countAmount()
+    {
+        $total = db('works')
+            ->where('quotation_id', $this->attributes['id'])
+            ->sum('works.total_price');
+        $this->setTotalAmountAttribute($total);
     }
 }

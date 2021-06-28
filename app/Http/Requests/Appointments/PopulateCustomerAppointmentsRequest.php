@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
 
@@ -28,7 +29,7 @@ class PopulateCustomerAppointmentsRequest extends FormRequest
     public function authorize()
     {
         $customer = $this->getCustomer();
-        return $this->checkCompanyPermission('view appointments', $customer);
+        return Gate::allows('view-any-appointment', $customer);
     }
 
     /**
@@ -39,7 +40,7 @@ class PopulateCustomerAppointmentsRequest extends FormRequest
     public function rules()
     {
         return [
-            'customer_id' => ['required', 'string'],
+            
         ];
     }
 

@@ -3,12 +3,13 @@
 namespace App\Http\Requests\Works;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\PopulateRequestOptions;
 
 use App\Models\WorkContract;
 
-class PopulateContractWorkRequest extends FormRequest
+class PopulateContractWorksRequest extends FormRequest
 {
     use PopulateRequestOptions;
 
@@ -29,10 +30,9 @@ class PopulateContractWorkRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $contract = $this->getWorkContract();
 
-        return $user->hasCompanyPermission($contract->company_id, 'view works');
+        return Gate::allows('view-any-work', $contract);
     }
 
     /**

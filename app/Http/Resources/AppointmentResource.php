@@ -6,6 +6,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 use App\Traits\ApiCollectionResource;
 
+use App\Http\Resources\CompanyResource;
+use App\Http\Resources\CustomerResource;
+
+use App\Enums\Appointment\AppointmentStatus;
+
 class AppointmentResource extends JsonResource
 {
     use ApiCollectionResource;
@@ -21,8 +26,7 @@ class AppointmentResource extends JsonResource
         $structure = [
             'id' => $this->id,
 
-            'company_id' => $this->company,
-            'customer_id' => $this->customer,
+            'customer' => new CustomerResource($this->customer),
 
             'status' => $this->status,
             'status_description' => $this->status_description,
@@ -40,23 +44,23 @@ class AppointmentResource extends JsonResource
             'note' => $this->note,
         ];
 
-        if ($this->status >= AppointmentStatus::Created) {
+        if ($this->status >= ((string) AppointmentStatus::Created)) {
             $structure['created_at'] = $this->created_at;
         }
 
-        if ($this->status >= AppointmentStatus::InProcess) {
+        if ($this->status >= ((string) AppointmentStatus::InProcess)) {
             $structure['in_process_at'] = $this->in_process_at;
         }
 
-        if ($this->status >= AppointmentStatus::Processed) {
+        if ($this->status >= ((string) AppointmentStatus::Processed)) {
             $structure['processed_at'] = $this->processed_at;
         }
 
-        if ($this->status >= AppointmentStatus::Calculated) {
+        if ($this->status >= ((string) AppointmentStatus::Calculated)) {
             $structure['calculated_at'] = $this->calculated_at;
         }
 
-        if ($this->status >= AppointmentStatus::Cancelled) {
+        if ($this->status >= ((string) AppointmentStatus::Cancelled)) {
             $structure['cancelled_at'] = $this->cancelled_at;
             $structure['cancellation_vault'] = $this->cancellation_vault;
             $structure['cancellation_vault_description'] = $this->cancellation_vault_description;

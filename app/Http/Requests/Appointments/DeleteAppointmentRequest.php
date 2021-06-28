@@ -23,10 +23,7 @@ class DeleteAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $appointment = $this->getAppointment();
-
-        return $user->hasCompanyPermission($appointment->company_id, 'delete appointments');
+        return gate()->allows('delete-appointment', $this->getAppointment());
     }
 
     /**

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Gate;
 use Webpatser\Uuid\Uuid;
 
 function searchInCollection(Collection $collection, $search)
@@ -163,6 +164,11 @@ function carbonStartOfDay($date)
 function carbonEndOfDay($date)
 {
     return Carbon::parse($date)->copy()->endOfDay();
+}
+
+function gate()
+{
+    return new Gate();
 }
 
 function jsonResponse($response)

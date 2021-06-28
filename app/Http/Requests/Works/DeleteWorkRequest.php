@@ -5,7 +5,9 @@ namespace App\Http\Requests\Works;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-class FindWorkRequest extends FormRequest
+use App\Models\Work;
+
+class DeleteWorkRequest extends FormRequest
 {
     private $work;
 
@@ -13,7 +15,8 @@ class FindWorkRequest extends FormRequest
     {
         if ($this->work) return $this->work;
 
-        return $this->work = Work::findOrFail($this->input('id'));
+        $id = $this->input('id');
+        return $this->work = Work::findOrFail($id);
     }
 
     /**
@@ -24,7 +27,9 @@ class FindWorkRequest extends FormRequest
     public function authorize()
     {
         $work = $this->getWork();
-        return Gate::allows('view-work', $work);
+
+        $action = $this->input('force') ? 'force-delete-work' : 'delete-work';
+        return Gate::allows($action, $work);
     }
 
     /**

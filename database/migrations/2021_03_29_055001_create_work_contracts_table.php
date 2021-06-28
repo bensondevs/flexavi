@@ -32,7 +32,7 @@ class CreateWorkContractsTable extends Migration
             $table->date('contract_date_end');
             $table->boolean('include_weekend')->default(false);
 
-            $table->double('price', 10, 2);
+            $table->double('amount', 10, 2);
             $table->char('payment_method');
 
             $table->char('status');
