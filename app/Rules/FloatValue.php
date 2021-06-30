@@ -34,7 +34,7 @@ class FloatValue implements Rule
             return is_int($value);
         }
 
-        return ((float) $value);
+        return $isFloat;
     }
 
     /**

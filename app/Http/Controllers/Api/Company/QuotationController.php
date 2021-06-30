@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Quotations\SaveQuotationRequest as SaveRequest;
 use App\Http\Requests\Quotations\FindQuotationRequest as FindRequest;
 use App\Http\Requests\Quotations\SendQuotationRequest as SendRequest;
+use App\Http\Requests\Quotations\PrintQuotationRequest as PrintRequest;
 use App\Http\Requests\Quotations\ReviseQuotationRequest as ReviseRequest;
 use App\Http\Requests\Quotations\HonorQuotationRequest as HonorRequest;
 use App\Http\Requests\Quotations\DeleteQuotationRequest as DeleteRequest;
@@ -108,8 +109,7 @@ class QuotationController extends Controller
         $quotation = $request->getQuotation();
         $quotation = $this->quotation->setModel($quotation);
 
-        $printData = $request->printData();
-        $quotation = $this->quotation->send($printData);
+        $quotation = $this->quotation->print();
 
         activity()->causedBy($request->user())
             ->performedOn($quotation)
@@ -152,7 +152,7 @@ class QuotationController extends Controller
     public function honor(HonorRequest $request)
     {
         $quotation = $request->getQuotation();
-        $this->quotation->setModel($quotation);
+        $quotation = $this->quotation->setModel($quotation);
 
         $honorData = $request->honorData();
         $quotation = $this->quotation->honor($honorData);

@@ -76,6 +76,11 @@ class QuotationPolicy
         return $user->hasCompanyPermission($quotation->company_id, 'send quotations');
     }
 
+    public function print(User $user, Quotation $quotation)
+    {
+        return $user->hasCompanyPermission($quotation->company_id, 'print quotations');
+    }
+
     public function revise(User $user, Quotation $quotation)
     {
         if ($quotation->status >= ((string) QuotationStatus::Honored)) {

@@ -15,6 +15,7 @@ use App\Repositories\Base\BaseRepository;
 use App\Jobs\SendMail;
 
 use App\Mail\Quotation\QuotationMail;
+use App\Mail\Quotation\NotifyQuotationRevision;
 
 class QuotationRepository extends BaseRepository
 {
@@ -78,24 +79,6 @@ class QuotationRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
-	public function saveRevision()
-	{
-		try {
-			$quotation = $this->getModel();
-			$quotation->status = QuotationStatus::Revised;
-			$quotation->save();
-
-			$this->setModel($quotation);
-
-			$this->setSuccess('Successfully revise the quotation.');
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to save revision.', $error);
-		}
-
-		return $this->getModel();
-	}
-
 	public function send(array $sendData = [])
 	{
 		try {
@@ -152,6 +135,32 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	public function revise(array $revisionData = [])
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->fill($revisionData);
+			$quotation->status = QuotationStatus::Revised;
+			$quotation->save();
+
+			// Inform Customer
+			$customer = $quotation->customer;
+			$destination = $customer->email ?: $revisionData['inform_email'];
+			$mail = new NotifyQuotationRevision($quotation);
+			$send = new SendMail($mail, $destination);
+			dispatch($send);
+
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully revise the quotation.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to revise quotation.', $error);
+		}
+
+		return $this->getModel();
+	}
+
 	public function honor(array $honorData = [])
 	{
 		try {
@@ -171,6 +180,8 @@ class QuotationRepository extends BaseRepository
 			$error = $qe->getMessage();
 			$this->setError('Failed to honor quotation data.');
 		}
+
+		return $this->getModel();
 	}
 
 	public function cancel(array $cancellationData = [])
@@ -188,21 +199,6 @@ class QuotationRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to cancel quotation data.', $error);
-		}
-
-		return $this->getModel();
-	}
-
-	public function revise(array $revisionData = [])
-	{
-		try {
-			$quotation = $this->getModel();
-			$quotation->fill($revisionData);
-			$this->setModel($quotation);
-			$this->saveRevision();
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to revise quotation.', $error);
 		}
 
 		return $this->getModel();

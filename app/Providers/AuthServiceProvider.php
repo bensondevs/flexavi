@@ -54,6 +54,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('create-quotation-with-appointment', [QuotationPolicy::class, 'createWithAppointment']);
         Gate::define('update-quotation', [QuotationPolicy::class, 'update']);
         Gate::define('send-quotation', [QuotationPolicy::class, 'send']);
+        Gate::define('print-quotation', [QuotationPolicy::class, 'print']);
         Gate::define('revise-quotation', [QuotationPolicy::class, 'revise']);
         Gate::define('honor-quotation', [QuotationPolicy::class, 'honor']);
         Gate::define('cancel-quotation', [QuotationPolicy::class, 'cancel']);
