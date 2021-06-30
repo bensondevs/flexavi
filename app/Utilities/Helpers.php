@@ -2,6 +2,7 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use \Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -227,25 +228,18 @@ function flashMessage($repositoryObject)
     );
 }
 
-function uploadToCloud()
+function uploadFile($fileRequest, string $directory)
 {
+    if (last_character($directory) !== '/')
+        $directory = ($directory . '/');
 
-}
+    $path = $directory . Carbon::now()->format('YmdHis'); 
+    $path .= urlencode($fileRequest->getClientOriginalName());
 
-function uploadFile($fileRequest, string $filePath)
-{
-    if (last_character($filePath) !== '/')
-        $filePath = ($filePath . '/');
+    $storageFile = new \App\Repositories\StorageFileRepository;
+    $file = $storageFile->upload(file_get_contents($fileRequest->getRealPath()), $path);
 
-    $fileName = $filePath . Carbon::now()->format('YmdHis'); 
-    $fileName .= $fileRequest->getClientOriginalName();
-
-    $fileRequest->move(
-        public_path($filePath), 
-        $fileName
-    );
-
-    return $fileName;
+    return $file;
 }
 
 function uploadBase64File($base64File, $path = 'uploads/documents', $fileName = '')
@@ -289,7 +283,7 @@ function uploadBase64Image($base64Image, $imagePath = 'uploads/test', $imageName
 
 function deleteFile($filePath)
 {
-    return File::delete($filePath);
+    return Storage::delete($filePath);
 }
 
 function toRupiah($amount)

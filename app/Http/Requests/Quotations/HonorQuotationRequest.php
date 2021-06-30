@@ -3,19 +3,16 @@
 namespace App\Http\Requests\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 
-use App\Models\Quotation;
+use App\Rules\FloatValue;
 
-class FindQuotatoinRequest extends FormRequest
+use App\Traits\InputRequest;
+
+class HonorQuotationRequest extends FormRequest
 {
-    private $quotation;
+    use InputRequest;
 
-    public function getQuotation()
-    {
-        return $this->quotation = ($this->quotation) ?:
-            Quotation::findOrFail($this->input('id'));
-    }
+    private $quotation;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +22,7 @@ class FindQuotatoinRequest extends FormRequest
     public function authorize()
     {
         $quotation = $this->getQuotation();
-        return Gate::allows('view-appointment', $quotation);
+        return Gate::allows('honor-quotation', $quotation);
     }
 
     /**
@@ -35,8 +32,10 @@ class FindQuotatoinRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $this->setRules([
+            'discount_amount' => [new FloatValue(true)],
+        ]);
+
+        return $this->returnRules();
     }
 }

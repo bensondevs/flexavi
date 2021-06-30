@@ -130,6 +130,8 @@ class PermissionsSeeder extends Seeder
         	'delete quotations',
             'restore quotations',
             'force delete quotations',
+            'add quotation attachments',
+            'remove quotation attachments',
 
             // Quotation Revisions
             'apply revision quotations',

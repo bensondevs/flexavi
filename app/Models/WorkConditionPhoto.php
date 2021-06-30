@@ -18,7 +18,7 @@ class WorkConditionPhoto extends Model
         'uploader_id',
         'work_id',
         'photo_type',
-        'photo_url',
+        'photo_path',
         'photo_description',
     ];
 
@@ -38,10 +38,9 @@ class WorkConditionPhoto extends Model
     public function setPhotoAttribute($photoFile)
     {
         $path = 'storage/uploads/works/conditions/';
-        $uploadedPhotoPath = uploadFile($photoFile, $path);
-        $photoUrl = asset($uploadedPhotoPath);
+        $photo = uploadFile($photoFile, $path);
 
-        $this->attribute['photo_url'] = $photoUrl;
+        $this->attribute['photo_path'] = $photo->path;
     }
 
     public function uploader()

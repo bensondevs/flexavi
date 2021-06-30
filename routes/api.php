@@ -224,6 +224,24 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::delete('delete', [QuotationController::class, 'delete']);
 
 				/*
+					Attachments
+				*/
+				Route::group(['prefix' => 'attachments'], function () {
+					Route::get('/', [QuotationController::class, 'attachments']);
+					Route::post('add', [QuotationController::class, 'addAttachment']);
+					Route::delete('remove', [QuotationController::class, 'removeAttachment']);
+				});
+
+				/*
+					Actions
+				*/
+				Route::post('send', [QuotationController::class, 'send']);
+				Route::post('print', [QuotationController::class, 'print']);
+				Route::post('revise', [QuotationController::class, 'revise']);
+				Route::post('cancel', [QuotationController::class, 'cancel']);
+				Route::post('honor', [QuotationController::class, 'honor']);
+
+				/*
 					Quotation Works
 				*/
 				Route::get('works', [WorkController::class, 'quotationWorks']);

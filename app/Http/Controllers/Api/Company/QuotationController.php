@@ -13,6 +13,10 @@ use App\Http\Requests\Quotations\HonorQuotationRequest as HonorRequest;
 use App\Http\Requests\Quotations\DeleteQuotationRequest as DeleteRequest;
 use App\Http\Requests\Quotations\CancelQuotationRequest as CancelRequest;
 use App\Http\Requests\Quotations\PopulateCompanyQuotationsRequest as PopulateRequest;
+use App\Http\Requests\Quotations\AddQuotationAttachmentRequest as AddAttachmentRequest;
+use App\Http\Requests\Quotations\RemoveQuotationAttachmentRequest as RemoveAttachmentRequest;
+
+use App\Enums\Quotation\QuotationCanceller;
 
 use App\Http\Resources\QuotationResource;
 
@@ -40,11 +44,7 @@ class QuotationController extends Controller
 
     public function store(SaveRequest $request)
     {
-        $documentUpload = $request->file('quotation_document');
-        $quotation = $this->quotation->uploadDocument($documentUpload);
-
         $input = $request->quotationData();
-        $input['creator_id'] = $request->user()->id;
     	$quotation = $this->quotation->save($input);
 
         activity()->causedBy($request->user())->performedOn($quotation)
@@ -53,16 +53,37 @@ class QuotationController extends Controller
     	return apiResponse($this->quotation);
     }
 
-    public function reuploadDocument(SaveRequest $request)
+    public function attachments(FindRequest $request)
     {
         $quotation = $request->getQuotation();
-        $quotation = $this->quotation->setModel();
+        $attachments = $quotation->attachments;
 
-        $documentUpload = $request->file('quotation_document');
-        $quotation = $this->quotation->uploadDocument($documentUpload);
+        return response()->json(['attachments' => $attachments]);
+    }
+
+    public function addAttachment(AddAttachmentRequest $request)
+    {
+        $quotation = $request->getQuotation();
+        $quotation = $this->quotation->setModel($quotation);
+
+        $attachmentData = $request->attachmentData();
+        $quotation = $this->quotation->addAttachment($attachmentData);
 
         activity()->causedBy($request->user())->performedOn($quotation)
-            ->log($request->user()->fullname . ' has done reuploading document quotation with ID: ' . $quotation->id);
+            ->log($request->user()->fullname . ' has attached a document to a quotation with ID: ' . $quotation->id);
+
+        return apiResponse($this->quotation);
+    }
+
+    public function removeAttachment(RemoveAttachmentRequest $request)
+    {
+        $attachment = $request->getQuotationAttachment();
+
+        activity()->causedBy($request->user())
+            ->performedOn($attachment)
+            ->log($request->user()->fullname . ' has removed quotation attachment with ID: ' . $attachment->id);
+
+        $this->quotation->removeAttachment($attachment);
 
         return apiResponse($this->quotation);
     }
@@ -118,7 +139,7 @@ class QuotationController extends Controller
         $this->quotation->setModel($quotation);
 
         $cancellationData = $request->cancellationData();
-        $cancellationData['canceller'] = 'company';
+        $cancellationData['canceller'] = QuotationCanceller::Company;
         $quotation = $this->quotation->cancel($cancellationData);
 
         activity()->causedBy($request->user())
@@ -163,12 +184,12 @@ class QuotationController extends Controller
         $quotation = $request->getQuotation();
     	$this->quotation->setModel($quotation);
 
-        $force = $request->input('force');
-    	$this->quotation->delete($force);
-
         activity()->causedBy($request->user())
             ->performedOn($quotation)
             ->log($request->user()->fullname . ' has' . ($force ? ' force ' : ' ') . 'deleted quotation with ID: ' . $quotation->id);
+
+        $force = $request->input('force');
+    	$this->quotation->delete($force);
 
     	return apiResponse($this->quotation);
     }

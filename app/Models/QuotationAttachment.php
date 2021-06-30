@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use \Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Webpatser\Uuid\Uuid;
+
+use App\Models\StorageFile;
+
+class QuotationAttachment extends Model
+{
+    protected $table = 'quotation_attachments';
+    protected $primaryKey = 'id';
+    public $timestamps = true;
+    public $incrementing = false;
+
+    protected $fillable = [
+        'quotation_id',
+        'name',
+        'description',
+        'attachment_path',
+    ];
+
+    protected $hidden = [
+        
+    ];
+
+    protected static function boot()
+    {
+    	parent::boot();
+
+    	self::creating(function ($attachment) {
+            $attachment->id = Uuid::generate()->string;
+    	});
+
+        self::deleting(function ($attachment) {
+            deleteFile($attachment->attachment_path);
+        });
+    }
+
+    public function setAttachmentFileAttribute($attachmentFile)
+    {
+        $directory = 'uploads/quotations/attachments/';
+        $attachment = uploadFile($attachmentFile, $directory);
+
+        return $this->attributes['attachment_path'] = $attachment->path;
+    }
+
+    public function getAttachmentFileAttribute()
+    {
+        $path = $this->attributes['attachment_path'];
+        $file = StorageFile::findByPath($path);
+        return $file->getFileContent();
+    }
+
+    public function getAttachmentUrlAttribute()
+    {
+        $path = $this->attributes['attachment_path'];
+        $file = StorageFile::findByPath($path);
+        return $file->getDownloadUrl();
+    }
+
+    public function quotation()
+    {
+        return $this->belongsTo('App\Models\Quotation', 'quotation_id', 'id');
+    }
+}

@@ -7,8 +7,12 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Quotation;
 
+use App\Traits\InputRequest;
+
 class CancelQuotationRequest extends FormRequest
 {
+    use InputRequest;
+
     private $quotation;
 
     public function getQuotation()
@@ -38,10 +42,14 @@ class CancelQuotationRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'canceller' => ['required', 'string'],
             'cancellation_reason' => ['required', 'string'],
-        ])
+        ]);
 
         return $this->returnRules();
+    }
+
+    public function cancellationData()
+    {
+        return $this->onlyInRules();
     }
 }

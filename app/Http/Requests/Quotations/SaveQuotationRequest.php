@@ -5,11 +5,13 @@ namespace App\Http\Requests\Quotations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Rules\FloatValue;
 use App\Rules\AmongStrings;
-use App\Rules\CompanyOwned;
 
 use App\Models\Customer;
 use App\Models\Quotation;
+
+use App\Enums\Quotation\QuotationStatus;
 
 use App\Traits\CompanyInputRequest;
 
@@ -25,7 +27,16 @@ class SaveQuotationRequest extends FormRequest
     {   
         if ($this->customer) return $this->customer;
 
-        return $this->customer = Customer::findOrFail($this->input('customer_id'));
+        if ($id = $this->input('customer_id')) {
+            $this->customer = Customer::findOrFail($this->input('customer_id'));
+        } else if ($this->appointment) {
+            $appointment = $this->getAppointment();
+            $this->customer = $appointment->customer;
+        } else {
+            abort(403, 'You need to specify customer or appointment.');
+        }
+
+        return $this->customer;
     }
 
     public function getQuotation()
@@ -51,9 +62,8 @@ class SaveQuotationRequest extends FormRequest
      */
     public function authorize()
     {
-        $customer = $this->getCustomer();
-
         if ($this->isMethod('POST')) {
+            $customer = $this->getCustomer();
             if ($this->input('appointment_id')) {
                 $appointment = $this->getAppointment();
                 return Gate::allows('create-quotation-with-appointment', $customer, $appointment);
@@ -67,6 +77,7 @@ class SaveQuotationRequest extends FormRequest
 
             if ($this->input('appointment_id')) {
                 $appointment = $this->getAppointment();
+                $customer = $this->getCustomer();
                 return Gate::allows('update-quotation-with-appointment', $quotation, $customer, $appointment);
             }
 
@@ -74,6 +85,18 @@ class SaveQuotationRequest extends FormRequest
         }
 
         return false;
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->merge([
+            'type' => (int) $this->input('type'),
+            'damage_causes' => json_decode($this->input('damage_causes'), true),
+            'expiry_date' => carbon()->parse($this->input('expiry_date')),
+            'vat_percentage' => floatval($this->input('vat_percentage')),
+            'discount_amount' => floatval($this->input('discount_amount')),
+            'payment_method' => (int) $this->input('payment_method'),
+        ]);
     }
 
     /**
@@ -85,23 +108,27 @@ class SaveQuotationRequest extends FormRequest
     {
         $this->setRules([
             'appointment_id' => ['string'],
-            'subject' => ['required', 'string'],
+            'customer_id' => ['string'],
+
+            'type' => ['required', 'numeric', 'min:1', 'max:4'],
             'quotation_number' => ['required', 'string', 'alpha_num'],
-            'quotation_type' => ['required', 'string', 'min:1', 'max:4'],
+            'quotation_date' => ['required', 'date'],
+
+            'contact_person' => ['required', 'string'],
+
+            'address' => ['required', 'string'],
+            'zip_code' => ['required', 'string', 'numeric'],
+            'phone_number' => ['required', 'string', 'numeric'],
+            
+            'damage_causes' => ['required', 'array'],
             'quotation_description' => ['required', 'string'],
-            'quotation_document' => ['file', 'mimes:pdf', 'max:10000'],
-            'expiry_date' => ['required', 'string', 'date'],
-            'status' => ['required', 'integer', 'min:1', 'max:5'],
-            'amount' => ['required', 'integer'],
+
+            'expiry_date' => ['required', 'date'],
+
+            'vat_percentage' => [new FloatValue(true)],
+            'discount_amount' => [new FloatValue(true)],
             'payment_method' => ['required', 'integer', 'min:1', 'max:2'],
         ]);
-
-        if ($this->isMethod('POST')) {
-            // Upload file
-            $documentRule = $this->rules['quotation_document'];
-            array_push($documentRule, 'required');
-            $this->addRule('quotation_document', $documentRule);
-        }
 
         return $this->returnRules();
     }
@@ -109,9 +136,8 @@ class SaveQuotationRequest extends FormRequest
     public function quotationData()
     {
         $data = $this->ruleWithCompany();
-        $data['creator_id'] = $this->user()->id;
         $data['customer_id'] = $this->getCustomer()->id;
-        unset($data['quotation_document']);
+        $data['status'] = QuotationStatus::Draft;
         return $data;
     }
 }

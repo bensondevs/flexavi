@@ -224,10 +224,9 @@ class Company extends Model
 
     public function setCompanyLogoAttribute($logoFile)
     {
-        $path = 'storage/companies/logos/';
-        $uploadedLogoPath = uploadFile($logoFile, $path);
-        $logoUrl = asset($uploadedLogoPath);
+        $path = 'uploads/companies/logos/';
+        $logo = uploadFile($logoFile, $path);
 
-        $this->attributes['company_logo_url'] = $logoUrl;
+        $this->attributes['company_logo_path'] = $logo->path;
     }
 }

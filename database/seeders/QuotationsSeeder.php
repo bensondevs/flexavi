@@ -59,8 +59,6 @@ class QuotationsSeeder extends Seeder
                 'phone_number' => '02861282634',
                 'damage_causes' => json_encode($damageCauses),
                 'quotation_description' => 'Hello this is seeder quotation damage descripton',
-                'quotation_document_url' => 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-                'is_signed' => (bool) rand(0, 1),
                 'amount' => $amount,
                 'vat_percentage' => $vatPercentage,
                 'discount_amount' => $discountAmount,

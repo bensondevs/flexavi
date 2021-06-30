@@ -28,7 +28,7 @@ class CreateEmployeesTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->string('photo_url')->nullable();
+            $table->string('photo_path')->nullable();
 
             $table->char('title');
             $table->string('employee_type');

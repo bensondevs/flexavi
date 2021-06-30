@@ -8,8 +8,13 @@ use \Illuminate\Database\QueryException;
 use App\Enums\Quotation\QuotationStatus;
 
 use App\Models\Quotation;
+use App\Models\QuotationAttachment;
 
 use App\Repositories\Base\BaseRepository;
+
+use App\Jobs\SendMail;
+
+use App\Mail\Quotation\QuotationMail;
 
 class QuotationRepository extends BaseRepository
 {
@@ -18,46 +23,12 @@ class QuotationRepository extends BaseRepository
 		$this->setInitModel(new Quotation);
 	}
 
-	public function uploadDocument($documentUpload)
-	{
-		try {
-			$quotation = $this->getModel();
-			$quotation->document = $documentUpload;
-
-			$this->setModel($quotation);
-
-			$this->setSuccess('Successfully upload quotation document');
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to delete quotation document', $error);
-		}
-
-		return $this->getModel();
-	}
-
-	public function reuploadDocument($documentUpload)
-	{
-		try {
-			$quotation = $this->getModel();
-			$quotation->document = $documentUpload;
-			$quotation->save();
-
-			$this->setModel($quotation);
-
-			$this->setSuccess('Successfully reupload quotation document.');
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to reupload quotation document.', $error);
-		}
-
-		return $this->getModel();
-	}
-
 	public function save(array $quotationData)
 	{
 		try {
 			$quotation = $this->getModel();
 			$quotation->fill($quotationData);
+			$quotation->damage_causes = $quotationData['damage_causes'];
 			$quotation->save();
 
 			$this->setModel($quotation);
@@ -69,6 +40,42 @@ class QuotationRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function addAttachment(array $attachmentData = [])
+	{
+		try {
+			$quotation = $this->getModel();
+			
+			$attachment = new QuotationAttachment();
+			$attachment->attachment_file = $attachmentData['attachment'];
+			unset($attachmentData['attachment']);
+			$attachment->fill($attachmentData);
+			$attachment->quotation_id = $quotation->id;
+			$attachment->save();
+
+			$this->setSuccess('Successfully add attachment to quotation');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to add attachment to quotation.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function removeAttachment(QuotationAttachment $attachment)
+	{
+		try {
+			// Delete file
+			$attachment->delete();
+
+			$this->setSuccess('Successfully delete attachment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to remove attachment', $error);
+		}
+
+		return $this->returnResponse();
 	}
 
 	public function saveRevision()
@@ -89,14 +96,27 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function send($email = '')
+	public function send(array $sendData = [])
 	{
 		try {
 			$quotation = $this->getModel();
 			
-			// Send to email
+			// Prepare data
+			$destination = $quotation->customer->email;
+			if (isset($sendData['destination'])) {
+				$destination = $sendData['destination'];
+			}
+			$text = $quotation->quotation_description;
+			if (isset($sendData['text'])) {
+				$text = $sendData['text'];
+			}
 
-			if ($quotation->status == 1) {
+			// Send email to customer
+			$mail = new QuotationMail($quotation, $text);
+			$send = new SendMail($mail, $destination);
+			dispatch($send);
+
+			if ($quotation->status == QuotationStatus::Draft) {
 				$quotation->status = QuotationStatus::Sent;
 				$quotation->save();
 			}
@@ -136,9 +156,12 @@ class QuotationRepository extends BaseRepository
 	{
 		try {
 			$quotation = $this->getModel();
-			$quotation->fill($honorData);
 			$quotation->status = QuotationStatus::Honored;
 			$quotation->honored_at = carbon()->now();
+			if (isset($honorData['discount_amount'])) {
+				$quotation->discount_amount = $honorData['discount_amount'];
+				$quotation->countAmount();
+			}
 			$quotation->save();
 
 			$this->setModel($quotation);
@@ -150,7 +173,7 @@ class QuotationRepository extends BaseRepository
 		}
 	}
 
-	public function cancel(array $cancellationData)
+	public function cancel(array $cancellationData = [])
 	{
 		try {
 			$quotation = $this->getModel();

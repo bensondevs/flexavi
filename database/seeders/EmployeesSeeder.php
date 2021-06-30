@@ -35,7 +35,7 @@ class EmployeesSeeder extends Seeder
 
                     'employment_status' => (['active', 'inactive', 'fired'])[rand(0, 2)],
                     
-                    'photo_url' => 'https://dummyimage.com/300/09f/fff.png',
+                    'photo_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
 
                     'address' => 'Address Test',
                     'house_number' => '11',

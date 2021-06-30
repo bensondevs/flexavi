@@ -47,8 +47,6 @@ class Quotation extends Model
         'phone_number',
         
         'quotation_description',
-        'quotation_document_url',
-        'is_signed',
 
         'amount',
         'vat_percentage',
@@ -88,7 +86,7 @@ class Quotation extends Model
             }
     	});
 
-        self::saving(function ($quotation) {
+        self::saved(function ($quotation) {
             $quotation->countAmount();
         });
     }
@@ -153,13 +151,9 @@ class Quotation extends Model
         return QuotationCanceller::getDescription($canceller);
     }
 
-    public function setDocumentAttribute($document)
+    public function setDamageCausesAttribute(array $damageCauses = [])
     {
-        $path = 'storage/uploads/quotations/files/';
-        $documentPath = uploadFile($document, $path);
-        $pdfUrl = asset($documentPath);
-
-        return $this->attributes['quotation_document_url'] = $pdfUrl;
+        $this->attributes['damage_causes'] = json_encode($damageCauses);
     }
 
     public function setDiscountPercentageAttribute(string $percentage)
@@ -199,10 +193,10 @@ class Quotation extends Model
         );
     }
 
-    public function photos()
+    public function attachments()
     {
         return $this->hasMany(
-            'App\Models\QuotationPhoto',
+            'App\Models\QuotationAttachment',
             'quotation_id',
             'id'
         );

@@ -47,9 +47,6 @@ class CreateQuotationsTable extends Migration
             $table->json('damage_causes');
             $table->text('quotation_description');
 
-            $table->text('quotation_document_url');
-            $table->boolean('is_signed')->default(0);
-
             $table->integer('amount')->default(0);
             $table->integer('vat_percentage')->default(0);
             $table->integer('discount_amount')->default(0);

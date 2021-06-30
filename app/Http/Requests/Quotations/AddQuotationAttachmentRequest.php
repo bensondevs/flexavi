@@ -5,18 +5,22 @@ namespace App\Http\Requests\Quotations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\InputRequest;
+
 use App\Models\Quotation;
 
-class ReviseQuotationRequest extends FormRequest
+class AddQuotationAttachmentRequest extends FormRequest
 {
+    use InputRequest;
+
     private $quotation;
 
     public function getQuotation()
     {
         if ($this->quotation) return $this->quotation;
 
-        return $this->quotation ?:
-            Quotation::findOrFail($this->input('id'));
+        $id = $this->input('quotation_id');
+        return $this->quotation = Quotation::findOrFail($id);
     }
 
     /**
@@ -27,7 +31,7 @@ class ReviseQuotationRequest extends FormRequest
     public function authorize()
     {
         $quotation = $this->getQuotation();
-        return Gate::allows('revise-quotation', $quotation);
+        return Gate::allows('add-quotation-attachment', $quotation);
     }
 
     /**
@@ -38,11 +42,19 @@ class ReviseQuotationRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'vat_percentage' => [new FloatValue(true)],
-            'discount_amount' => [new FloatValue(true)],
-            'payment_method' => ['required', 'integer', 'min:1', 'max:2'],
+            'name' => ['required', 'string'],
+            'description' => ['string'],
+            'attachment' => ['required', 'file', 'mimes:pdf,doc,docx,png,jpg,png,jpeg,svg', 'max:5000'],
         ]);
 
         return $this->returnRules();
+    }
+
+    public function attachmentData()
+    {
+        $data = $this->onlyInRules();
+        $data['attachment'] = $this->file('attachment');
+
+        return $data;
     }
 }

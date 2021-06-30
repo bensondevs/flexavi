@@ -39,7 +39,7 @@ class CarsSeeder extends Seeder
 
         		$this->car->save([
         			'company_id' => $company->id,
-        			'car_image_url' => 'https://dummyimage.com/300/09f/fff.png',
+        			'car_image_path' => 'https://dummyimage.com/300/09f/fff.png',
         			'brand' => $brand,
         			'model' => $model,
         			'year' => rand(2005, 2015),

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateQuotationPhotosTable extends Migration
+class CreateQuotationAttachmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateQuotationPhotosTable extends Migration
      */
     public function up()
     {
-        Schema::create('quotation_photos', function (Blueprint $table) {
+        Schema::create('quotation_attachments', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
             $table->uuid('quotation_id');
@@ -22,8 +22,9 @@ class CreateQuotationPhotosTable extends Migration
                 ->on('quotations')
                 ->onDelete('CASCADE');
 
-            $table->text('photo_url');
-            $table->text('photo_description');
+            $table->string('name');
+            $table->text('description')->nullable();
+            $table->text('attachment_path');
 
             $table->timestamps();
             $table->softDeletes();
@@ -37,6 +38,6 @@ class CreateQuotationPhotosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('quotation_photos');
+        Schema::dropIfExists('quotation_attachments');
     }
 }

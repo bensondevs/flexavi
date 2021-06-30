@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Quotation;
 
-class SendQuotationRequest extends FormRequest
+class FindQuotationRequest extends FormRequest
 {
     private $quotation;
 
@@ -25,7 +25,7 @@ class SendQuotationRequest extends FormRequest
     public function authorize()
     {
         $quotation = $this->getQuotation();
-        return Gate::allows('send-quotation', $quotation);
+        return Gate::allows('view-quotation', $quotation);
     }
 
     /**
@@ -38,19 +38,5 @@ class SendQuotationRequest extends FormRequest
         return [
             //
         ];
-    }
-
-    public function sendData()
-    {
-        $sendData = [];
-        if ($destination = $this->input('destination')) {
-            $sendData['destination'] = $destination;
-        }
-
-        if ($text = $this->input('text')) {
-            $sendData['text'] = $text;
-        }
-
-        return $sendData;
     }
 }

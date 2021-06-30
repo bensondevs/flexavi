@@ -31,7 +31,7 @@ class UsersSeeder extends Seeder
     		'id_card_type' => 'id_card',
     		'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
     		'phone' => '999999999999',
-    		'profile_picture_url' => 'https://dummyimage.com/300/09f/fff.png',
+    		'profile_picture_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
 
     		'email' => 'admin@flexavi.nl',
     		'password' => 'admin',
@@ -47,7 +47,7 @@ class UsersSeeder extends Seeder
         		'id_card_type' => 'id_card',
         		'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
         		'phone' => '999999999999',
-        		'profile_picture_url' => 'https://dummyimage.com/300/09f/fff.png',
+        		'profile_picture_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
 
         		'email' => 'owner' . ($index + 1) . '@flexavi.nl',
         		'password' => 'owner' . ($index + 1),
@@ -64,7 +64,7 @@ class UsersSeeder extends Seeder
                 'id_card_type' => 'id_card',
                 'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
                 'phone' => '999999999999',
-                'profile_picture_url' => 'https://dummyimage.com/300/09f/fff.png',
+                'profile_picture_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
 
                 'email' => 'employee' . ($index + 1) . '@flexavi.nl',
                 'password' => 'employee' . ($index + 1),

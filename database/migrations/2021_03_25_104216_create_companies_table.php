@@ -28,7 +28,7 @@ class CreateCompaniesTable extends Migration
             $table->string('vat_number'); // Need validation from API
             $table->string('commerce_chamber_number');
 
-            $table->string('company_logo_url')->nullable();
+            $table->string('company_logo_path')->nullable();
             $table->string('company_website_url')->nullable();
 
             $table->timestamps();

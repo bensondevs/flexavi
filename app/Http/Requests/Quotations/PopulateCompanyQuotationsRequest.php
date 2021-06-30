@@ -37,6 +37,14 @@ class PopulateCompanyQuotationsRequest extends FormRequest
     {
         $this->setWiths(['customer']);
 
+        if ($status = $this->input('status')) {
+            $this->addWhere([
+                'column' => 'status',
+                'operator' => '=',
+                'value' => $status,
+            ]);
+        }
+
         return $this->collectCompanyOptions();
     }
 }

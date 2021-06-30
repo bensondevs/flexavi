@@ -85,15 +85,14 @@ class Car extends Model
     public function setCarImageAttribute($carImageFile)
     {
         // Upload Image
-        $filename = uploadFile($carImageFile, 'storage/uploads/cars/');
-        $this->attributes['car_image_url'] = asset($filename);
+        $image = uploadFile($carImageFile, '/uploads/cars/');
+        $this->attributes['car_image_path'] = $image->path;
     }
 
     public function getCarImageAttribute()
     {
-        $carImageUrl = $this->attributes['car_image'];
-
-        return $carImageUrl ?: env('BLANK_IMAGE_URL');
+        $carImageUrl = Storage::url($this->attributes['car_image_path']);
+        return $carImageUrl;
     }
 
     public function company()

@@ -94,8 +94,8 @@ class Employee extends Model
     public function setPhotoAttribute($photoFile)
     {
         // Upload Photo
-        $url = uploadFile($photoFile, 'storage/uploads/employees');
-        $this->attributes['photo_url'] = $url;
+        $photo = uploadFile($photoFile, 'uploads/employees');
+        $this->attributes['photo_path'] = $photo->path;
     }
 
     public function getEmploymentStatusLabelAttribute()

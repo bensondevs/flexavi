@@ -4,6 +4,7 @@ namespace App\Policies;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 use App\Models\User;
+use App\Models\Customer;
 use App\Models\Quotation;
 
 use App\Enums\Quotation\QuotationStatus;
@@ -112,5 +113,15 @@ class QuotationPolicy
         }
 
         return $user->hasCompanyPermission($quotation->company_id, 'force delete quotations');
+    }
+
+    public function addAttachment(User $user, Quotation $quotation)
+    {
+        return $user->hasCompanyPermission($quotation->company_id, 'add quotation attachments');
+    }
+
+    public function removeAttachment(User $user, Quotation $quotation)
+    {
+        return $user->hasCompanyPermission($quotation->company_id, 'remove quotation attachments');
     }
 }

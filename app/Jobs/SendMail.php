@@ -8,27 +8,27 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailable;
+use Illuminate\Support\Facades\Mail;
 
-use App\Models\Quotation;
-
-class SendQuotationToCustomer implements ShouldQueue
+class SendMail implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $timeout = 1200;
 
-    private $quotation;
-    private $email;
+    private $mailable;
+    private $destination;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Quotation $quotation, $email = '')
+    public function __construct(Mailable $mailable, string $destination = '')
     {
-        $this->quotation = $quotation;
-        $this->email = $email;
+        $this->mailable = $mailable;
+        $this->destination = $destination;
     }
 
     /**
@@ -38,6 +38,6 @@ class SendQuotationToCustomer implements ShouldQueue
      */
     public function handle()
     {
-        //
+        Mail::to($this->destination)->send($this->mailable);
     }
 }

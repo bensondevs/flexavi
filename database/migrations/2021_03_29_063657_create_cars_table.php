@@ -22,7 +22,7 @@ class CreateCarsTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->string('car_image_url')->nullable();
+            $table->string('car_image_path')->nullable();
 
             $table->string('brand');
             $table->string('model');

@@ -29,7 +29,7 @@ class CreateWorkConditionPhotosTable extends Migration
                 ->onDelete('CASCADE');
 
             $table->string('photo_type');
-            $table->text('photo_url');
+            $table->text('photo_path');
             $table->text('photo_description')->nullable();
 
             $table->timestamps();

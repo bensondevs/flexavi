@@ -25,7 +25,7 @@ class QuotationResource extends JsonResource
     {
         $structure = [
             'id' => $this->id,
-            // 'customer' => new CustomerResource($this->customer),
+            'customer' => new CustomerResource($this->customer),
             // 'appointment' => new AppointmentResource($this->appointment),
 
             'type' => $this->type,
@@ -40,9 +40,6 @@ class QuotationResource extends JsonResource
             'address' => $this->address,
             'phone_number' => $this->phone_number,
             'quotation_description' => $this->quotation_description,
-            'quotation_document_url' => $this->quotation_document_url,
-
-            'is_signed' => $this->is_signed,
 
             'amount' => number_format($this->amount, 2),
             'formatted_amount' => $this->formatted_amount,

@@ -30,7 +30,7 @@ class CompaniesSeeder extends Seeder
                 'phone_number' => rand(1000, 9999) * rand(1000, 9999),
                 'vat_number' => rand(1000, 9999) * rand(1000, 9999),
                 'commerce_chamber_number' => rand(1, 100),
-                'company_logo_url' => asset('storage/uploads/cars/20210503070400pp.jpeg'),
+                'company_logo_path' => '/uploads/cars/20210503070400pp.jpeg',
                 'company_website_url' => 'www.randomwebsite.com',
 
                 'visiting_address' => json_encode([
