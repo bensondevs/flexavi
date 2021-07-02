@@ -13,7 +13,8 @@ use App\Http\Requests\Quotations\ReviseQuotationRequest as ReviseRequest;
 use App\Http\Requests\Quotations\HonorQuotationRequest as HonorRequest;
 use App\Http\Requests\Quotations\DeleteQuotationRequest as DeleteRequest;
 use App\Http\Requests\Quotations\CancelQuotationRequest as CancelRequest;
-use App\Http\Requests\Quotations\PopulateCompanyQuotationsRequest as PopulateRequest;
+use App\Http\Requests\Quotations\PopulateCompanyQuotationsRequest as CompanyPopulateRequest;
+use App\Http\Requests\Quotations\PopulateCustomerQuotationsRequest as CustomerPopulateRequest;
 use App\Http\Requests\Quotations\AddQuotationAttachmentRequest as AddAttachmentRequest;
 use App\Http\Requests\Quotations\RemoveQuotationAttachmentRequest as RemoveAttachmentRequest;
 
@@ -32,15 +33,26 @@ class QuotationController extends Controller
     	$this->quotation = $quotation;
     }
 
-    public function companyQuotations(PopulateRequest $request)
+    public function companyQuotations(CompanyPopulateRequest $request)
     {
         $options = $request->options();
 
     	$quotations = $this->quotation->all($options);
         $quotations = $this->quotation->paginate();
-        $quotations->data = QuotationResource::apiCollection($quotations);
+        $quotations = QuotationResource::apiCollection($quotations);
 
     	return response()->json(['quotations' => $quotations]);
+    }
+
+    public function customerQuotations(CustomerPopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $quotations = $this->quotation->all($options);
+        $quotations = $this->quotation->paginate();
+        $quotations = QuotationResource::apiCollection($quotations);
+
+        return response()->json(['quotations' => $quotations]);
     }
 
     public function store(SaveRequest $request)

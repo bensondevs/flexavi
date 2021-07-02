@@ -80,14 +80,6 @@ class WorkContract extends Model
         );
     }
 
-    public function inspection()
-    {
-        return $this->morphOne(
-            Inspection::class,
-            'signable'
-        );
-    }
-
     public function customer()
     {
         return $this->hasOne(

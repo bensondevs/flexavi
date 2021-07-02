@@ -28,6 +28,14 @@ class CreateWorksTable extends Migration
                 ->on('work_contracts')
                 ->onDelete('SET NULL');
 
+            $table->uuid('appointment_id')->nullable();
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('SET NULL');
+
+            $table->tinyInteger('status')->default(1);
+
             $table->integer('quantity');
             $table->string('quantity_unit');
             $table->text('description');

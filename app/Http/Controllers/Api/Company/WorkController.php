@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Works\SaveWorkRequest as SaveRequest;
 use App\Http\Requests\Works\FindWorkRequest as FindRequest;
 use App\Http\Requests\Works\DeleteWorkRequest as DeleteRequest;
+use App\Http\Requests\Works\AddAppointmentWorkRequest as AppointmentAdd;
 use App\Http\Requests\Works\PopulateContractWorksRequest as ContractPopulateRequest;
 use App\Http\Requests\Works\PopulateQuotationWorksRequest as QuotationPopulateRequest;
+use App\Http\Requests\Works\PopulateAppointmentWorkersRequest as AppointmentPopulateRequest;
 
 use App\Http\Resources\WorkResource;
 
@@ -46,32 +47,27 @@ class WorkController extends Controller
         return response()->json(['works' => $works]);
     }
 
-    public function store(SaveRequest $request)
+    public function appointmentWorks(AppointmentPopulateRequest $request)
     {
-    	$input = $request->onlyInRules();
-    	$work = $this->work->save($input);
+        $options = $request->options();
 
-    	return apiResponse($this->work);
+        $works = $this->work->all($options);
+        $works = $this->work->paginate();
+        $works = WorkResource::apiCollection($works);
+
+        return response()->json(['works' => $works]);
     }
 
-    public function update(SaveRequest $request)
+    public function addAppointmentWork(AppointmentAddRequest $request)
     {
-    	$work = $request->getWork();
-    	$this->work->setModel($work);
+        $input = $request->onlyInRules();
+        $work = $this->work->addToAppointment($input);
 
-    	$input = $request->onlyInRules();
-    	$this->work->save($input);
-
-    	return apiResponse($this->work);
+        return apiResponse($this->work);
     }
 
-    public function delete(DeleteRequest $request)
+    public function removeAppointmentWork(AppointmentRemoveRequest $request)
     {
-    	$work = $request->getWork();
 
-    	$this->work->setModel($work);
-    	$this->work->delete();
-
-    	return apiResponse($this->work);
     }
 }

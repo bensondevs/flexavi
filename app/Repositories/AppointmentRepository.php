@@ -11,6 +11,9 @@ use App\Enums\AppointmentableType;
 use App\Models\Appointment;
 use App\Models\Appointmentable;
 
+use App\Repositories\WorkRepository;
+use App\Repositories\ExecuteWorkRepository;
+
 use App\Repositories\Base\BaseRepository;
 
 class AppointmentRepository extends BaseRepository
@@ -52,6 +55,29 @@ class AppointmentRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to execute appointment.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function addWork(array $workData)
+	{
+		try {
+			$appointment = $this->getModel();
+
+			$workRepository = new WorkRepository;
+			$work = $workRepository->save($workData);
+
+			$executeWorkRepository = new ExecuteWorkRepository;
+			$executeWork = $executeWorkRepository->execute([
+				'appointment_id' => $appointment->id,
+				'work_id' => $work->id,
+			]);
+
+			$this->setSuccess('Successfully add work to appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to add work to appointment');
 		}
 
 		return $this->getModel();

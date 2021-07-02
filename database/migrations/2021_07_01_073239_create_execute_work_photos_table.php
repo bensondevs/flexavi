@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkConditionPhotosTable extends Migration
+class CreateExecuteWorkPhotosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,22 +13,16 @@ class CreateWorkConditionPhotosTable extends Migration
      */
     public function up()
     {
-        Schema::create('work_condition_photos', function (Blueprint $table) {
+        Schema::create('execute_work_photos', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('uploader_id');
-            $table->foreign('uploader_id')
+            $table->uuid('execute_work_id');
+            $table->foreign('execute_work_id')
                 ->references('id')
-                ->on('users')
+                ->on('execute_works')
                 ->onDelete('CASCADE');
 
-            $table->uuid('work_id');
-            $table->foreign('work_id')
-                ->references('id')
-                ->on('works')
-                ->onDelete('CASCADE');
-
-            $table->string('photo_type');
+            $table->tinyInteger('photo_condition_type')->default(1);
             $table->text('photo_path');
             $table->text('photo_description')->nullable();
 
@@ -44,6 +38,6 @@ class CreateWorkConditionPhotosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('work_condition_photos');
+        Schema::dropIfExists('execute_work_photos');
     }
 }

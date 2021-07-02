@@ -21,8 +21,7 @@ use App\Http\Controllers\Api\Company\AppointmentWorkerController;
 use App\Http\Controllers\Api\Company\RegisterInvitationController;
 use App\Http\Controllers\Api\Company\WorkController;
 use App\Http\Controllers\Api\Company\WorkContractController;
-use App\Http\Controllers\Api\Company\WorkActivityController;
-use App\Http\Controllers\Api\Company\WorkConditionPhotoController;
+use App\Http\Controllers\Api\Company\ExecuteWorkController;
 
 use App\Http\Controllers\Api\Customer\CustomerController;
 
@@ -134,6 +133,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::match(['PUT', 'PATCH'], 'update', [CompanyCustomerController::class, 'update']);
 				Route::delete('delete', [CompanyCustomerController::class, 'delete']);
 				Route::patch('restore', [CompanyCustomerController::class, 'restore']);
+
+				Route::get('quotations', [QuotationController::class, 'customerQuotations']);
 			});
 
 			/*
@@ -219,6 +220,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			*/
 			Route::group(['prefix' => 'quotations'], function () {
 				Route::get('/', [QuotationController::class, 'companyQuotations']);
+				Route::get('of_customer', [QuotationController::class, 'customerQuotations']);
 				Route::post('store', [QuotationController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
 				Route::delete('delete', [QuotationController::class, 'delete']);
@@ -301,23 +303,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::delete('delete', [WorkController::class, 'delete']);
 
 				/*
-					Company Work Activity Module
+					Execute Works Module
 				*/
-				Route::group(['prefix' => 'activities'], function () {
-					Route::get('/', [WorkActivityController::class, 'companyWorkActivities']);
-					Route::post('store', [WorkActivityController::class, 'store']);
-					Route::match(['PUT', 'PATCH'], 'update', [WorkActivityController::class, 'update']);
-					Route::delete('delete', [WorkActivityController::class, 'delete']);
-				});
-
-				/*
-					Company Work Condition Photo Module
-				*/
-				Route::group(['prefix' => 'condition_photos'], function () {
-					Route::get('/', [WorkConditionPhotoController::class, 'companyWorkConditionPhotos']);
-					Route::post('store', [WorkConditionPhoto::class, 'store']);
-					Route::match(['PUT', 'PATCH'], 'update', [WorkConditionPhotoController::class, 'update']);
-					Route::delete('delete', [WorkConditionPhotoController::class, 'delete']);
+				Route::group(['prefix' => 'execute'], function () {
+					Route::post('execute', [ExecuteWorkController::class, 'execute']);
+					Route::post('mark_unfinished', [ExecuteWorkController::class, 'markUnfinished']);
+					Route::post('mark_finished', [ExecuteWorkController::class, 'markFinished']);
+					Route::post('make_continuation', [ExecuteWorkController::class, 'makeContinuation']);
 				});
 			});
 

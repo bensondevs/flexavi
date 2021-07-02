@@ -49,6 +49,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Quotation
         Gate::define('view-any-quotation', [QuotationPolicy::class, 'viewAny']);
+        Gate::define('view-any-customer-quotation', [QuotationPolicy::class, 'viewAnyCustomer']);
         Gate::define('view-quotation', [QuotationPolicy::class, 'view']);
         Gate::define('create-quotation', [QuotationPolicy::class, 'create']);
         Gate::define('create-quotation-with-appointment', [QuotationPolicy::class, 'createWithAppointment']);
@@ -72,5 +73,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-work', [WorkPolicy::class, 'delete']);
         Gate::define('restore-work', [WorkPolicy::class, 'restore']);
         Gate::define('force-delete-work', [WorkPolicy::class, 'forceDelete']);
+
+        // Execute Work
+        Gate::define('execute-work', [ExecuteWorkPolicy::class, 'execute']);
+        Gate::define('mark-unfinish-execute-work', [ExecuteWorkPolicy::class, 'markUnfinish']);
+        Gate::define('mark-finish-execute-work', [ExecuteWorkPolicy::class, 'markFinish']);
+        Gate::define('make-continuation-execute-work', [ExecuteWorkPolicy::class, 'makeContinuation']);
     }
 }

@@ -30,7 +30,9 @@ class StorageFile extends Model
 
     public function getDownloadUrl()
     {
-        return Storage::url($this->attributes['path']);
+        $disk = $this->attributes['disk'];
+        $path = $this->attributes['path'];
+        return Storage::disk($disk)->url($path);
     }
 
     public function getFileContent()

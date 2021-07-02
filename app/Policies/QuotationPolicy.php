@@ -15,17 +15,22 @@ class QuotationPolicy
 
     public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('view appointments');
+        return $user->hasPermissionTo('view quotations');
+    }
+
+    public function viewAnyCustomer(User $user, Customer $customer)
+    {
+        return $user->hasCompanyPermission($customer->company_id, 'view quotations');
     }
 
     public function view(User $user, Quotation $quotation)
     {
-        return $user->hasCompanyPermission($quotation->company_id, 'view appointments');
+        return $user->hasCompanyPermission($quotation->company_id, 'view quotations');
     }
 
     public function create(User $user, Customer $customer)
     {
-        return $user->hasCompanyPermission($customer->company_id, 'create appointments');
+        return $user->hasCompanyPermission($customer->company_id, 'create quotations');
     }
 
     public function createWithAppointment(User $user, Customer $customer, Appointment $appointment)
@@ -34,7 +39,7 @@ class QuotationPolicy
             return abort(403, 'Cannot create quotation using other company data.');
         }
 
-        if (! $user->hasCompanyPermission($customer->company_id, 'create appointments')) {
+        if (! $user->hasCompanyPermission($customer->company_id, 'create quotations')) {
             return abort(403, 'You don\'t have permission to create quotation.');
         }
 
@@ -47,7 +52,7 @@ class QuotationPolicy
             return abort(403, 'Cannot create quotation using other company data.');
         }
 
-        if (! $user->hasCompanyPermission($quotation->company_id, 'edit appointments')) {
+        if (! $user->hasCompanyPermission($quotation->company_id, 'edit quotations')) {
             return abort(403, 'You don\'t have permission to update quotation');
         }
 
@@ -64,7 +69,7 @@ class QuotationPolicy
             return abort(403, 'Cannot create quotation using other company data.');
         }
 
-        if (! $user->hasCompanyPermission($appointment->company_id, 'edit appointments')) {
+        if (! $user->hasCompanyPermission($appointment->company_id, 'edit quotations')) {
             return abort(403, 'You don\'t have permission to update quotation');
         }
 

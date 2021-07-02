@@ -206,21 +206,11 @@ class PermissionsSeeder extends Seeder
             'restore works',
             'force delete works',
 
-        	// Work Activity
-        	'view work activities',
-        	'create work activities',
-        	'edit work activities',
-        	'delete work activities',
-            'restore work activities',
-            'force delete work activities',
-
-        	// Work Condition Photo
-        	'view work condition photos',
-        	'create work condition photos',
-        	'edit work condition photos',
-        	'delete work condition photos',
-            'restore work condition photos',
-            'force delete work condition photos',
+            // Execute Work
+            'execute works',
+            'mark finished execute works',
+            'mark unfinished execute works',
+            'make continuation execute works',
 
         	// Work Contract
         	'view work contracts',

@@ -17,14 +17,17 @@ use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as Custom
 use App\Http\Resources\AppointmentResource;
 
 use App\Repositories\AppointmentRepository;
+use App\Repositories\WorkRepository;
 
 class AppointmentController extends Controller
 {
     private $appointment;
+    private $work;
 
-    public function __construct(AppointmentRepository $appointment)
+    public function __construct(AppointmentRepository $appointment, WorkRepository $work)
     {
     	$this->appointment = $appointment;
+        $this->work = $work;
     }
 
     public function companyAppointments(CompanyPopulateRequest $request)
@@ -65,7 +68,7 @@ class AppointmentController extends Controller
         $input = $request->ruleWithCompany();
         $appointment = $this->appointment->save($input);
 
-        return apiResponse($this->appointment, ['appointment' => $appointment]);
+        return apiResponse($this->appointment);
     }
 
     public function execute(ExecuteRequest $request)
@@ -75,7 +78,18 @@ class AppointmentController extends Controller
         $appointment = $this->appointment->setModel($appointment);
         $appointment = $this->appointment->execute();
 
-        return apiResponse($this->appointment, ['appointment' => $appointment]);
+        return apiResponse($this->appointment);
+    }
+
+    public function addWork(AddWorkRequest $request)
+    {
+        $appointment = $request->getAppointment();
+        $appointment = $this->appointment->setModel($appointment);
+        
+        $input = $request->workData();
+        $appointment = $this->appointment->addWork($input);
+
+        return apiResponse($this->appointment);
     }
 
     public function process(ProcessRequest $request)

@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Enums\Work\WorkStatus;
+
 class Work extends Model
 {
     protected $table = 'works';
@@ -17,6 +19,8 @@ class Work extends Model
     protected $fillable = [
         'quotation_id',
         'work_contract_id',
+
+        'status',
 
         'quantity',
         'quantity_unit',
@@ -56,6 +60,13 @@ class Work extends Model
         }
 
         return $this->attributes['total_price'] = $total;
+    }
+
+    public function getStatusDescriptionAttribute()
+    {
+        $status = $this->attributes['status'];
+
+        return WorkStatus::getDescription($status);
     }
 
     public function getUnitTotalAttribute()
