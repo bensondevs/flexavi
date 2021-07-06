@@ -13,23 +13,27 @@ class ExecuteWorkPolicy
 {
     use HandlesAuthorization;
 
-    public function execute(User $user, ExecuteWork $executeWork)
+    public function execute(User $user, Work $Work, Appointment $appointment)
     {
-        return $user->hasCompanyPermission();
+        if ($work->company_id != $appointment->company_id) {
+            return false;
+        }
+
+        return $user->hasCompanyPermission($work->company_id, 'execute works');
     }
 
     public function markFinish(User $user, ExecuteWork $executeWork)
     {
-        //
+        return $user->hasCompanyPermission($executeWork->company_id, 'mark finish execute works');
     }
 
-    public function markUnfinished(User $user)
+    public function markUnfinished(User $user, ExecuteWork $executeWork)
     {
-        //
+        return $user->hasCompanyPermission($executeWork->company_id, 'mark unfinished execute works')
     }
 
-    public function makeContinuation(User $user)
+    public function makeContinuation(User $user, ExecuteWork $executeWork)
     {
-        //
+        return $user->hasCompanyPermission($executeWork->company_id, 'make continuation execute works');
     }
 }

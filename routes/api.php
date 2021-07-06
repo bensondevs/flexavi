@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\Company\RegisterInvitationController;
 use App\Http\Controllers\Api\Company\WorkController;
 use App\Http\Controllers\Api\Company\WorkContractController;
 use App\Http\Controllers\Api\Company\ExecuteWorkController;
+	use App\Http\Controllers\Api\Company\ExecuteWorkPhotoController;
 
 use App\Http\Controllers\Api\Customer\CustomerController;
 
@@ -303,13 +304,23 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::delete('delete', [WorkController::class, 'delete']);
 
 				/*
-					Execute Works Module
+					Execute Work Module
 				*/
 				Route::group(['prefix' => 'execute'], function () {
 					Route::post('execute', [ExecuteWorkController::class, 'execute']);
 					Route::post('mark_unfinished', [ExecuteWorkController::class, 'markUnfinished']);
 					Route::post('mark_finished', [ExecuteWorkController::class, 'markFinished']);
 					Route::post('make_continuation', [ExecuteWorkController::class, 'makeContinuation']);
+
+					/*
+						Execute Work Photo Module
+					*/
+					Route::group(['prefix' => 'photos'], function () {
+						Route::get('/', [ExecuteWorkPhotoController::class, 'exeuteWorkPhotos']);
+						Route::post('upload_before', [ExecuteWorkPhotoController::class, 'uploadBefore']);
+						Route::post('upload_after', [ExecuteWorkPhotoController::class, 'uploadAfter']);
+						Route::delete('delete', [ExecuteWorkPhotoController::class, 'delete']);
+					});
 				});
 			});
 

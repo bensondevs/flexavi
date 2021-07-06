@@ -9,6 +9,7 @@ use App\Repositories\Base\BaseRepository;
 
 use App\Enums\Work\WorkStatus;
 
+use App\Models\Work;
 use App\Models\ExecuteWork;
 
 class ExecuteWorkRepository extends BaseRepository
@@ -25,7 +26,6 @@ class ExecuteWorkRepository extends BaseRepository
 			$execute->fill($executionData);
 			$execute->save();
 
-			$work = $execute->work;
 			$work->status = WorkStatus::InProcess;
 			$work->save();
 
@@ -94,6 +94,7 @@ class ExecuteWorkRepository extends BaseRepository
 
 			$continuation = new ExecuteWork();
 			$continuation->fill($continuationData);
+			$continuation->company_id = $execute->company_id;
 			$continuation->work_id = $execute->work_id;
 			$continuation->previous_execute_work_id = $execute->id;
 			$continuation->is_continuation = true;

@@ -16,6 +16,12 @@ class CreateExecuteWorksTable extends Migration
         Schema::create('execute_works', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->uuid('company_id')->nullable();
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('SET NULL');
+
             $table->uuid('appointment_id')->nullable();
             $table->foreign('appointment_id')
                 ->references('id')

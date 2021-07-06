@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Gate;
 use App\Policies\WorkPolicy;
 use App\Policies\QuotationPolicy;
 use App\Policies\AppointmentPolicy;
+use App\Policies\ExecuteWorkPolicy;
+use App\Policies\ExecuteWorkPhotoPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -79,5 +81,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('mark-unfinish-execute-work', [ExecuteWorkPolicy::class, 'markUnfinish']);
         Gate::define('mark-finish-execute-work', [ExecuteWorkPolicy::class, 'markFinish']);
         Gate::define('make-continuation-execute-work', [ExecuteWorkPolicy::class, 'makeContinuation']);
+
+        // Execute Work Photo
+        Gate::define('view-any-execute-work-photo', [ExecuteWorkPhotoPolicy::class, 'viewAny']);
+        Gate::define('upload-execute-work-photo', [ExecuteWorkPhotoPolicy::class, 'upload']);
+        Gate::define('delete-execute-work-photos', [ExecuteWorkPhotoPolicy::class, 'delete']);
     }
 }

@@ -27,7 +27,7 @@ class BaseRepository
 	public function setInitModel(Model $model)
 	{
 		$this->model = $model;
-		$this->defaultModel = $model;
+		$this->defaultModel = clone $model;
 	}
 
 	public function setModel($model)
@@ -43,7 +43,7 @@ class BaseRepository
 	public function destroyModel()
 	{
 		$this->model = null;
-		$this->model = $this->defaultModel;
+		$this->model = clone $this->defaultModel;
 	}
 
 	public function setParentModel(Model $parentModel)

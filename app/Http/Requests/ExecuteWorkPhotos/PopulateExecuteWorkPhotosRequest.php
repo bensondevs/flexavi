@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\ExecuteWorks;
+namespace App\Http\Requests\ExecuteWorkPhotos;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\InputRequest;
+use App\Traits\PopulateRequestOptions;
 
 use App\Models\ExecuteWork;
 
-class MarkFinishedWorkRequest extends FormRequest
+class PopulateExecuteWorkPhotosRequest extends FormRequest
 {
-    use InputRequest;
+    use PopulateRequestOptions;
 
     private $executeWork;
 
@@ -19,7 +19,7 @@ class MarkFinishedWorkRequest extends FormRequest
     {
         if ($this->executeWork) return $this->executeWork;
 
-        $id = $this->input('id');
+        $id = $this->input('execute_work_id');
         return $this->executeWork = ExecuteWork::findOrFail($id);
     }
 
@@ -31,7 +31,7 @@ class MarkFinishedWorkRequest extends FormRequest
     public function authorize()
     {
         $executeWork = $this->getExecuteWork();
-        return Gate::allows('mark-finish-execute-work', $executeWork);
+        return Gate::allows('view-any-execute-work-photo', $executeWork);
     }
 
     /**
@@ -41,8 +41,17 @@ class MarkFinishedWorkRequest extends FormRequest
      */
     public function rules()
     {
-        $this->setRules([
-            'finish_note' => ['string'],
+        return [
+            //
+        ];
+    }
+
+    public function options()
+    {
+        $this->addWhere([
+            'execute_work_id' => $this->getExecuteWork()->id,
         ]);
+
+        return $this->collectOptions();
     }
 }

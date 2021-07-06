@@ -49,6 +49,8 @@ class SaveWorkRequest extends FormRequest
     protected function prepareForValidation()
     {
         $this->merge([
+            'company_id' => $this->getCompany()->id,
+
             'quantity' => (int) $this->input('quantity'),
             'unit_price' => (float) $this->input('unit_price'),
             'include_tax' => filter_var($this->input('include_tax'), FILTER_VALIDATE_BOOLEAN),
@@ -66,12 +68,16 @@ class SaveWorkRequest extends FormRequest
      */
     public function authorize()
     {
+        if ($this->input('appointment_id')) {
+            $attached = $this->getWorkContract();
+        }
+
         if ($this->input('work_contract_id')) {
-            $quotationOrContract = $this->getWorkContract();
+            $attached = $this->getWorkContract();
         }
 
         if ($this->input('quotation_id')) {
-            $quotationOrContract = $this->getQuotation();
+            $attached = $this->getQuotation();
         }
 
         if ($this->contract && $this->quotation) {
@@ -80,8 +86,14 @@ class SaveWorkRequest extends FormRequest
             }
         }
 
+        if ($this->appointment) {
+            if ($this->appointment->company_id != $this->getCompany()->id) {
+                return false;
+            }
+        }
+
         return $this->isMethod('POST') ?
-            Gate::allows('create-work', $quotationOrContract) :
+            Gate::allows('create-work', $attached) :
             Gate::allows('update-work', $this->getWork());
     }
 
@@ -93,6 +105,7 @@ class SaveWorkRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
+            'company_id' => ['string'],
             'quotation_id' => ['string'],
             'work_contract_id' => ['string'],
 

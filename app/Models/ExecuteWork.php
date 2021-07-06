@@ -17,6 +17,7 @@ class ExecuteWork extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'company_id',
         'appointment_id',
         'work_id',
         'is_finished',

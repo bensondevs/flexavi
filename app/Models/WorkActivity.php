@@ -35,13 +35,4 @@ class WorkActivity extends Model
             $workActivity->id = Uuid::generate()->string;
     	});
     }
-
-    public function assigned()
-    {
-        return $this->belongsTo(
-            $this->attributes['assignable_type'],
-            'id',
-            'assignable_id'
-        );
-    }
 }

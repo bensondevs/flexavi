@@ -17,6 +17,7 @@ class Work extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'appointment_id',
         'quotation_id',
         'work_contract_id',
 
@@ -94,14 +95,6 @@ class Work extends Model
 
     public function getTaxAmountAttribute()
     {
-        /*
-            $taxAmount + ($percentage)% = $totalPrice
-            $taxAmount + ((percentage/100) * $taxAmount) = $totalPrice
-            $taxAmount (1 + (percentage/100)) = $totalPrice
-            (100 + percentage)/100 = $totalPrice / $taxAmount
-            (100 + percentage)$taxAmount = $totalPrice * 100
-            $taxAmount = $totalPrice * 100 / (100 + percentage)
-        */
         $unitTotal = $this->getUnitTotalAttribute();
         $taxPercentage = $this->attributes['tax_percentage'];
         return $unitTotal * ($taxPercentage / 100);
@@ -131,6 +124,11 @@ class Work extends Model
     public function quotation()
     {
         return $this->belongsTo('App\Models\Quotation', 'quotation_id', 'id');
+    }
+
+    public function appointment()
+    {
+        return $this->belongsTo('App\Models\Appointment', 'appointment_id', 'id');
     }
 
     public function contract()

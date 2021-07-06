@@ -16,6 +16,18 @@ class CreateWorksTable extends Migration
         Schema::create('works', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->uuid('company_id')->nullable();
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('SET NULL');
+
+            $table->uuid('appointment_id')->nullable();
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('SET NULL');
+
             $table->uuid('quotation_id')->nullable();
             $table->foreign('quotation_id')
                 ->references('id')
@@ -28,17 +40,11 @@ class CreateWorksTable extends Migration
                 ->on('work_contracts')
                 ->onDelete('SET NULL');
 
-            $table->uuid('appointment_id')->nullable();
-            $table->foreign('appointment_id')
-                ->references('id')
-                ->on('appointments')
-                ->onDelete('SET NULL');
-
             $table->tinyInteger('status')->default(1);
 
-            $table->integer('quantity');
-            $table->string('quantity_unit');
-            $table->text('description');
+            $table->integer('quantity')->default(0);
+            $table->string('quantity_unit')->nullable();
+            $table->text('description')->nullable();
             $table->double('unit_price', 10, 2);
             $table->boolean('include_tax')->default(true);
             $table->integer('tax_percentage')->default(0);

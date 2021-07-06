@@ -23,16 +23,13 @@ class ExecuteWorkController extends Controller
 
     public function execute(ExecuteRequest $request)
     {
-        $execute = $request->getExecuteWork();
-        $this->execute->setModel($execute);
-
         $input = $request->executionData();
         $this->execute->execute($input);
 
         return apiResponse($this->execute);
     }
 
-    public function markFinished(MarkUnfinishedRequest $request)
+    public function markUnfinished(MarkUnfinishedRequest $request)
     {
         $execute = $request->getExecuteWork();
         $this->execute->setModel($execute);
@@ -43,7 +40,7 @@ class ExecuteWorkController extends Controller
         return apiResponse($this->execute);
     }
 
-    public function markUnfinished(MarkFinishedRequest $request)
+    public function markFinished(MarkFinishedRequest $request)
     {
         $execute = $request->getExecuteWork();
         $this->execute->setModel($execute);
@@ -59,7 +56,7 @@ class ExecuteWorkController extends Controller
         $execute = $request->getExecuteWork();
         $this->execute->setModel($execute);
 
-        $input = $request->continuationData();
+        $input = $request->onlyInRules();
         $this->execute->makeContinuation($input);
 
         return apiResponse($this->execute);

@@ -5,18 +5,31 @@ namespace App\Http\Requests\ExecuteWorks;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Models\ExecuteWork;
+use App\Traits\InputRequest;
+
+use App\Models\Work;
 
 class ExecuteWorkRequest extends FormRequest
 {
-    private $executeWork;
+    use InputRequest;
 
-    public function getExecuteWork()
+    private $work;
+    private $appointment;
+
+    public function getWork()
     {
-        if ($this->executeWork) return $this->executeWork;
+        if ($this->work) return $this->work;
 
-        $id = $this->input('id');
-        return $this->executeWork = ExecuteWork::findOrFail($id);
+        $id = $this->input('work_id');
+        return $this->work = Work::findOrFail($id);
+    }
+
+    public function getAppointment()
+    {
+        if ($this->appointment) return $this->appointment;
+
+        $id = $this->input('appointment_id');
+        return $this->appointment = Appointment::findOrFail($id);
     }
 
     /**
@@ -26,8 +39,10 @@ class ExecuteWorkRequest extends FormRequest
      */
     public function authorize()
     {
-        $executeWork = $this->getExecuteWork();
-        return Gate::allows('execute-work', $executeWork);
+        $work = $this->getWork();
+        $appointment = $this->getAppointment();
+
+        return Gate::allows('execute-work', $work, $appointment);
     }
 
     /**
@@ -37,8 +52,18 @@ class ExecuteWorkRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $this->setRules([
+            'appointment_id' => ['required', 'string'],
+            'work_id' => ['required', 'string'],
+        ]);
+
+        return $this->returnRules();
+    }
+
+    public function executeData()
+    {
+        $input = $request->onlyInRules();
+        $input['company_id'] = $this->getAppointment()->company_id;
+        return $input;
     }
 }
