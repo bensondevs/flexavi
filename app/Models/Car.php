@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 
 use App\Traits\ModelEnums;
@@ -63,10 +64,7 @@ class Car extends Model
 
     public function getStatusLabelAttribute()
     {
-        $status = $this->findByValue(
-            'CAR_STATUSES',
-            $this->attributes['status'] 
-        );
+        $status = $this->findByValue('CAR_STATUSES',$this->attributes['status']);
 
         return $status['label'];
     }

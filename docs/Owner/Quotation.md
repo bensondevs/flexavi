@@ -450,3 +450,4 @@ Payload name | Required | Validation | Description
 `zip_code` | Required | String | Zip Code of customer's house
 `phone_number` | Required | String | The callable phone number, this number will be called whenever roofer need certain contact with customer or people in charge of the house
 `damage_cause` | Required | Array, string | Damage causes needs to be fill with ARRAY, the number represents: Leak = 1, Fungus Mold = 2, Bird Nuisance = 3, Storm Damage = 4, Overdue Maintenance = 5
+`quotation_description` | Optional | String | The additional description about quotation, can be filled y the description of damage of the roof or anything related with and informing about everything needs to be known within quotation

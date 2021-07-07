@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
+use \Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\CausesActivity;
@@ -101,12 +102,12 @@ class User extends Authenticatable
         $path = 'uploads/users/profile_pictures/';
         $image = uploadFile($imageFile, $path);
 
-        $this->attributes['profile_picture_path_id'] = $image->id;
+        $this->attributes['profile_picture_path'] = $image->id;
     }
 
     public function getProfilePictureAttribute()
     {
-        return $this->attributes['profile_picture_url'];
+        return Storage::url($this->attributes['profile_picture_path']);
     }
 
     public function getUserRoleAttribute()
