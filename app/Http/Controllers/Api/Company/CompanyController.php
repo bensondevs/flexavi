@@ -45,7 +45,7 @@ class CompanyController extends Controller
         $company = $this->company->setModel($company);
         $company = $this->company->uploadCompanyLogo($logo);
 
-        return apiResponse($this->company, ['company' => $company]);
+        return apiResponse($this->company);
     }
 
     public function register(SaveRequest $request)
@@ -59,7 +59,7 @@ class CompanyController extends Controller
         $owner = $this->owner->setModel($owner);
         $owner = $this->owner->assignCompany($company);
 
-        return apiResponse($this->company, ['company' => $company]);
+        return apiResponse($this->company);
     }
 
     public function update(SaveRequest $request)
@@ -70,6 +70,6 @@ class CompanyController extends Controller
         $input = $request->companyData();
         $company = $this->company->save($input);
 
-        return apiResponse($this->company, ['company' => $company]);
+        return apiResponse($this->company);
     }
 }

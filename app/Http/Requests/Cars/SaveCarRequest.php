@@ -20,8 +20,10 @@ class SaveCarRequest extends FormRequest
 
     public function getCar()
     {
-        return $this->car = $this->model = $this->car ?:
-            Car::findOrFail($this->input('id'));
+        if ($this->car) return $this->car;
+
+        $id = $this->input('id');
+        return $this->car = $this->model = Car::findOrFail($id);
     }
 
     /**

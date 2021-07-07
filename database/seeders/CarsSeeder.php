@@ -46,7 +46,7 @@ class CarsSeeder extends Seeder
         			'car_name' => $company->company_name . ' Car ' . $brand . ' ' . $model,
         			'car_license' => rand(100000, 999999),
         			'insured' => (bool) rand(0, 1),
-        			'status' => 'free',
+        			'status' => rand(1, 2),
         		]);
         		$this->car->setModel(new Car);
         	}

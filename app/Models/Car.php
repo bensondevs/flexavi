@@ -8,28 +8,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use \Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 
-use App\Traits\ModelEnums;
+use App\Enums\Car\CarStatus;
 
 class Car extends Model
 {
     use SoftDeletes;
-    use ModelEnums;
 
     protected $table = 'cars';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
-
-    const CAR_STATUSES = [
-        [
-            'label' => 'Free',
-            'value' => 'free',
-        ],
-        [
-            'label' => 'Out',
-            'value' => 'out',
-        ]
-    ];
 
     protected $fillable = [
         'company_id',
@@ -59,25 +47,19 @@ class Car extends Model
 
     public function scopeFree($car)
     {
-        return $car->where('status', 'free');
+        return $car->where('status', CarStatus::Free);
+    }
+
+    public function scopeOut()
+    {
+        return $car->where('status', CarStatus::Out);
     }
 
     public function getStatusLabelAttribute()
     {
-        $status = $this->findByValue('CAR_STATUSES',$this->attributes['status']);
+        $status = $this->findByValue('CAR_STATUSES', $this->attributes['status']);
 
         return $status['label'];
-    }
-
-    public function setStatusAttribute($_status)
-    {
-        $status = $this->findFromAttributes(
-            'CAR_STATUSES',
-            $_status
-        );
-        if (! $status) $status = self::CAR_STATUSES[0];
-
-        $this->status = $status['value'];
     }
 
     public function setCarImageAttribute($carImageFile)

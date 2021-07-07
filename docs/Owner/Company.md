@@ -14,6 +14,7 @@ Header Name | Value
 ------------|-------
 Accept | `application/json`
 Authorization | `Bearer {token}`
+Content-Type | `multipart/form-data`
 
 **Parameters:**
 
@@ -40,8 +41,7 @@ Authorization | `Bearer {token}`
 **Response Attributes:**
 
 Attribute Name  | Type  | Description   
-----------------|-----------|---------------
-`company` | Object | Object data of updated company
+----------------|-------|---------------
 `status` | String | Request Processing status
 `message` | String | Message response for the user
 
@@ -49,29 +49,6 @@ Attribute Name  | Type  | Description
 
 ```json
 {
-    "company": {
-        "company_name": "Another Company",
-        "email": "company@flexavi.com",
-        "phone_number": "333111222000",
-        "vat_number": "111000222111",
-        "commerce_chamber_number": "121",
-        "company_website_url": "https://company.test.com/",
-        "visiting_address": {
-            "street": "11, Visited Address Street",
-            "house_number": "11",
-            "house_number_suffix": "A",
-            "zip_code": "111111",
-            "city": "Visited City"
-        },
-        "invoicing_address": {
-            "street": "22, Invoiced Address Street",
-            "house_number": "22",
-            "house_number_suffix": "A",
-            "zip_code": "22222",
-            "city": "Invoiced City"
-        },
-        "id": "13b96bc0-c496-11eb-b40f-fb944d91988d"
-    },
     "status": "success",
     "message": "Successfully save company data."
 }
@@ -195,36 +172,12 @@ Content-Type | `application/x-www-form-urlencoded`
 
 Attribute Name  | Type  | Description   
 ----------------|-------|---------------
-`company` | Object | Object data of updated company
 `status` | String | Request Processing status
 `message` | String | Message response for the user
 
 **Success Response Example:**
 ```json
 {
-    "company": {
-        "company_name": "Another Company",
-        "email": "company@flexavi.com",
-        "phone_number": "333111222000",
-        "vat_number": "111000222111",
-        "commerce_chamber_number": "121",
-        "company_website_url": "https://company.test.com/",
-        "visiting_address": {
-            "street": "11, Visited Address Street",
-            "house_number": "11",
-            "house_number_suffix": "A",
-            "zip_code": "111111",
-            "city": "Visited City"
-        },
-        "invoicing_address": {
-            "street": "22, Invoiced Address Street",
-            "house_number": "22",
-            "house_number_suffix": "A",
-            "zip_code": "22222",
-            "city": "Invoiced City"
-        },
-        "id": "13b96bc0-c496-11eb-b40f-fb944d91988d"
-    },
     "status": "success",
     "message": "Successfully save company data."
 }
@@ -255,8 +208,7 @@ Content-Type | `multipart/form-data`
 **Response Attributes:**
 
 Attribute Name  | Type  | Description   
-----------------|-----------|---------------
-`company` | Object | Object data of updated company
+----------------|-------|---------------
 `status` | String | Request Processing status
 `message` | String | Message response for the user
 
@@ -264,31 +216,6 @@ Attribute Name  | Type  | Description
 
 ```json
 {
-    "company": {
-        "id": "13b96bc0-c496-11eb-b40f-fb944d91988d",
-        "company_name": "Another Company",
-        "visiting_address": {
-            "city": "Visited City",
-            "street": "11, Visited Address Street",
-            "zip_code": "111111",
-            "house_number": "11",
-            "house_number_suffix": "A"
-        },
-        "invoicing_address": {
-            "city": "Invoiced City",
-            "street": "22, Invoiced Address Street",
-            "zip_code": "22222",
-            "house_number": "22",
-            "house_number_suffix": "A"
-        },
-        "email": "company@flexavi.com",
-        "email_verified_at": null,
-        "phone_number": "333111222000",
-        "vat_number": "111000222111",
-        "commerce_chamber_number": "121",
-        "company_logo_url": "http://localhost:8000/storage/companies/logos/20210604040318pp.jpeg",
-        "company_website_url": "https://company.test.com/"
-    },
     "status": "success",
     "message": "Successfully upload company logo"
 }

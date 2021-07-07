@@ -44,8 +44,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Toyota B",
                 "car_license": "317748",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c944b580-c922-11eb-ad4c-093488db0322",
@@ -55,8 +55,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes D",
                 "car_license": "588024",
                 "insured": 1,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c945a8e0-c922-11eb-a465-b114545c2dc4",
@@ -66,8 +66,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes B",
                 "car_license": "912330",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c94694c0-c922-11eb-bc28-19dd040fc96d",
@@ -77,8 +77,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Toyota B",
                 "car_license": "671708",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c9474100-c922-11eb-b314-43758310b806",
@@ -88,8 +88,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes C",
                 "car_license": "904168",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             }
         ],
         "first_page_url": "/?page=1",
@@ -168,8 +168,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Toyota B",
                 "car_license": "317748",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c944b580-c922-11eb-ad4c-093488db0322",
@@ -179,8 +179,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes D",
                 "car_license": "588024",
                 "insured": 1,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c945a8e0-c922-11eb-a465-b114545c2dc4",
@@ -190,8 +190,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes B",
                 "car_license": "912330",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c94694c0-c922-11eb-bc28-19dd040fc96d",
@@ -201,8 +201,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Toyota B",
                 "car_license": "671708",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c9474100-c922-11eb-b314-43758310b806",
@@ -212,8 +212,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes C",
                 "car_license": "904168",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             }
         ],
         "first_page_url": "/?page=1",
@@ -261,6 +261,7 @@ Header Name | Value
 ------------|--------------
 Accept | `application/json`
 Authorization | `Bearer {token}`
+Content-Type | `multipart/form-data`
 
 **Parameters:**
 
@@ -272,7 +273,6 @@ Payload name | Required | Validation | Description
 `car_name` | Required | string, unique | Name of the car 
 `car_license` | Required | string | Car license number, the legal identification of the car
 `insured` | Required | boolean | Insurance status, if not insured return false
-`status` | Required | string | Status of the car, whether the car is `free` or `out`
 
 **Request Body Example:**
 
@@ -399,7 +399,6 @@ Payload name | Required | Validation | Description
 `car_name` | Required | string, unique | Name of the car 
 `car_license` | Required | string | Car license number, the legal identification of the car
 `insured` | Required | boolean | Insurance status, if not insured return false
-`status` | Required | string | Status of the car, whether the car is `free` or `out`
 
 **Request Body Example:**
 
@@ -533,8 +532,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Toyota B",
                 "car_license": "317748",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c944b580-c922-11eb-ad4c-093488db0322",
@@ -544,8 +543,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes D",
                 "car_license": "588024",
                 "insured": 1,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c945a8e0-c922-11eb-a465-b114545c2dc4",
@@ -555,8 +554,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes B",
                 "car_license": "912330",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c94694c0-c922-11eb-bc28-19dd040fc96d",
@@ -566,8 +565,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Toyota B",
                 "car_license": "671708",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             },
             {
                 "id": "c9474100-c922-11eb-b314-43758310b806",
@@ -577,8 +576,8 @@ Attribute Name  | Type  | Description
                 "car_name": "Company 1 Car Mercedes C",
                 "car_license": "904168",
                 "insured": 0,
-                "status": "free",
-                "status_label": "Free"
+                "status": 1,
+                "status_description": "Free"
             }
         ],
         "first_page_url": "/?page=1",

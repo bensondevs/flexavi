@@ -55,7 +55,7 @@ class QuotationRepository extends BaseRepository
 			$attachment->quotation_id = $quotation->id;
 			$attachment->save();
 
-			$this->setSuccess('Successfully add attachment to quotation');
+			$this->setSuccess('Successfully add attachment to quotation.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to add attachment to quotation.', $error);
@@ -70,7 +70,7 @@ class QuotationRepository extends BaseRepository
 			// Delete file
 			$attachment->delete();
 
-			$this->setSuccess('Successfully delete attachment.');
+			$this->setSuccess('Successfully remove attachment.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to remove attachment', $error);
@@ -175,10 +175,10 @@ class QuotationRepository extends BaseRepository
 
 			$this->setModel($quotation);
 
-			$this->setSuccess('Successfully honor quotation data.');
+			$this->setSuccess('Successfully honor quotation.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
-			$this->setError('Failed to honor quotation data.');
+			$this->setError('Failed to honor quotation.');
 		}
 
 		return $this->getModel();
@@ -195,10 +195,10 @@ class QuotationRepository extends BaseRepository
 
 			$this->setModel($quotation);
 
-			$this->setSuccess('Successfully cancel quotation data.');
+			$this->setSuccess('Successfully cancel quotation.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
-			$this->setError('Failed to cancel quotation data.', $error);
+			$this->setError('Failed to cancel quotation.', $error);
 		}
 
 		return $this->getModel();
@@ -216,10 +216,8 @@ class QuotationRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete quotation.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete quotation.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete quotation.', $error);
 		}
 
 		return $this->returnResponse();

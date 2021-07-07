@@ -37,10 +37,8 @@ class CarRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save car data.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save car data.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save car data.', $error);
 		}
 
 		return $this->getModel();
@@ -57,10 +55,8 @@ class CarRepository extends BaseRepository
 
 			$this->setSuccess('Successfully validate car insurance');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to validate car insurance',
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to validate car insurance', $error);
 		}
 
 		return $this->getModel();
@@ -77,7 +73,8 @@ class CarRepository extends BaseRepository
 
 			$this->setSuccess('Successfully set car image.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to set car image', $qe->getMessage());
+			$error = $qe->getMessage();
+			$this->setError('Failed to set car image', $error);
 		}
 
 		return $this->getModel();
@@ -99,10 +96,8 @@ class CarRepository extends BaseRepository
 
 			$this->setSuccess('Successfully ' . ($forceDelete ? 'permanent ' : '') . 'delete car.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete car.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete car.', $error);
 		}
 
 		return $this->returnResponse();
@@ -118,7 +113,8 @@ class CarRepository extends BaseRepository
 
 			$this->setSuccess('Successfully restore car.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to restore car.', $qe->getMessage());
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore car.', $error);
 		}
 
 		return $this->getModel();

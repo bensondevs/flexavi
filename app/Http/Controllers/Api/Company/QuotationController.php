@@ -21,6 +21,7 @@ use App\Http\Requests\Quotations\RemoveQuotationAttachmentRequest as RemoveAttac
 use App\Enums\Quotation\QuotationCanceller;
 
 use App\Http\Resources\QuotationResource;
+use App\Http\Resources\QuotationAttachmentResource;
 
 use App\Repositories\QuotationRepository;
 
@@ -70,6 +71,7 @@ class QuotationController extends Controller
     {
         $quotation = $request->getQuotation();
         $attachments = $quotation->attachments;
+        $attachments = QuotationAttachmentResource::collection($attachments); 
 
         return response()->json(['attachments' => $attachments]);
     }

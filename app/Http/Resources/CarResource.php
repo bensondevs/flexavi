@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Enums\Car\CarStatus;
+
 use App\Traits\ApiCollectionResource;
 
 class CarResource extends JsonResource
@@ -27,7 +29,7 @@ class CarResource extends JsonResource
             'car_license' => $this->car_license,
             'insured' => $this->insured,
             'status' => $this->status,
-            'status_label' => $this->status_label,
+            'status_description' => CarStatus::getDescription($this->status),
         ];
     }
 }

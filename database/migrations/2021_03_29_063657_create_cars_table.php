@@ -32,7 +32,7 @@ class CreateCarsTable extends Migration
             $table->string('car_license');
 
             $table->boolean('insured')->default(0);
-            $table->char('status')->default('free');
+            $table->tinyInteger('status')->default(1);
 
             $table->timestamps();
             $table->softDeletes();

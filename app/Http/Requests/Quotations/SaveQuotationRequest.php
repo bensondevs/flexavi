@@ -45,7 +45,7 @@ class SaveQuotationRequest extends FormRequest
         if ($this->quotation) return $this->quotation;
         
         $id = $this->input('id') ?: $this->input('quotation_id');
-        return $this->quotation = Quotation::findOrFail($id);
+        return $this->quotation = $this->model = Quotation::findOrFail($id);
     }
 
     public function getAppointment()
@@ -75,14 +75,14 @@ class SaveQuotationRequest extends FormRequest
 
         if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
             $quotation = $this->getQuotation();
+            $customer = $this->getCustomer();
 
             if ($this->input('appointment_id')) {
                 $appointment = $this->getAppointment();
-                $customer = $this->getCustomer();
-                return Gate::allows('update-quotation-with-appointment', $quotation, $customer, $appointment);
+                return Gate::allows('update-quotation-with-appointment', [$quotation, $customer, $appointment]);
             }
 
-            return Gate::allows('update-quotation', $quotation, $customer);
+            return Gate::allows('update-quotation', [$quotation, $customer]);
         }
 
         return false;
@@ -95,7 +95,7 @@ class SaveQuotationRequest extends FormRequest
             'damage_causes' => json_decode($this->input('damage_causes'), true),
             'expiry_date' => $this->input('expiry_date') ? 
                 carbon()->parse($this->input('expiry_date')) :
-                null,
+                carbon()->now()->addDays(3),
             'vat_percentage' => floatval($this->input('vat_percentage')),
             'discount_amount' => floatval($this->input('discount_amount')),
             'payment_method' => (int) $this->input('payment_method'),

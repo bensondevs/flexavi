@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             SubAppointmentsSeeder::class,
             QuotationsSeeder::class,
             QuotationWorksSeeder::class,
+            QuotationAttachmentsSeeder::class,
             RegisterInvitationsSeeder::class,
         ]);
     }
