@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Rules\FloatValue;
 use App\Rules\AmongStrings;
+use App\Rules\UniqueWithConditions;
 
 use App\Models\Customer;
 use App\Models\Quotation;
@@ -92,7 +93,9 @@ class SaveQuotationRequest extends FormRequest
         $this->merge([
             'type' => (int) $this->input('type'),
             'damage_causes' => json_decode($this->input('damage_causes'), true),
-            'expiry_date' => carbon()->parse($this->input('expiry_date')),
+            'expiry_date' => $this->input('expiry_date') ? 
+                carbon()->parse($this->input('expiry_date')) :
+                null,
             'vat_percentage' => floatval($this->input('vat_percentage')),
             'discount_amount' => floatval($this->input('discount_amount')),
             'payment_method' => (int) $this->input('payment_method'),
@@ -111,7 +114,7 @@ class SaveQuotationRequest extends FormRequest
             'customer_id' => ['string'],
 
             'type' => ['required', 'numeric', 'min:1', 'max:4'],
-            'quotation_number' => ['required', 'string', 'alpha_num'],
+            'quotation_number' => ['required', 'string', 'alpha_dash', new UniqueWithConditions(new Quotation, [['company_id' => $this->getCompany()->id]])],
             'quotation_date' => ['required', 'date'],
 
             'contact_person' => ['required', 'string'],
@@ -123,7 +126,7 @@ class SaveQuotationRequest extends FormRequest
             'damage_causes' => ['required', 'array'],
             'quotation_description' => ['required', 'string'],
 
-            'expiry_date' => ['required', 'date'],
+            'expiry_date' => ['date'],
 
             'vat_percentage' => [new FloatValue(true)],
             'discount_amount' => [new FloatValue(true)],

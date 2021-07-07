@@ -11,7 +11,7 @@ use App\Models\ExecuteWork;
 
 use App\Enums\ExecuteWorkPhotos\PhotoConditionType;
 
-class UploadBeforeExecuteWorkPhotosRequest extends FormRequest
+class UploadAfterExecuteWorkPhotosRequest extends FormRequest
 {
     use InputRequest;
 
@@ -62,7 +62,7 @@ class UploadBeforeExecuteWorkPhotosRequest extends FormRequest
             array_push($dataArray, [
                 'execute_work_id' => $this->getExecuteWork()->id,
                 'photo' => $photo,
-                'photo_condition_type' => PhotoConditionType::Before,
+                'photo_condition_type' => PhotoConditionType::After,
                 'photo_description' => isset($descriptions[$index]) ? 
                     $descriptions[$index] : null,
             ]);

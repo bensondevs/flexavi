@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\ExecuteWorkPhotos\PopulateExecuteWorkPhotosRequest as PopulateRequest;
 use App\Http\Requests\ExecuteWorkPhotos\UploadBeforeExecuteWorkPhotosRequest as UploadBeforeRequest;
 use App\Http\Requests\ExecuteWorkPhotos\UploadAfterExecuteWorkPhotosRequest as UploadAfterRequest;
+use App\Http\Requests\ExecuteWorkPhotos\DeleteExecuteWorkPhotoRequest as DeleteRequest;
 
 use App\Repositories\ExecuteWorkPhotoRepository;
 

@@ -17,7 +17,7 @@ class UniqueWithConditions implements Rule
     {
         foreach ($conditions as $key => $value) 
             $model->where($key, $value);
-        $this->existedRecords = $model->get();
+        $this->existedRecords = $model;
     }
 
     /**
@@ -41,6 +41,6 @@ class UniqueWithConditions implements Rule
      */
     public function message()
     {
-        return 'The record is exists in database.';
+        return 'The record is already exists in database.';
     }
 }

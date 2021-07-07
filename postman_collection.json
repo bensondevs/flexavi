@@ -106,7 +106,7 @@
 								},
 								{
 									"key": "fullname",
-									"value": "User Full Name",
+									"value": "Test User",
 									"type": "text"
 								},
 								{
@@ -142,11 +142,11 @@
 								{
 									"key": "profile_picture",
 									"type": "file",
-									"src": "/home/benson/Desktop/theusername_f9c3a410-767a-11eb-9efd-d760ada925d0.png"
+									"src": "/home/benson/Downloads/pp.jpeg"
 								},
 								{
 									"key": "email",
-									"value": "register1@flexavi.com",
+									"value": "register99@flexavi.com",
 									"type": "text"
 								},
 								{
@@ -162,21 +162,30 @@
 								{
 									"key": "bank_name",
 									"value": "Another Bank",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "bic_code",
 									"value": "012",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "bank_account",
 									"value": "08361232113",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "bank_holder_name",
 									"value": "Another User",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "invitation_code",
+									"value": "register99",
 									"type": "text"
 								}
 							]
@@ -260,6 +269,43 @@
 								"api",
 								"auth",
 								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Email Used",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{BASE_URL}}/api/auth/check_email_used?email=",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"check_email_used"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": ""
+								}
 							]
 						}
 					},
@@ -490,6 +536,129 @@
 									]
 								},
 								{
+									"name": "Sub Appointments",
+									"item": [
+										{
+											"name": "Sub Appointments",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs?appointment_id=896b5ed0-d110-11eb-9247-ebd22e8e42b0",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs"
+													],
+													"query": [
+														{
+															"key": "appointment_id",
+															"value": "896b5ed0-d110-11eb-9247-ebd22e8e42b0"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Store Sub Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "896b5ed0-d110-11eb-9247-ebd22e8e42b0",
+															"type": "text"
+														},
+														{
+															"key": "status",
+															"value": "created",
+															"type": "text"
+														},
+														{
+															"key": "start",
+															"value": "2021-06-20 18:00:00",
+															"type": "text"
+														},
+														{
+															"key": "end",
+															"value": "2021-06-22 00:00:00",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/store",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs",
+														"store"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Sub Appointment",
+											"request": {
+												"method": "PATCH",
+												"header": [],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/update",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs",
+														"update"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
 									"name": "Company Appointments",
 									"request": {
 										"method": "GET",
@@ -528,6 +697,44 @@
 									"response": []
 								},
 								{
+									"name": "Customer Appointments",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/of_customer?customer_id=30ee2230-d721-11eb-9acd-3d5870791ca9",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"of_customer"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "30ee2230-d721-11eb-9acd-3d5870791ca9"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
 									"name": "Store Appointment",
 									"request": {
 										"method": "POST",
@@ -548,7 +755,7 @@
 											"formdata": [
 												{
 													"key": "customer_id",
-													"value": "81abf8c0-bbdb-11eb-a38d-bbc695b88be9",
+													"value": "3fa86590-cf79-11eb-8c41-bd1f633e0d63",
 													"type": "text"
 												},
 												{
@@ -594,6 +801,126 @@
 												"companies",
 												"appointments",
 												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Reschedule Appointment",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/reschedule",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"reschedule"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cancel Appointment",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "a68d9700-d053-11eb-980d-f7c57bc0dba7",
+													"type": "text"
+												},
+												{
+													"key": "cancellation_cause",
+													"value": "Roofer late",
+													"type": "text"
+												},
+												{
+													"key": "cancellation_vault",
+													"value": "roofer",
+													"type": "text"
+												},
+												{
+													"key": "cancellation_note",
+													"value": "The roofer come too late with agreed time",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/cancel",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"cancel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Execute Appointment",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "896b5ed0-d110-11eb-9247-ebd22e8e42b0",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/execute",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"execute"
 											]
 										}
 									},
@@ -745,7 +1072,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/employees?company_id=b33ab510-b609-11eb-bc8b-037301ced500&search=administrative",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -757,12 +1084,90 @@
 											],
 											"query": [
 												{
-													"key": "company_id",
-													"value": "b33ab510-b609-11eb-bc8b-037301ced500"
+													"key": "search",
+													"value": "administrative",
+													"disabled": true
 												},
 												{
+													"key": "page",
+													"value": "2",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Inviteable Employees",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees/inviteables",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees",
+												"inviteables"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Trashed Employees",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees/trasheds",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees",
+												"trasheds"
+											],
+											"query": [
+												{
 													"key": "search",
-													"value": "administrative"
+													"value": "administrative",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "2",
+													"disabled": true
 												}
 											]
 										}
@@ -791,12 +1196,8 @@
 												{
 													"key": "user_id",
 													"value": "b11bd1c0-b609-11eb-9f27-0be23b04ed70",
-													"type": "text"
-												},
-												{
-													"key": "company_id",
-													"value": "b33ab510-b609-11eb-bc8b-037301ced500",
-													"type": "text"
+													"type": "text",
+													"disabled": true
 												},
 												{
 													"key": "title",
@@ -811,6 +1212,36 @@
 												{
 													"key": "employment_status",
 													"value": "active",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Another street",
+													"type": "text"
+												},
+												{
+													"key": "house_number",
+													"value": "11",
+													"type": "text"
+												},
+												{
+													"key": "house_number_suffix",
+													"value": "A",
+													"type": "text"
+												},
+												{
+													"key": "zipcode",
+													"value": "11178",
+													"type": "text"
+												},
+												{
+													"key": "city",
+													"value": "Another City",
+													"type": "text"
+												},
+												{
+													"key": "province",
+													"value": "Another Province",
 													"type": "text"
 												}
 											]
@@ -852,18 +1283,20 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "2ce51fc0-b64b-11eb-8492-079d1208446c",
+													"value": "6f3b32e0-c923-11eb-8ae1-0d9369adeb90",
 													"type": "text"
 												},
 												{
 													"key": "user_id",
 													"value": "b11bd1c0-b609-11eb-9f27-0be23b04ed70",
-													"type": "text"
+													"type": "text",
+													"disabled": true
 												},
 												{
 													"key": "company_id",
 													"value": "b33ab510-b609-11eb-bc8b-037301ced500",
-													"type": "text"
+													"type": "text",
+													"disabled": true
 												},
 												{
 													"key": "title",
@@ -878,6 +1311,36 @@
 												{
 													"key": "employment_status",
 													"value": "active",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Another street",
+													"type": "text"
+												},
+												{
+													"key": "house_number",
+													"value": "11",
+													"type": "text"
+												},
+												{
+													"key": "house_number_suffix",
+													"value": "A",
+													"type": "text"
+												},
+												{
+													"key": "zipcode",
+													"value": "11178",
+													"type": "text"
+												},
+												{
+													"key": "city",
+													"value": "Another City",
+													"type": "text"
+												},
+												{
+													"key": "province",
+													"value": "Another Province",
 													"type": "text"
 												}
 											]
@@ -919,8 +1382,14 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "b42c7ff0-b609-11eb-b4b6-97ec8e29fb6b",
+													"value": "c90c1a80-c922-11eb-b1dc-51d432414c57",
 													"type": "text"
+												},
+												{
+													"key": "force",
+													"value": "true",
+													"type": "text",
+													"disabled": true
 												}
 											]
 										},
@@ -935,6 +1404,48 @@
 												"companies",
 												"employees",
 												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Restore Employee",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees/restore",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees",
+												"restore"
 											]
 										}
 									},
@@ -962,7 +1473,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/cars?company_id=fcf99570-ab59-11eb-a32a-1f260f88b98f&free_only=0",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -974,12 +1485,97 @@
 											],
 											"query": [
 												{
-													"key": "company_id",
-													"value": "fcf99570-ab59-11eb-a32a-1f260f88b98f"
+													"key": "free_only",
+													"value": "0",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Free Cars",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars/frees",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars",
+												"frees"
+											],
+											"query": [
+												{
+													"key": "per_page",
+													"value": "2",
+													"disabled": true
 												},
 												{
-													"key": "free_only",
-													"value": "0"
+													"key": "page",
+													"value": "2",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Trashed Cars",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars/trasheds",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars",
+												"trasheds"
+											],
+											"query": [
+												{
+													"key": "per_page",
+													"value": "2",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "2",
+													"disabled": true
 												}
 											]
 										}
@@ -1029,11 +1625,6 @@
 													"key": "car_license",
 													"value": "143862813",
 													"type": "text"
-												},
-												{
-													"key": "status",
-													"value": "free",
-													"type": "text"
 												}
 											]
 										},
@@ -1073,14 +1664,14 @@
 											"mode": "formdata",
 											"formdata": [
 												{
+													"key": "id",
+													"value": "a5d81460-c92a-11eb-b35f-2b0ee72781d0",
+													"type": "text"
+												},
+												{
 													"key": "car_image",
 													"type": "file",
 													"src": "/home/benson/Downloads/pp.jpeg"
-												},
-												{
-													"key": "id",
-													"value": "ffa7c790-ab59-11eb-b742-c328c1e0f2ee",
-													"type": "text"
 												}
 											]
 										},
@@ -1125,11 +1716,6 @@
 												{
 													"key": "id",
 													"value": "ffa7c790-ab59-11eb-b742-c328c1e0f2ee",
-													"type": "text"
-												},
-												{
-													"key": "company_id",
-													"value": "fcf99570-ab59-11eb-a32a-1f260f88b98f",
 													"type": "text"
 												},
 												{
@@ -1201,7 +1787,12 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "ffa7c790-ab59-11eb-b742-c328c1e0f2ee",
+													"value": "87ac8090-c860-11eb-9f3c-1f666b2d3b50",
+													"type": "text"
+												},
+												{
+													"key": "force",
+													"value": "true",
 													"type": "text"
 												}
 											]
@@ -1217,6 +1808,48 @@
 												"companies",
 												"cars",
 												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Restore Car",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "87ac8090-c860-11eb-9f3c-1f666b2d3b50",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/cars/restore",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"cars",
+												"restore"
 											]
 										}
 									},
@@ -1256,10 +1889,59 @@
 											],
 											"query": [
 												{
-													"key": "company_id",
-													"value": "b33ab510-b609-11eb-bc8b-037301ced500",
+													"key": "search",
+													"value": "company1.com",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "5",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "10",
 													"disabled": true
 												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Trashed Customers",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/trasheds",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"trasheds"
 											]
 										}
 									},
@@ -1291,7 +1973,7 @@
 												},
 												{
 													"key": "salutation",
-													"value": "Mr.",
+													"value": "mr",
 													"type": "text"
 												},
 												{
@@ -1373,7 +2055,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "e05dbd00-b576-11eb-a86a-bd809c0ae758",
+													"value": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6",
 													"type": "text"
 												},
 												{
@@ -1383,7 +2065,7 @@
 												},
 												{
 													"key": "salutation",
-													"value": "Mrs.",
+													"value": "mrs",
 													"type": "text"
 												},
 												{
@@ -1465,7 +2147,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "fdc7aef0-ab59-11eb-9892-bd74d7e178b4",
+													"value": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
 													"type": "text"
 												}
 											]
@@ -1485,14 +2167,72 @@
 										}
 									},
 									"response": []
-								}
-							]
-						},
-						{
-							"name": "Quotation",
-							"item": [
+								},
 								{
-									"name": "Company Quotations",
+									"name": "Restore Customer",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/restore",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"restore"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Customer Appointments",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/appointments",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"appointments"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Customer Quotations",
 									"request": {
 										"method": "GET",
 										"header": [
@@ -1508,6 +2248,209 @@
 											}
 										],
 										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/quotations?customer_id=b5df5bd0-da3e-11eb-8d8c-8574da4f7769",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"quotations"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "b5df5bd0-da3e-11eb-8d8c-8574da4f7769"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Quotation",
+							"item": [
+								{
+									"name": "Attachment",
+									"item": [
+										{
+											"name": "Quotation Attachments",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "id",
+															"value": "d2473df0-d968-11eb-bf20-1dde6e74f00d",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/attachments/?id=d2473df0-d968-11eb-bf20-1dde6e74f00d",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"quotations",
+														"attachments",
+														""
+													],
+													"query": [
+														{
+															"key": "id",
+															"value": "d2473df0-d968-11eb-bf20-1dde6e74f00d"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Add Attachment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "name",
+															"value": "Image Example",
+															"type": "text"
+														},
+														{
+															"key": "attachment",
+															"type": "file",
+															"src": "/home/benson/Downloads/Bukti Transfer.png"
+														},
+														{
+															"key": "quotation_id",
+															"value": "d2473df0-d968-11eb-bf20-1dde6e74f00d",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/attachments/add",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"quotations",
+														"attachments",
+														"add"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Remove Attachment",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "7afd94e0-d96d-11eb-b5aa-cbca6c80790b",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/attachments/remove",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"quotations",
+														"attachments",
+														"remove"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Company Quotations",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
 											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations",
 											"host": [
 												"{{BASE_URL}}"
@@ -1517,6 +2460,61 @@
 												"dashboard",
 												"companies",
 												"quotations"
+											],
+											"query": [
+												{
+													"key": "search",
+													"value": "Test",
+													"disabled": true
+												},
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "status",
+													"value": "1",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Customer Quotations",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/quotations?customer_id=0856c870-da86-11eb-8476-8dad999b7c5d",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"customers",
+												"quotations"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "0856c870-da86-11eb-8476-8dad999b7c5d"
+												}
 											]
 										}
 									},
@@ -1543,47 +2541,86 @@
 											"formdata": [
 												{
 													"key": "customer_id",
-													"value": "645a04f0-beb0-11eb-b81f-9150f45a8bcf",
+													"value": "085690e0-da86-11eb-a894-617b6dd6b7da",
+													"description": "Related Customer ID with this quotation",
 													"type": "text"
 												},
 												{
-													"key": "subject",
-													"value": "Quotation Subject Example",
+													"key": "type",
+													"value": "1",
+													"description": "Type of quotation, Leakage = 1, Renovation = 2, Reparation = 3, Renewal = 4",
 													"type": "text"
 												},
 												{
 													"key": "quotation_number",
 													"value": "112233445566",
+													"description": "Quotation Number, this must be unique for each company",
 													"type": "text"
 												},
 												{
-													"key": "quotation_type",
-													"value": "renovation",
+													"key": "quotation_date",
+													"value": "2021-06-29",
+													"description": "Quotation Date, this must have format of [YYYY-MM-DD]",
+													"type": "text"
+												},
+												{
+													"key": "contact_person",
+													"value": "Test Contact Person",
+													"description": "The name of contact person in quotation, in some rare case, this can be different than customer name",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Test Address",
+													"description": "The address of customer",
+													"type": "text"
+												},
+												{
+													"key": "zip_code",
+													"value": "111111",
+													"description": "Zip Code of customer",
+													"type": "text"
+												},
+												{
+													"key": "phone_number",
+													"value": "1111111111111",
+													"description": "The callable phone number, this number will be called whenever roofer need certain contact with customer or people in charge of the house",
+													"type": "text"
+												},
+												{
+													"key": "damage_causes",
+													"value": "[1, 2, 3]",
+													"description": "Damage causes needs to be fill with ARRAY, the number represents: Leak = 1, Fungus Mold = 2, Bird Nuisance = 3, Storm Damage = 4, Overdue Maintenance = 5",
 													"type": "text"
 												},
 												{
 													"key": "quotation_description",
 													"value": "Description Example",
+													"description": "The additional description about quotation, can be filled y the description of damage of the roof or anything related with and informing about everything needs to be known within quotation",
 													"type": "text"
-												},
-												{
-													"key": "quotation_document",
-													"type": "file",
-													"src": "/home/benson/Downloads/dummy.pdf"
 												},
 												{
 													"key": "expiry_date",
 													"value": "2021-06-21",
+													"description": "The Quotation expiry date, this offer can be expired whenever reached this date, this is OPTIONAL, if you don't specify this field, the quotation expiry date will be set 3 days after the quotation is created",
 													"type": "text"
 												},
 												{
-													"key": "status",
-													"value": "draft",
+													"key": "vat_percentage",
+													"value": "21",
+													"description": "The percentage of VAT, In this case we have 21% of VAT, you can only fill this field with maximum value of 100 and minumum of 0",
+													"type": "text"
+												},
+												{
+													"key": "discount_amount",
+													"value": "125",
+													"description": "The amount of discount, this is NOT DISCOUNT PERCENTAGE, so the value specified here is the amount of discount, the default of application is euro then if we specify with 125 then the discount will be EUR 125, it can be specified with 0 if there is no discount",
 													"type": "text"
 												},
 												{
 													"key": "payment_method",
-													"value": "cash",
+													"value": "1",
+													"description": "The payment method, the number represents: Cash = 1, BankTransfer = 2",
 													"type": "text"
 												}
 											]
@@ -1685,6 +2722,958 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "Delete Quotation",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "3fc8c7e0-d721-11eb-a456-5b0e26ba2716",
+													"type": "text"
+												},
+												{
+													"key": "force",
+													"value": "true",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Quotation Works",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/works?quotation_id=ba968370-d7d7-11eb-96cd-fbb05db316ea",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"works"
+											],
+											"query": [
+												{
+													"key": "quotation_id",
+													"value": "ba968370-d7d7-11eb-96cd-fbb05db316ea"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send Quotation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "ba968370-d7d7-11eb-96cd-fbb05db316ea",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/send",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"send"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Print Quotation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "76fc2090-d970-11eb-8f23-a382542ef6ac",
+													"description": "Printed Quotation ID",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/print",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"print"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Revise Quotation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "discount_amount",
+													"value": "1000",
+													"description": "Wanted discount",
+													"type": "text"
+												},
+												{
+													"key": "payment_method",
+													"value": "2",
+													"description": "Wanted Payment Method",
+													"type": "text"
+												},
+												{
+													"key": "id",
+													"value": "76fc2090-d970-11eb-8f23-a382542ef6ac",
+													"description": "Quotation ID",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/revise",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"revise"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Honor Quotation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "76fc2090-d970-11eb-8f23-a382542ef6ac",
+													"type": "text"
+												},
+												{
+													"key": "discount_amoun",
+													"value": "100",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/honor",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"honor"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Cancel Quotation",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "77089120-d970-11eb-909f-9b6f6e6f2549",
+													"type": "text"
+												},
+												{
+													"key": "cancellation_reason",
+													"value": "The cancel is test",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/cancel",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"cancel"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Owner",
+							"item": [
+								{
+									"name": "Company Owners",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/owners",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"owners"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "search",
+													"value": "owner",
+													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "10",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Inviteable Owners",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/owners/inviteables",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"owners",
+												"inviteables"
+											],
+											"query": [
+												{
+													"key": "page",
+													"value": "1",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Owner",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "bank_name",
+													"value": "Added Bank",
+													"type": "text"
+												},
+												{
+													"key": "bic_code",
+													"value": "911",
+													"type": "text"
+												},
+												{
+													"key": "bank_account",
+													"value": "9988776655",
+													"type": "text"
+												},
+												{
+													"key": "bank_holder_name",
+													"value": "Added Holder",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Another street",
+													"type": "text"
+												},
+												{
+													"key": "house_number",
+													"value": "11",
+													"type": "text"
+												},
+												{
+													"key": "house_number_suffix",
+													"value": "A",
+													"type": "text"
+												},
+												{
+													"key": "zipcode",
+													"value": "11178",
+													"type": "text"
+												},
+												{
+													"key": "city",
+													"value": "Another City",
+													"type": "text"
+												},
+												{
+													"key": "province",
+													"value": "Another Province",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/owners/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"owners",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Owner",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "d5d62150-c925-11eb-8487-d73d292448de",
+													"type": "text"
+												},
+												{
+													"key": "bank_name",
+													"value": "Added Banks",
+													"type": "text"
+												},
+												{
+													"key": "bic_code",
+													"value": "911",
+													"type": "text"
+												},
+												{
+													"key": "bank_account",
+													"value": "9988776655",
+													"type": "text"
+												},
+												{
+													"key": "bank_holder_name",
+													"value": "Added Holder",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Another street",
+													"type": "text"
+												},
+												{
+													"key": "house_number",
+													"value": "11",
+													"type": "text"
+												},
+												{
+													"key": "house_number_suffix",
+													"value": "A",
+													"type": "text"
+												},
+												{
+													"key": "zipcode",
+													"value": "11178",
+													"type": "text"
+												},
+												{
+													"key": "city",
+													"value": "Another City",
+													"type": "text"
+												},
+												{
+													"key": "province",
+													"value": "Another Province",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/owners/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"owners",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Owner",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "e8f80c40-c864-11eb-9d13-d1ff39c7c8eb",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/owners/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"owners",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Registester Invitations",
+							"item": [
+								{
+									"name": "Invite Employee",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "employee_id",
+													"value": "439f7bc0-c82d-11eb-bd70-e1fef1016ac9",
+													"type": "text"
+												},
+												{
+													"key": "invited_email",
+													"value": "sbensona77@gmail.com",
+													"type": "text"
+												},
+												{
+													"key": "expiry_time",
+													"value": "2021-06-11",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/register_invitations/invite_employee",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"register_invitations",
+												"invite_employee"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Invite Owner",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "owner_id",
+													"value": "77e48ce0-c82e-11eb-ba37-c990286d2c1c",
+													"type": "text"
+												},
+												{
+													"key": "invited_email",
+													"value": "test@email.com",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/register_invitations/invite_owner",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"register_invitations",
+												"invite_owner"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Work",
+							"item": [
+								{
+									"name": "Store Work",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "quotation_id",
+													"value": "ba968370-d7d7-11eb-96cd-fbb05db316ea",
+													"type": "text"
+												},
+												{
+													"key": "work_contract_id",
+													"value": "",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "quantity",
+													"value": "10",
+													"type": "text"
+												},
+												{
+													"key": "quantity_unit",
+													"value": "m2",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "This is API test from postman",
+													"type": "text"
+												},
+												{
+													"key": "unit_price",
+													"value": "25",
+													"type": "text"
+												},
+												{
+													"key": "include_tax",
+													"value": "true",
+													"type": "text"
+												},
+												{
+													"key": "tax_percentage",
+													"value": "9",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/works/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"works",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Work",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "0164a4a0-d80e-11eb-86db-855f9f0ad278",
+													"type": "text"
+												},
+												{
+													"key": "quotation_id",
+													"value": "ba968370-d7d7-11eb-96cd-fbb05db316ea",
+													"type": "text"
+												},
+												{
+													"key": "work_contract_id",
+													"value": "",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "quantity",
+													"value": "10",
+													"type": "text"
+												},
+												{
+													"key": "quantity_unit",
+													"value": "m2",
+													"type": "text"
+												},
+												{
+													"key": "description",
+													"value": "This is API test from postman",
+													"type": "text"
+												},
+												{
+													"key": "unit_price",
+													"value": "100",
+													"type": "text"
+												},
+												{
+													"key": "include_tax",
+													"value": "true",
+													"type": "text"
+												},
+												{
+													"key": "tax_percentage",
+													"value": "10",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/works/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"works",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Work",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "bb1e7950-d7d7-11eb-8c71-61575fc82a9d",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/works/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"works",
+												"delete"
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						},
@@ -1754,7 +3743,7 @@
 											"type": "text"
 										},
 										{
-											"key": "visiting_address_zip_code",
+											"key": "visiting_address_zipcode",
 											"value": "111111",
 											"type": "text"
 										},
@@ -1779,7 +3768,7 @@
 											"type": "text"
 										},
 										{
-											"key": "invoicing_address_zip_code",
+											"key": "invoicing_address_zipcode",
 											"value": "22222",
 											"type": "text"
 										},
@@ -1946,6 +3935,47 @@
 										"dashboard",
 										"companies",
 										"update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Upload Company Logo",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{API_TOKEN}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "company_logo",
+											"type": "file",
+											"src": "/home/benson/Downloads/pp.jpeg"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/dashboard/companies/upload_logo",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"dashboard",
+										"companies",
+										"upload_logo"
 									]
 								}
 							},

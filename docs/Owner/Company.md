@@ -244,6 +244,7 @@ Header Name | Value
 ------------|------
 Accept | `application/json`
 Authorization | `Bearer {token}`
+Content-Type | `multipart/form-data`
 
 **Parameters:**
 
