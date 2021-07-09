@@ -87,7 +87,7 @@ class AuthController extends Controller
     //public function register(RegisterRequest $request)
     public function register(Request $request)
     {
-        return response()->json(['all' => $request->all(), 'image' => $request->file('profile_picture')]);
+        return response()->json(['all' => $request->all(), 'profile_picture' => $request->file('profile_picture')]);
 
         if ($invitation = $request->getInvitation()) {
             if ($invitation->invited_email !== $request->input('email'))
