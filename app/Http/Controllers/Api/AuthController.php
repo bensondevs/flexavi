@@ -103,7 +103,9 @@ class AuthController extends Controller
         }
 
     	$user = new User();
-        $user->profile_picture = $request->file('profile_picture');
+        if ($profilePicture = $request->file('profile_picture')) {
+            $user->profile_picture = $profilePicture;
+        }
         $user = $this->auth->setModel($user);
     	$user = $this->auth->register($input, $attachments);
 

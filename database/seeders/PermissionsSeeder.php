@@ -18,6 +18,7 @@ class PermissionsSeeder extends Seeder
     {
         $actionNames = [
         	// Appointment
+            'view any appointments',
         	'view appointments',
         	'create appointments',
             'process appointments',
@@ -27,6 +28,7 @@ class PermissionsSeeder extends Seeder
             'restore appointments',
 
             // Sub Appointment
+            'view any sub appointments',
             'view sub appointments',
             'create sub appointments',
             'process sub appointments',
@@ -37,6 +39,7 @@ class PermissionsSeeder extends Seeder
             'force delete sub appointments',
 
         	// Car
+            'view any cars',
         	'view cars',
         	'create cars',
         	'edit cars',
@@ -52,6 +55,7 @@ class PermissionsSeeder extends Seeder
             'force delete companies',
 
             // Owners
+            'view any owners',
             'view owners',
             'create owners',
             'edit owners',
@@ -60,6 +64,7 @@ class PermissionsSeeder extends Seeder
             'force delete owners',
 
         	// Customer
+            'view any customers',
         	'view customers',
         	'create customers',
         	'edit customers',
@@ -68,6 +73,7 @@ class PermissionsSeeder extends Seeder
             'force delete customers',
 
         	// Employee
+            'view any employees',
         	'view employees',
         	'create employees',
         	'edit employees',
@@ -76,6 +82,7 @@ class PermissionsSeeder extends Seeder
             'force delete employees',
 
         	// Inspection
+            'view any inspections',
         	'view inspections',
         	'create inspections',
         	'edit inspections',
@@ -84,6 +91,7 @@ class PermissionsSeeder extends Seeder
             'force delete inspections',
 
         	// Inspector
+            'view any inspections',
         	'view inspectors',
         	'create inspectors',
         	'edit inspectors',
@@ -92,6 +100,7 @@ class PermissionsSeeder extends Seeder
             'force delete inspectors',
 
         	// Invoice
+            'view any invoices',
         	'view invoices',
         	'create invoices',
         	'edit invoices',
@@ -100,6 +109,7 @@ class PermissionsSeeder extends Seeder
             'force delete invoices',
 
         	// Invoice Item
+            'view any invoice items',
         	'view invoice items',
         	'create invoice items',
         	'edit invoice items',
@@ -108,6 +118,7 @@ class PermissionsSeeder extends Seeder
             'force delete invoice items',
 
         	// Payment Term
+            'view any payment terms',
         	'view payment terms',
         	'create payment terms',
         	'edit payment terms',
@@ -116,6 +127,7 @@ class PermissionsSeeder extends Seeder
             'force delete payment terms',
 
         	// Pricing
+            'view any pricings',
         	'view pricings',
         	'create pricings', 
         	'edit pricings',
@@ -124,6 +136,7 @@ class PermissionsSeeder extends Seeder
             'force delete pricings',
 
         	// Quotation
+            'view any quotations',
         	'view quotations',
         	'create quotations',
         	'edit quotations',
@@ -147,6 +160,7 @@ class PermissionsSeeder extends Seeder
             'force delete quotation revisions',
 
         	// Quotation Photo
+            'view any quotation photos',
         	'view quotation photos',
         	'create quotation photos',
         	'edit quotation photos',
@@ -159,6 +173,7 @@ class PermissionsSeeder extends Seeder
         	'send register invitations',
 
         	// Schedule
+            'view any schedules',
         	'view schedules',
         	'create schedules',
         	'edit schedules',
@@ -167,6 +182,7 @@ class PermissionsSeeder extends Seeder
             'force delete schedules',
 
         	// Schedule Car
+            'view any schedule cars',
         	'view schedule cars',
         	'create schedule cars',
         	'edit schedule cars',
@@ -175,6 +191,7 @@ class PermissionsSeeder extends Seeder
             'force delete schedule cars',
 
         	// Schedule Employee
+            'view any schedule employees',
         	'view schedule employees',
         	'create schedule employees',
         	'edit schedule employees',
@@ -183,6 +200,7 @@ class PermissionsSeeder extends Seeder
             'force delete schedule employees',
 
         	// Warranty
+            'view any warranties',
         	'view warranties',
         	'create warranties',
         	'edit warranties',
@@ -191,6 +209,7 @@ class PermissionsSeeder extends Seeder
             'force delete warranties',
 
         	// Warranty Claim
+            'view any warranty claims',
         	'view warranty claims',
         	'create warranty claims',
         	'edit warranty claims',
@@ -199,6 +218,7 @@ class PermissionsSeeder extends Seeder
             'force delete warranty claims',
 
         	// Work
+            'view any works',
         	'view works',
         	'create works',
         	'edit works',
@@ -213,6 +233,7 @@ class PermissionsSeeder extends Seeder
             'make continuation execute works',
 
         	// Work Contract
+            'view any work contracts',
         	'view work contracts',
         	'create work contracts',
         	'edit work contracts',

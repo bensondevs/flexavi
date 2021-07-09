@@ -10,6 +10,7 @@ use App\Rules\FloatValue;
 use App\Models\Work;
 use App\Models\Quotation;
 use App\Models\WorkContract;
+use App\Models\Appointment;
 
 use App\Traits\CompanyInputRequest;
 
@@ -46,6 +47,14 @@ class SaveWorkRequest extends FormRequest
         return $this->quotation = Quotation::findOrFail($id);
     }
 
+    public function getAppointment()
+    {
+        if ($this->appointment) return $this->appointment;
+
+        $id = $this->input('appointment_id');
+        return $this->quotation = Appointment::findOrFail($id);
+    }
+
     protected function prepareForValidation()
     {
         $this->merge([
@@ -69,7 +78,7 @@ class SaveWorkRequest extends FormRequest
     public function authorize()
     {
         if ($this->input('appointment_id')) {
-            $attached = $this->getWorkContract();
+            $attached = $this->getAppointment();
         }
 
         if ($this->input('work_contract_id')) {
@@ -108,6 +117,7 @@ class SaveWorkRequest extends FormRequest
             'company_id' => ['string'],
             'quotation_id' => ['string'],
             'work_contract_id' => ['string'],
+            'appointment_id' => ['string'],
 
             'quantity' => ['required', 'integer'],
             'quantity_unit' => ['required', 'string'],

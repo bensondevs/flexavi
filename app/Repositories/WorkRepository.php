@@ -23,19 +23,22 @@ class WorkRepository extends BaseRepository
 			$work->fill($workData);
 			$work->save();
 
-			$this->setModel($work);
-
 			// Update quotation
 			$quotation = $work->quotation;
             $quotation->countAmount();
             $quotation->save();
 
+            if ($appointmentId = $quotation->appointment_id) {
+            	$work->appointment_id = $appointmentId;
+            	$work->save();
+            }
+
+            $this->setModel($work);
+
 			$this->setSuccess('Successfully save work.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to create work.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to create work.', $error);
 		}
 
 		return $this->getModel();

@@ -38,6 +38,7 @@ class QuotationWorksSeeder extends Seeder
                 array_push($rawWorks, [
                     'id' => generateUuid(),
                     'quotation_id' => $quotation->id,
+                    'appointment_id' => $quotation->appointment_id,
                     'quantity' => $quantity,
                     'quantity_unit' => $units[rand(0, (count($units) - 1))],
                     'description' => 'This is seeder work',

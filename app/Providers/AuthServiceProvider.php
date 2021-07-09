@@ -69,6 +69,7 @@ class AuthServiceProvider extends ServiceProvider
 
         // Work
         Gate::define('view-any-work', [WorkPolicy::class, 'viewAny']);
+        Gate::define('view-any-appointment-work', [WorkPolicy::class, 'viewAnyAppointment']);
         Gate::define('view-work', [WorkPolicy::class, 'view']);
         Gate::define('create-work', [WorkPolicy::class, 'create']);
         Gate::define('update-work', [WorkPolicy::class, 'update']);

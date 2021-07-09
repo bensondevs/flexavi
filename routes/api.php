@@ -299,6 +299,11 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Company Work Module
 			*/
 			Route::group(['prefix' => 'works'], function () {
+				Route::get('quotation_works', [WorkController::class, 'quotationWorks']);
+				Route::get('contract_works', [WorkController::class, 'contractWorks']);
+				Route::get('appointment_works', [WorkController::class, 'appointmentWorks']);
+				Route::get('unfinished_works', [WorkController::class, 'unfinishedWorks']);
+
 				Route::post('store', [WorkController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [WorkController::class, 'update']);
 				Route::delete('delete', [WorkController::class, 'delete']);

@@ -449,12 +449,12 @@ Payload name | Required | Validation | Description
 `address` | Required | String | The address of customer's house
 `zip_code` | Required | String | Zip Code of customer's house
 `phone_number` | Required | String | The callable phone number, this number will be called whenever roofer need certain contact with customer or people in charge of the house
-`damage_cause` | Required | Array, string | Damage causes needs to be fill with ARRAY, the number represents: Leak = 1, Fungus Mold = 2, Bird Nuisance = 3, Storm Damage = 4, Overdue Maintenance = 5
+`damage_cause` | Required | Array, string | Damage causes needs to be fill with ARRAY, the number represents: `Leak` = `1`, `Fungus Mold` = `2`, `Bird Nuisance` = 3, `Storm Damage` = `4`, `Overdue Maintenance` = `5`
 `quotation_description` | Optional | String | The additional description about quotation, can be filled y the description of damage of the roof or anything related with and informing about everything needs to be known within quotation
 `expiry_date` | Optional | Date, String | The Quotation expiry date, this offer can be expired whenever reached this date, this is OPTIONAL, if you don't specify this field, the quotation expiry date will be set 3 days after the quotation is created
 `vat_percentage` | Required | integer | The percentage of VAT, you can only fill this field with maximum value of 100 and minumum of 0, and remember THIS IS NOT VAT AMOUNT OF MONEY
 `discount_amount` | Required | integer | The amount of discount, this is NOT DISCOUNT PERCENTAGE, so the value specified here is the amount of discount, the default of application is euro then if we specify with 125 then the discount will be EUR 125, it can be specified with 0 if there is no discount
-`payment_method` | Required | integer | The payment method, the number represents: Cash = 1, BankTransfer = 2
+`payment_method` | Required | integer | The payment method, the number represents: `Cash` = `1`, `Bank Transfer` = `2`
 
 **Response Attributes:**
 
@@ -501,12 +501,12 @@ Payload name | Required | Validation | Description
 `address` | Required | String | The address of customer's house
 `zip_code` | Required | String | Zip Code of customer's house
 `phone_number` | Required | String | The callable phone number, this number will be called whenever roofer need certain contact with customer or people in charge of the house
-`damage_cause` | Required | Array, string | Damage causes needs to be fill with ARRAY, the number represents: Leak = 1, Fungus Mold = 2, Bird Nuisance = 3, Storm Damage = 4, Overdue Maintenance = 5
+`damage_cause` | Required | Array, string | Damage causes needs to be fill with ARRAY, the number represents: `Leak` = `1`, `Fungus Mold` = `2`, `Bird Nuisance` = `3`, `Storm Damage` = `4`, `Overdue Maintenance` = `5`
 `quotation_description` | Optional | String | The additional description about quotation, can be filled y the description of damage of the roof or anything related with and informing about everything needs to be known within quotation
 `expiry_date` | Optional | Date, String | The Quotation expiry date, this offer can be expired whenever reached this date, this is OPTIONAL, if you don't specify this field, the quotation expiry date will be set 3 days after the quotation is created
 `vat_percentage` | Required | integer | The percentage of VAT, you can only fill this field with maximum value of 100 and minumum of 0, and remember THIS IS NOT VAT AMOUNT OF MONEY
 `discount_amount` | Required | integer | The amount of discount, this is NOT DISCOUNT PERCENTAGE, so the value specified here is the amount of discount, the default of application is euro then if we specify with 125 then the discount will be EUR 125, it can be specified with 0 if there is no discount
-`payment_method` | Required | integer | The payment method, the number represents: Cash = 1, BankTransfer = 2
+`payment_method` | Required | integer | The payment method, the number represents: `Cash` = `1`, `Bank Transfer` = `2`
 
 **Response Attributes:**
 

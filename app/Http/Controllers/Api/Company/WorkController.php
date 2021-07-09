@@ -6,8 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\Works\DeleteWorkRequest as DeleteRequest;
-use App\Http\Requests\Works\AddAppointmentWorkRequest as AppointmentAdd;
+use App\Http\Requests\Works\AddAppointmentWorkRequest as AppointmentAddRequest;
 use App\Http\Requests\Works\PopulateUnfinishedWorksRequest as PopulateUnfinishedRequest;
+use App\Http\Requests\Works\PopulateCompanyWorksRequest as CompanyPopulateRequest;
 use App\Http\Requests\Works\PopulateContractWorksRequest as ContractPopulateRequest;
 use App\Http\Requests\Works\PopulateQuotationWorksRequest as QuotationPopulateRequest;
 use App\Http\Requests\Works\PopulateAppointmentWorkersRequest as AppointmentPopulateRequest;
@@ -23,6 +24,17 @@ class WorkController extends Controller
     public function __construct(WorkRepository $work)
     {
     	$this->work = $work;
+    }
+
+    public function companyWorks(CompanyPopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $works = $this->work->all($options);
+        $works = $this->work->paginate();
+        $works = WorkResource::apiCollection($works);
+
+        return response()->json(['works' => $works]);
     }
 
     public function quotationWorks(QuotationPopulateRequest $request)
@@ -69,15 +81,26 @@ class WorkController extends Controller
         return response()->json(['works' => $works]);
     }
 
-    public function addAppointmentWork(AppointmentAddRequest $request)
+    public function store(SaveRequest $request)
     {
         $input = $request->onlyInRules();
-        $work = $this->work->addToAppointment($input);
+        $works = $this->work->save($input);
 
         return apiResponse($this->work);
     }
 
-    public function deleteWork(DeleteRequest $request)
+    public function update(SaveRequest $request)
+    {
+        $work = $request->getWork()
+        $this->work->setModel($work);
+
+        $input = $request->onlyInRules();
+        $this->work->save($input);
+
+        return apiResponse($this->work);
+    }
+
+    public function delete(DeleteRequest $request)
     {
         $work = $request->getWork();
         $this->work->setModel($work);

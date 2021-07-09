@@ -55,7 +55,7 @@ class RegisterRequest extends FormRequest
             'id_card_number' => ['required', 'string'],
             'phone' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'profile_picture' => ['required', 'file', 'mimes:jpg,jpeg,svg,png'],
+            'profile_picture' => ['file', 'mimes:jpg,jpeg,svg,png'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'password' => [
                 'required', 

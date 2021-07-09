@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
+use Illuminate\Auth\Access\HandlesAuthorization;
+
 use App\Models\User;
 use App\Models\Work;
-use Illuminate\Auth\Access\HandlesAuthorization;
+use App\Models\Appointment;
 
 class WorkPolicy
 {
@@ -15,93 +17,42 @@ class WorkPolicy
         return $user->hasCompanyPermission($quotationOrContract->company_id, 'view works');
     }
 
-    public function view(User $user, Work $work)
+    public function viewAnyAppointment(User $user, Appointment $appointment)
     {
-        if ($quotation = $work->quotation) {
-            if (! $user->hasCompanyPermission($quotation->company_id, 'view works')) {
-                return false;
-            }
-        }
-
-        if ($contract = $work->contract) {
-            if (! $user->hasCompanyPermission($contract->company_id, 'view works')) {
-                return false;
-            }
-        }
-
-        return true;
+        return $user->hasCompanyPermission($appointment->company_id, 'view appointment works');
     }
 
-    public function create(User $user, $quotationOrContract)
+    public function view(User $user, Work $work)
     {
-        return $user->hasCompanyPermission($quotationOrContract->company_id, 'create works');
+        return $user->hasCompanyPermission($work->company_id, 'view works');
+    }
+
+    public function create(User $user)
+    {
+        if ($role = $user->roles()->first()) {
+            return ($role->name == 'owner') || ($role->name == 'employee');
+        }
+
+        return false;
     }
 
     public function update(User $user, Work $work)
     {
-        if ($quotation = $work->quotation) {
-            if (! $user->hasCompanyPermission($quotation->company_id, 'edit works')) {
-                return false;
-            }
-        }
-
-        if ($contract = $work->contract) {
-            if (! $user->hasCompanyPermission($contract->company_id, 'edit works')) {
-                return false;
-            }
-        }
-
-        return true;
+        return $user->hasCompanyPermission($work->company_id, 'update works');
     }
 
     public function delete(User $user, Work $work)
     {
-        if ($quotation = $work->quotation) {
-            if (! $user->hasCompanyPermission($quotation->company_id, 'delete works')) {
-                return false;
-            }
-        }
-
-        if ($contract = $work->contract) {
-            if (! $user->hasCompanyPermission($contract->company_id, 'delete works')) {
-                return false;
-            }
-        }
-
-        return true;
+        return $user->hasCompanyPermission($work->company_id, 'delete works');
     }
 
     public function restore(User $user, Work $work)
     {
-        if ($quotation = $work->quotation) {
-            if (! $user->hasCompanyPermission($quotation->company_id, 'restore works')) {
-                return false;
-            }
-        }
-
-        if ($contract = $work->contract) {
-            if (! $user->hasCompanyPermission($contract->company_id, 'restore works')) {
-                return false;
-            }
-        }
-
-        return true;
+        return $user->hasCompanyPermission($work->company_id, 'restore works');
     }
 
     public function forceDelete(User $user, Work $work)
     {
-        if ($quotation = $work->quotation) {
-            if (! $user->hasCompanyPermission($quotation->company_id, 'force delete works')) {
-                return false;
-            }
-        }
-
-        if ($contract = $work->contract) {
-            if (! $user->hasCompanyPermission($contract->company_id, 'force delete works')) {
-                return false;
-            }
-        }
-
-        return true;
+        return $user->hasCompanyPermission($work->company_id, 'force delete works');
     }
 }
