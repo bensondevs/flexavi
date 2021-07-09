@@ -47,6 +47,7 @@ class RegisterRequest extends FormRequest
      */
     public function rules()
     {
+        dd($this->all());
         $this->setRules([
             'fullname' => ['required', 'string'],
             'salutation' => ['required', 'string'],
