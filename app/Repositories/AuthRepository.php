@@ -81,7 +81,7 @@ class AuthRepository extends BaseRepository
 			$sendJob = new SendMail(new VerifyEmail($user), $user->email);
 			dispatch($sendJob);
 
-			$this->setSuccess('Successfully send email verification.');
+			// $this->setSuccess('Successfully send email verification.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to send email verification', $error);

@@ -91,7 +91,7 @@ class PermissionsSeeder extends Seeder
             'force delete inspections',
 
         	// Inspector
-            'view any inspections',
+            'view any inspectors',
         	'view inspectors',
         	'create inspectors',
         	'edit inspectors',

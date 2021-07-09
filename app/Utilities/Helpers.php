@@ -2,7 +2,9 @@
 
 use Carbon\Carbon;
 use Illuminate\Support\Str;
-use \Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -307,12 +309,38 @@ function isRoute($routeName)
     return Route::currentRouteName() == $routeName;
 }
 
+function is_base64_string($string)
+{
+    return base64_encode(base64_decode($string, true)) === $string;
+}
+
 function isRouteStartsWith($start, $routeName = '')
 {
     // if route is not defined make it current route
     $routeName = $routeName ? $routeName : Route::currentRouteName();
 
     return substr($routeName, 0, strlen($start)) == $start;
+}
+
+function convertBase64ToUploadedFile($base64String)
+{
+    $fileData = base64_decode($base64String);
+    $mimeType = explode(':', substr($base64String, 0, strpos($base64String, ';')))[1];
+
+    $tmpFilePath = sys_get_temp_dir() . '/' . Str::uuid()->toString();
+    file_put_contents($tmpFilePath, $fileData);
+
+    $tmpFile = new SymfonyFile($tmpFilePath);
+
+    $file = new UploadedFile(
+        $tmpFile->getPathname(),
+        $tmpFile->getFilename(),
+        $mimeType,
+        0,
+        false
+    );
+
+    return $file;
 }
 
 function createPagination($collections, $perPage = 10, $currentPage = 1)

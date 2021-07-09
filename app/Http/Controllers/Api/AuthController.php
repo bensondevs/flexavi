@@ -84,11 +84,8 @@ class AuthController extends Controller
         return apiResponse($this->auth, ['user' => $user]);
     }
 
-    //public function register(RegisterRequest $request)
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        return response()->json(['all' => $request->all(), 'profile_picture' => $request->file('profile_picture')]);
-
         if ($invitation = $request->getInvitation()) {
             if ($invitation->invited_email !== $request->input('email'))
                 return response()->json(['message' => 'This invitation is not for this email'], 403);
@@ -106,7 +103,7 @@ class AuthController extends Controller
         }
 
     	$user = new User();
-        if ($profilePicture = $request->file('profile_picture')) {
+        if ($profilePicture = $request->profile_picture) {
             $user->profile_picture = $profilePicture;
         }
         $user = $this->auth->setModel($user);

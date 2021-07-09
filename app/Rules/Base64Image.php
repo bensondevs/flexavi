@@ -4,9 +4,9 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-class Base64ImageRule implements Rule
+class Base64Image implements Rule
 {
-    public $inputExtension;
+    public $extension;
     protected $allowedExtensions;
 
     /**
@@ -33,20 +33,10 @@ class Base64ImageRule implements Rule
      */
     public function passes($attribute, $value)
     {
-        $imageExtension = explode(
-            '/', 
-            explode(
-                ':', 
-                substr($value, 0, strpos($value, ';')
-            )
-        )[1])[1];
+        $extension = explode('/', explode(':', substr($value, 0, strpos($value, ';')))[1])[1];
+        $this->extension = $extension;
 
-        $this->inputExtension = $imageExtension;
-
-        return in_array(
-            $imageExtension, 
-            $this->allowedExtensions
-        );
+        return in_array($extension, $this->allowedExtensions);
     }
 
     /**
@@ -56,6 +46,6 @@ class Base64ImageRule implements Rule
      */
     public function message()
     {
-        return __('The image uplaoded is not Base64 Image! The extension is: ') . $this->inputExtension;
+        return __('The image uplaoded is not Base64 Image! The extension is: ') . $this->extension;
     }
 }

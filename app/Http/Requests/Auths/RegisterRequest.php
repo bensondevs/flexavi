@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auths;
 
 use Illuminate\Foundation\Http\FormRequest;
+use ProtoneMedia\LaravelMixins\Request\ConvertsBase64ToFiles;
 
 use App\Traits\InputRequest;
 
@@ -10,6 +11,7 @@ use App\Rules\HasUpperCase;
 use App\Rules\HasLowerCase;
 use App\Rules\HasNumerical;
 use App\Rules\HasSpecialCharacter;
+use App\Rules\Base64Image;
 
 use App\Models\Owner;
 use App\Models\RegisterInvitation;
@@ -55,7 +57,7 @@ class RegisterRequest extends FormRequest
             'id_card_number' => ['required', 'string'],
             'phone' => ['required', 'string'],
             'address' => ['required', 'string'],
-            'profile_picture' => ['image', 'mimes:jpg,jpeg,svg,png'],
+            'profile_picture' => ['required', 'image', 'mimes:jpg,jpeg,png,svg,bmp'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'password' => [
                 'required', 
@@ -68,6 +70,12 @@ class RegisterRequest extends FormRequest
             ],
             'confirm_password' => ['required', 'string', 'same:password'],
         ]);
+
+        if (is_string($this->input('profile_picture'))) {
+            $picture = convertBase64ToUploadedFile($this->input('profile_picture'));
+            $this->merge(['profile_picture' => $picture]);
+            $this->addRule('profile_picture', ['required']);
+        }
 
         // Has no invitation, then it must be owner
         if (! $this->input('invitation_code')) {

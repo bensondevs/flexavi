@@ -104,7 +104,7 @@ class User extends Authenticatable
         $path = 'uploads/users/profile_pictures/';
         $image = uploadFile($imageFile, $path);
 
-        $this->attributes['profile_picture_path'] = $image->id;
+        $this->attributes['profile_picture_path'] = $image->path;
     }
 
     public function getProfilePictureAttribute()
