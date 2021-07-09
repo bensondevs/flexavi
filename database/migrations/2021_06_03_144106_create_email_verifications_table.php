@@ -14,15 +14,14 @@ class CreateEmailVerificationsTable extends Migration
     public function up()
     {
         Schema::create('email_verifications', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->string('code')->primary();
 
             $table->string('model');
             $table->uuid('model_id');
             $table->string('model_verification_column')
                 ->default('email_verified_at');
 
-            $table->string('verification_status')->default('waiting');
-
+            $table->datetime('expired_at')->nullable();
             $table->timestamps();
         });
     }

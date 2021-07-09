@@ -86,13 +86,7 @@ function encryptString($string)
 
 function decryptString($encrypted)
 {
-    try {
-        $decryptString = Crypt::decryptString($encrypted);        
-    } catch (Exception $e) {
-        $decryptString = null;
-    }
-
-    return $decryptString;
+    return Crypt::decryptString($encrypted);
 }
 
 function executor()

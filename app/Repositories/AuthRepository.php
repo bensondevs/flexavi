@@ -7,8 +7,13 @@ use \Illuminate\Database\QueryException;
 
 use Socialite;
 
+use App\Mail\Auth\VerifyEmail;
+
+use App\Jobs\SendMail;
+
 use App\Models\User;
 use App\Models\Customer;
+use App\Models\EmailVerification;
 use App\Models\RegisterInvitation;
 
 use App\Repositories\EmployeeRepository;
@@ -67,6 +72,38 @@ class AuthRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function sendEmailVerification()
+	{
+		try {
+			$user = $this->getModel();
+			$sendJob = new SendMail(new VerifyEmail($user), $user->email);
+			dispatch($sendJob);
+
+			$this->setSuccess('Successfully send email verification.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to send email verification', $error);
+		}
+
+		return;
+	}
+
+	public function verifyEmail(string $encryptedCode)
+	{
+		try {
+			$decryptedCode = Crypt::decryptString($encryptedCode);
+			$verification = EmailVerification::findByCodeOrFail($decryptedCode);
+			$verification->verify();
+
+			$this->setSuccess('Successfully verify email address');	
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to verify email address.', $error);
+		}
+
+		return $verification;
 	}
 
 	public function login(array $credentials)

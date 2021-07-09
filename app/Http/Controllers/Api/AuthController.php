@@ -109,12 +109,18 @@ class AuthController extends Controller
         $user = $this->auth->setModel($user);
     	$user = $this->auth->register($input, $attachments);
 
-    	return apiResponse($this->auth, ['user' => $user]);
+        // Send Email Verification
+        $this->auth->sendEmailVerification();
+
+    	return apiResponse($this->auth);
     }
 
-    public function verifyEmail(VerifyEmailRequest $request)
+    public function verifyEmail(Request $request)
     {
+        $code = $request->input('code');
+        $this->auth->verifyEmail($code);
 
+        return apiResponse($this->auth);
     }
 
     public function socialMediaRegister(Request $request, $driver)

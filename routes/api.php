@@ -73,6 +73,11 @@ Route::group(['prefix' => 'auth'], function () {
 	Route::post('register', [AuthController::class, 'register']);
 	Route::post('register_company', [CompanyController::class, 'registerCompany']);
 
+	/*
+		Verify Email
+	*/
+	Route::get('verify_email', [AuthController::class, 'verifyEmail']);
+
 	Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 

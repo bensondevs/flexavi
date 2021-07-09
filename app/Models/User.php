@@ -13,6 +13,8 @@ use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Webpatser\Uuid\Uuid;
 
+use App\Models\EmailVerification;
+
 class User extends Authenticatable
 {
     use SoftDeletes;
@@ -125,6 +127,17 @@ class User extends Authenticatable
         // Create Token
         $plainTextToken = $this->createToken(time())->plainTextToken;
         return $this->token = $plainTextToken;
+    }
+
+    public function createEmailVerification()
+    {
+        $verification = new EmailVerification();
+        $verification->model = self::class;
+        $verification->model_id = $this->attributes['id'];
+        $verification->expiry_time = carbon()->now()->addDays(3);
+        $verification->save();
+
+        return $verification;
     }
 
     public function hasCompanyPermission($companyId, string $doAction = '')
