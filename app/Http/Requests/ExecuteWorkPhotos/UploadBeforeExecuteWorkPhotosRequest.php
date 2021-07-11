@@ -25,6 +25,18 @@ class UploadBeforeExecuteWorkPhotosRequest extends FormRequest
         return $this->executeWork = ExecuteWork::findOrFail($id);
     }
 
+    protected function prepareForValidation()
+    {
+        $photos = $this->photos;
+        foreach ($photos as $index => $photo) {
+            if (is_string($photo)) {
+                $photos[$index] = convertBase64ToUploadedFile($photo);
+            }
+        }
+
+        $this->merge(['photos' => $photos]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *

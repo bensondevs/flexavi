@@ -9,6 +9,9 @@ use App\Models\Company;
 use App\Models\Employee;
 use App\Models\RegisterInvitation;
 
+use App\Enums\Employee\EmployeeType;
+use App\Enums\Employee\EmploymentStatus;
+
 class RegisterInvitationsSeeder extends Seeder
 {
     /**
@@ -52,8 +55,8 @@ class RegisterInvitationsSeeder extends Seeder
                 $employee = Employee::create([
                     'company_id' => $company->id,
                     'title' => 'Invited Employee',
-                    'employee_type' => rand(0, 1) ? 'roofers' : 'administrative',
-                    'employment_status' => 'active',
+                    'employee_type' => rand(EmployeeType::Administrative, EmployeeType::Roofer),
+                    'employment_status' => rand(EmploymentStatus::Active, EmploymentStatus::Fired),
 
                     'address' => 'Address Test',
                     'house_number' => '11',

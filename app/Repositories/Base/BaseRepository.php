@@ -17,12 +17,13 @@ class BaseRepository
 {
 	use RepositoryPayload;
 
-	protected $defaultModel = null;
-	protected $model = null;
-	protected $resource;
-	protected $parentModel = null;
-	protected $collection = null;
-	protected $paginations = null;
+	private $defaultModel = null;
+	private $model = null;
+	private $resource;
+	private $parentModel = null;
+	private $collection = null;
+	private $paginations = null;
+	private $defaultPaginationPerPage = 10;
 
 	public function setInitModel(Model $model)
 	{
@@ -143,9 +144,23 @@ class BaseRepository
 			}
 		}
 
-		if (isset($options['withs']))
-			if ($options['withs'])
+		if (isset($options['withs'])) {
+			if ($options['withs']) {
 				$models = $models->with($options['withs']);
+			}
+		}
+
+		if (isset($options['with_counts'])) {
+			if ($options['with_counts']) {
+				$models = $models->withCount($options['with_counts']);
+			}
+		}
+
+		if (isset($options['per_page'])) {
+			if ($options['per_page']) {
+				$this->defaultPaginationPerPage = $options['per_page'];
+			}
+		}
 
 
 		$models = $models->get();
@@ -163,8 +178,12 @@ class BaseRepository
 		return $this->all($options, $pagination);
 	}
 
-	public function paginate($perPage = 10, $page = null, $options = [])
+	public function paginate($perPage = null, $page = null, $options = [])
 	{
+		if (! $perPage) {
+			$perPage = $this->defaultPaginationPerPage;
+		}
+
 	    $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
 	    $items = $this->getCollection();
 	    $paginations = new LengthAwarePaginator(

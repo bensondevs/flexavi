@@ -6,6 +6,7 @@ trait PopulateRequestOptions
 {
 	private $search = '';
 	private $withs = [];
+	private $withCounts = [];
 	private $wheres = [];
 	private $whereHases = [];
 
@@ -17,6 +18,16 @@ trait PopulateRequestOptions
 	public function setWiths(array $relations)
 	{
 		$this->withs = $relations;
+	}
+
+	public function addWithCount(string $countRelation)
+	{
+		array_push($this->withCounts, $countRelation);
+	}
+
+	public function setWithCounts(array $countRelations)
+	{
+		$this->withCounts = $countRelations;
 	}
 
 	public function addWhere(array $condition)
@@ -79,6 +90,7 @@ trait PopulateRequestOptions
         	'per_page' => $perPage,
         	'search' => $this->search,
             'withs' => $this->withs,
+            'with_counts' => $this->withCounts,
             'wheres' => $this->wheres,
             'where_hases' => $this->whereHases,
         ];

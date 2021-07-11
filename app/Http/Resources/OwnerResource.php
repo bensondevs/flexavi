@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Resources\UserResource;
+
 use App\Traits\ApiCollectionResource;
 
 class OwnerResource extends JsonResource
@@ -20,7 +22,7 @@ class OwnerResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'user' => $this->user,
+            'user' => new UserResource($this->user),
             'is_prime_owner' => $this->is_prime_owner,
             'bank_name' => $this->bank_name,
             'bic_code' => $this->bic_code,

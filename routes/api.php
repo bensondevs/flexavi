@@ -38,8 +38,6 @@ use App\Http\Controllers\Api\Customer\CustomerController;
 */
 
 Route::group(['prefix' => 'auth'], function () {
-	Route::get('check_email_used', [AuthController::class, 'checkEmailUsed']);
-
 	/*
 		Conventional Login
 	*/
@@ -66,6 +64,12 @@ Route::group(['prefix' => 'auth'], function () {
 			Route::get('{driver}/register', [AuthController::class, 'socialMediaRegister']);
 		});
 	});
+
+	/*
+		Informations
+	*/
+	Route::get('id_card_types', [UserController::class, 'idCardTypes']);
+	Route::get('check_email_used', [AuthController::class, 'checkEmailUsed']);
 	
 	/*
 		Register
@@ -157,6 +161,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::post('reschedule', [AppointmentController::class, 'reschedule']);
 				Route::post('execute', [AppointmentController::class, 'execute']);
 				Route::post('process', [AppointmentController::class, 'process']);
+
+				/*
+					Select Options
+				*/
+				Route::get('types', [AppointmentController::class, 'appointmentTypes']);
+				Route::get('statuses', [AppointmentController::class, 'appointmentStatuses']);
+				Route::get('cancellation_vaults', [AppointmentController::class, 'appointmentCancellationVaults']);
 
 				/*
 					Sub Appointments Module

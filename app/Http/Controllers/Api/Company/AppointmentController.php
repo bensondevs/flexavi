@@ -30,6 +30,27 @@ class AppointmentController extends Controller
         $this->work = $work;
     }
 
+    public function appointmentTypes()
+    {
+        $appointment = $this->appointment->getModel();
+        $selectOptions = $appointment->typeOptions();
+        return response()->json($selectOptions);
+    }
+
+    public function appointmentStatuses()
+    {
+        $appointment = $this->appointment->getModel();
+        $selectOptions = $appointment->statusOptions();
+        return response()->json($selectOptions);
+    }
+
+    public function appointmentCancellationVaults()
+    {
+        $appointment = $this->appointment->getModel();
+        $selectOptions = $appointment->cancellationVaultOptions();
+        return response()->json($selectOptions);
+    }
+
     public function companyAppointments(CompanyPopulateRequest $request)
     {
         $options = $request->options();
@@ -77,17 +98,6 @@ class AppointmentController extends Controller
 
         $appointment = $this->appointment->setModel($appointment);
         $appointment = $this->appointment->execute();
-
-        return apiResponse($this->appointment);
-    }
-
-    public function addWork(AddWorkRequest $request)
-    {
-        $appointment = $request->getAppointment();
-        $appointment = $this->appointment->setModel($appointment);
-        
-        $input = $request->workData();
-        $appointment = $this->appointment->addWork($input);
 
         return apiResponse($this->appointment);
     }

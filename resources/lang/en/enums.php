@@ -1,10 +1,34 @@
 <?php
 
+use App\Enums\User\UserIdCardType;
+
+use App\Enums\Appointment\AppointmentStatus;
+
 use App\Enums\Quotation\QuotationStatus;
 use App\Enums\Quotation\QuotationDamageCause;
 
+use App\Enums\Work\WorkStatus;
+
+use App\Enums\Invoice\InvoiceStatus;
+
 return [
-    // Quotations
+    // User
+    UserIdCardType::class => [
+        UserIdCardType::NationalIdCard => 'National ID Card',
+        UserIdCardType::Passport => 'Passport',
+        UserIdCardType::DrivingLicense => 'Driving License',
+    ],
+
+    // Appointment
+    AppointmentStatus::class => [
+        AppointmentStatus::Created => 'Created',
+        AppointmentStatus::InProcess => 'In Process',
+        AppointmentStatus::Processed => 'Processed',
+        AppointmentStatus::Calculated => 'Calculated',
+        AppointmentStatus::Cancelled => 'Cancelled',
+    ],
+
+    // Quotation
     QuotationStatus::class => [
         QuotationStatus::Draft => 'Draft / Created',
         QuotationStatus::Sent => 'Sent',
@@ -15,9 +39,39 @@ return [
 
     QuotationDamageCause::class => [
         QuotationDamageCause::Leak => 'Leak',
-        QuotationDamageCause::FungusMold => 'Fungus/Mold',
+        QuotationDamageCause::FungusMold => 'Fungus / Mold',
         QuotationDamageCause::BirdNuisance => 'Bird Nuisance',
         QuotationDamageCause::StormDamage => 'Storm Damage',
         QuotationDamageCause::OverdueMaintenance => 'Overdue Maintenance',
+    ],
+
+    QuotationPaymentMethod::class => [
+        QuotationPaymentMethod::Cash => 'Cash',
+        QuotationPaymentMethod::BankTransfer => 'Bank Transfer',
+    ],
+
+    // Work
+    WorkStatus::class => [
+        WorkStatus::Created => 'Created',
+        WorkStatus::InProcess => 'In Process',
+        WorkStatus::Finished => 'Finished',
+        WorkStatus::Unfinished => 'Unfinished',
+    ],
+
+    // Invoice
+    InvoiceStatus::class => [
+        InvoiceStatus::Created => 'Created / Draft',
+        InvoiceStatus::Send => 'Send / Definitive',
+        InvoiceStatus::Paid => 'Paid',
+        InvoiceStatus::PaymentOverdue => 'Payment Overdue',
+        InvoiceStatus::FirstReminder => 'Overdue, send first reminder?',
+        InvoiceStatus::FirstReminderSent => 'First Reminder Sent',
+        InvoiceStatus::SecondReminder => 'First reminder sent, send the second reminder?',
+        InvoiceStatus::SecondReminderSent => 'Second Reminder Sent',
+        InvoiceStatus::ThirdReminder => 'Second Reminder Sent, send the third reminder?',
+        InvoiceStatus::ThirdReminderSent => 'Third Reminder Sent',
+        InvoiceStatus::OverdueDebtCollector => 'Overdue, debt collector?',
+        InvoiceStatus::SentDebtCollector => 'Sent to debt collector',
+        InvoiceStatus::PaidViaDebtCollector => 'Paid via Debt collector',
     ],
 ];

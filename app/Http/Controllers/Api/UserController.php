@@ -9,7 +9,11 @@ use App\Http\Requests\User\SaveUserRequest;
 use App\Http\Requests\Users\ChangePasswordRequest;
 use App\Http\Requests\Users\SetProfilePictureRequest;
 
+use App\Enums\User\UserIdCardType;
+
 use App\Repositories\UserRepository;
+
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -22,9 +26,14 @@ class UserController extends Controller
 
     public function current()
     {
-    	return response()->json([
-            'user' => auth()->user()
-        ]);
+        $user = auth()->user();
+    	return response()->json(['user' => new UserResource($user)]);
+    }
+
+    public function idCardTypes()
+    {
+        $types = UserIdCardType::asSelectArray();
+        return response()->json($types);
     }
 
     public function setProfilePicture(SetProfilePictureRequest $request)

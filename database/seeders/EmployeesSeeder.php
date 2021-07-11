@@ -8,6 +8,9 @@ use App\Models\Company;
 use App\Models\Role;
 use App\Models\Employee;
 
+use App\Enums\Employee\EmployeeType;
+use App\Enums\Employee\EmploymentStatus;
+
 class EmployeesSeeder extends Seeder
 {
     /**
@@ -31,9 +34,9 @@ class EmployeesSeeder extends Seeder
                     'company_id' => $company->id,
 
                     'title' => 'Employee Title',
-                    'employee_type' => (['administrative', 'roofers'])[rand(0, 1)],
+                    'employee_type' => rand(EmployeeType::Administrative, EmployeeType::Roofer),
 
-                    'employment_status' => (['active', 'inactive', 'fired'])[rand(0, 2)],
+                    'employment_status' => rand(EmploymentStatus::Active, EmploymentStatus::Fired),
                     
                     'photo_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
 

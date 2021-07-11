@@ -103,39 +103,18 @@ class Invoice extends Model
         return $status['label'];
     }
 
-    public function workContract()
-    {
-        return $this->hasOne(
-            'App\Models\WorkContract', 
-            'id', 
-            'work_contract_id'
-        );
-    }
-
     public function items()
     {
-        return $this->hasMany(
-            'App\Models\InvoiceItem', 
-            'invoice_id', 
-            'id'
-        );
+        return $this->hasMany(InvoiceItems::class);
     }
 
     public function paymentTerms()
     {
-        return $this->hasMany(
-            'App\Models\PaymentTerm', 
-            'invoice_id', 
-            'id'
-        );
+        return $this->hasMany(PaymentTerm::class);
     }
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company', 
-            'company_id', 
-            'id'
-        );
+        return $this->belongsTo(Company::class);
     }
 }

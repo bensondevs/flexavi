@@ -110,26 +110,18 @@ class Inspection extends Model
     	});
     }
 
-    public function quotationOrWorkContract()
+    public function appointment()
     {
-        return $this->morphTo();
+        return $this->belongsTo(Appointment::class);
     }
 
     public function inspectors()
     {
-        return $this->hasMany(
-            'App\Models\Inspector', 
-            'inspection_id', 
-            'id'
-        );
+        return $this->hasMany(Inspector::class);
     }
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company', 
-            'company_id', 
-            'id'
-        );
+        return $this->belongsTo(Company::class);
     }
 }

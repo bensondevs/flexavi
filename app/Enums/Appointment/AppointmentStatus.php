@@ -3,8 +3,9 @@
 namespace App\Enums\Appointment;
 
 use BenSampo\Enum\Enum;
+use BenSampo\Enum\Contracts\LocalizedEnum;
 
-final class AppointmentStatus extends Enum
+final class AppointmentStatus extends Enum implements LocalizedEnum
 {
     const Created = 1;
     const InProcess = 2;

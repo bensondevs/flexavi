@@ -4,6 +4,9 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Enums\Employee\EmployeeType;
+use App\Enums\Employee\EmploymentStatus;
+
 class CreateEmployeesTable extends Migration
 {
     /**
@@ -31,8 +34,8 @@ class CreateEmployeesTable extends Migration
             $table->string('photo_path')->nullable();
 
             $table->char('title');
-            $table->string('employee_type');
-            $table->char('employment_status')->default('active');
+            $table->tinyInteger('employee_type')->default(EmployeeType::Administrative);
+            $table->tinyInteger('employment_status')->default(EmploymentStatus::Active);
 
             $table->text('address');
             $table->char('house_number');

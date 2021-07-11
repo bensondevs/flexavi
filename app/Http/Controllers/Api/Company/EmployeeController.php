@@ -65,7 +65,7 @@ class EmployeeController extends Controller
         $input = $request->ruleWithCompany();
     	$employee = $this->employee->save($input);
 
-    	return apiResponse($this->employee, ['employee' => $employee]);
+    	return apiResponse($this->employee);
     }
 
     public function update(SaveRequest $request)
@@ -76,7 +76,7 @@ class EmployeeController extends Controller
         $input = $request->ruleWithCompany();
     	$employee = $this->employee->save($input);
 
-    	return apiResponse($this->employee, ['employee' => $employee]);
+    	return apiResponse($this->employee);
     }
 
     public function delete(DeleteRequest $request)

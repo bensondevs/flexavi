@@ -4,6 +4,8 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+use App\Http\Resources\UserResource;
+
 use App\Traits\ApiCollectionResource;
 
 class EmployeeResource extends JsonResource
@@ -22,15 +24,17 @@ class EmployeeResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'employee_type' => $this->employee_type,
+            'employee_type_description' => $this->employee_type_description,
             'employment_status' => $this->employment_status,
-            'employment_status_label' => $this->employment_status_label,
-            'user' => $this->user,
+            'employment_status_description' => $this->employment_status_description,
+            'user' => new UserResource($this->user),
             'address' => $this->address,
             'house_number' => $this->house_number,
             'house_number_suffix' => $this->house_number_suffix,
             'zipcode' => $this->zipcode,
             'city' => $this->city,
             'province' => $this->province,
+            'inspections_count' => $this->inspections_count,
         ];
     }
 }

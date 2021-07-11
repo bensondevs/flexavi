@@ -5,45 +5,23 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Webpatser\Uuid\Uuid;
 
-use App\Traits\ModelEnums;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+
+use App\Enums\Employee\EmployeeType;
+use App\Enums\Employee\EmploymentStatus;
 
 class Employee extends Model
 {
-    use ModelEnums;
     use SoftDeletes;
+    use HasRelationships;
 
     protected $table = 'employees';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
-
-    const EMPLOYEE_TYPES = [
-        [
-            'label' => 'Administrative',
-            'value' => 'administrative',
-        ],
-        [
-            'label' => 'Roofer',
-            'value' => 'roofer',
-        ]
-    ];
-
-    const EMPLOYEE_STATUSES = [
-        [
-            'label' => 'Active',
-            'value' => 'active',
-        ],
-        [
-            'label' => 'Inactive',
-            'value' => 'inactive',
-        ],
-        [
-            'label' => 'Fired',
-            'value' => 'fired',
-        ]
-    ];
 
     protected $fillable = [
         'user_id',
@@ -60,10 +38,6 @@ class Employee extends Model
         'province',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected static function boot()
     {
     	parent::boot();
@@ -75,19 +49,37 @@ class Employee extends Model
 
     public function user()
     {
-        return $this->belongsTo(
-            'App\Models\User', 
-            'user_id', 
-            'id'
-        );
+        return $this->belongsTo(User::class);
     }
 
     public function company()
     {
-        return $this->hasOne(
-            'App\Models\Company', 
-            'id', 
-            'company_id'
+        return $this->hasOne(Company::class);
+    }
+
+    public function inspectors()
+    {
+        return $this->hasMany(Inspector::class);
+    }
+
+    public function inspections()
+    {
+        return $this->belongsToMany(Inspection::class, Inspector::class);
+    }
+
+    public function todayInspections()
+    {
+        $now = carbon()->now();
+        $startOfToday = $now->startOfDay();
+        $endOfToday = $now->endOfDay();
+
+        return $this->inspections()->whereHas(
+            'appointment', 
+            function (Builder $appointment) use ($startOfToday, $endOfToday) {
+                $appointment
+                    ->where('start', '>=', $startOfToday)
+                    ->where('end', '<=', $endOfToday);
+            }
         );
     }
 
@@ -98,28 +90,15 @@ class Employee extends Model
         $this->attributes['photo_path'] = $photo->path;
     }
 
-    public function getEmploymentStatusLabelAttribute()
+    public function getEmployeeTypeDescriptionAttribute()
     {
-        $statuses = collect(self::EMPLOYEE_STATUSES);
-        $statuses = $statuses->where('value', $this->attributes['employment_status']);
-        $status = $statuses->first();
-
-        return $status['label'];
+        $type = $this->attributes['employee_type'];
+        return EmployeeType::getDescription($type);
     }
 
-    public static function getTypeValues()
+    public function getEmploymentStatusDescriptionAttribute()
     {
-        $types = collect(self::EMPLOYEE_TYPES);
-        $values = $types->pluck('value');
-
-        return $values->toArray();
-    }
-
-    public static function getStatusValues()
-    {
-        $types = collect(self::EMPLOYEE_STATUSES);
-        $values = $types->pluck('value');
-
-        return $values->toArray();
+        $status = $this->attributes['employment_status'];
+        return EmploymentStatus::getDescription($status);
     }
 }

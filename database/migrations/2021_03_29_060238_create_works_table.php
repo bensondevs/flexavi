@@ -42,12 +42,12 @@ class CreateWorksTable extends Migration
 
             $table->tinyInteger('status')->default(1);
 
-            $table->integer('quantity')->default(0);
+            $table->double('quantity', 8, 2)->default(0);
             $table->string('quantity_unit')->nullable();
             $table->text('description')->nullable();
             $table->double('unit_price', 10, 2);
             $table->boolean('include_tax')->default(true);
-            $table->integer('tax_percentage')->default(0);
+            $table->double('tax_percentage', 8, 2)->default(0);
             $table->double('total_price')->default(0);
 
             $table->timestamps();

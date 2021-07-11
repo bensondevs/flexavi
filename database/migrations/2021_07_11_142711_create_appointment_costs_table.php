@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateInspectorsTable extends Migration
+class CreateAppointmentCostsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,23 +13,20 @@ class CreateInspectorsTable extends Migration
      */
     public function up()
     {
-        Schema::create('inspectors', function (Blueprint $table) {
+        Schema::create('appointment_costs', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('inspection_id');
-            $table->foreign('inspection_id')
+            $table->uuid('appointment_id');
+            $table->foreign('appointment_id')
                 ->references('id')
-                ->on('inspections')
+                ->on('appointments');
                 ->onDelete('CASCADE');
 
-            $table->uuid('employee_id');
-            $table->foreign('employee_id')
-                ->references('id')
-                ->on('employees')
-                ->onDelete('CASCADE');
+            $table->string('cost_name');
+            $table->double('cost', 8, 2);
+            $table->double('paid_cost', 8, 2)->default(0);
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -40,6 +37,6 @@ class CreateInspectorsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('inspectors');
+        Schema::dropIfExists('appointment_costs');
     }
 }

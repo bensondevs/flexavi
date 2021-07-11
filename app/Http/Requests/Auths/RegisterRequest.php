@@ -25,11 +25,14 @@ class RegisterRequest extends FormRequest
     public function getInvitation()
     {
         $invitationCode = $this->input('invitation_code');
+        if (! $invitationCode) {
+            return null;
+        }
 
-        if (! $invitationCode) return null;
-
-        return $this->invitation = $this->invitation ?:
-            RegisterInvitation::findByCode($invitationCode);
+        if ($this->invitation) {
+            return $this->invitation;
+        }
+        return $this->invitation = RegisterInvitation::findByCode($invitationCode);
     }
 
     /**

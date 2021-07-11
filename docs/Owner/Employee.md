@@ -37,35 +37,22 @@ Attribute Name  | Type  | Description
         "current_page": 1,
         "data": [
             {
-                "id": "6f3b32e0-c923-11eb-8ae1-0d9369adeb90",
-                "title": "Another Employee",
-                "employee_type": "administrative",
-                "employment_status": "active",
-                "employment_status_label": "Active",
-                "user": null,
-                "address": "Another street",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "11178",
-                "city": "Another City",
-                "province": "Another Province"
-            },
-            {
-                "id": "c90c1a80-c922-11eb-b1dc-51d432414c57",
+                "id": "7cf6c7a0-e0d3-11eb-9ff2-d10f3f87ae90",
                 "title": "Employee Title",
-                "employee_type": "administrative",
-                "employment_status": "inactive",
-                "employment_status_label": "Inactive",
+                "employee_type": "roofers",
+                "employee_type_description": "",
+                "employment_status": "active",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c66433c0-c922-11eb-816b-8517c5c75b56",
+                    "id": "7a40dab0-e0d3-11eb-b8af-d1f8e529af04",
                     "fullname": "Flexavi Employee 1",
                     "salutation": "Mr.",
-                    "birth_date": "1996-06-09",
+                    "birth_date": "1997-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "135270112",
+                    "id_card_number": "774978482",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee1@flexavi.nl",
                     "email_verified_at": null,
@@ -79,21 +66,22 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c2050-c922-11eb-a41c-27a86f48f68c",
+                "id": "7cf6c9e0-e0d3-11eb-914f-19b8da222f6e",
                 "title": "Employee Title",
                 "employee_type": "roofers",
-                "employment_status": "fired",
-                "employment_status_label": "Fired",
+                "employee_type_description": "",
+                "employment_status": "inactive",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c66e75b0-c922-11eb-96a7-ddcae4aaf34b",
+                    "id": "7a4b8260-e0d3-11eb-a897-f3f563ed5849",
                     "fullname": "Flexavi Employee 2",
                     "salutation": "Mr.",
-                    "birth_date": "1997-06-09",
+                    "birth_date": "1998-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "258789806",
+                    "id_card_number": "485669952",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee2@flexavi.nl",
                     "email_verified_at": null,
@@ -107,21 +95,22 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c2370-c922-11eb-9329-d7ce8e141064",
+                "id": "7cf6cae0-e0d3-11eb-b0ff-119df6727a11",
                 "title": "Employee Title",
                 "employee_type": "administrative",
-                "employment_status": "inactive",
-                "employment_status_label": "Inactive",
+                "employee_type_description": "",
+                "employment_status": "active",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c6791680-c922-11eb-aad2-07a0c351ecc1",
+                    "id": "7a563060-e0d3-11eb-b6b1-31821a9c91ce",
                     "fullname": "Flexavi Employee 3",
                     "salutation": "Mr.",
-                    "birth_date": "2001-06-09",
+                    "birth_date": "2000-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "221440908",
+                    "id_card_number": "228989700",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee3@flexavi.nl",
                     "email_verified_at": null,
@@ -135,21 +124,22 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c2630-c922-11eb-bf91-9ba62a9b346e",
+                "id": "7cf6cbb0-e0d3-11eb-b6c2-eb71d7c71696",
                 "title": "Employee Title",
                 "employee_type": "administrative",
-                "employment_status": "fired",
-                "employment_status_label": "Fired",
+                "employee_type_description": "",
+                "employment_status": "active",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c683b7d0-c922-11eb-9c9a-efdcc85c3736",
+                    "id": "7a60e160-e0d3-11eb-9abd-e3b907eb27b0",
                     "fullname": "Flexavi Employee 4",
                     "salutation": "Mr.",
-                    "birth_date": "1997-06-09",
+                    "birth_date": "1996-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "931663543",
+                    "id_card_number": "772838609",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee4@flexavi.nl",
                     "email_verified_at": null,
@@ -163,21 +153,22 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c28f0-c922-11eb-b99f-ffb901640b39",
+                "id": "7cf6cc80-e0d3-11eb-92fc-851643ef8617",
                 "title": "Employee Title",
-                "employee_type": "roofers",
-                "employment_status": "fired",
-                "employment_status_label": "Fired",
+                "employee_type": "administrative",
+                "employee_type_description": "",
+                "employment_status": "inactive",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c68e70c0-c922-11eb-b28f-67b8e26884e8",
+                    "id": "7a6b92c0-e0d3-11eb-80ad-4928421560e7",
                     "fullname": "Flexavi Employee 5",
                     "salutation": "Mr.",
-                    "birth_date": "1996-06-09",
+                    "birth_date": "1999-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "295443276",
+                    "id_card_number": "479439307",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee5@flexavi.nl",
                     "email_verified_at": null,
@@ -191,21 +182,22 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c2b90-c922-11eb-b009-bf254184b0d2",
+                "id": "7cf6cd50-e0d3-11eb-b23f-1507416109c0",
                 "title": "Employee Title",
-                "employee_type": "roofers",
-                "employment_status": "inactive",
-                "employment_status_label": "Inactive",
+                "employee_type": "administrative",
+                "employee_type_description": "",
+                "employment_status": "active",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c698a550-c922-11eb-ba33-5ba356b4b91b",
+                    "id": "7a7629a0-e0d3-11eb-80a8-5975888bc04e",
                     "fullname": "Flexavi Employee 6",
                     "salutation": "Mr.",
-                    "birth_date": "1996-06-09",
+                    "birth_date": "1996-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "236188367",
+                    "id_card_number": "980132572",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee6@flexavi.nl",
                     "email_verified_at": null,
@@ -219,21 +211,22 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c2e30-c922-11eb-a83d-311c9215bc59",
+                "id": "7cf6ce20-e0d3-11eb-b1ae-275f21bc494c",
                 "title": "Employee Title",
                 "employee_type": "roofers",
+                "employee_type_description": "",
                 "employment_status": "active",
-                "employment_status_label": "Active",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c6a33960-c922-11eb-959f-ab22c70fc9cd",
+                    "id": "7a808260-e0d3-11eb-9059-df71c8f79e86",
                     "fullname": "Flexavi Employee 7",
                     "salutation": "Mr.",
-                    "birth_date": "1997-06-09",
+                    "birth_date": "2001-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "817708792",
+                    "id_card_number": "432298860",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee7@flexavi.nl",
                     "email_verified_at": null,
@@ -247,21 +240,22 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c30d0-c922-11eb-ba12-1f24f325a43e",
+                "id": "7cf6cee0-e0d3-11eb-b344-299db28dffe4",
                 "title": "Employee Title",
                 "employee_type": "administrative",
+                "employee_type_description": "",
                 "employment_status": "fired",
-                "employment_status_label": "Fired",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c6ad8540-c922-11eb-9f95-9356da58b99a",
+                    "id": "7a8b0d20-e0d3-11eb-815a-072e8f8e213d",
                     "fullname": "Flexavi Employee 8",
                     "salutation": "Mr.",
-                    "birth_date": "2001-06-09",
+                    "birth_date": "2000-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "216775930",
+                    "id_card_number": "228111848",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee8@flexavi.nl",
                     "email_verified_at": null,
@@ -275,23 +269,53 @@ Attribute Name  | Type  | Description
                 "province": "Any Province"
             },
             {
-                "id": "c90c3360-c922-11eb-8517-b3d102b9e640",
+                "id": "7cf6cfc0-e0d3-11eb-8b34-538251701dd7",
                 "title": "Employee Title",
                 "employee_type": "administrative",
+                "employee_type_description": "",
                 "employment_status": "active",
-                "employment_status_label": "Active",
+                "employment_status_description": "",
                 "user": {
-                    "id": "c6b98520-c922-11eb-a997-8b22a8139652",
+                    "id": "7a953ce0-e0d3-11eb-9a78-87f0765079bb",
                     "fullname": "Flexavi Employee 9",
                     "salutation": "Mr.",
-                    "birth_date": "1998-06-09",
+                    "birth_date": "2001-07-09",
                     "id_card_type": "id_card",
-                    "id_card_number": "700211875",
+                    "id_card_number": "282216992",
                     "phone": "999999999999",
                     "phone_verified_at": null,
-                    "profile_picture_url": "https://dummyimage.com/300/09f/fff.png",
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
                     "registration_code": null,
                     "email": "employee9@flexavi.nl",
+                    "email_verified_at": null,
+                    "deleted_at": null
+                },
+                "address": "Address Test",
+                "house_number": "11",
+                "house_number_suffix": "A",
+                "zipcode": "117177",
+                "city": "Any City",
+                "province": "Any Province"
+            },
+            {
+                "id": "7cf6d080-e0d3-11eb-8755-452677ff5b35",
+                "title": "Employee Title",
+                "employee_type": "administrative",
+                "employee_type_description": "",
+                "employment_status": "active",
+                "employment_status_description": "",
+                "user": {
+                    "id": "7aa0bb30-e0d3-11eb-9835-c9fc5619c9d6",
+                    "fullname": "Flexavi Employee 10",
+                    "salutation": "Mr.",
+                    "birth_date": "1998-07-09",
+                    "id_card_type": "id_card",
+                    "id_card_number": "241825336",
+                    "phone": "999999999999",
+                    "phone_verified_at": null,
+                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
+                    "registration_code": null,
+                    "email": "employee10@flexavi.nl",
                     "email_verified_at": null,
                     "deleted_at": null
                 },
@@ -334,7 +358,7 @@ Attribute Name  | Type  | Description
         "per_page": 10,
         "prev_page_url": null,
         "to": 10,
-        "total": 11
+        "total": 17
     }
 }
 ```
@@ -378,8 +402,8 @@ Attribute Name  | Type  | Description
                 "id": "2124a3a0-c5d6-11eb-b76c-09197012e8a7",
                 "title": "Invited Employee",
                 "employee_type": "roofers",
-                "employment_status": "active",
-                "employment_status_label": "Active",
+                "employment_status": 1,
+                "employment_status_description": "Active",
                 "user": null
             }
         },
@@ -434,16 +458,23 @@ Authorization | `Bearer {token}`
  Payload name | Required | Validation | Description    
 --------------|----------|------------|-------------
 `title` | Required | string | The title of the employee, usually title given by the company
-`employee_type` | Require | string | Employee types available `administrative` or `roofer`
-`employee_status` | Optional | string | Employee statuses available `active`, `inactive`, `fired`. When not input, automatically set to `active`
+`employee_type` | Required | string or integer | Employee types available `Administrative` or `1`, `Roofer` or `2` 
+`employee_status` | Optional | string or integer | Employee statuses available `Active` or `1`, `Inactive` or `2`, `Fired` or `3`. When this value is not specified, the default value will be `1`.
+`address` | Required | string | Address of the employee.
+`house_number` | Required | integer | The house number of employee address.
+`house_number_suffix` | Optional | string | The suffix of employee address number.
+
 
 **Request Body Example:**
 
 ```json
 {
     "title": "Roof Engineer",
-	"employee_type": "roofer",
-	"employee_status": "active",
+	"employee_type": "Roofer",
+	"employee_status": 1,
+    "address": "Another street",
+    "house_number": 11,
+    "house_number_suffix": "A",
 }
 ```
 
@@ -459,15 +490,6 @@ Attribute Name  | Type  | Description
 
 ```json
 {
-    "employee": {
-        "title": "Another Employee",
-        "employee_type": "administrative",
-        "employment_status": "active",
-        "company_id": "198874a0-c5d6-11eb-896e-057d244ae1fa",
-        "id": "07f69c00-c7b5-11eb-b290-d11f6e46c68e",
-        "updated_at": "2021-06-07T17:23:10.000000Z",
-        "created_at": "2021-06-07T17:23:10.000000Z"
-    },
     "status": "success",
     "message": "Successfully save employee data."
 }
@@ -528,7 +550,7 @@ Attribute Name  | Type  | Description
         "photo_url": null,
         "title": "Another Employee",
         "employee_type": "administrative",
-        "employment_status": "active",
+        "employment_status": 1,
         "created_at": "2021-06-07T17:23:10.000000Z",
         "updated_at": "2021-06-07T17:23:10.000000Z",
         "deleted_at": null
@@ -624,8 +646,8 @@ Attribute Name  | Type  | Description
                 "id": "c90c1a80-c922-11eb-b1dc-51d432414c57",
                 "title": "Employee Title",
                 "employee_type": "administrative",
-                "employment_status": "inactive",
-                "employment_status_label": "Inactive",
+                "employment_status": 1,
+                "employment_status_description": "Inactive",
                 "user": {
                     "id": "c66433c0-c922-11eb-816b-8517c5c75b56",
                     "fullname": "Flexavi Employee 1",
@@ -728,7 +750,7 @@ Attribute Name  | Type  | Description
         "photo_url": "https://dummyimage.com/300/09f/fff.png",
         "title": "Employee Title",
         "employee_type": "administrative",
-        "employment_status": "inactive",
+        "employment_status": 1,
         "address": "Address Test",
         "house_number": "11",
         "house_number_suffix": "A",

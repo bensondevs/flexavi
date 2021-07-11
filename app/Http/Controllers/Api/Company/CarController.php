@@ -31,7 +31,7 @@ class CarController extends Controller
         $options = $request->options();
 
     	$cars = $this->car->all($options);
-        $cars = $this->car->paginate($options['per_page']);
+        $cars = $this->car->paginate();
         $cars = CarResource::apiCollection($cars);
 
     	return response()->json(['cars' => $cars]);
@@ -42,7 +42,7 @@ class CarController extends Controller
         $options = $request->options();
 
         $cars = $this->car->freeCars($options);
-        $cars = $this->car->paginate($options['per_page']);
+        $cars = $this->car->paginate();
         $cars = CarResource::apiCollection($cars);
 
         return response()->json(['cars' => $cars]);
@@ -53,7 +53,7 @@ class CarController extends Controller
         $options = $request->options();
 
         $cars = $this->car->trasheds($options);
-        $cars = $this->car->paginate($options['per_page']);
+        $cars = $this->car->paginate();
         $cars = CarResource::apiCollection($cars);
 
         return response()->json(['cars' => $cars]);

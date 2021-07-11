@@ -18,6 +18,6 @@ class InspectionController extends Controller
 
     public function initiateInspection()
     {
-
+        //
     }
 }

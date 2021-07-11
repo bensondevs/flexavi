@@ -145,19 +145,19 @@ class Appointment extends Model
         return $this->hasOne('App\Models\Warranty', 'appointment_id', 'id');
     }
 
-    public static function getTypeValues()
+    public static function typeOptions()
     {
-        return AppointmentType::getValues();
+        return AppointmentType::asSelectArray();
     }
 
-    public static function getStatusValues()
+    public static function statusOptions()
     {
-        return AppointmentStatus::getValues();
+        return AppointmentStatus::asSelectArray();
     }
 
-    public static function getCancellationVaultValues()
+    public static function cancellationVaultOptions()
     {
-        return AppointmentCancellationVault::getValues();
+        return AppointmentCancellationVault::asSelectArray();
     }
 
     public function isLate()

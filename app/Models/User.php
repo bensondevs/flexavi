@@ -107,7 +107,7 @@ class User extends Authenticatable
         $this->attributes['profile_picture_path'] = $image->path;
     }
 
-    public function getProfilePictureAttribute()
+    public function getProfilePictureUrlAttribute()
     {
         return Storage::url($this->attributes['profile_picture_path']);
     }
