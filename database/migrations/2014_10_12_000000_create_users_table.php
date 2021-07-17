@@ -18,7 +18,6 @@ class CreateUsersTable extends Migration
 
             // Personal Identity
             $table->string('fullname');
-            $table->char('salutation')->default('Mr.');
             $table->date('birth_date');
             $table->char('id_card_type');
             $table->char('id_card_number');

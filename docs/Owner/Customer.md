@@ -39,120 +39,60 @@ Attribute Name  | Type  | Description
             {
                 "id": "198e8710-c5d6-11eb-a1c3-75e3acac9bb2",
                 "fullname": "Customer 1 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "81",
-                "zipcode": "851132",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer1@Company 1.com",
                 "phone": "115455235"
             },
             {
                 "id": "198e8ba0-c5d6-11eb-b36b-1f45909ad7fe",
                 "fullname": "Customer 2 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "71",
-                "zipcode": "469566",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer2@Company 1.com",
                 "phone": "327364052"
             },
             {
                 "id": "198e8d80-c5d6-11eb-b8a8-737e93e62af1",
                 "fullname": "Customer 3 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "96",
-                "zipcode": "105567",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer3@Company 1.com",
                 "phone": "276277318"
             },
             {
                 "id": "198e8f30-c5d6-11eb-8f4f-ddcde50b5e97",
                 "fullname": "Customer 4 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "31",
-                "zipcode": "850434",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer4@Company 1.com",
                 "phone": "674243377"
             },
             {
                 "id": "198e90b0-c5d6-11eb-bacc-a79cb1aa6a8d",
                 "fullname": "Customer 5 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "35",
-                "zipcode": "413390",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer5@Company 1.com",
                 "phone": "903922434"
             },
             {
                 "id": "198e9230-c5d6-11eb-9b95-69f9480715c1",
                 "fullname": "Customer 6 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "72",
-                "zipcode": "465554",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer6@Company 1.com",
                 "phone": "392495470"
             },
             {
                 "id": "198e93a0-c5d6-11eb-a3eb-55bd17c7470b",
                 "fullname": "Customer 7 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "56",
-                "zipcode": "654157",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer7@Company 1.com",
                 "phone": "624644876"
             },
             {
                 "id": "198e9510-c5d6-11eb-b954-3560ba62d816",
                 "fullname": "Customer 8 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "34",
-                "zipcode": "391323",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer8@Company 1.com",
                 "phone": "473465401"
             },
             {
                 "id": "198e9680-c5d6-11eb-8774-4b9787ddc295",
                 "fullname": "Customer 9 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "57",
-                "zipcode": "172981",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer9@Company 1.com",
                 "phone": "267552723"
             },
             {
                 "id": "198e9800-c5d6-11eb-a268-c7a62893c049",
                 "fullname": "Customer 10 of Company 1",
-                "salutation": "Mr.",
-                "address": "Customer Address Road",
-                "house_number": "79",
-                "zipcode": "349199",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer10@Company 1.com",
                 "phone": "706355448"
             }
@@ -228,13 +168,7 @@ Authorization | `Bearer {token}`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `fullname` | Required | string | Fullname of customer
-`salutation` | Optional | string | Salutation for customer available salutation can be `mr`, `mrs`, `sir`, `madam`, `dear`
-`address` | Required | string | Address of the customer
-`house_number` | Required | string | House number of the customer
-`zipcode` | Required | numeric | Zipcode of the customer
-`city` | Required | string | City of the customer
-`province` | Required | string | Province of the customer
-`email` | Required | string, unique, email | Email of the customer
+`email` | Optional | string, unique, email | Email of the customer
 `phone` | Required | string, phone number | Unique phone number of customer
 `second_phone` | Optional | string, phone number | Second phone number of customer, cannot be equal to `phone` but not unique, can be using other user's phone number.
 
@@ -270,11 +204,6 @@ Attribute Name  | Type  | Description
     "customer": {
         "fullname": "John Doe",
         "salutation": "mr",
-        "address": "Another Road 11",
-        "house_number": "11",
-        "zipcode": "12345",
-        "city": "Another City",
-        "province": "Province",
         "email": "john@doe.com",
         "phone": "1234567890",
         "company_id": "59322d20-c819-11eb-ac4a-5545e4062ed5",
@@ -309,13 +238,7 @@ Payload name | Required | Validation | Description
 -------------|----------|------------|-------------
 `id` | Required | string | ID of updated customer
 `fullname` | Required | string | Fullname of customer
-`salutation` | Optional | string | Salutation for customer available salutation can be `mr`, `mrs`, `sir`, `madam`, `dear`
-`address` | Required | string | Address of the customer
-`house_number` | Required | string | House number of the customer
-`zipcode` | Required | numeric | Zipcode of the customer
-`city` | Required | string | City of the customer
-`province` | Required | string | Province of the customer
-`email` | Required | string, unique, email | Email of the customer
+`email` | Optional | string, unique, email | Email of the customer
 `phone` | Required | string, phone number | Unique phone number of customer
 `second_phone` | Optional | string, phone number | Second phone number of customer, cannot be equal to `phone` but not unique, can be using other user's phone number.
 
@@ -325,12 +248,6 @@ Payload name | Required | Validation | Description
 {
     "id": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6",
     "fullname": "John Doe",
-    "salutation": "mrs",
-    "address": "Another Road 11",
-    "house_number": "11",
-    "zipcode": "12345",
-    "city": "Just A City",
-    "province": "Another Province",
     "email": "john@doe.com",
     "phone": "1234567890",
     "second_phone": "1231231231"
@@ -353,13 +270,7 @@ Attribute Name  | Type  | Description
         "id": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6",
         "company_id": "59322d20-c819-11eb-ac4a-5545e4062ed5",
         "fullname": "John Doe",
-        "salutation": "mrs",
         "email": "john@doe.com",
-        "address": "Another Road 11",
-        "house_number": "11",
-        "zipcode": "12345",
-        "city": "Just A City",
-        "province": "Another Province",
         "phone": "1234567890",
         "second_phone": null,
         "created_at": "2021-06-08T07:24:23.000000Z",
@@ -456,12 +367,6 @@ Attribute Name  | Type  | Description
             {
                 "id": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
                 "fullname": "Customer 1 of Company 1",
-                "salutation": "dear",
-                "address": "Customer Address Road",
-                "house_number": "25",
-                "zipcode": "395665",
-                "city": "Anycity",
-                "province": "Anyprovince",
                 "email": "customer1@company1.com",
                 "phone": "654721355",
                 "second_phone": null
@@ -545,14 +450,6 @@ Attribute Name  | Type  | Description
         "company_id": "c8844320-c922-11eb-8153-c71677def74d",
         "registered_from": "web",
         "fullname": "Customer 1 of Company 1",
-        "salutation": "dear",
-        "email": "customer1@company1.com",
-        "address": "Customer Address Road",
-        "house_number": "25",
-        "house_number_suffix": null,
-        "zipcode": "395665",
-        "city": "Anycity",
-        "province": "Anyprovince",
         "phone": "654721355",
         "second_phone": null,
         "created_at": "2021-06-09T13:01:19.000000Z",

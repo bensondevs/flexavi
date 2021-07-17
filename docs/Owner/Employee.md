@@ -46,7 +46,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a40dab0-e0d3-11eb-b8af-d1f8e529af04",
                     "fullname": "Flexavi Employee 1",
-                    "salutation": "Mr.",
                     "birth_date": "1997-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "774978482",
@@ -69,7 +68,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a4b8260-e0d3-11eb-a897-f3f563ed5849",
                     "fullname": "Flexavi Employee 2",
-                    "salutation": "Mr.",
                     "birth_date": "1998-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "485669952",
@@ -92,7 +90,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a563060-e0d3-11eb-b6b1-31821a9c91ce",
                     "fullname": "Flexavi Employee 3",
-                    "salutation": "Mr.",
                     "birth_date": "2000-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "228989700",
@@ -115,7 +112,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a60e160-e0d3-11eb-9abd-e3b907eb27b0",
                     "fullname": "Flexavi Employee 4",
-                    "salutation": "Mr.",
                     "birth_date": "1996-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "772838609",
@@ -138,7 +134,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a6b92c0-e0d3-11eb-80ad-4928421560e7",
                     "fullname": "Flexavi Employee 5",
-                    "salutation": "Mr.",
                     "birth_date": "1999-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "479439307",
@@ -161,7 +156,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a7629a0-e0d3-11eb-80a8-5975888bc04e",
                     "fullname": "Flexavi Employee 6",
-                    "salutation": "Mr.",
                     "birth_date": "1996-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "980132572",
@@ -184,7 +178,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a808260-e0d3-11eb-9059-df71c8f79e86",
                     "fullname": "Flexavi Employee 7",
-                    "salutation": "Mr.",
                     "birth_date": "2001-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "432298860",
@@ -207,7 +200,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a8b0d20-e0d3-11eb-815a-072e8f8e213d",
                     "fullname": "Flexavi Employee 8",
-                    "salutation": "Mr.",
                     "birth_date": "2000-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "228111848",
@@ -230,7 +222,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7a953ce0-e0d3-11eb-9a78-87f0765079bb",
                     "fullname": "Flexavi Employee 9",
-                    "salutation": "Mr.",
                     "birth_date": "2001-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "282216992",
@@ -253,7 +244,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "7aa0bb30-e0d3-11eb-9835-c9fc5619c9d6",
                     "fullname": "Flexavi Employee 10",
-                    "salutation": "Mr.",
                     "birth_date": "1998-07-09",
                     "id_card_type": "id_card",
                     "id_card_number": "241825336",
@@ -585,7 +575,6 @@ Attribute Name  | Type  | Description
                 "user": {
                     "id": "c66433c0-c922-11eb-816b-8517c5c75b56",
                     "fullname": "Flexavi Employee 1",
-                    "salutation": "Mr.",
                     "birth_date": "1996-06-09",
                     "id_card_type": "id_card",
                     "id_card_number": "135270112",

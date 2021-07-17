@@ -35,7 +35,6 @@ class User extends Authenticatable
     protected $fillable = [
         // Personal Identity
         'fullname',
-        'salutation',
         'birth_date',
         'id_card_type',
         'id_card_number',

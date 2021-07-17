@@ -57,7 +57,7 @@ class AuthController extends Controller
     {
     	$input = $request->onlyInRules();
     	$user = $this->auth->login($input);
-        $user->role = $user->owner;
+        $user->role = $user->user_role;
 
     	return apiResponse($this->auth, ['user' => $user]); 
     }

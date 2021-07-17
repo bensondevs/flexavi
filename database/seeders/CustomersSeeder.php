@@ -42,7 +42,6 @@ class CustomersSeeder extends Seeder
                     'company_id' => $company->id,
             
                     'fullname' => 'Customer ' . ($index + 1) . ' of ' . $company->company_name,
-                    'salutation' => 'dear',
                     'address' => 'Customer Address Road',
                     'house_number' => rand(1, 100),
                     'zipcode' => rand(100, 999) . rand(100, 999),

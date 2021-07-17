@@ -26,7 +26,6 @@ class UsersSeeder extends Seeder
     {
     	$user = $this->user->save([
     		'fullname' => 'Flexavi Admin ',
-    		'salutation' => 'Mr.',
     		'birth_date' => carbon()->now()->subYears(rand(20, 25)),
     		'id_card_type' => 'id_card',
     		'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
@@ -42,7 +41,6 @@ class UsersSeeder extends Seeder
         	$this->user->setModel(new User);
         	$this->user->save([
         		'fullname' => 'Flexavi Owner ' . ($index + 1),
-        		'salutation' => 'Mr.',
         		'birth_date' => carbon()->now()->subYears(rand(20, 25)),
         		'id_card_type' => 'id_card',
         		'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
@@ -59,7 +57,6 @@ class UsersSeeder extends Seeder
             $this->user->setModel(new User);
             $user = $this->user->save([
                 'fullname' => 'Flexavi Employee ' . ($index + 1),
-                'salutation' => 'Mr.',
                 'birth_date' => carbon()->now()->subYears(rand(20, 25)),
                 'id_card_type' => 'id_card',
                 'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),

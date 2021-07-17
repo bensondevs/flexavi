@@ -28,12 +28,6 @@ class EmployeeResource extends JsonResource
             'employment_status' => $this->employment_status,
             'employment_status_description' => $this->employment_status_description,
             'user' => new UserResource($this->user),
-            'address' => $this->address,
-            'house_number' => $this->house_number,
-            'house_number_suffix' => $this->house_number_suffix,
-            'zipcode' => $this->zipcode,
-            'city' => $this->city,
-            'province' => $this->province,
             'inspections_count' => $this->inspections_count,
         ];
     }

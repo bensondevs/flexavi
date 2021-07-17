@@ -50,11 +50,8 @@ class SaveCustomerRequest extends FormRequest
      */
     public function rules()
     {
-        $salutations = Customer::salutationValues();
-
         $this->setRules([
             'fullname' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
-            'salutation' => ['string', new AmongStrings($salutations)],
             'address' => ['required', 'string'],
             'house_number' => ['required', 'numeric'],
             'zipcode' => ['required', new ZipCode],

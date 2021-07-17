@@ -28,10 +28,6 @@ class Owner extends Model
         'bank_holder_name',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected $casts = [
         'is_prime_owner' => 'boolean',
     ];

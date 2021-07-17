@@ -28,13 +28,6 @@ class CreateCustomersTable extends Migration
             $table->string('salutation')->default('dear');
 
             $table->string('email')->nullable();
-            
-            $table->text('address');
-            $table->char('house_number');
-            $table->char('house_number_suffix')->nullable();
-            $table->char('zipcode');
-            $table->char('city');
-            $table->char('province');
 
             $table->string('phone')->unique();
             $table->string('second_phone')->nullable();

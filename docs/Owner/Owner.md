@@ -58,12 +58,6 @@ Attribute Name  | Type  | Description
                 "bic_code": "9213",
                 "bank_account": "83271221",
                 "bank_holder_name": "Flexavi Owner 1",
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "cfdbe8d0-c922-11eb-b50d-6b48abca3839",
@@ -73,12 +67,6 @@ Attribute Name  | Type  | Description
                 "bic_code": "001",
                 "bank_account": "1010101010",
                 "bank_holder_name": "Invited User",
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "d5d62150-c925-11eb-8487-d73d292448de",

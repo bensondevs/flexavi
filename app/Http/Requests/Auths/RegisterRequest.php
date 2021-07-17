@@ -56,7 +56,6 @@ class RegisterRequest extends FormRequest
     {
         $this->setRules([
             'fullname' => ['required', 'string'],
-            'salutation' => ['required', 'string'],
             'birth_date' => ['required', 'date'],
             'id_card_type' => ['required', 'string'],
             'id_card_number' => ['required', 'string'],

@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Enums\Customer;
+
+use BenSampo\Enum\Enum;
+
+/**
+ * @method static static OptionOne()
+ * @method static static OptionTwo()
+ * @method static static OptionThree()
+ */
+final class CustomerSalutation extends Enum
+{
+    const OptionOne =   0;
+    const OptionTwo =   1;
+    const OptionThree = 2;
+}

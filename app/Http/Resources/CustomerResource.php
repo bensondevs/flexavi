@@ -23,11 +23,6 @@ class CustomerResource extends JsonResource
 
             'fullname' => $this->fullname,
             'salutation' => $this->salutation,
-            'address' => $this->address,
-            'house_number' => $this->house_number,
-            'zipcode' => $this->zipcode,
-            'city' => $this->city,
-            'province' => $this->province,
             'email' => $this->email,
             'phone' => $this->phone,
             'second_phone' => $this->second_phone,

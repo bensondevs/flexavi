@@ -18,49 +18,12 @@ class Customer extends Model
     public $timestamps = true;
     public $incrementing = false;
 
-    const CUSTOMER_SALUTATIONS = [
-        [
-            'label' => 'Mister',
-            'value' => 'mr',
-        ],
-        [
-            'label' => 'Mistress',
-            'value' => 'mrs',
-        ],
-        [
-            'label' => 'Miss',
-            'value' => 'ms',
-        ],
-        [
-            'label' => 'Sir',
-            'value' => 'sir',
-        ],
-        [
-            'label' => 'Madam',
-            'value' => 'madam',
-        ],
-        [
-            'label' => 'Dear',
-            'value' => 'dear',
-        ]
-    ];
-
     protected $fillable = [
         'company_id',
         
         'fullname',
-        'salutation',
-        'address',
-        'house_number',
-        'zipcode',
-        'city',
-        'province',
         'email',
         'phone',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()
@@ -74,11 +37,7 @@ class Customer extends Model
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company', 
-            'company_id', 
-            'id'
-        );
+        return $this->belongsTo(Company::class);
     }
 
     public function getSalutationLabelAttribute()

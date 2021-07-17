@@ -29,7 +29,7 @@ class CustomerController extends Controller
         $options = $request->options();
 
     	$customers = $this->customer->all($options);
-        $customers = $this->customer->paginate($options['per_page']);
+        $customers = $this->customer->paginate();
         $customers = CustomerResource::apiCollection($customers);
 
     	return response()->json(['customers' => $customers]);
@@ -40,7 +40,7 @@ class CustomerController extends Controller
         $options = $request->options();
 
         $customers = $this->customer->trasheds($options);
-        $customers = $this->customer->paginate($options['per_page']);
+        $customers = $this->customer->paginate();
         $customers = CustomerResource::apiCollection($customers);
 
         return response()->json(['customers' => $customers]);
@@ -51,7 +51,7 @@ class CustomerController extends Controller
         $input = $request->ruleWithCompany();
     	$customer = $this->customer->save($input);
 
-    	return apiResponse($this->customer, ['customer' => $customer]);
+    	return apiResponse($this->customer);
     }
 
     public function update(SaveRequest $request)
@@ -62,7 +62,7 @@ class CustomerController extends Controller
         $input = $request->ruleWithCompany();
     	$customer = $this->customer->save($input);
 
-    	return apiResponse($this->customer, ['customer' => $customer]);
+    	return apiResponse($this->customer);
     }
 
     public function delete(DeleteRequest $request)
@@ -82,6 +82,6 @@ class CustomerController extends Controller
         $customer = $this->customer->setModel($customer);
         $customer = $this->customer->restore();
 
-        return apiResponse($this->customer, ['customer' => $customer]);
+        return apiResponse($this->customer);
     }
 }
