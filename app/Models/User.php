@@ -134,7 +134,7 @@ class User extends Authenticatable
         $verification = new EmailVerification();
         $verification->model = self::class;
         $verification->model_id = $this->attributes['id'];
-        $verification->expiry_time = carbon()->now()->addDays(3);
+        $verification->expired_at = carbon()->now()->addDays(3);
         $verification->save();
 
         return $verification;
