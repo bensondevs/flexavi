@@ -94,6 +94,7 @@ class AuthController extends Controller
     	$input = $request->userData();
         if (! $attachments = $request->getAttachments()) {
             $owner = $this->owner->save($request->getOwnerData());
+            dd($this->owner->queryError);
             $attachments = [
                 'model' => 'App\Models\Owner',
                 'model_id' => $owner->id,

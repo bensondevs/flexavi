@@ -9,6 +9,8 @@ use App\Repositories\Base\BaseRepository;
 
 use App\Models\PaymentTerm;
 
+use App\Enums\PaymentTerm\PaymentTermStatus;
+
 class PaymentTermRepository extends BaseRepository
 {
 	public function __construct()
@@ -31,6 +33,39 @@ class PaymentTermRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function markAsPaid()
+	{
+		try {
+			$term = $this->getModel();
+			$term->status = PaymentTermStatus::Paid;
+			$term->save();
+
+			$this->setModel($term);
+
+			$this->setSuccess('Payment term has been settled.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to settle payment term.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function cancelPaidStatus()
+	{
+		try {
+			$term = $this->getModel();
+			$term->status = PaymentTermStatus::Paid;
+		} catch (QueryException $qe) {
+			
+		}
+	}
+
+	public function sendDebtCollector()
+	{
+		//
 	}
 
 	public function delete(bool $force = false)
