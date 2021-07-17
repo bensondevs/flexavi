@@ -178,11 +178,6 @@ Payload name | Required | Validation | Description
 {
     "fullname": "John Doe",
     "salutation": "mrs",
-    "address": "Another Road 11",
-    "house_number": "11",
-    "zipcode": "12345",
-    "city": "Just A City",
-    "province": "Another Province",
     "email": "john@doe.com",
     "phone": "1234567890",
     "second_phone": "1231231231"
