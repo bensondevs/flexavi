@@ -76,22 +76,19 @@ class User extends Authenticatable
         });
     }
 
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
+
     public function owner()
     {
-        return $this->hasOne(
-            'App\Models\Owner', 
-            'user_id',
-            'id'
-        );
+        return $this->hasOne(Owner::class);
     }
 
     public function employee()
     {
-        return $this->hasOne(
-            'App\Models\Employee', 
-            'user_id', 
-            'id'
-        );
+        return $this->hasOne(Employee::class);
     }
 
     public function setUnhashedPasswordAttribute(string $value)

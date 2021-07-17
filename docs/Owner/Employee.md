@@ -58,12 +58,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6c9e0-e0d3-11eb-914f-19b8da222f6e",
@@ -87,12 +81,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6cae0-e0d3-11eb-b0ff-119df6727a11",
@@ -116,12 +104,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6cbb0-e0d3-11eb-b6c2-eb71d7c71696",
@@ -145,12 +127,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6cc80-e0d3-11eb-92fc-851643ef8617",
@@ -174,12 +150,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6cd50-e0d3-11eb-b23f-1507416109c0",
@@ -203,12 +173,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6ce20-e0d3-11eb-b1ae-275f21bc494c",
@@ -232,12 +196,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6cee0-e0d3-11eb-b344-299db28dffe4",
@@ -261,12 +219,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6cfc0-e0d3-11eb-8b34-538251701dd7",
@@ -290,12 +242,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             },
             {
                 "id": "7cf6d080-e0d3-11eb-8755-452677ff5b35",
@@ -319,12 +265,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             }
         ],
         "first_page_url": "/?page=1",
@@ -460,9 +400,6 @@ Authorization | `Bearer {token}`
 `title` | Required | string | The title of the employee, usually title given by the company
 `employee_type` | Required | string or integer | Employee types available `Administrative` or `1`, `Roofer` or `2` 
 `employee_status` | Optional | string or integer | Employee statuses available `Active` or `1`, `Inactive` or `2`, `Fired` or `3`. When this value is not specified, the default value will be `1`.
-`address` | Required | string | Address of the employee.
-`house_number` | Required | integer | The house number of employee address.
-`house_number_suffix` | Optional | string | The suffix of employee address number.
 
 
 **Request Body Example:**
@@ -472,9 +409,6 @@ Authorization | `Bearer {token}`
     "title": "Roof Engineer",
 	"employee_type": "Roofer",
 	"employee_status": 1,
-    "address": "Another street",
-    "house_number": 11,
-    "house_number_suffix": "A",
 }
 ```
 
@@ -663,12 +597,6 @@ Attribute Name  | Type  | Description
                     "email_verified_at": null,
                     "deleted_at": null
                 },
-                "address": "Address Test",
-                "house_number": "11",
-                "house_number_suffix": "A",
-                "zipcode": "117177",
-                "city": "Any City",
-                "province": "Any Province"
             }
         ],
         "first_page_url": "/?page=1",
@@ -750,13 +678,7 @@ Attribute Name  | Type  | Description
         "photo_url": "https://dummyimage.com/300/09f/fff.png",
         "title": "Employee Title",
         "employee_type": "administrative",
-        "employment_status": 1,
-        "address": "Address Test",
-        "house_number": "11",
-        "house_number_suffix": "A",
-        "zipcode": "117177",
-        "city": "Any City",
-        "province": "Any Province",
+        "employment_s,
         "created_at": "2021-06-09T13:01:20.000000Z",
         "updated_at": "2021-06-09T16:49:48.000000Z",
         "deleted_at": null

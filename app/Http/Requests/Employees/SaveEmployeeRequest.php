@@ -77,13 +77,6 @@ class SaveEmployeeRequest extends FormRequest
             'title' => ['required', 'string'],
             'employee_type' => ['required', 'integer', 'min:1', 'max:2'],
             'employment_status' => ['integer', 'min:1', 'max:3'],
-
-            'address' => ['required', 'string'],
-            'house_number' => ['required', 'integer'],
-            'house_number_suffix' => ['string'],
-            'zipcode' => ['required', 'integer'],
-            'city' => ['required', 'string'],
-            'province' => ['required', 'string'],
         ]);
 
         return $this->returnRules();

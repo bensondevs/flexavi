@@ -36,13 +36,6 @@ class CreateEmployeesTable extends Migration
             $table->char('title');
             $table->tinyInteger('employee_type')->default(EmployeeType::Administrative);
             $table->tinyInteger('employment_status')->default(EmploymentStatus::Active);
-
-            $table->text('address');
-            $table->char('house_number');
-            $table->char('house_number_suffix')->nullable();
-            $table->char('zipcode');
-            $table->char('city');
-            $table->char('province');
             
             $table->timestamps();
             $table->softDeletes();

@@ -29,13 +29,6 @@ class Employee extends Model
         'title',
         'employee_type',
         'employment_status',
-
-        'address',
-        'house_number',
-        'house_number_suffix',
-        'zipcode',
-        'city',
-        'province',
     ];
 
     protected static function boot()

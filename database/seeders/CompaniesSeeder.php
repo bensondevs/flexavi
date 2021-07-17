@@ -60,12 +60,6 @@ class CompaniesSeeder extends Seeder
                 'bic_code' => '9213',
                 'bank_account' => '83271221',
                 'bank_holder_name' => $user->fullname,
-                'address' => 'Address Test',
-                'house_number' => '11',
-                'house_number_suffix' => 'A',
-                'zipcode' => '117177',
-                'city' => 'Any City',
-                'province' => 'Any Province',
                 'created_at' => carbon()->now(),
                 'updated_at' => carbon()->now(),
             ]);

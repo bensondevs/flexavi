@@ -115,17 +115,22 @@ class RegisterRequest extends FormRequest
     public function getOwnerData()
     {
         return $this->only([
+            'bank_name',
+            'bic_code',
+            'bank_account',
+            'bank_holder_name',
+        ]);
+    }
+
+    public function getAddressData()
+    {
+        return $this->only([
             'address',
             'house_number',
             'house_number_suffix',
             'zipcode',
             'city',
             'province',
-
-            'bank_name',
-            'bic_code',
-            'bank_account',
-            'bank_holder_name',
         ]);
     }
 

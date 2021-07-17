@@ -25,10 +25,6 @@ class PaymentTerm extends Model
         'due_date',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected static function boot()
     {
     	parent::boot();

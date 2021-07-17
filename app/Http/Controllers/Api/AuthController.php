@@ -16,19 +16,23 @@ use App\Models\User;
 
 use App\Repositories\AuthRepository;
 use App\Repositories\CompanyOwnerRepository as OwnerRepository;
+use App\Repositories\AddressRepository;
 
 class AuthController extends Controller
 {
     private $auth;
     private $owner;
+    private $address;
 
     public function __construct(
     	AuthRepository $auth,
-        OwnerRepository $owner
+        OwnerRepository $owner,
+        AddressRepository $address
     )
     {
     	$this->auth = $auth;
         $this->owner = $owner;
+        $this->address = $address;
     }
 
     public function checkEmailUsed(Request $request)
@@ -106,12 +110,18 @@ class AuthController extends Controller
             ];
         }
 
+        // Register User
     	$user = new User();
         if ($profilePicture = $request->profile_picture) {
             $user->profile_picture = $profilePicture;
         }
         $user = $this->auth->setModel($user);
     	$user = $this->auth->register($input, $attachments);
+
+        // Save address
+        $addressData = $request->getAddressData();
+        $addressData['user_id'] = $user->id;
+        $this->address->save($addressData);
 
         // Send Email Verification
         $this->auth->sendEmailVerification();

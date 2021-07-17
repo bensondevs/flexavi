@@ -57,13 +57,6 @@ class SaveOwnerRequest extends FormRequest
             'bic_code' => ['required', 'string'],
             'bank_account' => ['required', 'string'],
             'bank_holder_name' => ['required', 'string'],
-
-            'address' => ['required', 'string'],
-            'house_number' => ['required', 'integer'],
-            'house_number_suffix' => ['string'],
-            'zipcode' => ['required', 'integer'],
-            'city' => ['required', 'string'],
-            'province' => ['required', 'string'],
         ]);
 
         return $this->returnRules();

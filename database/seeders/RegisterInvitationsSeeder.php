@@ -36,13 +36,6 @@ class RegisterInvitationsSeeder extends Seeder
                     'bic_code' => '001',
                     'bank_account' => '1010101010',
                     'bank_holder_name' => 'Invited User',
-
-                    'address' => 'Address Test',
-                    'house_number' => '11',
-                    'house_number_suffix' => 'A',
-                    'zipcode' => '117177',
-                    'city' => 'Any City',
-                    'province' => 'Any Province',
                 ]);
 
                 $attachments = [
@@ -57,13 +50,6 @@ class RegisterInvitationsSeeder extends Seeder
                     'title' => 'Invited Employee',
                     'employee_type' => rand(EmployeeType::Administrative, EmployeeType::Roofer),
                     'employment_status' => rand(EmploymentStatus::Active, EmploymentStatus::Fired),
-
-                    'address' => 'Address Test',
-                    'house_number' => '11',
-                    'house_number_suffix' => 'A',
-                    'zipcode' => '117177',
-                    'city' => 'Any City',
-                    'province' => 'Any Province',
                 ]);
 
                 $attachments = [
