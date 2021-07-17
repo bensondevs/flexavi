@@ -13,7 +13,7 @@ use App\Enums\Work\WorkStatus;
 use App\Enums\Invoice\InvoiceStatus;
 use App\Enums\Invoice\InvoicePaymentMethod;
 
-use App\Enums\Invoice\PaymentTermStatus;
+use App\Enums\PaymentTerm\PaymentTermStatus;
 
 return [
     // User

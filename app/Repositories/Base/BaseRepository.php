@@ -11,11 +11,11 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-use App\Repositories\Base\RepositoryPayload;
+use App\Traits\RepositoryResponse;
 
 class BaseRepository 
 {
-	use RepositoryPayload;
+	use RepositoryResponse;
 
 	private $defaultModel = null;
 	private $model = null;

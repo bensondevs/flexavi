@@ -10,14 +10,16 @@ use App\Models\Invoice;
 
 class PopulatePaymentTermsRequest extends FormRequest
 {
-    use PopulatePaymentTermsRequest;
+    use PopulateRequestOptions;
 
     private $invoice;
 
     public function getInvoice()
     {
-        return $this->invoice = ($this->invoice) ?:
-            Invoice::findOrFail($this->input('id'));
+        if ($this->invoice) return $this->invoice;
+
+        $id = $this->input('id') ?: $this->input('invoice_id');
+        return $this->invoice = Invoice::findOrFail($id);
     }
 
     /**
@@ -30,10 +32,7 @@ class PopulatePaymentTermsRequest extends FormRequest
         $user = $this->user();
         $invoice = $this->getInvoice();
 
-        return $user->hasCompanyPermission(
-            $invoice->company_id, 
-            'view payment terms'
-        );
+        return $user->hasCompanyPermission($invoice->company_id, 'view payment terms');
     }
 
     /**

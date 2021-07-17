@@ -7,14 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Enums\RegisterInvitation\RegisterInvitationStatus;
+
 class RegisterInvitation extends Model
 {
     protected $table = 'register_invitations';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
-
-    const ATTACHMENTS = [];
 
     protected $fillable = [
         'invited_email',
@@ -55,11 +55,11 @@ class RegisterInvitation extends Model
     public function checkExpired()
     {
         $status = $this->attributes['status'];
-        if ($status == 'expired') return true;
+        if ($status == RegisterInvitationStatus::Expired) return true;
 
         $expiryTime = $this->attributes['expiry_time'];
         if (carbon()->now() >= carbon()->parse($expiryTime)) {
-            $this->attributes['status'] = 'expired';
+            $this->attributes['status'] = RegisterInvitationStatus::Expired;
             return $this->save();
         }
 

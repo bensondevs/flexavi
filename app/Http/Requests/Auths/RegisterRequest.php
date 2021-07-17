@@ -119,6 +119,10 @@ class RegisterRequest extends FormRequest
     {
         $invitation = $this->getInvitation();
 
+        if ($invitation->status != 'expired') {
+            abort(422, 'The invitation has been used');
+        }
+
         return $invitation ? $invitation->attachments : [];
     }
 }

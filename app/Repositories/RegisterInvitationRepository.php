@@ -7,6 +7,8 @@ use \Illuminate\Database\QueryException;
 
 use App\Models\RegisterInvitation;
 
+use App\Enums\RegisterInvitation\RegiterInvitationStatus;
+
 use App\Repositories\Base\BaseRepository;
 
 class RegisterInvitationRepository extends BaseRepository
@@ -37,8 +39,28 @@ class RegisterInvitationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function createInvitationUrl()
+	public function findByCode($code)
 	{
-		
+		$invitation = $this->getModel();
+		$invitation = $invitation->findByCode($code);
+		$this->setModel($invitation);
+	}
+
+	public function markAsUsed()
+	{
+		try {
+			$invitation = $this->getModel();
+			$invitation->status = RegisterInvitationStatus::Used;
+			$invitation->save();
+
+			$this->setModel($invitation);
+
+			$this->setSuccess('Successfully mark registration invitation as used');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to mark registration invitation as used');
+		}
+
+		return $this->getModel();
 	}
 }

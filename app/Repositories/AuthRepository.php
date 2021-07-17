@@ -24,12 +24,14 @@ class AuthRepository extends BaseRepository
 	private $customer;
 	private $employee;
 	private $owner;
+	private $invitation;
 
 	public function __construct()
 	{
 		$this->setInitModel(new User);
 		$this->customer = new Customer();
-		$this->employee = new EmployeeRepository;
+		$this->employee = new EmployeeRepository();
+		$this->invitation = new RegisterInvitationRepository();
 	}
 
 	public function register(array $registerData, array $attachments = [])
@@ -48,7 +50,11 @@ class AuthRepository extends BaseRepository
 				$roleModel->{$attachments['related_column']} = $user->id;
 
 				if (! $roleModel->save()) {
-					abort(500, 'Failed to assign role, role creation failed');
+					// Unsave the user
+					$user->forceDelete();
+
+					// Abort the process
+					abort(500, 'Failed to assign role, role data insertion failed.');
 				}
 
 				if (isset($attachments['registration_code'])) {
@@ -58,9 +64,8 @@ class AuthRepository extends BaseRepository
 					$user->save();
 
 					// Invalidate the invitation
-					$invitation = RegisterInvitation::findByCode($code);
-					$invitation->status = 'expired';
-					$invitation->save();
+					$this->invitation->findByCode($code);
+					$this->invitation->markAsUsed();
 				}
 
 				$user->assignRole($attachments['role']);

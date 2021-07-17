@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repositories\Base;
+namespace App\Traits;
 
 use Illuminate\Http\Response;
 
-trait RepositoryPayload 
+trait RepositoryResponse
 {
 	public $status;
 	public $httpStatus = 200;
