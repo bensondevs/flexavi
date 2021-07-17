@@ -7,7 +7,7 @@ use \Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\
+use App\Models\Address;
 
 class AddressRepository extends BaseRepository
 {

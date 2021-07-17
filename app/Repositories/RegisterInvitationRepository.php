@@ -7,7 +7,7 @@ use \Illuminate\Database\QueryException;
 
 use App\Models\RegisterInvitation;
 
-use App\Enums\RegisterInvitation\RegiterInvitationStatus;
+use App\Enums\RegisterInvitation\RegisterInvitationStatus;
 
 use App\Repositories\Base\BaseRepository;
 

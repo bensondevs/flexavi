@@ -16,6 +16,8 @@ use App\Rules\Base64Image;
 use App\Models\Owner;
 use App\Models\RegisterInvitation;
 
+use App\Enums\RegisterInvitation\RegisterInvitationStatus;
+
 class RegisterRequest extends FormRequest
 {
     use InputRequest;
@@ -138,7 +140,7 @@ class RegisterRequest extends FormRequest
     {
         $invitation = $this->getInvitation();
 
-        if ($invitation->status != 'expired') {
+        if ($invitation->status != RegisterInvitationStatus::Active) {
             abort(422, 'The invitation has been used');
         }
 
