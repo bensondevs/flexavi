@@ -59,7 +59,14 @@ class RegisterRequest extends FormRequest
             'id_card_type' => ['required', 'string'],
             'id_card_number' => ['required', 'string'],
             'phone' => ['required', 'string'],
+
             'address' => ['required', 'string'],
+            'house_number' => ['required', 'integer'],
+            'house_number_suffix' => ['string'],
+            'zipcode' => ['required', 'integer'],
+            'city' => ['required', 'string'],
+            'province' => ['required', 'string'],
+
             'profile_picture' => ['required', 'image', 'mimes:jpg,jpeg,png,svg,bmp'],
             'email' => ['required', 'string', 'email', 'unique:users,email'],
             'password' => [
@@ -108,6 +115,13 @@ class RegisterRequest extends FormRequest
     public function getOwnerData()
     {
         return $this->only([
+            'address',
+            'house_number',
+            'house_number_suffix',
+            'zipcode',
+            'city',
+            'province',
+
             'bank_name',
             'bic_code',
             'bank_account',
