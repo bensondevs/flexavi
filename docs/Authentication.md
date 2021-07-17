@@ -90,6 +90,11 @@ Payload name | Required | Validation | Description
 `id_card_number` | Required | string | The value of the ID
 `phone` | Required | string | Valid phone number with country code without `+`
 `address` | Required | string | Valid address of the user
+`house_number` | Required | string | House number of the user
+`house_number_suffix` | Optional | string | House number suffix of the user
+`zipcode` | Required | numeric | Zipcode of the user
+`city` | Required | string | City of the user
+`province` | Required | string | Province of the user
 `profile_picture` | Required | file type: jpg, jpeg, svg, png | Profile picture of the user
 `email` | Required | string | Unique email of user
 `password` | Required | string, min: 8 characters, has uppercase, has lowercase, has numerical, has special characters | The password of the user, needs to be having minimal 8 characters, with uppercase, lowercase, numberical value and special characters
@@ -112,7 +117,12 @@ Payload name | Required | Validation | Description
     "id_card_type": "id",
     "id_card_number": "331511328312",
     "phone": "61238172212",
-    "address": "Another Address Example 123",
+    "address": "Another Address Example",
+    "house_number": "11",
+    "house_number_suffix": "A",
+    "zipcode": "12345",
+    "city": "Just A City",
+    "province": "Another Province",
     "profile_picture": "<FILE>",
     "email": "register1@flexavi.com",
     "password": "#Password123",
