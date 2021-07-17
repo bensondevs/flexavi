@@ -94,7 +94,7 @@ class AuthController extends Controller
     	$input = $request->userData();
         if (! $attachments = $request->getAttachments()) {
             $owner = $this->owner->save($request->getOwnerData());
-            if (! $owner) {
+            if ($this->owner->status == 'error') {
                 abort(500, $this->owner->queryError);
             }
 

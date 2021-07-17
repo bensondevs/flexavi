@@ -22,7 +22,7 @@ class CreateOwnersTable extends Migration
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
