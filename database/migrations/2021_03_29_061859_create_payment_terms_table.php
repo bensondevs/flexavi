@@ -28,12 +28,10 @@ class CreatePaymentTermsTable extends Migration
                 ->on('invoices')
                 ->onDelete('SET NULL');
 
-            $table->char('term_name');
+            $table->char('term_name')->nullable();
             $table->double('amount', 10, 2);
+            $table->tinyInteger('status')->default(1);
             $table->date('due_date');
-
-            $table->tinyInteger('reminder_count')
-                ->default(0);
 
             $table->timestamps();
             $table->softDeletes();

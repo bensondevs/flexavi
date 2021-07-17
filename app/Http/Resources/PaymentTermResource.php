@@ -18,6 +18,13 @@ class PaymentTermResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'term_name' => $this->term_name,
+            'status' => $this->status,
+            'status_description' => $this->status_description,
+            'amount' => number_format($this->amount, 2),
+            'due_date' => $this->due_date,
+            'human_due_date' => $this->human_due_date,
+        ];
     }
 }

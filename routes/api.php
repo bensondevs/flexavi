@@ -227,7 +227,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::group(['prefix' => 'payment_terms'], function () {
 					Route::get('/', [PaymentTermController::class, 'paymentTerms']);
 					Route::post('store', [PaymentTermController::class, 'store']);
-					Route::match(['PUT', 'PATCH'], 'update', [PaymentTermController::class, 'update']);
 					Route::delete('delete', [PaymentTermController::class, 'delete']);
 				});
 			});
@@ -318,6 +317,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::get('quotation_works', [WorkController::class, 'quotationWorks']);
 				Route::get('contract_works', [WorkController::class, 'contractWorks']);
 				Route::get('appointment_works', [WorkController::class, 'appointmentWorks']);
+				Route::get('finished_works', [WorkController::class, 'finishedWorks']);
 				Route::get('unfinished_works', [WorkController::class, 'unfinishedWorks']);
 
 				Route::post('store', [WorkController::class, 'store']);

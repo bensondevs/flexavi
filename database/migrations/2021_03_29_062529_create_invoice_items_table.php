@@ -22,10 +22,17 @@ class CreateInvoiceItemsTable extends Migration
                 ->on('invoices')
                 ->onDelete('CASCADE');
 
+            $table->uuid('work_id')->nullable();
+            $table->foreign('work_id')
+                ->references('id')
+                ->on('works')
+                ->onDelete('CASCADE');
+
             $table->char('item_name');
-            $table->text('item_description');
-            $table->integer('item_quantity');
-            $table->double('item_price', 10, 2);
+            $table->text('description');
+            $table->integer('quantity');
+            $table->string('quantity_unit');
+            $table->double('amount', 10, 2);
 
             $table->timestamps();
             $table->softDeletes();

@@ -38,18 +38,7 @@ class PaymentTermController extends Controller
     	$input = $request->ruleWithCompany();
     	$term = $this->term->save($input);
 
-    	return apiResponse($this->term, ['term' => $term]);
-    }
-
-    public function update(SaveRequest $request)
-    {
-    	$term = $request->getPaymentTerm();
-    	$term = $this->term->setModel($term);
-
-    	$input = $request->ruleWithCompany();
-    	$term = $this->term->save($input);
-
-    	return apiResponse($this->term, ['term' => $term]);
+    	return apiResponse($this->term);
     }
 
     public function delete(FindRequest $request)

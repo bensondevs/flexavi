@@ -136,9 +136,9 @@ class AppointmentController extends Controller
     public function generateInvoice(GenerateInvoiceRequest $request)
     {
         $appointment = $request->getAppointment();
-        $invoice = $this->invoice->generate($appointment);
+        $invoice = $this->invoice->generateFromAppointment($appointment);
 
-        return apiResponse($this->invoice, ['invoice' => $invoice]);
+        return apiResponse($this->invoice);
     }
 
     public function update(SaveRequest $request)

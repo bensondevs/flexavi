@@ -177,47 +177,32 @@ class Quotation extends Model
 
     public function appointment()
     {
-        return $this->belongsTo(
-            'App\Models\Appointment', 
-            'appointment_id',
-            'id',
-        );
+        return $this->belongsTo(Appointment::class);
     }
 
     public function customer()
     {
-        return $this->hasOne(
-            'App\Models\Customer', 
-            'id',
-            'customer_id'
-        );
+        return $this->belongsTo(Customer::class);
     }
 
     public function attachments()
     {
-        return $this->hasMany(
-            'App\Models\QuotationAttachment',
-            'quotation_id',
-            'id'
-        );
+        return $this->hasMany(QuotationAttachment::class);
     }
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company', 
-            'company_id', 
-            'id'
-        );
+        return $this->belongsTo(Company::class);
     }
 
     public function revisions()
     {
-        return $this->hasMany(
-            'App\Models\QuotationRevision',
-            'quotation_id',
-            'id'
-        );
+        return $this->hasMany(QuotationRevision::class);
+    }
+
+    public function invoice()
+    {
+        return $this->morphOne(Invoice::class, 'referenceable');
     }
 
     public static function getTypeValues()

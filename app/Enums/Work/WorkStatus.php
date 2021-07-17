@@ -8,7 +8,7 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 final class WorkStatus extends Enum implements LocalizedEnum
 {
     const Created = 1;
-    const InProccess = 2;
+    const InProcess = 2;
     const Finished = 3;
     const Unfinished = 4;
 }

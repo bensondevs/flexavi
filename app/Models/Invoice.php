@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Enums\Invoice\InvoiceStatus;
+use App\Enums\Invoice\InvoicePaymentMethod;
+
 class Invoice extends Model
 {
     use SoftDeletes;
@@ -16,66 +19,15 @@ class Invoice extends Model
     public $timestamps = true;
     public $incrementing = false;
 
-    const STATUSES = [
-        [
-            'id' => 1,
-            'label' => 'Created / Draft',
-        ],
-        [
-            'id' => 2,
-            'label' => 'Send / Definitive',
-        ],
-        [
-            'id' => 3,
-            'label' => 'Paid',
-        ],
-        [
-            'id' => 4,
-            'label' => 'Payment Overdue',
-        ],
-        [
-            'id' => 5,
-            'label' => 'Overdue, send first reminder?',
-        ],
-        [
-            'id' => 6,
-            'label' => 'First Reminder Sent',
-        ],
-        [
-            'id' => 7,
-            'label' => 'First reminder sent, send the second reminder?',
-        ],
-        [
-            'id' => 8,
-            'label' => 'Second reminder sent',
-        ],
-        [
-            'id' => 9,
-            'label' => 'Second reminder sent, send the third reminder?',
-        ],
-        [
-            'id' => 10,
-            'label' => 'Third reminder sent',
-        ],
-        [
-            'id' => 11,
-            'label' => 'Overdue, debt collector?',
-        ],
-        [
-            'id' => 12,
-            'label' => 'Sent to debt collector',
-        ],
-        [
-            'id' => 13,
-            'label' => 'Paid via Debt collector',
-        ]
-    ];
-
     protected $fillable = [
         'company_id',
-        'work_contract_id',
+        'customer_id',
+
+        'referenceable_id',
+        'referenceable_type',
+
         'total',
-        'status_code',
+        'status',
         'payment_method',
     ];
 
@@ -88,24 +40,27 @@ class Invoice extends Model
     	});
     }
 
-    public function getStatusAttribute()
+    public function getStatusDescriptionAttribute()
     {
-        $statusId = $this->attributes['status_code'];
-        $statuses = collect(self::STATUSES);
-        $status = $statuses->where('id', $statusId)->first();
-
-        return $status;
+        $status = $this->attributes['status'];
+        return InvoiceStatus::getDescription($status);
     }
 
-    public function getStatusLabelAttribute()
+    public function getPaymentMethodDescriptionAttribute()
     {
-        $status = $this->getStatusArrayAttribute();
-        return $status['label'];
+        $method = $this->attributes['payment_method'];
+        return InvoicePaymentMethod::getDescription($method);
+    }
+
+    public function getFormattedTotalAttribute()
+    {
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $this->attributes['total']);
     }
 
     public function items()
     {
-        return $this->hasMany(InvoiceItems::class);
+        return $this->hasMany(InvoiceItem::class);
     }
 
     public function paymentTerms()
@@ -116,5 +71,28 @@ class Invoice extends Model
     public function company()
     {
         return $this->belongsTo(Company::class);
+    }
+
+    public function referenceable()
+    {
+        return $this->morphTo();
+    }
+
+    public function generateItemsFromWorks($works)
+    {
+        $rawItems = [];
+        foreach ($works as $work) {
+            $rawItems[] = new InvoiceItem([
+                'invoice_id' => $this->attributes['id'],
+                'work_id' => $work->id,
+                'item_name' => $work->description,
+                'description' => 'Referenced from work',
+                'quantity' => $work->quantity,
+                'quantity_unit' => $work->quantity_unit,
+                'amount' => $work->unit_price,
+            ]);
+        }
+
+        return $this->items()->saveMany($rawItems);
     }
 }

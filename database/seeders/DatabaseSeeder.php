@@ -23,10 +23,13 @@ class DatabaseSeeder extends Seeder
             CarsSeeder::class,
             AppointmentsSeeder::class,
             AppointmentWorkersSeeder::class,
+            AppointmentWorksSeeder::class,
             SubAppointmentsSeeder::class,
             QuotationsSeeder::class,
             QuotationWorksSeeder::class,
             QuotationAttachmentsSeeder::class,
+            InvoicesSeeder::class,
+            PaymentTermsSeeder::class,
             RegisterInvitationsSeeder::class,
         ]);
     }

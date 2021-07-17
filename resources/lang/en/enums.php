@@ -6,10 +6,14 @@ use App\Enums\Appointment\AppointmentStatus;
 
 use App\Enums\Quotation\QuotationStatus;
 use App\Enums\Quotation\QuotationDamageCause;
+use App\Enums\Quotation\QuotationPaymentMethod;
 
 use App\Enums\Work\WorkStatus;
 
 use App\Enums\Invoice\InvoiceStatus;
+use App\Enums\Invoice\InvoicePaymentMethod;
+
+use App\Enums\Invoice\PaymentTermStatus;
 
 return [
     // User
@@ -73,5 +77,17 @@ return [
         InvoiceStatus::OverdueDebtCollector => 'Overdue, debt collector?',
         InvoiceStatus::SentDebtCollector => 'Sent to debt collector',
         InvoiceStatus::PaidViaDebtCollector => 'Paid via Debt collector',
+    ],
+
+    InvoicePaymentMethod::class => [
+        InvoicePaymentMethod::Cash => 'Cash',
+        InvoicePaymentMethod::BankTransfer => 'Bank Transfer',
+    ],
+
+    // Payment Term
+    PaymentTermStatus::class => [
+        PaymentTermStatus::Unpaid => 'Unpaid',
+        PaymentTermStatus::Paid => 'Paid',
+        PaymentTermStatus::ForwardedToDebtCollector => 'Forwarded to Debt Collector',
     ],
 ];

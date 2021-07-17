@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Invoices\PopulateInvoicesRequest as PopulateRequest;
+use App\Http\Requests\Invoices\PopulateCompanyInvoicesRequest as PopulateRequest;
 use App\Http\Requests\Invoices\SaveInvoiceRequest as SaveRequest;
 use App\Http\Requests\Invoices\FindInvoiceRequest as FindRequest;
 
 use App\Http\Resources\InvoiceResource;
+
+use App\Repositories\InvoiceRepository;
 
 class InvoiceController extends Controller
 {
@@ -24,25 +26,66 @@ class InvoiceController extends Controller
     {
         $invoices = $this->invoice->all($request->options());
         $invoices = $this->invoice->paginate();
-        $invoices->data = InvoiceResource::collection($invoices);
+        $invoices = InvoiceResource::apiCollection($invoices);
 
         return response()->json(['invoices' => $invoices]);
     }
 
-    public function store(SaveRequest $request)
+    public function items(FindRequest $request)
     {
-        $input = $request->ruleWithCompany();
-        $invoice = $this->invoice->save($input);
-
-        return apiResponse($this->invoice, $invoice);
+        $invoice = $request->getInvoice();
+        return response()->json(['items' => $invoice->items]);
     }
 
-    public function update(SaveRequest $request)
+    public function send(FindRequest $request)
     {
-        $this->invoice->setModel($request->getInvoice());
-        $invoice = $this->invoice->save($request->ruleWithCompany());
+        $invoice = $request->getInvoice();
 
-        return apiResponse($this->invoice, $invoice);
+        $this->invoice->setModel($invoice);
+        $this->invoice->send();
+
+        return apiResponse($this->invoice);
+    }
+
+    public function sendFirstReminder(FindRequest $request)
+    {
+        $invoice = $request->getInvoice();
+
+        $this->invoice->setModel($invoice);
+        $this->invoice->sendFirstReminder();
+
+        return apiResponse($this->invoice);
+    }
+
+    public function sendSecondReminder(FindRequest $request)
+    {
+        $invoice = $request->getInvoice();
+
+        $this->invoice->setModel($invoice);
+        $this->invoice->sendSecondReminder();
+
+        return apiResponse($this->invoice);
+    }
+
+    public function sendThirdReminder(FindRequest $request)
+    {
+        $invoice = $request->getInvoice();
+
+        $this->invoice->setModel($invoice);
+        $this->invoice->sendThirdReminder();
+
+        return apiResponse($this->invoice);
+    }
+
+    public function markAsPaid(FindRequest $request)
+    {
+        $invoice = $request->getInvoice();
+        $this->invoice->setModel($invoice);
+
+        $isViaDebtCollector = $request->input('is_via_debt_collector');
+        $this->invoice->markAsPaid($isViaDebtCollector);
+
+        return apiResponse($this->invoice);
     }
 
     public function delete(Request $request)

@@ -178,6 +178,14 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    public function generateInvoice(GenerateInvoiceRequest $request)
+    {
+        $quotation = $this->getQuotation();
+        $invoice = $this->invoice->generateFromQuotation($quotation);
+
+        return apiResponse($this->invoice);
+    }
+
     public function update(SaveRequest $request)
     {
         $quotation = $request->getQuotation();

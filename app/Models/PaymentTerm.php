@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 
+use App\Enums\PaymentTerm\PaymentTermStatus;
+
 class PaymentTerm extends Model
 {
     protected $table = 'payment_terms';
@@ -18,9 +20,9 @@ class PaymentTerm extends Model
         'company_id',
         'invoice_id',
         'term_name',
+        'status',
         'amount',
         'due_date',
-        'reminder_count',
     ];
 
     protected $hidden = [
@@ -36,21 +38,31 @@ class PaymentTerm extends Model
     	});
     }
 
+    public function getStatusDescriptionAttribute()
+    {
+        $status = $this->attributes['status'];
+        return PaymentTermStatus::getDescription($status);
+    }
+
+    public function getFormattedAmountAttribute()
+    {
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $this->attributes['amount']);
+    }
+
+    public function getHumanDueDateAttribute()
+    {
+        $dueDate = $this->attributes['due_date'];
+        return carbon($dueDate)->format('M d, Y');
+    }
+
     public function invoice()
     {
-        return $this->belongsTo(
-            'App\Models\Invoice', 
-            'id', 
-            'invoice_id'
-        );
+        return $this->belongsTo(Invoice::class);
     }
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company', 
-            'company_id', 
-            'id'
-        );
+        return $this->belongsTo(Company::class);
     }
 }

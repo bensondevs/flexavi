@@ -5,48 +5,272 @@ namespace App\Repositories;
 use \Illuminate\Support\Facades\DB;
 use \Illuminate\Database\QueryException;
 
+use App\Jobs\SendMail;
+
+use App\Mail\Invoice\SendInvoice;
+
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
+use App\Models\Quotation;
 use App\Models\Appointment;
+use App\Models\WorkContract;
 
 use App\Repositories\Base\BaseRepository;
 
 class InvoiceRepository extends BaseRepository
 {
-	private $item;
-
 	public function __construct()
 	{
 		$this->setInitModel(new Invoice);
-		$this->item = new InvoiceItem;
 	}
 
-	public function generate(Appointment $appointment)
+	public function generateFromAppointment(Appointment $appointment, array $invoiceData = [])
 	{
-		//
-	}
+		$works = $appointment->works;
+		if (empty($works)) {
+			$this->setUnprocessedInput('Failed to generate invoice from appointment. Appointment has no work attached.');
+			return false;
+		}
 
-	public function save(array $invoiceData)
-	{
 		try {
 			$invoice = $this->getModel();
 			$invoice->fill($invoiceData);
+			$invoice->referenceable_type = Appointment::class;
+			$invoice->referenceable_id = $appointment->id;
+			$invoice->company_id = $appointment->company_id;
+			$invoice->total = $works->sum('total');
+			$invoice->save();
+
+			// Generate items from works
+			$invoice->generateItemsFromWorks($works);
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully generate invoice from appointment');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to generate invoice from appointment.', $error);
+			return false;
+		}
+
+		return $invoice;
+	}
+
+	public function generateFromQuotation(Quotation $quotation, array $invoiceData = [])
+	{
+		$works = $quotation->works;
+		if (empty($works)) {
+			$this->setUnprocessedInput('Failed to generate invoice from quotation. Quotation has no work attached.');
+			return false;
+		}
+
+		try {
+			$invoice = $this->getModel();
+			$invoice->fill($invoiceData);
+			$invoice->referenceable_type = Quotation::class;
+			$invoice->referenceable_id = $quotation->id;
+			$invoice->company_id = $quotation->company_id;
+			$invoice->total = $works->sum('total');
+			$invoice->save();
+
+			// Generate items from works
+			$invoice->generateItemsFromWorks($works);
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully generate invoice from quotation.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to generate invoice from quotation.', $error);
+			return false;
+		}
+
+		return $invoice;
+	}
+
+	public function generateFromWorkContract(WorkContract $contract, array $invoiceData = [])
+	{
+		$works = $contract->works;
+		if (empty($works)) {
+			$this->setUnprocessedInput('Failed to generate invoice from work contract. Work contract has no work attached.');
+			return false;
+		}
+
+		try {
+			$invoice = $this->getModel();
+			$invoice->fill($invoiceData);
+			$invoice->referenceable_type = WorkContract::class;
+			$invoice->referenceable_id = $contract->id;
+			$invoice->company_id = $contract->company_id;
+			$invoice->total = $works->sum('total');
+			$invoice->save();
+
+			// Generate items from works
+			$invoice->generateItemsFromWorks($works);
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully generate invoice from work contract.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to generate invoice from work contract.', $error);
+			return false;
+		}
+
+		return $invoice;
+	}
+
+	public function send()
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->load(['items', 'customer']);
+
+			// Send to mail
+			$mail = new SendInvoice($invoice);
+			$job = new SendEmail($mail, $invoice->customer->email);
+			dispatch($job);
+
+			$invoice->status = InvoiceStatus::Sent;
 			$invoice->save();
 
 			$this->setModel($invoice);
 
-			$this->setSuccess('Successfully save invoice data.');
-		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save invoice data.', 
-				$qe->getMessage()
-			);
+			$this->setSuccess('Successfully send invoice to customer.');
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+			$this->setError('Failed to send invoice to customer', $error);
 		}
 
 		return $this->getModel();
 	}
 
-	public function delete(bool $force)
+	public function overdueInvoices()
+	{
+		$today = carbon()->now()->startOfDay();
+
+		return Invoice::where('status', '!=', InvoiceStatus::Paid)
+            ->where('status', '!=', InvoiceStatus::SentDebtCollector)
+            ->where('status', '!=', InvoiceStatus::PaidViaDebtCollector)
+            ->where('overdue', '>=', $today)
+            ->orWhere('first_reminder_overdue', '>=', $today)
+            ->orWhere('second_reminder_overdue', '>=', $today)
+            ->orWhere('third_reminder_overdue', '>=', $today)
+            ->get();
+	}
+
+	public function sendFirstReminder()
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->load(['items', 'customer']);
+
+			// Send to mail
+			$mail = new InvoiceFirstReminder($invoice);
+			$job = new SendEmail($mail, $invoice->customer->email);
+			dispatch($job);
+
+			$invoice->status = InvoiceStatus::FirstReminderSent;
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully send first reminder to customer.');
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+			$this->setError('Failed to send first reminder to customer', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function sendSecondReminder()
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->load(['items', 'customer']);
+
+			// Send to mail
+			$mail = new InvoiceSecondReminder($invoice);
+			$job = new SendEmail($mail, $invoice->customer->email);
+			dispatch($job);
+
+			$invoice->status = InvoiceStatus::SecondReminderSent;
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully send second reminder to customer.');
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+			$this->setError('Failed to send second reminder to customer', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function sendThirdReminder()
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->load(['items', 'customer']);
+
+			// Send to mail
+			$mail = new InvoiceThirdReminder($invoice);
+			$job = new SendEmail($mail, $invoice->customer->email);
+			dispatch($job);
+
+			$invoice->status = InvoiceStatus::ThirdReminderSent;
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully send third reminder to customer.');
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+			$this->setError('Failed to send third reminder to customer', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function sendDebtCollector()
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->status = InvoiceStatus::SentDebtCollector;
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully sent debt collector.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to send debt collector', $error);
+		}
+	}
+
+	public function markAsPaid(bool $viaDebtCollector = false)
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->status = ($viaDebtCollector) ?
+				InvoiceStatus::PaidViaDebtCollector :
+				InvoiceStatus::Paid;
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully mark invoice as paid.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to mark invoice as paid', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function delete(bool $force = false)
 	{
 		try {
 			$invoice = $this->getModel();
@@ -65,69 +289,5 @@ class InvoiceRepository extends BaseRepository
 		}
 
 		return $this->returnResponse();
-	}
-
-	public function setItem(InvoiceItem $item)
-	{
-		$this->item = $item;
-	}
-
-	public function findItem($itemId)
-	{
-		return $this->item = $this->item->find($itemId);
-	}
-
-	public function addItem(array $itemData)
-	{
-		try {
-			$invoice = $this->getModel();
-			$invoice->items()->save($itemData);
-
-			$this->setModel($invoice);
-
-			$this->setSuccess('Successfully add item to invoice');
-		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to add item to invoice', 
-				$qe->getMessage()
-			);
-		}
-
-		return $this->getModel();
-	}
-
-	public function saveItem(array $itemData)
-	{
-		try {
-			$item = $this->item;
-			$item->fill($itemData);
-			$item->save();
-
-			$this->setItem($item);
-
-			$this->setSuccess('Successfully save item data.');
-		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save item data.',
-				$qe->getMessage()
-			);
-		}
-
-		return $this->item;
-	}
-
-	public function deleteItem(bool $force = false)
-	{
-		try {
-			$force ?
-				$this->item->forceDelete() :
-				$this->item->delete();
-
-			$this->setSuccess('Successfully delete invoice item.');
-		} catch (QueryException $qe) {
-			$this->setError('Failed to delete invoice item.');
-		}
-
-		return $this->item;
 	}
 }

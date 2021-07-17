@@ -22,15 +22,17 @@ class CreateInvoicesTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->uuid('work_contract_id')->nullable();
-            $table->foreign('work_contract_id')
+            $table->uuid('customer_id');
+            $table->foreign('customer_id')
                 ->references('id')
-                ->on('work_contracts')
-                ->onDelete('SET NULL');
+                ->on('customers')
+                ->onDelete('CASCADE');
+
+            $table->uuidMorphs('referenceable');
 
             $table->double('total', 10, 2);
 
-            $table->tinyInteger('status_code')->default(1);
+            $table->tinyInteger('status')->default(1);
             $table->char('payment_method');
 
             $table->timestamps();

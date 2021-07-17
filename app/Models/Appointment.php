@@ -107,42 +107,57 @@ class Appointment extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Models\Company', 'company_id', 'id');
+        return $this->belongsTo(Company::class);
     }
 
     public function customer()
     {
-        return $this->hasOne('App\Models\Customer', 'id', 'customer_id');
+        return $this->belongsTo(Customer::class);
     }
 
     public function subs()
     {
-        return $this->hasMany('App\Models\SubAppointment', 'appoinment_id', 'id');
+        return $this->hasMany(SubAppointment::class);
     }
 
     public function inspection()
     {
-        return $this->hasOne('App\Models\Inspection', 'appointment_id', 'id');
+        return $this->hasOne(Inspection::class);
     }
 
     public function quotation()
     {
-        return $this->hasOne('App\Models\Quotation', 'appointment_id', 'id');
+        return $this->hasOne(Quotation::class);
     }
 
-    public function executeWork()
+    public function works()
     {
-        return $this->hasOne('App\Models\ExecuteWork', 'appointment_id', 'id');
+        return $this->hasMany(Work::class);
+    }
+
+    public function executeWorks()
+    {
+        return $this->hasMany(ExecuteWork::class);
     }
 
     public function warranty()
     {
-        return $this->hasOne('App\Models\Warranty', 'appointment_id', 'id');
+        return $this->hasOne(Warranty::class);
     }
 
     public function paymentReminder()
     {
-        return $this->hasOne('App\Models\Warranty', 'appointment_id', 'id');
+        return $this->hasOne(PaymentReminder::class);
+    }
+
+    public function costs()
+    {
+        return $this->hasMany(AppointmentCost::class);
+    }
+
+    public function invoice()
+    {
+        return $this->morphOne(Invoice::class);
     }
 
     public static function typeOptions()

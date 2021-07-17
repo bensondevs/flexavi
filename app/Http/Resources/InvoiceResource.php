@@ -18,14 +18,26 @@ class InvoiceResource extends JsonResource
      */
     public function toArray($request)
     {
+        $referenceable = $this->referenceable;
+
+        if ($this->referenceable_type == 'App\Models\Quotation') {
+            $reference = new QuotationResource($referenceable);
+        } else if ($this->referenceable_type == 'App\Models\Appointment') {
+            $reference = new AppointmentResource($referenceable);
+        }
+
         return [
             'id' => $this->id,
-            'work_contract' => $this->workContract,
-            'total' => $this->total,
-            'payment_status' => $this->payment_status,
+            'total' => number_format($this->total, 2),
+            'formatted_total' => $this->formatted_total,
+            'status' => $this->status,
+            'status_description' => $this->status_description,
             'payment_method' => $this->payment_method,
-            'items' => $this->items,
-            'payment_terms' => $this->payment_terms,
+            'payment_method_description' => $this->payment_method_description,
+            // 'items' => $this->items,
+            // 'payment_terms' => PaymentTermResource::collection($this->paymentTerms),
+            // 'reference_type' => $this->referenceable_type,
+            // 'reference' => $reference,
         ];
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Works\DeleteWorkRequest as DeleteRequest;
 use App\Http\Requests\Works\AddAppointmentWorkRequest as AppointmentAddRequest;
+use App\Http\Requests\Works\PopulateFinishedWorksRequest as PopulateFinishedRequest;
 use App\Http\Requests\Works\PopulateUnfinishedWorksRequest as PopulateUnfinishedRequest;
 use App\Http\Requests\Works\PopulateCompanyWorksRequest as CompanyPopulateRequest;
 use App\Http\Requests\Works\PopulateContractWorksRequest as ContractPopulateRequest;
@@ -60,6 +61,17 @@ class WorkController extends Controller
     }
 
     public function appointmentWorks(AppointmentPopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $works = $this->work->all($options);
+        $works = $this->work->paginate();
+        $works = WorkResource::apiCollection($works);
+
+        return response()->json(['works' => $works]);
+    }
+
+    public function finishedWorks(PopulateFinishedRequest $request)
     {
         $options = $request->options();
 

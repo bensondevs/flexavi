@@ -15,7 +15,11 @@ class AppointmentCost extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'appointment_id',
 
+        'cost_name',
+        'cost',
+        'paid_cost',
     ];
 
     protected $hidden = [
@@ -26,8 +30,21 @@ class AppointmentCost extends Model
     {
     	parent::boot();
 
-    	self::creating(function ($appointmentCost) {
-            $appointmentCost->id = Uuid::generate()->string;
+    	self::creating(function ($cost) {
+            $cost->id = Uuid::generate()->string;
     	});
+    }
+
+    public function getUnpaidCostAttribute()
+    {
+        $cost = $this->attributes['cost'];
+        $paid = $this->attributes['paid_cost'];
+
+        return $cost - $paid;
+    }
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
     }
 }

@@ -21,9 +21,10 @@ class InvoiceItem extends Model
         'invoice_id',
 
         'item_name',
-        'item_description',
-        'item_quantity',
-        'item_price',
+        'description',
+        'quantity',
+        'quantity_unit',
+        'amount',
     ];
 
     protected $hidden = [
@@ -37,5 +38,12 @@ class InvoiceItem extends Model
     	self::creating(function ($invoiceItem) {
             $invoiceItem->id = Uuid::generate()->string;
     	});
+    }
+
+    public function getTotalAttribute()
+    {   
+        $quantity = $this->attributes['quantity'];
+        $amount = $this->attributes['amount'];
+        return $quantity * $amount;
     }
 }

@@ -5,9 +5,9 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 use App\Models\Work;
-use App\Models\Quotation;
+use App\Models\Appointment;
 
-class QuotationWorksSeeder extends Seeder
+class AppointmentWorksSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,13 +16,13 @@ class QuotationWorksSeeder extends Seeder
      */
     public function run()
     {
-        $quotations = Quotation::all();
+        $appointments = Appointment::whereDoesntHave('quotation')->get();
+
+        $units = ['m2', 'cm2', 'm', 'l', 'dm3'];
 
         $rawWorks = [];
-        foreach ($quotations as $key => $quotation) {
-            for ($index = 0; $index < rand(1, 7); $index++) {
-                $units = ['m2', 'cm2', 'm', 'l', 'dm3'];
-
+        foreach ($appointments as $appointment) {
+            for ($index = 0; $index < rand(1, 10); $index++) {
                 $unitPrice = rand(10, 200);
                 $quantity = rand(1, 1000);
                 $subTotal = $unitPrice * $quantity;
@@ -35,23 +35,25 @@ class QuotationWorksSeeder extends Seeder
                 }
                 $totalPrice = $subTotal + $taxAmount;
 
-                array_push($rawWorks, [
+                $rawWorks[] = [
                     'id' => generateUuid(),
-                    'company_id' => $quotation->company_id,
-                    'quotation_id' => $quotation->id,
-                    'appointment_id' => $quotation->appointment_id,
+                    'company_id' => $appointment->company_id,
+                    'appointment_id' => $appointment->id,
                     'quantity' => $quantity,
                     'quantity_unit' => $units[rand(0, (count($units) - 1))],
-                    'description' => 'This is seeder quotation work',
+                    'description' => 'This is seeder appointment work',
                     'unit_price' => $unitPrice,
                     'include_tax' => $includeTax,
                     'tax_percentage' => $taxPercentage,
                     'total_price' => $totalPrice,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
-                ]);
+                ];
             }
         }
-        Work::insert($rawWorks);
+
+        foreach (array_chunk($rawWorks, 1000) as $chunk) {
+            Work::insert($chunk);
+        }
     }
 }

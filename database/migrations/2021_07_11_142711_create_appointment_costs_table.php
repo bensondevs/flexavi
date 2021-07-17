@@ -19,7 +19,7 @@ class CreateAppointmentCostsTable extends Migration
             $table->uuid('appointment_id');
             $table->foreign('appointment_id')
                 ->references('id')
-                ->on('appointments');
+                ->on('appointments')
                 ->onDelete('CASCADE');
 
             $table->string('cost_name');
@@ -27,6 +27,7 @@ class CreateAppointmentCostsTable extends Migration
             $table->double('paid_cost', 8, 2)->default(0);
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

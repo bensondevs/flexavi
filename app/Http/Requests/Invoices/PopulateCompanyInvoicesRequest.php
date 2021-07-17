@@ -4,13 +4,13 @@ namespace App\Http\Requests\Invoices;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Traits\PopulateCompanyRequestOptions;
+use App\Traits\CompanyPopulateRequestOptions;
 
 use App\Rules\HasCompanyPermission;
 
 class PopulateCompanyInvoicesRequest extends FormRequest
 {
-    use PopulateCompanyRequestOptions;
+    use CompanyPopulateRequestOptions;
 
     /**
      * Determine if the user is authorized to make this request.
@@ -53,7 +53,7 @@ class PopulateCompanyInvoicesRequest extends FormRequest
             ]);
         }
 
-        // $this->setWiths(['workContract', 'items', 'paymentTerms']);
+        $this->setWiths(['paymentTerms', 'referenceable', 'items']);
 
         return $this->collectCompanyOptions();
     }

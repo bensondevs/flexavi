@@ -12,9 +12,9 @@ class WorkPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(User $user, $quotationOrContract)
+    public function viewAny(User $user, $workAttachable)
     {
-        return $user->hasCompanyPermission($quotationOrContract->company_id, 'view works');
+        return $user->hasCompanyPermission($workAttachable->company_id, 'view works');
     }
 
     public function viewAnyAppointment(User $user, Appointment $appointment)
