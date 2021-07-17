@@ -119,7 +119,6 @@ class RegisterRequest extends FormRequest
     {
         $invitation = $this->getInvitation();
 
-        return $invitation ? 
-            $invitation->attachments : [];
+        return $invitation ? $invitation->attachments : [];
     }
 }

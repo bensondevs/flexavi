@@ -38,13 +38,18 @@ class AuthRepository extends BaseRepository
 			$user = $this->getModel();
 			$user->fill($registerData);
 			$user->unhashed_password = $registerData['password'];
-			$user->save();
+			if (! $user->save()) {
+				abort(500, 'Failed to register user.');
+			}
 
 			// Attachment exist
 			if ($attachments) {
 				$roleModel = $attachments['model']::findOrFail($attachments['model_id']);
 				$roleModel->{$attachments['related_column']} = $user->id;
-				$roleModel->save();
+
+				if (! $roleModel->save()) {
+					abort(500, 'Failed to assign role, role creation failed');
+				}
 
 				if (isset($attachments['registration_code'])) {
 					$code = $attachments['registration_code'];
@@ -65,10 +70,8 @@ class AuthRepository extends BaseRepository
 
 			$this->setSuccess('Successfully register as user.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to register as user.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to register as user.', $error);
 		}
 
 		return $this->getModel();

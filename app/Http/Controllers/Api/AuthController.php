@@ -53,7 +53,7 @@ class AuthController extends Controller
     {
     	$input = $request->onlyInRules();
     	$user = $this->auth->login($input);
-        $user->role = $user->user_role;
+        $user->role = $user->owner;
 
     	return apiResponse($this->auth, ['user' => $user]); 
     }
@@ -94,7 +94,10 @@ class AuthController extends Controller
     	$input = $request->userData();
         if (! $attachments = $request->getAttachments()) {
             $owner = $this->owner->save($request->getOwnerData());
-            dd($this->owner->queryError);
+            if (! $owner) {
+                abort(500, $this->owner->queryError);
+            }
+
             $attachments = [
                 'model' => 'App\Models\Owner',
                 'model_id' => $owner->id,

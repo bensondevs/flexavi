@@ -81,6 +81,6 @@ class RegisterInvitationsSeeder extends Seeder
                 'attachments' => json_encode($attachments),
             ]);
         }
-        RegisterInvitation::insert($rawInvitations);
+        $invitation = RegisterInvitation::insert($rawInvitations);
     }
 }
