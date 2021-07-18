@@ -135,4 +135,9 @@ class Work extends Model
     {
         return $this->belongsTo('App\Models\WorkContract', 'work_contract_id', 'id');
     }
+
+    public static function collectAllStatuses()
+    {
+        return WorkStatus::asSelectArray();
+    } 
 }

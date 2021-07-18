@@ -36,6 +36,7 @@ class PopulateEmployeesRequest extends FormRequest
     public function options()
     {
         $this->addWith('user');
+        $this->addWith('addresses');
         $this->addWithCount('inspections');
 
         return $this->collectCompanyOptions();

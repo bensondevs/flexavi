@@ -65,7 +65,7 @@ return [
     // Invoice
     InvoiceStatus::class => [
         InvoiceStatus::Created => 'Created / Draft',
-        InvoiceStatus::Send => 'Send / Definitive',
+        InvoiceStatus::Sent => 'Sent / Definitive',
         InvoiceStatus::Paid => 'Paid',
         InvoiceStatus::PaymentOverdue => 'Payment Overdue',
         InvoiceStatus::FirstReminder => 'Overdue, send first reminder?',

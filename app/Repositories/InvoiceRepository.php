@@ -125,14 +125,13 @@ class InvoiceRepository extends BaseRepository
 		try {
 			$invoice = $this->getModel();
 			$invoice->load(['items', 'customer']);
+			$invoice->status = InvoiceStatus::Sent;
+			$invoice->generateNumber();
+			$invoice->save();
 
-			// Send to mail
 			$mail = new SendInvoice($invoice);
 			$job = new SendEmail($mail, $invoice->customer->email);
 			dispatch($job);
-
-			$invoice->status = InvoiceStatus::Sent;
-			$invoice->save();
 
 			$this->setModel($invoice);
 
@@ -140,6 +139,43 @@ class InvoiceRepository extends BaseRepository
 		} catch (Exception $e) {
 			$error = $e->getMessage();
 			$this->setError('Failed to send invoice to customer', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function printDraft()
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->generateNumber();
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully print invoice as draft.');
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+			$this->setError('Failed to print invoice as draft', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function print()
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->status = InvoiceStatus::Sent;
+			$invoice->generateNumber();
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully print invoice to customer.');
+		} catch (Exception $e) {
+			$error = $e->getMessage();
+			$this->setError('Failed to print invoice to customer', $error);
 		}
 
 		return $this->getModel();
@@ -159,7 +195,25 @@ class InvoiceRepository extends BaseRepository
             ->get();
 	}
 
-	public function sendFirstReminder()
+	public function changeStatus($status)
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->status = $status;
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully change invoice status.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to change invoice status.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function sendFirstReminder($nextDueDate)
 	{
 		try {
 			$invoice = $this->getModel();

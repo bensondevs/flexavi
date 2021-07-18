@@ -83,4 +83,9 @@ class RegisterInvitation extends Model
 
         return $attachments;
     }
+
+    public static function collectAllStatuses()
+    {
+        return RegisterInvitationStatus::asSelectArray();
+    }
 }

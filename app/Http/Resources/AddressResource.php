@@ -6,7 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 use App\Traits\ApiCollectionResource;
 
-class CustomerResource extends JsonResource
+class AddressResource extends JsonResource
 {
     use ApiCollectionResource;
 
@@ -19,14 +19,12 @@ class CustomerResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-
-            'addresses' => $this->addresses,
-
-            'fullname' => $this->fullname,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'second_phone' => $this->second_phone,
+            'address' => $this->address,
+            'house_number' => $this->house_number,
+            'house_number_suffix' => $this->house_number_suffix,
+            'zipcode' => $this->zipcode,
+            'city' => $this->city,
+            'province' => $this->province,
         ];
     }
 }

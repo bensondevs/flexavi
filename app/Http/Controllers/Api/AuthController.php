@@ -14,6 +14,8 @@ use Socialite;
 
 use App\Models\User;
 
+use App\Http\Resources\UserResource;
+
 use App\Repositories\AuthRepository;
 use App\Repositories\CompanyOwnerRepository as OwnerRepository;
 use App\Repositories\AddressRepository;
@@ -44,7 +46,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => 'unavailable',
                 'message' => 'This email has been used by other user',
-            ]);
+            ], 422);
         }
 
         return response()->json([
@@ -57,7 +59,7 @@ class AuthController extends Controller
     {
     	$input = $request->onlyInRules();
     	$user = $this->auth->login($input);
-        $user->role = $user->user_role;
+        $user = new UserResource($user);
 
     	return apiResponse($this->auth, ['user' => $user]); 
     }

@@ -16,6 +16,8 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->string('invoice_number')->nullable();
+
             $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')

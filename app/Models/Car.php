@@ -75,6 +75,11 @@ class Car extends Model
         return $carImageUrl;
     }
 
+    public static function collectAllStatuses()
+    {
+        return CarStatus::asSelectArray();
+    }
+
     public function company()
     {
         return $this->belongsTo(

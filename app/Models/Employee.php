@@ -45,6 +45,17 @@ class Employee extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function addresses()
+    {
+        return $this->hasManyThrough(
+            Address::class, 
+            User::class,
+            'id',
+            'user_id',
+            'user_id',
+        );
+    }
+
     public function company()
     {
         return $this->hasOne(Company::class);
@@ -93,5 +104,15 @@ class Employee extends Model
     {
         $status = $this->attributes['employment_status'];
         return EmploymentStatus::getDescription($status);
+    }
+
+    public static function collectAllTypes()
+    {
+        return EmployeeType::asSelectArray();
+    }
+
+    public static function collectAllEmploymentStatus()
+    {
+        return EmploymentStatus::asSelectArray();
     }
 }

@@ -57,15 +57,36 @@ class PaymentTermRepository extends BaseRepository
 	{
 		try {
 			$term = $this->getModel();
-			$term->status = PaymentTermStatus::Paid;
+			$term->status = PaymentTermStatus::Unpaid;
+			$term->save();
+
+			$this->setModel($term);
+
+			$this->setSuccess('Successfully cancel paid status');
 		} catch (QueryException $qe) {
-			
+			$error = $qe->getMessage();
+			$this->setError('Failed to cancel paid status', $error);
 		}
+
+		return $this->getModel();
 	}
 
-	public function sendDebtCollector()
+	public function forwardToDebtCollector()
 	{
-		//
+		try {
+			$term = $this->getModel();
+			$term->status = PaymentTermStatus::ForwardedToDebtCollector;
+			$term->save();
+
+			$this->setModel($term);
+
+			$this->setSuccess('Successfully forward payment term to debt collector.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to forward payment term to debt collector.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	public function delete(bool $force = false)

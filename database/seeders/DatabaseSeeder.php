@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             InvoicesSeeder::class,
             PaymentTermsSeeder::class,
             RegisterInvitationsSeeder::class,
+            AddressesSeeder::class,
         ]);
     }
 }

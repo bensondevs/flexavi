@@ -105,6 +105,21 @@ class Appointment extends Model
         return AppointmentCancellationVault::getDescription($cancellationVaultCode);
     }
 
+    public static function collectAllCancellationVaults()
+    {
+        return AppointmentCancellationVault::asSelectArray();
+    }
+
+    public static function collectAllStatuses()
+    {
+        return AppointmentStatus::asSelectArray();
+    }
+
+    public static function collectAllTypes()
+    {
+        return AppointmentType::asSelectArray();
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);

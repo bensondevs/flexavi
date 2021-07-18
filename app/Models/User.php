@@ -15,6 +15,8 @@ use Webpatser\Uuid\Uuid;
 
 use App\Models\EmailVerification;
 
+use App\Enums\User\UserIdCardType;
+
 class User extends Authenticatable
 {
     use SoftDeletes;
@@ -115,6 +117,18 @@ class User extends Authenticatable
         return $roleName;
     }
 
+    public function getPhoneVerifiedStatusAttribute()
+    {
+        $verifiedAt = $this->attributes['phone_verified_at'];
+        return (bool) $verifiedAt;
+    }
+
+    public function getEmailVerifiedStatusAttribute()
+    {
+        $verifiedAt = $this->attributes['email_verified_at'];
+        return (bool) $verifiedAt;
+    }
+
     public function generateToken()
     {
         // Delete old tokens
@@ -162,4 +176,9 @@ class User extends Authenticatable
         // Disallow, because pass none
         return false;
     }
+
+    public static function collectAllIdCardTypes()
+    {
+        return UserIdCardType::asSelectArray();
+    } 
 }

@@ -232,4 +232,29 @@ class Quotation extends Model
             ->sum('works.total_price');
         $this->setTotalAmountAttribute($total);
     }
+
+    public static function collectAllTypes()
+    {
+        return QuotationType::asSelectArray();
+    }
+
+    public static function collectAllStatuses()
+    {
+        return QuotationStatus::asSelectArray();
+    }
+
+    public static function collectAllPaymentMethods()
+    {
+        return QuotationPaymentMethod::asSelectArray();
+    }
+
+    public static function collectAllDamageCauses()
+    {
+        return QuotationDamageCauses::asSelectArray();
+    }
+
+    public static function collectAllCanceller()
+    {
+        return QuotationCanceller::asSelectArray();
+    }
 }

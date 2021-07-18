@@ -40,6 +40,18 @@ class Customer extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function addresses()
+    {
+        return $this->hasManyThrough(
+            Address::class, 
+            User::class,
+            'id',
+            'user_id',
+            'id',
+            'id'
+        );
+    }
+
     public function getSalutationLabelAttribute()
     {
         $salutations = collect(self::CUSTOMER_SALUTATIONS);

@@ -78,6 +78,56 @@ class Invoice extends Model
         return $this->morphTo();
     }
 
+    public function collectAllPaymentMethods()
+    {
+        return InvoicePaymentMethod::asSelectArray();
+    }
+
+    public static function collectAllStatuses()
+    {
+        return InvoiceStatus::asSelectArray();
+    }
+
+    public static function collectStatusOptions()
+    {
+        $statuses = self::collectAllStatuses();
+        for ($removeableIndex = 1; $removeableIndex < 5; $removeableIndex++) {
+            unset($statuses[$removeableIndex]);
+        }
+
+        return $statuses;
+    }
+
+    public function generateNumber()
+    {
+        // Get month and year as first 4 + 2 characters
+        $now = carbon()->now()->copy();
+        $year = $now->year;
+        $month = $now->format('m');
+
+        // Check if there is sent invoice within this year
+        $latestSentInvoice = self::where('created_at', '>=', $now->startOfYear())
+            ->where('status', '>=', InvoiceStatus::Sent)
+            ->whereNotNull('invoice_number')
+            ->latest()
+            ->first();
+        if ($latestSentInvoice) {
+            $latestInvoiceNumber = (int) $latestSentInvoice->invoice_number;
+
+            // Double check and make sure that there is no invoice with this number
+            while (self::where('invoice_number', $latestInvoiceNumber)->count()) {
+                $latestInvoiceNumber++;
+            }
+
+            $invoiceNumber = (string) ($latestInvoiceNumber);
+        } else {
+            $lastFiveDigits = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $invoiceNumber = $year . $month . $lastFiveDigits;
+        }
+
+        return $this->attributes['invoice_number'] = $invoiceNumber;
+    }
+
     public function generateItemsFromWorks($works)
     {
         $rawItems = [];

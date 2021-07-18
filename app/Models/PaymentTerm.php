@@ -61,4 +61,9 @@ class PaymentTerm extends Model
     {
         return $this->belongsTo(Company::class);
     }
+
+    public static function collectAllStatuses()
+    {
+        return PaymentTermStatus::asSelectArray();
+    }
 }

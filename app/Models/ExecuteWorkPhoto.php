@@ -50,4 +50,9 @@ class ExecuteWorkPhoto extends Model
         $file = StorageFile::findByPath($path);
         return $file->getDownloadUrl();
     }
+
+    public static function collectAllPhotoConditionTypes()
+    {
+        return PhotoConditionType::asSelectArray();
+    }
 }

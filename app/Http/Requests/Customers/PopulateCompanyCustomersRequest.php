@@ -37,6 +37,7 @@ class PopulateCompanyCustomersRequest extends FormRequest
 
     public function options()
     {
+        $this->addWith('addresses');
         return $this->collectCompanyOptions();
     }
 }

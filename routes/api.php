@@ -6,9 +6,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\UserController;
 
+use App\Http\Controllers\Meta\CarController as MetaCarController;
+use App\Http\Controllers\Meta\UserController as MetaUserController;
+use App\Http\Controllers\Meta\WorkController as MetaWorkController;
+use App\Http\Controllers\Meta\InvoiceController as MetaInvoiceController;
+use App\Http\Controllers\Meta\EmployeeController as MetaEmployeeController;
+use App\Http\Controllers\Meta\QuotationController as MetaQuotationController;
+use App\Http\Controllers\Meta\AppointmentController as MetaAppointmentController;
+use App\Http\Controllers\Meta\PaymentTermController as MetaPaymentTermController;
+use App\Http\Controllers\Meta\ExecuteWorkPhotoController as MetaExecuteWorkPhotoController;
+use App\Http\Controllers\Meta\RegisterInvitationController as MetaRegisterInvitationController;
+
 use App\Http\Controllers\Api\Company\CarController;
 use App\Http\Controllers\Api\Company\InvoiceController;
 use App\Http\Controllers\Api\Company\CompanyController;
+use App\Http\Controllers\Api\Company\AddressController;
 use App\Http\Controllers\Api\Company\EmployeeController;
 use App\Http\Controllers\Api\Company\CustomerController as CompanyCustomerController;
 use App\Http\Controllers\Api\Company\QuotationController;
@@ -83,6 +95,88 @@ Route::group(['prefix' => 'auth'], function () {
 	Route::get('verify_email', [AuthController::class, 'verifyEmail']);
 
 	Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+});
+
+Route::group(['prefix' => 'meta'], function () {
+	/*
+		Appointment Meta
+	*/
+	Route::group(['prefix' => 'appointment'], function () {
+		Route::get('all_cancellation_vaults', [MetaAppointmentController::class, 'allCancellationVaults']);
+		Route::get('all_statuses', [MetaAppointmentController::class, 'allCancellationVaults']);
+		Route::get('all_types', [MetaAppointmentController::class, 'allCancellationVaults']);
+	});
+
+	/*
+		Car Meta
+	*/
+	Route::group(['prefix' => 'car'], function () {
+		Route::get('all_statuses', [MetaCarController::class, 'allStatuses']);
+	});
+
+	/*
+		Employee Meta
+	*/
+	Route::group(['prefix' => 'employee'], function () {
+		Route::get('all_types', [MetaEmployeeController::class, 'allTypes']);
+		Route::get('all_employment_statuses', [EmployeeController::class, 'allEmploymentStatuses']);
+	});
+
+	/*
+		Execute Work Photo Meta
+	*/
+	Route::group(['prefix' => 'execute_work_photo'], function () {
+		Route::get('all_photo_condition_types', [MetaExecuteWorkPhotoController::class, 'allPhotoConditionTypes']);
+	});
+
+	/*
+		Invoice Meta
+	*/
+	Route::group(['prefix' => 'invoice'], function () {
+		Route::get('all_statuses', [MetaInvoiceController::class, 'allStatuses']);
+		Route::get('selectable_statuses', [MetaInvoiceController::class, 'selectableStatuses']);
+		Route::get('all_payment_methods', [MetaInvoiceController::class, 'allPaymentMethods']);
+	});
+
+	/*
+		Payment Term Meta
+	*/
+	Route::group(['prefix' => 'payment_term'], function () {
+		Route::get('all_statuses', [MetaPaymentTermController::class, 'allStatuses']);
+	});
+
+	/*
+		Quotation Meta
+	*/
+	Route::group(['prefix' => 'quotation'], function () {
+		Route::get('all_types', [MetaQuotationController::class, 'allTypes']);
+		Route::get('all_statuses', [MetaQuotationController::class, 'allStatuses']);
+		Route::get('all_payment_methods', [MetaQuotationController::class, 'allPaymentMethods']);
+		Route::get('all_damage_causes', [MetaQuotationController::class, 'allDamageCauses']);
+		Route::get('all_canceller', [MetaQuotationController::class, 'allCanceller']);
+	});
+
+	/*
+		Register Invitation Meta
+	*/
+	Route::group(['prefix' => 'register_invitation'], function () {
+		Route::get('all_statuses', [MetaRegisterInvitationController::class, 'allStatuses']);
+	});
+
+	/*
+		User Meta
+	*/
+	Route::group(['prefix' => 'user'], function () {
+		Route::get('check_email_used', [MetaUserController::class, 'check_email_used']);
+		Route::get('all_id_card_types', [MetaUserController::class, 'allIdCardTypes']);
+	});
+
+	/*
+		Register Invitation Meta
+	*/
+	Route::group(['prefix' => 'work'], function () {
+		Route::get('all_statuses', [MetaWorkController::class, 'allStatuses']);
+	});
 });
 
 Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function () {
@@ -219,14 +313,22 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Company Invoice Module
 			*/
 			Route::group(['prefix' => 'invoices'], function () {
+				Route::get('all_statuses', [InvoiceController::class, 'allStatuses']);
 				Route::get('/', [InvoiceController::class, 'companyInvoices']);
-				Route::post('store', [InvoiceController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
+				Route::post('send', [InvoiceController::class, 'send']);
+				Route::get('status_options', [InvoiceController::class, 'statusOptions']);
+				Route::post('send_reminder', [InvoiceController::class, 'sendReminder']);
+				Route::match(['PUT', 'PATCH'], 'changeStatus', [InvoiceController::class, 'changeStatus']);
+				Route::post('mark_as_paid', [InvoiceController::class, 'markAsPaid']);
 				Route::delete('delete', [InvoiceController::class, 'delete']);
 
 				Route::group(['prefix' => 'payment_terms'], function () {
 					Route::get('/', [PaymentTermController::class, 'paymentTerms']);
 					Route::post('store', [PaymentTermController::class, 'store']);
+					Route::post('mark_as_paid', [PaymentTermController::class, 'markAsPaid']);
+					Route::post('cancel_paid_status', [PaymentTermController::class, 'cancel_paid_status']);
+					Route::post('forward_to_debt_collector', [PaymentTermController::class, 'forwardToDebtCollector']);
 					Route::delete('delete', [PaymentTermController::class, 'delete']);
 				});
 			});
@@ -343,6 +445,14 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 						Route::delete('delete', [ExecuteWorkPhotoController::class, 'delete']);
 					});
 				});
+			});
+
+			/*
+				Address List
+			*/
+			Route::group(['prefix' => 'addresses', 'as' => 'addresses.'], function () {
+				Route::get('/', [AddressController::class, 'userAddresses']);
+				Route::get('employee', [AddressController::class, 'employeeAddresses']);
 			});
 
 			/*

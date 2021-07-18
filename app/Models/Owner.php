@@ -43,21 +43,24 @@ class Owner extends Model
     	});
     }
 
+    public function addresses()
+    {
+        return $this->hasManyThrough(
+            Address::class, 
+            User::class,
+            'id',
+            'user_id',
+            'user_id',
+        );
+    }
+
     public function user()
     {
-        return $this->belongsTo(
-            'App\Models\User', 
-            'user_id', 
-            'id'
-        );
+        return $this->belongsTo(User::class);
     }
 
     public function company()
     {
-        return $this->hasOne(
-            'App\Models\Company',
-            'id',
-            'company_id'
-        );
+        return $this->belongsTo(Company::class);
     }
 }

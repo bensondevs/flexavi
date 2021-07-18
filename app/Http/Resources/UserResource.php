@@ -18,16 +18,24 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $structure = [
             'id' => $this->id,
             'fullname' => $this->fullname,
-            'salutation' => $this->salutation,
             'birth_date' => $this->birth_date,
             'id_card_type' => $this->id_card_type,
             'id_card_number' => $this->id_card_number,
             'phone' => $this->phone,
+            'phone_verified_status' => $this->phone_verified_status,
             'email' => $this->email,
+            'email_verified_status' => $this->email_verified_status,
             'profile_picture' => $this->profile_picture_url,
+            'role' => $this->user_role,
         ];
+
+        if ($this->token) {
+            $structure['token'] = $this->token;
+        }
+
+        return $structure;
     }
 }

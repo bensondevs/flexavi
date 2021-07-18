@@ -8,6 +8,10 @@ use App\Models\Invoice;
 use App\Models\Quotation;
 use App\Models\Appointment;
 
+use App\Jobs\Invoice\GenerateInvoiceNumber;
+
+use App\Enums\Invoice\InvoiceStatus;
+
 class InvoicesSeeder extends Seeder
 {
     /**
@@ -56,9 +60,14 @@ class InvoicesSeeder extends Seeder
             ];
         }
 
-        $chunks = array_chunk($rawInvoices, 1000);
+        $chunks = array_chunk($rawInvoices, 5000);
         foreach ($chunks as $key => $chunk) {
             Invoice::insert($chunk);
+        }
+
+        $sentInvoices = Invoice::where('status', '>=', InvoiceStatus::Sent)->get();
+        foreach ($sentInvoices as $sentInvoice) {
+            dispatch(new GenerateInvoiceNumber($sentInvoice));
         }
     }
 }

@@ -22,6 +22,13 @@ class InvoiceController extends Controller
     	$this->invoice = $invoice;
     }
 
+    public function allStatuses()
+    {
+        $invoice = $this->getInvoice();
+        $statuses = $invoice->collectAllStatuses();
+        return response()->json(['statuses' => $statuses]);
+    }
+
     public function companyInvoices(PopulateRequest $request)
     {
         $invoices = $this->invoice->all($request->options());
@@ -37,6 +44,17 @@ class InvoiceController extends Controller
         return response()->json(['items' => $invoice->items]);
     }
 
+    public function update(UpdateInvoiceRequest $request)
+    {
+        $invoice = $request->getInvoice();
+        $this->invoice->setModel($invoice);
+
+        $input = $request->validated();
+        $this->invoice->save($input);
+
+        return apiResponse($this->invoice);
+    }
+
     public function send(FindRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -47,32 +65,41 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
-    public function sendFirstReminder(FindRequest $request)
+    public function print(FindRequest $request)
     {
         $invoice = $request->getInvoice();
 
         $this->invoice->setModel($invoice);
-        $this->invoice->sendFirstReminder();
+        $this->invoice->print();
 
         return apiResponse($this->invoice);
     }
 
-    public function sendSecondReminder(FindRequest $request)
+    public function sendReminder(SendReminderRequest $request)
     {
         $invoice = $request->getInvoice();
 
         $this->invoice->setModel($invoice);
-        $this->invoice->sendSecondReminder();
+        $this->invoice->sendReminder();
 
         return apiResponse($this->invoice);
     }
 
-    public function sendThirdReminder(FindRequest $request)
+    public function statusOptions()
+    {
+        $invoice = $this->invoice->getModel();
+        $statuses = $invoice->collectStatusOptions();
+
+        return response()->json(['statuses' => $statuses]);
+    }
+
+    public function changeStatus(ChangeStatusRequest $request)
     {
         $invoice = $request->getInvoice();
-
         $this->invoice->setModel($invoice);
-        $this->invoice->sendThirdReminder();
+
+        $status = $request->input('status');
+        $this->invoice->changeStatus($status);
 
         return apiResponse($this->invoice);
     }
@@ -88,9 +115,11 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
-    public function delete(Request $request)
+    public function delete(DeleteRequest $request)
     {
-        $this->invoice->find($request->input('id'));
+        $invoice = $request->getInvoice();
+
+        $this->invoice->setModel($invoice);
         $this->invoice->delete();
 
         return apiResponse($this->invoice);

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 
 use App\Policies\WorkPolicy;
+use App\Policies\AddressPolicy;
 use App\Policies\QuotationPolicy;
 use App\Policies\AppointmentPolicy;
 use App\Policies\ExecuteWorkPolicy;
@@ -87,5 +88,14 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-execute-work-photo', [ExecuteWorkPhotoPolicy::class, 'viewAny']);
         Gate::define('upload-execute-work-photo', [ExecuteWorkPhotoPolicy::class, 'upload']);
         Gate::define('delete-execute-work-photos', [ExecuteWorkPhotoPolicy::class, 'delete']);
+
+        // Address
+        Gate::define('view-any-address', [AddressPolicy::class, 'viewAny']);
+        Gate::define('view-any-employee-address', [AddressPolicy::class, 'viewAnyEmployee']);
+        Gate::define('create-address', [AddressPolicy::class, 'create']);
+        Gate::define('edit-address', [AddressPolicy::class, 'update']);
+        Gate::define('delete-address', [AddressPolicy::class, 'delete']);
+        Gate::define('restore-address', [AddressPolicy::class, 'restore']);
+        Gate::define('force-delete-address', [AddressPolicy::class, 'forceDelete']);
     }
 }

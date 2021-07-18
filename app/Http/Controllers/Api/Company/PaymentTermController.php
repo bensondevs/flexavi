@@ -44,16 +44,31 @@ class PaymentTermController extends Controller
     public function markAsPaid(FindRequest $request)
     {
         $term = $request->getPaymentTerm();
+        $this->term->setModel($term);
+        $this->term->markAsPaid();
+
+        return apiResponse($this->term);
     }
 
     public function cancelPaidStatus(CancelPaidStatusRequest $request)
     {
         $term = $request->getPaymentTerm();
+        $term = $this->term->setModel($term);
+
+        $reason = $request->input('reason');
+        $term = $this->term->cancelPaidStatus();
+
+        return apiResponse($this->term);
     }
 
-    public function sendDebtCollector(FindRequest $request)
+    public function forwardToDebtCollector(FindRequest $request)
     {
         $term = $request->getPaymentTerm();
+
+        $this->term->setModel($term);
+        $this->term->forwardToDebtCollector();
+    
+        return apiResponse($this->term);
     }
 
     public function delete(FindRequest $request)

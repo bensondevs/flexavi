@@ -8,7 +8,7 @@ use BenSampo\Enum\Contracts\LocalizedEnum;
 final class InvoiceStatus extends Enum implements LocalizedEnum
 {
     const Created = 1;
-    const Send = 2;
+    const Sent = 2;
     const Paid = 3;
     const PaymentOverdue = 4;
     const FirstReminder = 5;

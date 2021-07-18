@@ -16,3 +16,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect('https://app.daksoftware.nl');
 });
+
+Route::get('test', function () {
+    $now = carbon()->now()->copy();
+    dd(\App\Models\Invoice::where('created_at', '>=', $now->startOfYear())
+            ->where('status', '>=', \App\Enums\Invoice\InvoiceStatus::Sent)
+            ->whereNotNull('invoice_number')
+            ->count());
+});

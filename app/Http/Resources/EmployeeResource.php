@@ -28,6 +28,7 @@ class EmployeeResource extends JsonResource
             'employment_status' => $this->employment_status,
             'employment_status_description' => $this->employment_status_description,
             'user' => new UserResource($this->user),
+            'addresses' => $this->addresses,
             'inspections_count' => $this->inspections_count,
         ];
     }

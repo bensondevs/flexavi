@@ -240,6 +240,15 @@ class PermissionsSeeder extends Seeder
         	'delete work contracts',
             'restore work contracts',
             'force delete work contracts',
+
+            // Address
+            'view any addresses',
+            'view addresses',
+            'create addresses',
+            'edit addresses',
+            'delete addresses',
+            'restore addresses',
+            'force delete addresses',
         ];
 
         $rawPermissions = [];
