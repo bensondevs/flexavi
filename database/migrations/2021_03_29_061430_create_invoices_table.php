@@ -33,6 +33,8 @@ class CreateInvoicesTable extends Migration
             $table->uuidMorphs('referenceable');
 
             $table->double('total', 10, 2);
+            $table->double('total_in_terms')->default(0);
+            $table->double('total_paid')->default(0);
 
             $table->tinyInteger('status')->default(1);
             $table->char('payment_method');

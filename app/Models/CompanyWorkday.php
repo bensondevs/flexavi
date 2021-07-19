@@ -20,10 +20,6 @@ class CompanyWorkday extends Model
         'include_weekend',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected static function boot()
     {
     	parent::boot();

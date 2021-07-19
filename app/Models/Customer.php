@@ -7,16 +7,24 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class Customer extends Model
 {
     use HasApiTokens;
     use SoftDeletes;
+    use Searchable;
 
     protected $table = 'customers';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'fullname',
+        'email',
+        'phone',
+    ];
 
     protected $fillable = [
         'company_id',

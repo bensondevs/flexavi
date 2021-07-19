@@ -11,6 +11,9 @@ use App\Models\Inspection;
 
 class WorkContract extends Model
 {
+    use Searchable;
+    use SoftDeletes;
+
     protected $table = 'work_contracts';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -49,10 +52,6 @@ class WorkContract extends Model
         'pdf_url',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected static function boot()
     {
     	parent::boot();
@@ -73,38 +72,22 @@ class WorkContract extends Model
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company', 
-            'company_id', 
-            'id'
-        );
+        return $this->belongsTo(Company::class);
     }
 
     public function customer()
     {
-        return $this->hasOne(
-            'App\Models\Customer', 
-            'customer_id', 
-            'id'
-        );
+        return $this->hasOne(Customer::class);
     }
 
     public function works()
     {
-        return $this->hasMany(
-            'App\Models\Work', 
-            'work_contract_id',
-            'id'
-        );
+        return $this->hasMany(Work::class);
     }
 
     public function warranty()
     {
-        return $this->hasOne(
-            'App\Models\Warranty',
-            'work_contract_id',
-            'id'
-        );
+        return $this->hasOne(Warranty::class);
     }
 
     public function countAmount()

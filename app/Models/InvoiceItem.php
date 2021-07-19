@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
+
+use App\Observers\InvoiceItemObserver;
 
 class InvoiceItem extends Model
 {
+    use Searchable;
     use SoftDeletes;
 
     protected $table = 'invoice_items';
@@ -27,17 +31,29 @@ class InvoiceItem extends Model
         'amount',
     ];
 
-    protected $hidden = [
-        
+    protected $searchable = [
+        'item_name',
+        'description',
     ];
 
     protected static function boot()
     {
     	parent::boot();
+        self::observe(InvoiceItemObserver::class);
 
     	self::creating(function ($invoiceItem) {
             $invoiceItem->id = Uuid::generate()->string;
     	});
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
     }
 
     public function getTotalAttribute()
@@ -45,5 +61,12 @@ class InvoiceItem extends Model
         $quantity = $this->attributes['quantity'];
         $amount = $this->attributes['amount'];
         return $quantity * $amount;
+    }
+
+    public function recountInvoiceTotal()
+    {
+        $invoice = $this->invoice()->first();
+        $invoice->countTotal();
+        $invoice->save();
     }
 }

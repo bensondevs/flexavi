@@ -6,13 +6,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class AppointmentCost extends Model
 {
+    use SoftDeletes;
+    use Searchable;
+
     protected $table = 'appointment_costs';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'cost_name',
+    ];
 
     protected $fillable = [
         'appointment_id',
@@ -20,10 +28,6 @@ class AppointmentCost extends Model
         'cost_name',
         'cost',
         'paid_cost',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()

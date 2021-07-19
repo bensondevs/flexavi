@@ -6,15 +6,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 use App\Models\StorageFile;
 
 class ExecuteWorkPhoto extends Model
 {
+    use Searchable;
+    use SoftDeletes;
+
     protected $table = 'execute_work_photos';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'photo_path',
+        'photo_description',    
+    ];
 
     protected $fillable = [
         'execute_work_id',
@@ -23,9 +32,6 @@ class ExecuteWorkPhoto extends Model
         'photo_description',
     ];
 
-    protected $hidden = [
-        
-    ];
 
     protected static function boot()
     {

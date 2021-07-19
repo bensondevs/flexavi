@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class Schedule extends Model
 {
+    use SoftDeletes;
+    use Searchable;
+
     protected $table = 'schedules';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -23,8 +27,8 @@ class Schedule extends Model
         'start_money',
     ];
 
-    protected $hidden = [
-        
+    protected $searchable = [
+        'activity_name',
     ];
 
     protected static function boot()

@@ -16,6 +16,12 @@ class CreateInvoiceItemsTable extends Migration
         Schema::create('invoice_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->uuid('company_id')->nullable();
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('SET NULL');
+
             $table->uuid('invoice_id');
             $table->foreign('invoice_id')
                 ->references('id')

@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
+
+use App\Observers\InvoiceObserver;
 
 use App\Enums\Invoice\InvoiceStatus;
 use App\Enums\Invoice\InvoicePaymentMethod;
@@ -13,11 +16,16 @@ use App\Enums\Invoice\InvoicePaymentMethod;
 class Invoice extends Model
 {
     use SoftDeletes;
+    use Searchable;
 
     protected $table = 'invoices';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'invoice_number',
+    ];
 
     protected $fillable = [
         'company_id',
@@ -34,10 +42,17 @@ class Invoice extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(InvoiceObserver::class);
 
     	self::creating(function ($invoice) {
             $invoice->id = Uuid::generate()->string;
     	});
+    }
+
+    public function scopeOverdue($query)
+    {
+        return $query->where('status', '>=', InvoiceStatus::PaymentOverdue)
+            ->where('status', '<=', InvoiceStatus::SentDebtCollector);
     }
 
     public function getStatusDescriptionAttribute()
@@ -106,7 +121,9 @@ class Invoice extends Model
         $month = $now->format('m');
 
         // Check if there is sent invoice within this year
-        $latestSentInvoice = self::where('created_at', '>=', $now->startOfYear())
+        $startOfYear = $now->startOfYear();
+        $latestSentInvoice = self::where('created_at', '>=', $startOfYear)
+            ->where('company_id', $this->attributes['company_id'])
             ->where('status', '>=', InvoiceStatus::Sent)
             ->whereNotNull('invoice_number')
             ->latest()
@@ -115,7 +132,11 @@ class Invoice extends Model
             $latestInvoiceNumber = (int) $latestSentInvoice->invoice_number;
 
             // Double check and make sure that there is no invoice with this number
-            while (self::where('invoice_number', $latestInvoiceNumber)->count()) {
+            while (
+                self::where('invoice_number', (string) $latestInvoiceNumber)
+                ->where('company_id', $this->attributes['company_id'])
+                ->count() > 0
+            ) {
                 $latestInvoiceNumber++;
             }
 
@@ -144,5 +165,22 @@ class Invoice extends Model
         }
 
         return $this->items()->saveMany($rawItems);
+    }
+
+    public function countTotal()
+    {
+        $items = $this->items()->get();
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item->total;
+        }
+
+        $this->attributes['total'] = $total;
+    }
+
+    public function countTermsTotal()
+    {
+        $terms = $this->paymentTerms()->get();
+        $this->attributes['total_in_terms'] = $terms->sum('amount');
     }
 }

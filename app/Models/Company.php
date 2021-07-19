@@ -6,15 +6,27 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class Company extends Model
 {
     use SoftDeletes;
+    use Searchable;
 
     protected $table = 'companies';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'company_name',
+
+        'email',
+        'phone_number',
+        'vat_number',
+        'commerce_chamber_number',
+        'company_website_url',
+    ];
 
     protected $fillable = [
         'company_name',

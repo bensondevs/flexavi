@@ -12,6 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 use App\Models\EmailVerification;
 
@@ -19,6 +20,7 @@ use App\Enums\User\UserIdCardType;
 
 class User extends Authenticatable
 {
+    use Searchable;
     use SoftDeletes;
     use HasFactory, Notifiable, HasApiTokens;
     use HasRoles;
@@ -28,6 +30,13 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'fullname',
+        'id_card_number',
+        'phone',
+        'email',
+    ];
 
     /**
      * The attributes that are mass assignable.

@@ -6,11 +6,15 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 use App\Enums\Work\WorkStatus;
 
 class Work extends Model
 {
+    use Searchable;
+    use SoftDeletes;
+
     protected $table = 'works';
     protected $primaryKey = 'id';
     public $timestamps = true;

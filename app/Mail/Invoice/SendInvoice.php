@@ -33,7 +33,10 @@ class SendInvoice extends Mailable
     public function build()
     {
         $invoice = $this->invoice;
-        return $this->view('invoices.send')
+        $invoice->load(['items', 'customer']);
+        
+        return $this
+            ->view('invoices.send')
             ->with(['invoice' => $invoice]);
     }
 }

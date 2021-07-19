@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Invoice;
 use App\Models\PaymentTerm;
 
+use App\Jobs\Test\SyncInvoicePaymentTerms;
+
 class PaymentTermsSeeder extends Seeder
 {
     /**

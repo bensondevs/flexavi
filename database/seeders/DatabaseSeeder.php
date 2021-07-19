@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             QuotationWorksSeeder::class,
             QuotationAttachmentsSeeder::class,
             InvoicesSeeder::class,
+            InvoiceItemsSeeder::class,
             PaymentTermsSeeder::class,
             RegisterInvitationsSeeder::class,
             AddressesSeeder::class,

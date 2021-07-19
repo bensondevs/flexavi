@@ -19,6 +19,7 @@ use App\Http\Controllers\Meta\RegisterInvitationController as MetaRegisterInvita
 
 use App\Http\Controllers\Api\Company\CarController;
 use App\Http\Controllers\Api\Company\InvoiceController;
+	use App\Http\Controllers\Api\Company\InvoiceItemController;
 use App\Http\Controllers\Api\Company\CompanyController;
 use App\Http\Controllers\Api\Company\AddressController;
 use App\Http\Controllers\Api\Company\EmployeeController;
@@ -313,16 +314,28 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Company Invoice Module
 			*/
 			Route::group(['prefix' => 'invoices'], function () {
-				Route::get('all_statuses', [InvoiceController::class, 'allStatuses']);
 				Route::get('/', [InvoiceController::class, 'companyInvoices']);
+				Route::get('overdue', [InvoiceController::class, 'companyOverdueInvoices']);
 				Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
 				Route::post('send', [InvoiceController::class, 'send']);
-				Route::get('status_options', [InvoiceController::class, 'statusOptions']);
 				Route::post('send_reminder', [InvoiceController::class, 'sendReminder']);
 				Route::match(['PUT', 'PATCH'], 'changeStatus', [InvoiceController::class, 'changeStatus']);
 				Route::post('mark_as_paid', [InvoiceController::class, 'markAsPaid']);
 				Route::delete('delete', [InvoiceController::class, 'delete']);
 
+				/*
+					Invoice Item Module
+				*/
+				Route::group(['prefix' => 'items'], function () {
+					Route::get('/', [InvoiceItemController::class, 'invoiceItems']);
+					Route::post('store', [InvoiceItemController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [InvoiceItemController::class, 'update']);
+					Route::delete('delete', [InvoiceItemController::class, 'delete']);
+				});
+
+				/*
+					Invoice Payment Term Module
+				*/
 				Route::group(['prefix' => 'payment_terms'], function () {
 					Route::get('/', [PaymentTermController::class, 'paymentTerms']);
 					Route::post('store', [PaymentTermController::class, 'store']);

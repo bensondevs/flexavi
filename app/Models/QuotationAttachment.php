@@ -4,14 +4,18 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use \Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 use App\Models\StorageFile;
 
 class QuotationAttachment extends Model
 {
+    use SoftDeletes;
+    use Searchable;
+
     protected $table = 'quotation_attachments';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -24,8 +28,8 @@ class QuotationAttachment extends Model
         'attachment_path',
     ];
 
-    protected $hidden = [
-        
+    protected $searchable = [
+        'attachment_path',
     ];
 
     protected static function boot()

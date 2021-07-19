@@ -7,6 +7,8 @@ use \Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
+use App\Jobs\Invoice\RecalculateInvoiceTotal;
+
 use App\Models\InvoiceItem;
 
 class InvoiceItemRepository extends BaseRepository
@@ -25,10 +27,10 @@ class InvoiceItemRepository extends BaseRepository
 
 			$this->setModel($item);
 
-			$this->setSuccess('Successfully add item to invoice');
+			$this->setSuccess('Successfully save invoice item.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
-			$this->setError('Failed to add item to invoice.', $error);
+			$this->setError('Failed to save invoice item.', $error);
 		}
 
 		return $this->getModel();
@@ -38,9 +40,8 @@ class InvoiceItemRepository extends BaseRepository
 	{
 		try {
 			$item = $this->getModel();
-			$force ? 
-				$item->forceDelete() :
-				$item->delete();
+				
+			$force ? $item->forceDelete() : $item->delete();
 
 			$this->destroyModel();
 

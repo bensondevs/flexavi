@@ -7,17 +7,27 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use \Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 use App\Enums\Car\CarStatus;
 
 class Car extends Model
 {
     use SoftDeletes;
+    use Searchable;
 
     protected $table = 'cars';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'brand',
+        'model',
+        'year',
+        'car_name',
+        'car_license',
+    ];
 
     protected $fillable = [
         'company_id',
@@ -28,12 +38,6 @@ class Car extends Model
         'car_license',
         'insured',
         'status',
-    ];
-
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
 
     protected static function boot()

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class WorkActivity extends Model
 {
@@ -14,6 +15,10 @@ class WorkActivity extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    protected $searchable = [
+        'activity_name',
+    ];
+
     protected $fillable = [
         'company_id',
         'assignable_type',
@@ -21,10 +26,6 @@ class WorkActivity extends Model
         'activity_name',
         'price',
         'unit',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()

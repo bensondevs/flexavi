@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class SubAppointment extends Model
 {
+    use Searchable;
+    use SoftDeletes;
+
     protected $table = 'sub_appointments';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -74,20 +78,17 @@ class SubAppointment extends Model
 
     public function appointment()
     {
-        return $this->belongsTo(
-            'App\Models\Appointment', 
-            'appoinment_id', 
-            'id'
-        );
+        return $this->belongsTo(Appointment::class);
     }
 
     public function previousSubAppointment()
     {
-        return $this->belongsTo(
-            'App\Models\Appointment', 
-            'appoinment_id', 
-            'id'
-        );
+        return $this->belongsTo(self::class, 'previous_sub_appointment_id');
+    }
+
+    public function rescheduledSubAppointment()
+    {
+        return $this->belongsTo(self::class, 'next_sub_appointment_id');
     }
 
     public static function getStatusValues()

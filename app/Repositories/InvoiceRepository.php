@@ -9,6 +9,8 @@ use App\Jobs\SendMail;
 
 use App\Mail\Invoice\SendInvoice;
 
+use App\Enums\Invoice\InvoiceStatus;
+
 use App\Models\Invoice;
 use App\Models\InvoiceItem;
 use App\Models\Quotation;
@@ -22,6 +24,24 @@ class InvoiceRepository extends BaseRepository
 	public function __construct()
 	{
 		$this->setInitModel(new Invoice);
+	}
+
+	public function save(array $invoiceData = [])
+	{
+		try {
+			$invoice = $this->getModel();
+			$invoice->fill($invoiceData);
+			$invoice->save();
+
+			$this->setModel($invoice);
+
+			$this->setSuccess('Successfully save invoice.');
+		} catch (QueryException $e) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to save invoice.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	public function generateFromAppointment(Appointment $appointment, array $invoiceData = [])
@@ -124,13 +144,17 @@ class InvoiceRepository extends BaseRepository
 	{
 		try {
 			$invoice = $this->getModel();
-			$invoice->load(['items', 'customer']);
 			$invoice->status = InvoiceStatus::Sent;
-			$invoice->generateNumber();
+			// $invoice->generateNumber();
 			$invoice->save();
 
+			// Generate Invoice Number in background
+			dispatch(new GenerateInvoiceNumber($invoice));
+
+			// Send them afterwards
 			$mail = new SendInvoice($invoice);
 			$job = new SendEmail($mail, $invoice->customer->email);
+			$jon->delay(1);
 			dispatch($job);
 
 			$this->setModel($invoice);
@@ -167,7 +191,6 @@ class InvoiceRepository extends BaseRepository
 		try {
 			$invoice = $this->getModel();
 			$invoice->status = InvoiceStatus::Sent;
-			$invoice->generateNumber();
 			$invoice->save();
 
 			$this->setModel($invoice);
@@ -181,18 +204,15 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function overdueInvoices()
+	public function overdueInvoices(array $options = [], bool $pagination = false)
 	{
-		$today = carbon()->now()->startOfDay();
+		if (! isset($options['scopes'])) {
+			$options['scopes'] = [];
+		}
 
-		return Invoice::where('status', '!=', InvoiceStatus::Paid)
-            ->where('status', '!=', InvoiceStatus::SentDebtCollector)
-            ->where('status', '!=', InvoiceStatus::PaidViaDebtCollector)
-            ->where('overdue', '>=', $today)
-            ->orWhere('first_reminder_overdue', '>=', $today)
-            ->orWhere('second_reminder_overdue', '>=', $today)
-            ->orWhere('third_reminder_overdue', '>=', $today)
-            ->get();
+		array_push($options['scopes'], 'overdue');
+
+        return $this->all($options, $pagination);
 	}
 
 	public function changeStatus($status)

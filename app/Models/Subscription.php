@@ -6,9 +6,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class Subscription extends Model
 {
+    use Searchable;
+    use SoftDeletes;
+
     protected $table = 'subscriptions';
     protected $primaryKey = 'id';
     public $timestamps = true;

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
@@ -15,6 +16,7 @@ use App\Enums\Employee\EmploymentStatus;
 
 class Employee extends Model
 {
+    use Searchable;
     use SoftDeletes;
     use HasRelationships;
 
@@ -22,6 +24,10 @@ class Employee extends Model
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'title',
+    ];
 
     protected $fillable = [
         'user_id',

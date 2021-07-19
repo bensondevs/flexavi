@@ -91,13 +91,22 @@ class BaseRepository
 	{
 		$models = $this->getModel();
 
-		if (isset($options['search'])) {
-			if ($options['search']) {
-				$columns = $models->getFillable();
-				foreach ($columns as $key => $column) {
-					$models = ($key == 0) ?
-						$models->where($column, 'like', '%' . $options['search'] . '%') :
-						$models->orWhere($column, 'like', '%' . $options['search'] . '%');
+		if (isset($options['withs'])) {
+			if ($options['withs']) {
+				$models = $models->with($options['withs']);
+			}
+		}
+
+		if (isset($options['with_counts'])) {
+			if ($options['with_counts']) {
+				$models = $models->withCount($options['with_counts']);
+			}
+		}
+
+		if (isset($options['scopes'])) {
+			if ($options['scopes']) {
+				foreach ($options['scopes'] as $scope) {
+					$models = $models->{$scope}();
 				}
 			}
 		}
@@ -144,29 +153,27 @@ class BaseRepository
 			}
 		}
 
-		if (isset($options['withs'])) {
-			if ($options['withs']) {
-				$models = $models->with($options['withs']);
-			}
-		}
-
-		if (isset($options['with_counts'])) {
-			if ($options['with_counts']) {
-				$models = $models->withCount($options['with_counts']);
-			}
-		}
-
 		if (isset($options['per_page'])) {
 			if ($options['per_page']) {
 				$this->defaultPaginationPerPage = $options['per_page'];
 			}
 		}
 
+		if (isset($options['search'])) {
+			if ($options['search']) {
+				$searchableColumns = $this->getModel()->getSearchable();
+				foreach ($searchableColumns as $key => $column) {
+					$models = ($key == 0) ?
+						$models->where($column, 'like', '%' . $options['search'] . '%') :
+						$models->orWhere($column, 'like', '%' . $options['search'] . '%');
+				}
+			}
+		}
 
 		$models = $models->get();
 		$this->setCollection($models);
 
-		return $models;
+		return ($pagination) ? $this->paginate() : $models;
 	}
 
 	public function trasheds(array $options = [], bool $pagination = false)

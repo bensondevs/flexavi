@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Policies\WorkPolicy;
 use App\Policies\AddressPolicy;
+use App\Policies\InvoicePolicy;
 use App\Policies\QuotationPolicy;
 use App\Policies\AppointmentPolicy;
 use App\Policies\ExecuteWorkPolicy;
+use App\Policies\InvoiceItemPolicy;
 use App\Policies\ExecuteWorkPhotoPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -67,6 +69,26 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('force-delete-quotation', [QuotationPolicy::class, 'forceDelete']);
         Gate::define('add-quotation-attachment', [QuotationPolicy::class, 'addAttachment']);
         Gate::define('remove-quotation-attachment', [QuotationPolicy::class, 'removeAttachment']);
+
+        // Invoices
+        Gate::define('view-any-invoice', [InvoicePolicy::class, 'viewAny']);
+        Gate::define('view-any-appointment-invoice', [InvoicePolicy::class, 'viewAnyAppointment']);
+        Gate::define('view-invoice', [InvoicePolicy::class, 'view']);
+        Gate::define('create-invoice', [InvoicePolicy::class, 'create']);
+        Gate::define('update-invoice', [InvoicePolicy::class, 'update']);
+        Gate::define('delete-invoice', [InvoicePolicy::class, 'delete']);
+        Gate::define('restore-invoice', [InvoicePolicy::class, 'restore']);
+        Gate::define('force-delete-invoice', [InvoicePolicy::class, 'forceDelete']);
+
+        // Invoice Items
+        Gate::define('view-any-invoice-item', [InvoiceItemPolicy::class, 'viewAny']);
+        Gate::define('view-any-appointment-invoice-item', [InvoiceItemPolicy::class, 'viewAnyAppointment']);
+        Gate::define('view-invoice-item', [InvoiceItemPolicy::class, 'view']);
+        Gate::define('create-invoice-item', [InvoiceItemPolicy::class, 'create']);
+        Gate::define('update-invoice-item', [InvoiceItemPolicy::class, 'update']);
+        Gate::define('delete-invoice-item', [InvoiceItemPolicy::class, 'delete']);
+        Gate::define('restore-invoice-item', [InvoiceItemPolicy::class, 'restore']);
+        Gate::define('force-delete-invoice-item', [InvoiceItemPolicy::class, 'forceDelete']);
 
         // Work
         Gate::define('view-any-work', [WorkPolicy::class, 'viewAny']);

@@ -6,15 +6,24 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class Owner extends Model
 {
+    use Searchable;
     use SoftDeletes;
 
     protected $table = 'owners';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'bank_name',
+        'bic_code',
+        'bank_account',
+        'bank_holder_name',
+    ];
 
     protected $fillable = [
         'user_id',

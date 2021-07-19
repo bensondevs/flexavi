@@ -17,14 +17,13 @@ class QuotationWorksSeeder extends Seeder
     public function run()
     {
         $quotations = Quotation::all();
+        $units = ['m2', 'cm2', 'm', 'l', 'dm3'];
 
         $rawWorks = [];
         foreach ($quotations as $key => $quotation) {
             for ($index = 0; $index < rand(1, 7); $index++) {
-                $units = ['m2', 'cm2', 'm', 'l', 'dm3'];
-
-                $unitPrice = rand(10, 200);
-                $quantity = rand(1, 1000);
+                $unitPrice = rand(1, 20) * 10;
+                $quantity = rand(1, 10) * 10;
                 $subTotal = $unitPrice * $quantity;
                 
                 $taxPercentage = 0;

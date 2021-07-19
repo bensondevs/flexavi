@@ -30,7 +30,7 @@ trait CompanyPopulateRequestOptions
         $user = $this->user();
         if (! $company = $user->{$user->user_role}->company) {
             $message = 'This user has no company yet, please register.';
-            return response()->json(['message' => $message], 403);
+            return abort(403, $message);
         }
 
         return $this->company = $company;
@@ -76,7 +76,9 @@ trait CompanyPopulateRequestOptions
     public function collectCompanyOptions()
     {
     	$this->addWhere([
+            'clause' => 'where',
     		'column' => 'company_id',
+            'operator' => '=',
     		'value' => $this->getCompany()->id,
     	]);
 

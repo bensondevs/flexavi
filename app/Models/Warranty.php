@@ -35,19 +35,6 @@ class Warranty extends Model
 
     public function workContract()
     {
-        return $this->belongsTo(
-            'App\Models\WorkContract',
-            'work_contract_id',
-            'id'
-        );
-    }
-
-    public function claims()
-    {
-        return $this->hasMany(
-            'App\Models\WarrantyClaim', 
-            'warranty_id', 
-            'id'
-        );
+        return $this->belongsTo(WorkContract::class);
     }
 }

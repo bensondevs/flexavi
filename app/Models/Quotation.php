@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 use BenSampo\Enum\Traits\CastsEnums;
 
@@ -22,12 +23,25 @@ use App\Models\Inspection;
 class Quotation extends Model
 {
     use SoftDeletes;
+    use Searchable;
     use CastsEnums;
 
     protected $table = 'quotations';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $searchable = [
+        'quotation_number',
+        'contact_person',
+        'address',
+        'zip_code',
+        'address',
+        'phone_number',
+        'quotation_description',
+        'honor_note',
+        'cancellation_reason',
+    ];
 
     protected $fillable = [
         'company_id',

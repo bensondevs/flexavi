@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Invoices\PopulateCompanyInvoicesRequest as PopulateRequest;
 use App\Http\Requests\Invoices\SaveInvoiceRequest as SaveRequest;
 use App\Http\Requests\Invoices\FindInvoiceRequest as FindRequest;
+use App\Http\Requests\Invoices\UpdateInvoiceRequest as UpdateRequest;
 
 use App\Http\Resources\InvoiceResource;
 
@@ -22,29 +23,27 @@ class InvoiceController extends Controller
     	$this->invoice = $invoice;
     }
 
-    public function allStatuses()
-    {
-        $invoice = $this->getInvoice();
-        $statuses = $invoice->collectAllStatuses();
-        return response()->json(['statuses' => $statuses]);
-    }
-
     public function companyInvoices(PopulateRequest $request)
     {
-        $invoices = $this->invoice->all($request->options());
-        $invoices = $this->invoice->paginate();
+        $options = $request->options();
+
+        $invoices = $this->invoice->all($options, true);
         $invoices = InvoiceResource::apiCollection($invoices);
 
         return response()->json(['invoices' => $invoices]);
     }
 
-    public function items(FindRequest $request)
+    public function companyOverdueInvoices(PopulateRequest $request)
     {
-        $invoice = $request->getInvoice();
-        return response()->json(['items' => $invoice->items]);
+        $options = $request->options();
+
+        $invoices = $this->invoice->overdueInvoices($options, true);
+        $invoices = InvoiceResource::apiCollection($invoices);
+
+        return response()->json(['invoices' => $invoices]);
     }
 
-    public function update(UpdateInvoiceRequest $request)
+    public function update(UpdateRequest $request)
     {
         $invoice = $request->getInvoice();
         $this->invoice->setModel($invoice);
@@ -75,6 +74,16 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
+    public function printDraft(FindRequest $request)
+    {
+        $invoice = $request->getInvoice();
+
+        $this->invoice->setModel($invoice);
+        $this->invoice->printDraft();
+
+        return apiResponse($this->invoice);
+    }
+
     public function sendReminder(SendReminderRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -83,14 +92,6 @@ class InvoiceController extends Controller
         $this->invoice->sendReminder();
 
         return apiResponse($this->invoice);
-    }
-
-    public function statusOptions()
-    {
-        $invoice = $this->invoice->getModel();
-        $statuses = $invoice->collectStatusOptions();
-
-        return response()->json(['statuses' => $statuses]);
     }
 
     public function changeStatus(ChangeStatusRequest $request)

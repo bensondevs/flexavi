@@ -8,9 +8,7 @@ use App\Models\Invoice;
 use App\Models\Quotation;
 use App\Models\Appointment;
 
-use App\Jobs\Invoice\GenerateInvoiceNumber;
-
-use App\Enums\Invoice\InvoiceStatus;
+use App\Jobs\Test\SyncInvoiceNumbers;
 
 class InvoicesSeeder extends Seeder
 {
@@ -65,9 +63,7 @@ class InvoicesSeeder extends Seeder
             Invoice::insert($chunk);
         }
 
-        $sentInvoices = Invoice::where('status', '>=', InvoiceStatus::Sent)->get();
-        foreach ($sentInvoices as $sentInvoice) {
-            dispatch(new GenerateInvoiceNumber($sentInvoice));
-        }
+        // Sync and Auto generate Invoice Number
+        dispatch(new SyncInvoiceNumbers());
     }
 }

@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
 class Inspection extends Model
 {
+    use Searchable;
     use SoftDeletes;
 
     protected $table = 'inspections';
@@ -84,6 +86,10 @@ class Inspection extends Model
                 'options' => [],
             ]
         ],
+    ];
+
+    protected $searchable = [
+        'sidenote',
     ];
 
     protected $fillable = [

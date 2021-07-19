@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Invoices;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
@@ -19,7 +20,7 @@ class PopulateCompanyInvoicesRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::allows('view-any-invoice');
     }
 
     /**
@@ -53,7 +54,15 @@ class PopulateCompanyInvoicesRequest extends FormRequest
             ]);
         }
 
-        $this->setWiths(['paymentTerms', 'referenceable', 'items']);
+        if ($status = $this->get('status')) {
+            $this->addWhere([
+                'column' => 'status',
+                'operator' => '=',
+                'value' => $status,
+            ]);
+        }
+
+        $this->setWiths(['referenceable']);
 
         return $this->collectCompanyOptions();
     }

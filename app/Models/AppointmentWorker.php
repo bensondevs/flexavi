@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 
 class AppointmentWorker extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'appointment_workers';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -19,10 +21,6 @@ class AppointmentWorker extends Model
         'appointment_id',
         'employee_type',
         'employee_id',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()
@@ -36,28 +34,16 @@ class AppointmentWorker extends Model
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company',
-            'company_id',
-            'id'
-        );
+        return $this->belongsTo(Company::class);
     }
 
     public function appointment()
     {
-        return $this->hasOne(
-            'App\Models\Appointment',
-            'appointment_id',
-            'id',
-        );
+        return $this->belongsTo(Appointment::class);
     }
 
     public function employee()
     {
-        return $this->hasOne(
-            'App\Models\Employee',
-            'employee_id',
-            'id'
-        );
+        return $this->belongsTo(Employee::class);
     }
 }
