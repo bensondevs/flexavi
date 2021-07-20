@@ -13,6 +13,8 @@ use App\Observers\InvoiceObserver;
 use App\Enums\Invoice\InvoiceStatus;
 use App\Enums\Invoice\InvoicePaymentMethod;
 
+use App\Enums\PaymentTerm\PaymentTermStatus;
+
 class Invoice extends Model
 {
     use SoftDeletes;
@@ -35,6 +37,9 @@ class Invoice extends Model
         'referenceable_type',
 
         'total',
+        'total_in_terms',
+        'total_paid',
+    
         'status',
         'payment_method',
     ];
@@ -70,7 +75,50 @@ class Invoice extends Model
     public function getFormattedTotalAttribute()
     {
         setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%(#1n', $this->attributes['total']);
+        return money_format('%+.2n', $this->attributes['total']);
+    }
+
+    public function getFormattedTotalInTermsAttribute()
+    {
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%(#1n', $this->attributes['total_in_terms']);
+    }
+
+    public function getTotalOutTermsAttribute()
+    {
+        $total = $this->attributes['total'];
+        $totalInTerms = $this->attributes['total_in_terms'];
+
+        return $total - $totalInTerms;
+    }
+
+    public function getFormattedTotalOutTermsAttribute()
+    {
+        $totalOutTerms = $this->getTotalOutTermsAttribute();
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%+.2n', $totalOutTerms);
+    }
+
+    public function getFormattedTotalPaidAttribute()
+    {
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%+.2n', $this->attributes['total_paid']);
+    }
+
+    public function getTotalUnpaidAttribute()
+    {
+        $total = $this->attributes['total'];
+        $paid = $this->attributes['total_paid']; 
+
+        return $total - $paid;
+    }
+
+    public function getFormattedTotalUnpaidAttribute()
+    {
+        $unpaid = $this->getTotalUnpaidAttribute();
+
+        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
+        return money_format('%+.2n', $unpaid);
     }
 
     public function items()
@@ -182,5 +230,8 @@ class Invoice extends Model
     {
         $terms = $this->paymentTerms()->get();
         $this->attributes['total_in_terms'] = $terms->sum('amount');
+
+        $paidTerms = $terms->where('status', PaymentTermStatus::Paid);
+        $this->attributes['total_paid'] = $paidTerms->sum('amount');
     }
 }

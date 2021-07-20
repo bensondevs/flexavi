@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\PaymentTerms\SavePaymentTermRequest as SaveRequest;
+use App\Http\Requests\PaymentTerms\CreatePaymentTermRequest as CreateRequest;
+use App\Http\Requests\PaymentTerms\UpdatePaymentTermRequest as UpdateRequest;
 use App\Http\Requests\PaymentTerms\FindPaymentTermRequest as FindRequest;
 use App\Http\Requests\PaymentTerms\PopulatePaymentTermsRequest as PopulateRequest;
 
@@ -26,31 +27,42 @@ class PaymentTermController extends Controller
     {
     	$options = $request->options();
 
-    	$terms = $this->term->all($options);
-    	$terms = $this->term->paginate();
-    	$terms->data = PaymentTermResource::collection($terms);
+    	$terms = $this->term->all($options, true);
+    	$terms = PaymentTermResource::apiCollection($terms);
 
     	return response()->json(['payment_terms' => $terms]);
     }
 
-    public function store(SaveRequest $request)
+    public function store(CreateRequest $request)
     {
-    	$input = $request->ruleWithCompany();
-    	$term = $this->term->save($input);
+        $input = $request->validated();
+    	$this->term->save($input);
 
     	return apiResponse($this->term);
+    }
+
+    public function update(UpdateRequest $request)
+    {
+        $term = $request->getPaymentTerm();
+        $this->term->setModel($term);
+
+        $input = $request->validated();
+        $this->term->save($input);
+
+        return apiResponse($this->term);
     }
 
     public function markAsPaid(FindRequest $request)
     {
         $term = $request->getPaymentTerm();
+
         $this->term->setModel($term);
         $this->term->markAsPaid();
 
         return apiResponse($this->term);
     }
 
-    public function cancelPaidStatus(CancelPaidStatusRequest $request)
+    public function cancelPaidStatus(FindRequest $request)
     {
         $term = $request->getPaymentTerm();
         $term = $this->term->setModel($term);
@@ -74,6 +86,7 @@ class PaymentTermController extends Controller
     public function delete(FindRequest $request)
     {
     	$term = $request->getPaymentTerm();
+        
     	$this->term->setModel($term);
     	$this->term->delete();
 

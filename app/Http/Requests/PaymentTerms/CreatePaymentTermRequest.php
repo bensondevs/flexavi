@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Requests\PaymentTerms;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+
+use App\Traits\InputRequest;
+
+use App\Rules\FloatValue;
+
+use App\Models\Invoice;
+
+class CreatePaymentTermRequest extends FormRequest
+{
+    use InputRequest;
+
+    private $invoice;
+    private $paymentTerm;
+
+    public function getInvoice()
+    {
+        if ($this->invoice) return $this->invoice;
+
+        $id = $this->input('invoice_id');
+        return $this->invoice = Invoice::findOrFail($id);
+    }
+
+    protected function prepareForValidation()
+    {
+        $invoice = $this->getInvoice();
+        $this->merge(['company_id' => $invoice->company_id]);
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        $invoice = $this->getInvoice();
+        return Gate::allows('create-payment-term', $invoice);
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $invoice = $this->getInvoice();
+
+        $this->setRules([
+            'invoice_id' => ['required', 'string'],
+            'term_name' => ['required', 'string'],
+            'amount' => ['required', 'numeric', new FloatValue(true), 'min:1', 'max:' . $invoice->total_out_terms],
+            'due_date' => ['required', 'date'],
+        ]);
+
+        return $this->returnRules();
+    }
+
+    public function messages()
+    {
+        $invoice = $this->getInvoice();
+
+        return [
+            'amount.max' => 'You cannot add payment term amount more than total amount of invoice. Maximum you can add: ' . $invoice->formatted_total_out_terms,
+        ];
+    }
+}

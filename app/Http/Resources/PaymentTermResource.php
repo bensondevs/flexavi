@@ -19,6 +19,7 @@ class PaymentTermResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'term_name' => $this->term_name,
             'status' => $this->status,
             'status_description' => $this->status_description,

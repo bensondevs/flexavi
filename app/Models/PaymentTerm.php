@@ -60,7 +60,7 @@ class PaymentTerm extends Model
     public function getHumanDueDateAttribute()
     {
         $dueDate = $this->attributes['due_date'];
-        return carbon($dueDate)->format('M d, Y');
+        return carbon()->parse($dueDate)->format('M d, Y');
     }
 
     public function invoice()

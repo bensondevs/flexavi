@@ -12,6 +12,7 @@ use App\Policies\QuotationPolicy;
 use App\Policies\AppointmentPolicy;
 use App\Policies\ExecuteWorkPolicy;
 use App\Policies\InvoiceItemPolicy;
+use App\Policies\PaymentTermPolicy;
 use App\Policies\ExecuteWorkPhotoPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -89,6 +90,16 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-invoice-item', [InvoiceItemPolicy::class, 'delete']);
         Gate::define('restore-invoice-item', [InvoiceItemPolicy::class, 'restore']);
         Gate::define('force-delete-invoice-item', [InvoiceItemPolicy::class, 'forceDelete']);
+
+        // Payment Term
+        Gate::define('view-any-payment-term', [PaymentTermPolicy::class, 'viewAny']);
+        Gate::define('view-any-appointment-payment-term', [PaymentTermPolicy::class, 'viewAnyAppointment']);
+        Gate::define('view-payment-term', [PaymentTermPolicy::class, 'view']);
+        Gate::define('create-payment-term', [PaymentTermPolicy::class, 'create']);
+        Gate::define('update-payment-term', [PaymentTermPolicy::class, 'update']);
+        Gate::define('delete-payment-term', [PaymentTermPolicy::class, 'delete']);
+        Gate::define('restore-payment-term', [PaymentTermPolicy::class, 'restore']);
+        Gate::define('force-delete-payment-term', [PaymentTermPolicy::class, 'forceDelete']);
 
         // Work
         Gate::define('view-any-work', [WorkPolicy::class, 'viewAny']);

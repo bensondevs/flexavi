@@ -27,7 +27,7 @@ class DeleteInvoiceItemRequest extends FormRequest
     public function authorize()
     {
         $item = $this->getInvoiceItem();
-        return Gate::allows('delete-invoice-item', $item);
+        return Gate::raw('delete-invoice-item', $item);
     }
 
     /**

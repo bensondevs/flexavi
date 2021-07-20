@@ -29,7 +29,8 @@ class PaymentTermRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save payment term.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to save payment term.');
+			$error = $qe->getMessage();
+			$this->setError('Failed to save payment term.', $error);
 		}
 
 		return $this->getModel();

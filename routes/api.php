@@ -339,8 +339,9 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::group(['prefix' => 'payment_terms'], function () {
 					Route::get('/', [PaymentTermController::class, 'paymentTerms']);
 					Route::post('store', [PaymentTermController::class, 'store']);
+					Route::match(['PUT', 'PATCH'], 'update', [PaymentTermController::class, 'update']);
 					Route::post('mark_as_paid', [PaymentTermController::class, 'markAsPaid']);
-					Route::post('cancel_paid_status', [PaymentTermController::class, 'cancel_paid_status']);
+					Route::post('cancel_paid_status', [PaymentTermController::class, 'cancelPaidStatus']);
 					Route::post('forward_to_debt_collector', [PaymentTermController::class, 'forwardToDebtCollector']);
 					Route::delete('delete', [PaymentTermController::class, 'delete']);
 				});

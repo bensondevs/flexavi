@@ -24,11 +24,13 @@ class PaymentTermsSeeder extends Seeder
             $total = $invoice->total;
             
             // Break down the price to each term
-            do {
+            while ($total > 0) {
                 // Set Term Amount
-                $termAmount = rand(1, $total);
-                if ($termAmount > $total)
+                if ($total < 100) {
                     $termAmount = $total;
+                } else {
+                    $termAmount = rand(1, $total);
+                }
 
                 $rawPaymentTerms[] = [
                     'id' => generateUuid(),
@@ -43,12 +45,21 @@ class PaymentTermsSeeder extends Seeder
                 ];
 
                 // Substract the rest of total
-                $total -= $termAmount;
-            } while ($total > 0);
+                $total = $total - $termAmount;
+
+                if ($total <= 0) {
+                    break;
+                }
+            }
         }
 
         foreach (array_chunk($rawPaymentTerms, 1000) as $chunk) {
             PaymentTerm::insert($chunk);
         }
+
+        // Sync invoice payment terms
+        $sync = new SyncInvoicePaymentTerms();
+        $sync->delay(1);
+        dispatch($sync);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\PaymentTerms;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\PopulateRequestOptions;
 
@@ -29,10 +30,8 @@ class PopulatePaymentTermsRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $invoice = $this->getInvoice();
-
-        return $user->hasCompanyPermission($invoice->company_id, 'view payment terms');
+        return Gate::allows('view-any-payment-term', $invoice);
     }
 
     /**

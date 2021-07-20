@@ -27,7 +27,7 @@ class PaymentTermPolicy
         return $user->hasCompanyPermission($invoice->company_id, 'create payment terms');
     }
 
-    public function edit(User $user, PaymentTerm $paymentTerm)
+    public function update(User $user, PaymentTerm $paymentTerm)
     {
         return $user->hasCompanyPermission($paymentTerm->company_id, 'edit payment terms');
     }
