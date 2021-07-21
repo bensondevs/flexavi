@@ -59,7 +59,6 @@ class PaymentTermsSeeder extends Seeder
 
         // Sync invoice payment terms
         $sync = new SyncInvoicePaymentTerms();
-        $sync->delay(1);
         dispatch($sync);
     }
 }

@@ -137,12 +137,15 @@ class RegisterRequest extends FormRequest
 
     public function getAttachments()
     {
-        $invitation = $this->getInvitation();
+        if ($invitation = $this->getInvitation()) {
+            if ($invitation->status != RegisterInvitationStatus::Active) {
+                abort(422, 'The invitation has been used');
+            }
 
-        if ($invitation->status != RegisterInvitationStatus::Active) {
-            abort(422, 'The invitation has been used');
+            return $invitation->attachments;
         }
 
-        return $invitation ? $invitation->attachments : [];
+
+        return [];
     }
 }

@@ -23,6 +23,7 @@ class CreateRegisterInvitationsTable extends Migration
             $table->datetime('expiry_time');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
