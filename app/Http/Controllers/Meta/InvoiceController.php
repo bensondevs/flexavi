@@ -13,20 +13,20 @@ class InvoiceController extends Controller
     {
         $statuses = Invoice::collectAllStatuses();
 
-        return response()->json(['statuses' => $statuses]);
+        return response()->json($statuses);
     }
 
     public function selectableStatuses()
     {
         $selectableStatuses = Invoice::collectStatusOptions();
 
-        return response()->json(['statuses' => $selectableStatuses]);
+        return response()->json($selectableStatuses);
     }
 
     public function allPaymentMethods()
     {
         $methods = Invoice::collectAllPaymentMethods();
 
-        return response()->json(['payment_methods' => $methods]);
+        return response()->json($methods);
     }
 }

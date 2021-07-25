@@ -93,13 +93,6 @@ class Employee extends Model
         );
     }
 
-    public function setPhotoAttribute($photoFile)
-    {
-        // Upload Photo
-        $photo = uploadFile($photoFile, 'uploads/employees');
-        $this->attributes['photo_path'] = $photo->path;
-    }
-
     public function getEmployeeTypeDescriptionAttribute()
     {
         $type = $this->attributes['employee_type'];

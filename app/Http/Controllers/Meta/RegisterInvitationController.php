@@ -13,6 +13,6 @@ class RegisterInvitationController extends Controller
     {
         $statuses = RegisterInvitation::collectAllStatuses();
 
-        return response()->json(['statuses' => $statuses]);
+        return response()->json($statuses);
     }
 }

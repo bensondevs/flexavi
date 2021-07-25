@@ -25,13 +25,22 @@ class CreateCustomersTable extends Migration
             $table->string('registered_from')->default('web');
 
             $table->string('fullname');
-            $table->string('salutation')->default('dear');
 
             $table->string('email')->nullable();
 
             $table->string('phone')->unique();
             $table->string('second_phone')->nullable();
 
+            $table->char('unique_key');
+
+            $table->text('address');
+            $table->char('house_number');
+            $table->char('house_number_suffix')->nullable();
+            $table->char('zipcode');
+            $table->char('city');
+            $table->char('province');
+
+            $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();
         });

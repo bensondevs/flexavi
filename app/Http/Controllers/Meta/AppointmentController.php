@@ -13,20 +13,20 @@ class AppointmentController extends Controller
     {
         $vaults = Appointment::collectAllCancellationVaults();
 
-        return response()->json(['cancellation_vaults' => $vaults]);
+        return response()->json($vaults);
     }
 
     public function allStatuses()
     {
         $statuses = Appointment::collectAllStatuses();
 
-        return response()->json(['statuses' => $statuses]);
+        return response()->json($statuses);
     }
 
     public function allTypes()
     {
         $types = Appointment::collectAllTypes();
 
-        return response()->json(['types' => $types]);
+        return response()->json($types);
     }
 }

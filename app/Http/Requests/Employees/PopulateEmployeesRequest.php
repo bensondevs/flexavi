@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
@@ -17,10 +18,7 @@ class PopulateEmployeesRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $company = $this->getCompany();
-
-        return $user->hasCompanyPermission($company->id, 'view employees');
+        return Gate::allows('view any employees');
     }
 
     /**

@@ -37,8 +37,6 @@ class EmployeesSeeder extends Seeder
                     'employee_type' => rand(EmployeeType::Administrative, EmployeeType::Roofer),
 
                     'employment_status' => rand(EmploymentStatus::Active, EmploymentStatus::Fired),
-                    
-                    'photo_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
 
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),

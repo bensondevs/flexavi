@@ -25,6 +25,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
     use HasRoles;
     use CausesActivity;
+    use Notifiable;
 
     protected $table = 'users';
     protected $primaryKey = 'id';

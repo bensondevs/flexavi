@@ -31,8 +31,6 @@ class CreateEmployeesTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->string('photo_path')->nullable();
-
             $table->char('title');
             $table->tinyInteger('employee_type')->default(EmployeeType::Administrative);
             $table->tinyInteger('employment_status')->default(EmploymentStatus::Active);

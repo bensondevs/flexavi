@@ -21,7 +21,6 @@ use App\Repositories\Base\BaseRepository;
 
 class AuthRepository extends BaseRepository
 {
-	private $customer;
 	private $employee;
 	private $owner;
 	private $invitation;
@@ -29,7 +28,6 @@ class AuthRepository extends BaseRepository
 	public function __construct()
 	{
 		$this->setInitModel(new User);
-		$this->customer = new Customer();
 		$this->employee = new EmployeeRepository();
 		$this->invitation = new RegisterInvitationRepository();
 	}
@@ -142,10 +140,8 @@ class AuthRepository extends BaseRepository
 
 			$this->setSuccess('Successfully login');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to do login, there is something wrong and we don\' know yet', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to do login, there is something wrong and we don\' know yet', $error);
 		}
 
 		return $this->getModel();
@@ -154,29 +150,21 @@ class AuthRepository extends BaseRepository
 	public function customerLogin(array $credentials)
 	{
 		try {
-			$zipcode = $credentials['zipcode'];
-			$houseNumber = $credentials['house_number'];
-
-			$customer = $this->customer->where('zipcode', $zipcode)
-				->where('house_number', $houseNumber)
-				->first();
-
-			if (! $customer) 
+			if (! $customer = Customer::findUsingCredentials($credentials)) {
 				return $this->setNotFound('Customer account not found.');
+			}
 
-			$customer->token = $customer->createToken(time())->plainTextToken;
-			$this->customer = $customer;
+			if (! $customer = $customer->attemptAutenticate($credentials['unique_key'])) {
+				return $this->setUnprocessedInput('Failed to logging in, the unique key does not match out record.');
+			}
 
 			$this->setSuccess('Successfully logged in as customer');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to login to customer.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to login to customer.', $error);
 		}
 
-		return $this->status == 'success' ?
-			$this->customer : null;
+		return $customer;
 	}
 
 	public function socialiteLogin($driver)

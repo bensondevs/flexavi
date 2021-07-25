@@ -26,22 +26,7 @@ class CustomerLoginRequest extends FormRequest
         return [
             'zipcode' => ['required', 'string'],
             'house_number' => ['required', 'string'],
-        ];
-    }
-
-    public function onlyInRules()
-    {
-        return $this->only(array_keys($this->rules()));
-    }
-
-    public function messages()
-    {
-        return [
-            'zipcode.required' => 'Please insert Zip Code',
-            'zipcode.string' => 'Please insert valid Zip Code',
-
-            'house_number.required' => 'Please insert House Number',
-            'house_number.string' => 'Please insert valid House Number',
+            'unique_key' => ['required', 'string'],
         ];
     }
 }

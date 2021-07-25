@@ -128,6 +128,17 @@ function randomDate($format = 'd/m/Y')
     return $date;
 }
 
+function random_phone($length = 12)
+{
+    $result = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $result .= random_int(0, 9);
+    }
+
+    return $result;
+}
+
 function carbon($parameter = null)
 {
     return $parameter ? 

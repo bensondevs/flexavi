@@ -13,6 +13,6 @@ class ExecuteWorkPhotoController extends Controller
     {
         $types = ExecuteWorkPhoto::collectAllPhotoConditionTypes();
 
-        return response()->json(['photo_condition_types' => $types]);
+        return response()->json($types);
     }
 }

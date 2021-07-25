@@ -12,35 +12,30 @@ class QuotationController extends Controller
     public function allTypes()
     {
         $types = Quotation::collectAllTypes();
-
-        return response()->json(['types' => $types]);
+        return response()->json($types);
     }
 
     public function allStatuses()
     {
         $statuses = Quotation::collectAllStatuses();
-
-        return response()->json(['statuses' => $statuses]);
+        return response()->json($statuses);
     }
 
     public function allPaymentMethods()
     {
         $methods = Quotation::collectAllPaymentMethods();
-
-        return response()->json(['payment_methods' => $methods]);
+        return response()->json($methods);
     }
 
     public function allDamageCauses()
     {
         $causes = Quotation::collectAllDamageCauses();
-
-        return response()->json(['damage_causes' => $causes]);
+        return response()->json($causes);
     }
 
     public function allCanceller()
     {
         $cancellers = Quotation::collectAllCanceller();
-
-        return response()->json(['cancellers' => $cancellers]);
+        return response()->json($cancellers);
     }
 }

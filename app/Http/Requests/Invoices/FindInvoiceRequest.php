@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Invoices;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Invoice;
 
@@ -12,8 +13,10 @@ class FindInvoiceRequest extends FormRequest
 
     public function getInvoice()
     {
-        return $this->invoice = $this->invoice ?: 
-            Invoice::findOrFail($this->input('id'));
+        if ($this->invoice) return $this->invoice;
+
+        $id = $this->input('id') ?: $this->input('invoice_id');
+        return $this->invoice = Invoice::findOrFail($id);
     }
 
     /**
@@ -23,10 +26,8 @@ class FindInvoiceRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $invoice = $this->getInvoice();
-
-        return $user->hasCompanyPermission($invoice, 'view invoices');
+        return Gate::allows('view-invoice', $invoice);
     }
 
     /**

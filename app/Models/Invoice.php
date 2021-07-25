@@ -141,7 +141,7 @@ class Invoice extends Model
         return $this->morphTo();
     }
 
-    public function collectAllPaymentMethods()
+    public static function collectAllPaymentMethods()
     {
         return InvoicePaymentMethod::asSelectArray();
     }

@@ -3,7 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\Auths\AuthController;
+use App\Http\Controllers\Api\Auths\CustomerAuthController;
 use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Meta\CarController as MetaCarController;
@@ -60,8 +61,9 @@ Route::group(['prefix' => 'auth'], function () {
 		Customer Login
 	*/
 	Route::group(['prefix' => 'customer'], function () {
-		Route::post('login', [AuthController::class, 'customerLogin']);
-		Route::post('logout', [AuthController::class, 'customerLogout'])->middleware('auth:sanctum');
+		Route::post('login', [CustomerAuthController::class, 'login']);
+		Route::post('reset_unique_key', [CustomerAuthController::class, 'resetUniqueKey']);
+		Route::post('logout', [CustomerAuthController::class, 'logout'])->middleware('auth:sanctum');
 	});
 
 	/*
@@ -74,7 +76,7 @@ Route::group(['prefix' => 'auth'], function () {
 		});
 		
 		Route::group(['prefix' => 'register'], function () {
-			Route::get('{driver}/register', [AuthController::class, 'socialMediaRegister']);
+			Route::get('{driver}', [AuthController::class, 'socialMediaRegister']);
 		});
 	});
 
@@ -104,8 +106,8 @@ Route::group(['prefix' => 'meta'], function () {
 	*/
 	Route::group(['prefix' => 'appointment'], function () {
 		Route::get('all_cancellation_vaults', [MetaAppointmentController::class, 'allCancellationVaults']);
-		Route::get('all_statuses', [MetaAppointmentController::class, 'allCancellationVaults']);
-		Route::get('all_types', [MetaAppointmentController::class, 'allCancellationVaults']);
+		Route::get('all_statuses', [MetaAppointmentController::class, 'allStatuses']);
+		Route::get('all_types', [MetaAppointmentController::class, 'allTypes']);
 	});
 
 	/*
@@ -120,14 +122,14 @@ Route::group(['prefix' => 'meta'], function () {
 	*/
 	Route::group(['prefix' => 'employee'], function () {
 		Route::get('all_types', [MetaEmployeeController::class, 'allTypes']);
-		Route::get('all_employment_statuses', [EmployeeController::class, 'allEmploymentStatuses']);
+		Route::get('all_employment_statuses', [MetaEmployeeController::class, 'allEmploymentStatuses']);
 	});
 
 	/*
 		Execute Work Photo Meta
 	*/
 	Route::group(['prefix' => 'execute_work_photo'], function () {
-		Route::get('all_photo_condition_types', [MetaExecuteWorkPhotoController::class, 'allPhotoConditionTypes']);
+		Route::get('all_types', [MetaExecuteWorkPhotoController::class, 'allPhotoConditionTypes']);
 	});
 
 	/*
@@ -168,7 +170,7 @@ Route::group(['prefix' => 'meta'], function () {
 		User Meta
 	*/
 	Route::group(['prefix' => 'user'], function () {
-		Route::get('check_email_used', [MetaUserController::class, 'check_email_used']);
+		Route::get('check_email_used', [MetaUserController::class, 'checkEmailUsed']);
 		Route::get('all_id_card_types', [MetaUserController::class, 'allIdCardTypes']);
 	});
 
@@ -239,6 +241,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::delete('delete', [CompanyCustomerController::class, 'delete']);
 				Route::patch('restore', [CompanyCustomerController::class, 'restore']);
 
+				Route::get('appointments', [AppointmentController::class, 'customerAppointments']);
 				Route::get('quotations', [QuotationController::class, 'customerQuotations']);
 			});
 

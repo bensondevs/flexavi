@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Gate;
 use App\Policies\WorkPolicy;
 use App\Policies\AddressPolicy;
 use App\Policies\InvoicePolicy;
+use App\Policies\CustomerPolicy;
+use App\Policies\EmployeePolicy;
 use App\Policies\QuotationPolicy;
 use App\Policies\AppointmentPolicy;
 use App\Policies\ExecuteWorkPolicy;
@@ -130,5 +132,21 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-address', [AddressPolicy::class, 'delete']);
         Gate::define('restore-address', [AddressPolicy::class, 'restore']);
         Gate::define('force-delete-address', [AddressPolicy::class, 'forceDelete']);
+
+        // Employee
+        Gate::define('view-any-employee', [EmployeePolicy::class, 'viewAny']);
+        Gate::define('create-employee', [EmployeePolicy::class, 'create']);
+        Gate::define('edit-employee', [EmployeePolicy::class, 'update']);
+        Gate::define('delete-employee', [EmployeePolicy::class, 'delete']);
+        Gate::define('restore-employee', [EmployeePolicy::class, 'restore']);
+        Gate::define('force-delete-employee', [EmployeePolicy::class, 'forceDelete']);
+
+        // Customer
+        Gate::define('view-any-customer', [CustomerPolicy::class, 'viewAny']);
+        Gate::define('create-customer', [CustomerPolicy::class, 'create']);
+        Gate::define('edit-customer', [CustomerPolicy::class, 'update']);
+        Gate::define('delete-customer', [CustomerPolicy::class, 'delete']);
+        Gate::define('restore-customer', [CustomerPolicy::class, 'restore']);
+        Gate::define('force-delete-customer', [CustomerPolicy::class, 'forceDelete']);
     }
 }

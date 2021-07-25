@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
@@ -17,10 +18,7 @@ class PopulateCompanyCustomersRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $company = $this->getCompany();
-
-        return $user->hasCompanyPermission($company->id, 'view customers');
+        return Gate::allows('view-any-customer');
     }
 
     /**

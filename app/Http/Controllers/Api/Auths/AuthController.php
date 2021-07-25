@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auths;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -66,7 +66,7 @@ class AuthController extends Controller
 
     public function customerLogin(CustomerLoginRequest $request)
     {
-        $input = $request->onlyInRules();
+        $input = $request->validated();
         $customer = $this->auth->customerLogin($input);
 
         return apiResponse($this->auth, ['customer' => $customer]);

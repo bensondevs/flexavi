@@ -12,7 +12,6 @@ class PaymentTermController extends Controller
     public function allStatuses()
     {
         $statuses = PaymentTerm::collectAllStatuses();
-
-        return response()->json(['statuses' => $statuses]);
+        return response()->json($statuses);
     }
 }

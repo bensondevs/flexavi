@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
 
@@ -12,8 +13,10 @@ class FindCustomerRequest extends FormRequest
 
     public function getCustomer()
     {
-        return $this->customer = $this->customer ?: 
-            Customer::findOrFail($this->input('id'));
+        if ($this->customer) return $this->customer;
+
+        $id = $this->input('id') ?: $this->input('customer_id');
+        return $this->customer = Customer::findOrFail($id);
     }
 
     /**
@@ -23,10 +26,8 @@ class FindCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $customer = $this->getCustomer();
-
-        return $user->hasCompanyPermission($customer->company_id, 'view customers');
+        return Gate::allows('view-customer', $customer);
     }
 
     /**

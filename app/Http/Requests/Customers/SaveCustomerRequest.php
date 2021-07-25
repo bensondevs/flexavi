@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
 
@@ -21,9 +22,10 @@ class SaveCustomerRequest extends FormRequest
 
     public function getCustomer()
     {
-        return $this->customer = $this->model = ($this->customer) ?
-            $this->customer : 
-            Customer::findOrFail($this->input('id'));
+        if ($this->customer) return $this->customer;
+
+        $id = $this->input('id') ?: $this->input('customer_id');
+        return $this->customer = $this->model = Customer::findOrFail($id);
     }
 
     /**
@@ -33,14 +35,12 @@ class SaveCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $company = $this->getCompany();
-
-        if ($this->isMethod('POST'))
-            return $user->hasCompanyPermission($company->id, 'create customers');
+        if ($this->isMethod('POST')) {
+            return Gate::allows('create-customer');
+        }
     
         $customer = $this->getCustomer();
-        return $user->hasCompanyPermission($customer->company_id, 'edit customers');
+        return Gate::allows('edit-customer', $customer);
     }
 
     /**
@@ -52,11 +52,6 @@ class SaveCustomerRequest extends FormRequest
     {
         $this->setRules([
             'fullname' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
-            'address' => ['required', 'string'],
-            'house_number' => ['required', 'numeric'],
-            'zipcode' => ['required', new ZipCode],
-            'city' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
-            'province' => ['required', 'string', 'regex:/^[\pL\s\-]+$/u'],
             'email' => ['string', 'email', 'unique:customers,email'],
             'phone' => ['required', 'numeric', 'unique:customers,phone'],
             'second_phone' => ['numeric', new NotEqual('phone')],

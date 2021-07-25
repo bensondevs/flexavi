@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Employee;
 
@@ -12,8 +13,10 @@ class DeleteEmployeeRequest extends FormRequest
 
     public function getEmployee()
     {
-        return $this->employee = $this->employee ?:
-            Employee::withTrashed()->findOrFail($this->input('id'));
+        if ($this->employee) return $this->employee;
+
+        $id = $this->input('id') ?: $this->input('employee_id');
+        return $this->employee = Employee::withTrashed()->findOrFail($id);
     }
 
     /**
@@ -23,10 +26,8 @@ class DeleteEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $employee = $this->getEmployee();
-
-        return $user->hasCompanyPermission($employee->company_id, 'delete employees');
+        return Gate::allows('delete-employee', $employee);
     }
 
     /**

@@ -7,23 +7,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Company;
 use App\Models\Customer;
 
-use App\Repositories\CompanyRepository;
-use App\Repositories\CustomerRepository;
-
 class CustomersSeeder extends Seeder
 {
-    private $company;
-	private $customer;
-
-	public function __construct(
-        CompanyRepository $company,
-        CustomerRepository $customer
-    )
-	{
-        $this->company = $company;
-		$this->customer = $customer;
-	}
-
     /**
      * Run the database seeds.
      *
@@ -31,11 +16,11 @@ class CustomersSeeder extends Seeder
      */
     public function run()
     {
-        $companies = $this->company->all();
+        $companies = Company::all();
 
         $rawCustomers = [];
         foreach ($companies as $key => $company) {
-            for ($index = 0; $index < 100; $index++) {
+            for ($index = 0; $index < 1000; $index++) {
                 array_push($rawCustomers, [
                     'id' => generateUuid(),
 
@@ -43,13 +28,25 @@ class CustomersSeeder extends Seeder
             
                     'fullname' => 'Customer ' . ($index + 1) . ' of ' . $company->company_name,
                     'email' => 'customer' . ($index + 1) . '@' . strtolower(str_replace(' ', '', $company->company_name)) . '.com',
-                    'phone' => rand(111111111, 999999999),
+                    'phone' => random_phone(13),
+
+                    'unique_key' => random_string(5),
+
+                    'address' => 'Customer ' . ($index + 1) . ' address',
+                    'house_number' => rand(1, 1000),
+                    'house_number_suffix' => 'X',
+                    'zipcode' => rand(100000, 999999),
+                    'city' => 'Randon City',
+                    'province' => 'Random Province',
 
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
                 ]);
             }
         }
-        Customer::insert($rawCustomers);
+        
+        foreach (array_chunk($rawCustomers, 100) as $chunk) {
+            Customer::insert($chunk);
+        }
     }
 }

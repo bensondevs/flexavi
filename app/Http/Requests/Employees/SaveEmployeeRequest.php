@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Employee;
 
@@ -20,7 +21,7 @@ class SaveEmployeeRequest extends FormRequest
     {
         if ($this->employee) return $this->employee;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('employee_id');
         return $this->employee = $this->model = Employee::findOrFail($id);
     }
 
@@ -31,13 +32,17 @@ class SaveEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->authorizeCompanyAction('employees');
+        if ($this->isMethod('POST')) {
+            return Gate::allows('create-employee');
+        }
+
+        return Gate::allows('edit-employee', $this->getEmployee());
     }
 
     protected function prepareForValidation()
     {
         if ($type = $this->employee_type) {
-            if (! is_int($this->employee_type)) {
+            if (! is_numeric($this->employee_type)) {
                 $type = ucfirst($type);
                 $available = EmployeeType::getKeys();
                 if (! in_array($type, $available)) {
@@ -51,7 +56,7 @@ class SaveEmployeeRequest extends FormRequest
         }
 
         if ($status = $this->employment_status) {
-            if (! in_array($this->employment_status)) {
+            if (! is_numeric($this->employment_status)) {
                 $status = ucfirst($type);
                 $available = EmployementStatus::getKeys();
                 if (! in_array($type, $available)) {

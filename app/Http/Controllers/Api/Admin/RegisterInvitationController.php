@@ -13,34 +13,34 @@ class RegisterInvitationController extends Controller
 {
     private $invitation;
 
-    public function __construct(
-    	RegisterInvitationRepository $invitation
-    )
+    public function __construct(RegisterInvitationRepository $invitation)
     {
     	$this->invitation = $invitation;
     }
 
     public function sendInvitation(SendInvitationRequest $request)
     {
-    	$invitation = $this->invitation->send(
-    		$request->onlyInRules()
-    	);
+        $input = $request->validated();
+    	$invitation = $this->invitation->send($input);
 
-    	return apiResponse($this->invitation, $invitation);
+    	return apiResponse($this->invitation);
     }
 
-    public function invitations(Request $request)
+    public function invitations(PopulateRequest $request)
     {
-    	$invitations = $this->invitation->all();
+        $options = $request->options();
 
-    	return response()->json([
-    		'invitations' => $invitations
-    	]);
+    	$invitations = $this->invitation->all();
+        $invitations = $this->invitation->paginate();
+
+    	return response()->json(['invitations' => $invitations]);
     }
 
     public function delete(FindInvitationRequest $request)
     {
-    	$this->invitation->setModel($request->getInvitation());
+        $invitation = $request->getInvitation();
+
+    	$this->invitation->setModel($invitation);
     	$this->invitation->delete();
 
     	return apiResponse($this->invitation);

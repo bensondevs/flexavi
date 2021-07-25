@@ -13,13 +13,13 @@ class EmployeeController extends Controller
     {
         $types = Employee::collectAllTypes();
 
-        return response()->json(['types' => $types]);
+        return response()->json($types);
     }
 
     public function allEmploymentStatuses()
     {
         $statuses = Employee::collectAllEmploymentStatus();
 
-        return response()->json(['employment_statuses' => $statuses]);
+        return response()->json($statuses);
     }
 }

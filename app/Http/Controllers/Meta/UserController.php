@@ -30,6 +30,6 @@ class UserController extends Controller
     public function allIdCardTypes()
     {
         $types = User::collectAllIdCardTypes();
-        return response()->json(['id_card_types' => $types]);
+        return response()->json($types);
     }
 }

@@ -264,7 +264,7 @@ class Quotation extends Model
 
     public static function collectAllDamageCauses()
     {
-        return QuotationDamageCauses::asSelectArray();
+        return QuotationDamageCause::asSelectArray();
     }
 
     public static function collectAllCanceller()

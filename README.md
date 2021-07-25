@@ -7,3 +7,4 @@
 - [Customer](docs/Customer/Index.md)
 - [Employee](docs/Employee/Index.md)
 - [Administrator](docs/Administrator.md)
+- [Meta](docs/Meta/Index.md)

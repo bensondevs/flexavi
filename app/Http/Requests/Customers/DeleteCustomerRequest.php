@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
 
@@ -12,8 +13,17 @@ class DeleteCustomerRequest extends FormRequest
 
     public function getCustomer()
     {
-        return $this->customer = $this->customer ?:
-            Customer::withTrashed()->findOrFail($this->input('id'));
+        if ($this->customer) return $this->customer;
+
+        $id = $this->input('id') ?: $this->input('customer_id');
+        return $this->customer = Customer::withTrashed()->findOrFail($id);
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($force = $this->input('force')) {
+            $this->merge(['force' => strtobool($force)]);
+        }
     }
 
     /**
@@ -23,10 +33,8 @@ class DeleteCustomerRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $customer = $this->getCustomer();
-
-        return $user->hasCompanyPermission($customer->company_id, 'delete customers');
+        return Gate::allows('delete-customer', $customer);
     }
 
     /**

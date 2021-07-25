@@ -13,6 +13,6 @@ class CarController extends Controller
     {
         $statuses = Car::collectAllStatuses();
 
-        return response()->json(['statuses' => $statuses]);
+        return response()->json($statuses);
     }
 }

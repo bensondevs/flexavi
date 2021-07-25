@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Customers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
 
@@ -16,8 +17,10 @@ class RestoreCustomerRequest extends FormRequest
 
     public function getTrashedCustomer()
     {
-        return $this->trashedCustomer = $this->model = $this->trashedCustomer ?:
-            Customer::withTrashed()->findOrFail($this->input('id'));
+        if ($this->trashedCustomer) return $this->trashedCustomer;
+
+        $id = $this->input('id') ?: $this->input('customer_id');
+        return $this->trashedCustomer = Customer::withTrashed()->findOrFail($id);
     }
 
     /**
@@ -28,7 +31,7 @@ class RestoreCustomerRequest extends FormRequest
     public function authorize()
     {
         $customer = $this->getTrashedCustomer();
-        return $this->checkCompanyPermission('restore customers', $customer);
+        return Gate::allows('restore-customer', $customer);
     }
 
     /**

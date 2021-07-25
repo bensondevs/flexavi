@@ -130,6 +130,17 @@ class BaseRepository
 			}
 		}
 
+		if (isset($options['search'])) {
+			if ($options['search']) {
+				$searchableColumns = $this->getModel()->getSearchable();
+				foreach ($searchableColumns as $key => $column) {
+					$models = ($key == 0) ?
+						$models->where($column, 'like', '%' . $options['search'] . '%') :
+						$models->orWhere($column, 'like', '%' . $options['search'] . '%');
+				}
+			}
+		}
+
 		if (isset($options['where_hases'])) {
 			if ($options['where_hases']) {
 				foreach ($options['where_hases'] as $relation => $conditions) {
@@ -156,17 +167,6 @@ class BaseRepository
 		if (isset($options['per_page'])) {
 			if ($options['per_page']) {
 				$this->defaultPaginationPerPage = $options['per_page'];
-			}
-		}
-
-		if (isset($options['search'])) {
-			if ($options['search']) {
-				$searchableColumns = $this->getModel()->getSearchable();
-				foreach ($searchableColumns as $key => $column) {
-					$models = ($key == 0) ?
-						$models->where($column, 'like', '%' . $options['search'] . '%') :
-						$models->orWhere($column, 'like', '%' . $options['search'] . '%');
-				}
 			}
 		}
 

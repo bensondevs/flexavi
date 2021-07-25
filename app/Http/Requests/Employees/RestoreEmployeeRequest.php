@@ -3,21 +3,20 @@
 namespace App\Http\Requests\Employees;
 
 use Illuminate\Foundation\Http\FormRequest;
-
-use App\Traits\CompanyInputRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Employee;
 
 class RestoreEmployeeRequest extends FormRequest
 {
-    use CompanyInputRequest;
-
     private $trashedEmployee;
 
     public function getTrashedEmployee()
     {
-        return $this->trashedEmployee = $this->trashedEmployee ?:
-            Employee::withTrashed()->findOrFail($this->input('id'));
+        if ($this->trashedEmployee) return $this->trashedEmployee;
+
+        $id = $this->input('id') ?: $this->input('employee_id');
+        return $this->trashedEmployee = Employee::onlyTrashed()->findOrFail($id);
     }
 
     /**
@@ -28,7 +27,7 @@ class RestoreEmployeeRequest extends FormRequest
     public function authorize()
     {
         $employee = $this->getTrashedEmployee();
-        return $this->checkCompanyPermission('restore employees', $employee);
+        return Gate::allows('restore-employee', $employee);
     }
 
     /**

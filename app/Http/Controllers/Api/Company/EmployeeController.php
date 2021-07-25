@@ -95,6 +95,7 @@ class EmployeeController extends Controller
         $employee = $request->getTrashedEmployee();
         $employee = $this->employee->setModel($employee);
         $employee = $this->employee->restore();
+        $employee = new EmployeeResource($employee);
 
         return apiResponse($this->employee, ['employee' => $employee]);
     }

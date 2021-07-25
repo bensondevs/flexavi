@@ -3,6 +3,7 @@
 use App\Enums\User\UserIdCardType;
 
 use App\Enums\Appointment\AppointmentStatus;
+use App\Enums\Appointment\AppointmentType;
 
 use App\Enums\Quotation\QuotationStatus;
 use App\Enums\Quotation\QuotationDamageCause;
@@ -30,6 +31,15 @@ return [
         AppointmentStatus::Processed => 'Processed',
         AppointmentStatus::Calculated => 'Calculated',
         AppointmentStatus::Cancelled => 'Cancelled',
+    ],
+
+    AppointmentType::class => [
+        AppointmentType::Inspection => 'Inspection',
+        AppointmentType::Quotation => 'Quotation',
+        AppointmentType::ExecuteWork => 'Execute Work',
+        AppointmentType::Warranty => 'Warranty',
+        AppointmentType::PaymentPickUp => 'Payment Pick-Up',
+        AppointmentType::PaymentReminder => 'Payment Reminder',
     ],
 
     // Quotation

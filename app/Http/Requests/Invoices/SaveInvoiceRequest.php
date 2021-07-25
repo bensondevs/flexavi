@@ -26,11 +26,7 @@ class SaveInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            'work_contract_id' => [
-                'required', 
-                'string', 
-                'exists:work_contracts,id'
-            ],
+            //
         ];
     }
 }

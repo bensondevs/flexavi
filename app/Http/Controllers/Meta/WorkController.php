@@ -11,8 +11,6 @@ class WorkController extends Controller
 {
     public function allStatuses()
     {
-        $statuses = Work::collectAllStatuses();
-
-        return response()->json(['statuses' => $statuses]);
+        return response()->json(Work::collectAllStatuses());
     }
 }
