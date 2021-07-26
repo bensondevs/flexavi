@@ -27,12 +27,17 @@
 									"formdata": [
 										{
 											"key": "zipcode",
-											"value": "128760",
+											"value": "767299",
 											"type": "text"
 										},
 										{
 											"key": "house_number",
-											"value": "59",
+											"value": "763",
+											"type": "text"
+										},
+										{
+											"key": "unique_key",
+											"value": "LvBE0",
 											"type": "text"
 										}
 									]
@@ -47,6 +52,47 @@
 										"auth",
 										"customer",
 										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reset Unique Key",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "zipcode",
+											"value": "767299",
+											"type": "text"
+										},
+										{
+											"key": "house_number",
+											"value": "763",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/api/auth/customer/reset_unique_key",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"customer",
+										"reset_unique_key"
 									]
 								}
 							},
@@ -102,16 +148,12 @@
 								{
 									"key": "invitation_code",
 									"value": "register1",
-									"type": "text"
+									"type": "text",
+									"disabled": true
 								},
 								{
 									"key": "fullname",
 									"value": "Test User",
-									"type": "text"
-								},
-								{
-									"key": "salutation",
-									"value": "Mr",
 									"type": "text"
 								},
 								{
@@ -142,11 +184,12 @@
 								{
 									"key": "profile_picture",
 									"type": "file",
-									"src": "/home/benson/Downloads/pp.jpeg"
+									"src": "/home/benson/Downloads/pp.jpeg",
+									"disabled": true
 								},
 								{
 									"key": "email",
-									"value": "register99@flexavi.com",
+									"value": "register22@flexavi.com",
 									"type": "text"
 								},
 								{
@@ -162,30 +205,52 @@
 								{
 									"key": "bank_name",
 									"value": "Another Bank",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "bic_code",
 									"value": "012",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "bank_account",
 									"value": "08361232113",
-									"type": "text",
-									"disabled": true
+									"type": "text"
 								},
 								{
 									"key": "bank_holder_name",
 									"value": "Another User",
+									"type": "text"
+								},
+								{
+									"key": "invitation_code",
+									"value": "register22",
 									"type": "text",
 									"disabled": true
 								},
 								{
-									"key": "invitation_code",
-									"value": "register99",
+									"key": "profile_picture",
+									"value": "data:image/jpeg;base64,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",
+									"type": "text"
+								},
+								{
+									"key": "house_number",
+									"value": "12",
+									"type": "text"
+								},
+								{
+									"key": "zipcode",
+									"value": "721711",
+									"type": "text"
+								},
+								{
+									"key": "city",
+									"value": "Another City",
+									"type": "text"
+								},
+								{
+									"key": "province",
+									"value": "Another Province",
 									"type": "text"
 								}
 							]
@@ -269,43 +334,6 @@
 								"api",
 								"auth",
 								"logout"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Check Email Used",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/api/auth/check_email_used?email=",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"api",
-								"auth",
-								"check_email_used"
-							],
-							"query": [
-								{
-									"key": "email",
-									"value": ""
-								}
 							]
 						}
 					},
@@ -1206,43 +1234,14 @@
 												},
 												{
 													"key": "employee_type",
-													"value": "administrative",
+													"value": "1",
 													"type": "text"
 												},
 												{
 													"key": "employment_status",
-													"value": "active",
-													"type": "text"
-												},
-												{
-													"key": "address",
-													"value": "Another street",
-													"type": "text"
-												},
-												{
-													"key": "house_number",
-													"value": "11",
-													"type": "text"
-												},
-												{
-													"key": "house_number_suffix",
-													"value": "A",
-													"type": "text"
-												},
-												{
-													"key": "zipcode",
-													"value": "11178",
-													"type": "text"
-												},
-												{
-													"key": "city",
-													"value": "Another City",
-													"type": "text"
-												},
-												{
-													"key": "province",
-													"value": "Another Province",
-													"type": "text"
+													"value": "1",
+													"type": "text",
+													"disabled": true
 												}
 											]
 										},
@@ -1283,7 +1282,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "6f3b32e0-c923-11eb-8ae1-0d9369adeb90",
+													"value": "48302f90-ec91-11eb-9f11-c7d69605ac3a",
 													"type": "text"
 												},
 												{
@@ -1305,43 +1304,14 @@
 												},
 												{
 													"key": "employee_type",
-													"value": "administrative",
+													"value": "1",
 													"type": "text"
 												},
 												{
 													"key": "employment_status",
-													"value": "active",
-													"type": "text"
-												},
-												{
-													"key": "address",
-													"value": "Another street",
-													"type": "text"
-												},
-												{
-													"key": "house_number",
-													"value": "11",
-													"type": "text"
-												},
-												{
-													"key": "house_number_suffix",
-													"value": "A",
-													"type": "text"
-												},
-												{
-													"key": "zipcode",
-													"value": "11178",
-													"type": "text"
-												},
-												{
-													"key": "city",
-													"value": "Another City",
-													"type": "text"
-												},
-												{
-													"key": "province",
-													"value": "Another Province",
-													"type": "text"
+													"value": "1",
+													"type": "text",
+													"disabled": true
 												}
 											]
 										},
@@ -1382,7 +1352,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "c90c1a80-c922-11eb-b1dc-51d432414c57",
+													"value": "48f5a740-ea4c-11eb-a0cf-db19228a927f",
 													"type": "text"
 												},
 												{
@@ -1430,7 +1400,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
+													"value": "48f5a740-ea4c-11eb-a0cf-db19228a927f",
 													"type": "text"
 												}
 											]
@@ -1742,11 +1712,6 @@
 													"key": "car_license",
 													"value": "143862813",
 													"type": "text"
-												},
-												{
-													"key": "status",
-													"value": "out",
-													"type": "text"
 												}
 											]
 										},
@@ -1877,7 +1842,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/customers",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers?search=john@doe.com&per_page=100",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -1890,8 +1855,7 @@
 											"query": [
 												{
 													"key": "search",
-													"value": "company1.com",
-													"disabled": true
+													"value": "john@doe.com"
 												},
 												{
 													"key": "page",
@@ -1900,8 +1864,7 @@
 												},
 												{
 													"key": "per_page",
-													"value": "10",
-													"disabled": true
+													"value": "100"
 												}
 											]
 										}
@@ -1972,36 +1935,6 @@
 													"type": "text"
 												},
 												{
-													"key": "salutation",
-													"value": "mr",
-													"type": "text"
-												},
-												{
-													"key": "address",
-													"value": "Another Road 11",
-													"type": "text"
-												},
-												{
-													"key": "house_number",
-													"value": "11",
-													"type": "text"
-												},
-												{
-													"key": "zipcode",
-													"value": "12345",
-													"type": "text"
-												},
-												{
-													"key": "city",
-													"value": "Another City",
-													"type": "text"
-												},
-												{
-													"key": "province",
-													"value": "Province",
-													"type": "text"
-												},
-												{
 													"key": "email",
 													"value": "john@doe.com",
 													"type": "text"
@@ -2055,7 +1988,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6",
+													"value": "4847c840-ea4c-11eb-98c9-a39a5d10c593",
 													"type": "text"
 												},
 												{
@@ -2064,43 +1997,14 @@
 													"type": "text"
 												},
 												{
-													"key": "salutation",
-													"value": "mrs",
-													"type": "text"
-												},
-												{
-													"key": "address",
-													"value": "Another Road 11",
-													"type": "text"
-												},
-												{
-													"key": "house_number",
-													"value": "11",
-													"type": "text"
-												},
-												{
-													"key": "zipcode",
-													"value": "12345",
-													"type": "text"
-												},
-												{
-													"key": "city",
-													"value": "Just A City",
-													"type": "text"
-												},
-												{
-													"key": "province",
-													"value": "Another Province",
-													"type": "text"
-												},
-												{
 													"key": "email",
 													"value": "john@doe.com",
-													"type": "text"
+													"type": "text",
+													"disabled": true
 												},
 												{
 													"key": "phone",
-													"value": "1234567890",
+													"value": "1234567111",
 													"type": "text"
 												},
 												{
@@ -2147,7 +2051,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
+													"value": "4847c840-ea4c-11eb-98c9-a39a5d10c593",
 													"type": "text"
 												}
 											]
@@ -2189,7 +2093,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "c88bcae0-c922-11eb-80c3-3d4feea41ff5",
+													"value": "4847c840-ea4c-11eb-98c9-a39a5d10c593",
 													"type": "text"
 												}
 											]
@@ -2214,9 +2118,20 @@
 									"name": "Customer Appointments",
 									"request": {
 										"method": "GET",
-										"header": [],
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/appointments",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/appointments?customer_id=4847c840-ea4c-11eb-98c9-a39a5d10c593",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -2226,6 +2141,12 @@
 												"companies",
 												"customers",
 												"appointments"
+											],
+											"query": [
+												{
+													"key": "customer_id",
+													"value": "4847c840-ea4c-11eb-98c9-a39a5d10c593"
+												}
 											]
 										}
 									},
@@ -2248,7 +2169,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/quotations?customer_id=b5df5bd0-da3e-11eb-8d8c-8574da4f7769",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/quotations?customer_id=4847c840-ea4c-11eb-98c9-a39a5d10c593",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -2262,7 +2183,7 @@
 											"query": [
 												{
 													"key": "customer_id",
-													"value": "b5df5bd0-da3e-11eb-8d8c-8574da4f7769"
+													"value": "4847c840-ea4c-11eb-98c9-a39a5d10c593"
 												}
 											]
 										}
@@ -2307,7 +2228,7 @@
 													]
 												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/attachments/?id=d2473df0-d968-11eb-bf20-1dde6e74f00d",
+													"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/attachments/?id=b66dc230-df2a-11eb-a200-230bc9a33294",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -2322,7 +2243,7 @@
 													"query": [
 														{
 															"key": "id",
-															"value": "d2473df0-d968-11eb-bf20-1dde6e74f00d"
+															"value": "b66dc230-df2a-11eb-a200-230bc9a33294"
 														}
 													]
 												}
@@ -2541,7 +2462,7 @@
 											"formdata": [
 												{
 													"key": "customer_id",
-													"value": "085690e0-da86-11eb-a894-617b6dd6b7da",
+													"value": "33fc1950-df1b-11eb-bf74-e1937ecb36b7",
 													"description": "Related Customer ID with this quotation",
 													"type": "text"
 												},
@@ -2608,7 +2529,7 @@
 												{
 													"key": "vat_percentage",
 													"value": "21",
-													"description": "The percentage of VAT, In this case we have 21% of VAT, you can only fill this field with maximum value of 100 and minumum of 0",
+													"description": "The percentage of VAT, you can only fill this field with maximum value of 100 and minumum of 0, and remember THIS IS NOT VAT AMOUNT OF MONEY",
 													"type": "text"
 												},
 												{
@@ -2662,47 +2583,91 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "7140cfb0-bf03-11eb-98ce-83d8bb970ca1",
+													"value": "06ba4940-df1d-11eb-870b-335f4df666bb",
 													"type": "text"
 												},
 												{
 													"key": "customer_id",
-													"value": "645a04f0-beb0-11eb-b81f-9150f45a8bcf",
+													"value": "33fc1950-df1b-11eb-bf74-e1937ecb36b7",
+													"description": "Related Customer ID with this quotation",
 													"type": "text"
 												},
 												{
-													"key": "subject",
-													"value": "Quotation Subject Example Updated",
+													"key": "type",
+													"value": "1",
+													"description": "Type of quotation, Leakage = 1, Renovation = 2, Reparation = 3, Renewal = 4",
 													"type": "text"
 												},
 												{
 													"key": "quotation_number",
-													"value": "223344556677",
+													"value": "112233445566",
+													"description": "Quotation Number, this must be unique for each company",
 													"type": "text"
 												},
 												{
-													"key": "quotation_type",
-													"value": "reparation",
+													"key": "quotation_date",
+													"value": "2021-06-29",
+													"description": "Quotation Date, this must have format of [YYYY-MM-DD]",
+													"type": "text"
+												},
+												{
+													"key": "contact_person",
+													"value": "Test Contact Person",
+													"description": "The name of contact person in quotation, in some rare case, this can be different than customer name",
+													"type": "text"
+												},
+												{
+													"key": "address",
+													"value": "Test Address",
+													"description": "The address of customer",
+													"type": "text"
+												},
+												{
+													"key": "zip_code",
+													"value": "111111",
+													"description": "Zip Code of customer",
+													"type": "text"
+												},
+												{
+													"key": "phone_number",
+													"value": "1111111111111",
+													"description": "The callable phone number, this number will be called whenever roofer need certain contact with customer or people in charge of the house",
+													"type": "text"
+												},
+												{
+													"key": "damage_causes",
+													"value": "[1, 2]",
+													"description": "Damage causes needs to be fill with ARRAY, the number represents: Leak = 1, Fungus Mold = 2, Bird Nuisance = 3, Storm Damage = 4, Overdue Maintenance = 5",
 													"type": "text"
 												},
 												{
 													"key": "quotation_description",
 													"value": "Description Example",
+													"description": "The additional description about quotation, can be filled y the description of damage of the roof or anything related with and informing about everything needs to be known within quotation",
 													"type": "text"
 												},
 												{
 													"key": "expiry_date",
-													"value": "2021-06-26",
+													"value": "2021-06-21",
+													"description": "The Quotation expiry date, this offer can be expired whenever reached this date, this is OPTIONAL, if you don't specify this field, the quotation expiry date will be set 3 days after the quotation is created",
 													"type": "text"
 												},
 												{
-													"key": "status",
-													"value": "send",
+													"key": "vat_percentage",
+													"value": "21",
+													"description": "The percentage of VAT, you can only fill this field with maximum value of 100 and minumum of 0, and remember THIS IS NOT VAT AMOUNT OF MONEY",
+													"type": "text"
+												},
+												{
+													"key": "discount_amount",
+													"value": "125",
+													"description": "The amount of discount, this is NOT DISCOUNT PERCENTAGE, so the value specified here is the amount of discount, the default of application is euro then if we specify with 125 then the discount will be EUR 125, it can be specified with 0 if there is no discount",
 													"type": "text"
 												},
 												{
 													"key": "payment_method",
-													"value": "cash",
+													"value": "2",
+													"description": "The payment method, the number represents: Cash = 1, BankTransfer = 2",
 													"type": "text"
 												}
 											]
@@ -2744,7 +2709,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "3fc8c7e0-d721-11eb-a456-5b0e26ba2716",
+													"value": "06ba4940-df1d-11eb-870b-335f4df666bb",
 													"type": "text"
 												},
 												{
@@ -2766,51 +2731,6 @@
 												"companies",
 												"quotations",
 												"delete"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Quotation Works",
-									"protocolProfileBehavior": {
-										"disableBodyPruning": true
-									},
-									"request": {
-										"method": "GET",
-										"header": [
-											{
-												"key": "Accept",
-												"value": "application/json",
-												"type": "text"
-											},
-											{
-												"key": "Authorization",
-												"value": "Bearer {{API_TOKEN}}",
-												"type": "text"
-											}
-										],
-										"body": {
-											"mode": "urlencoded",
-											"urlencoded": []
-										},
-										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/works?quotation_id=ba968370-d7d7-11eb-96cd-fbb05db316ea",
-											"host": [
-												"{{BASE_URL}}"
-											],
-											"path": [
-												"api",
-												"dashboard",
-												"companies",
-												"quotations",
-												"works"
-											],
-											"query": [
-												{
-													"key": "quotation_id",
-													"value": "ba968370-d7d7-11eb-96cd-fbb05db316ea"
-												}
 											]
 										}
 									},
@@ -3045,6 +2965,51 @@
 												"companies",
 												"quotations",
 												"cancel"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Quotation Works",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations/works?quotation_id=4afcb650-df1b-11eb-8dbb-3fc12b7f3e7c",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"quotations",
+												"works"
+											],
+											"query": [
+												{
+													"key": "quotation_id",
+													"value": "4afcb650-df1b-11eb-8dbb-3fc12b7f3e7c"
+												}
 											]
 										}
 									},
@@ -3678,6 +3643,806 @@
 							]
 						},
 						{
+							"name": "Invoice",
+							"item": [
+								{
+									"name": "Payment Term",
+									"item": [
+										{
+											"name": "Invoice Payment Terms",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/payment_terms?id=04dba750-e957-11eb-aaca-735b1c824b4d",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"payment_terms"
+													],
+													"query": [
+														{
+															"key": "id",
+															"value": "04dba750-e957-11eb-aaca-735b1c824b4d"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Store Payment Term",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "invoice_id",
+															"value": "04dba750-e957-11eb-aaca-735b1c824b4d",
+															"type": "text"
+														},
+														{
+															"key": "term_name",
+															"value": "Another Term from Input",
+															"type": "text"
+														},
+														{
+															"key": "amount",
+															"value": "3824",
+															"type": "text"
+														},
+														{
+															"key": "due_date",
+															"value": "2021-07-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/payment_terms/store",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"payment_terms",
+														"store"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Payment Term",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "076c33d0-e957-11eb-a059-bd81d29a01c1",
+															"type": "text"
+														},
+														{
+															"key": "term_name",
+															"value": "Updated Term",
+															"type": "text"
+														},
+														{
+															"key": "amount",
+															"value": "556",
+															"type": "text"
+														},
+														{
+															"key": "due_date",
+															"value": "2021-07-30",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/payment_terms/update",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"payment_terms",
+														"update"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Mark As Paid",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "id",
+															"value": "97335330-e959-11eb-9885-ffbacc553f2d",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/payment_terms/mark_as_paid",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"payment_terms",
+														"mark_as_paid"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Cancel Paid Status",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "id",
+															"value": "97335330-e959-11eb-9885-ffbacc553f2d",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/payment_terms/cancel_paid_status",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"payment_terms",
+														"cancel_paid_status"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Forward To Debt Collector",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "id",
+															"value": "97335330-e959-11eb-9885-ffbacc553f2d",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/payment_terms/forward_to_debt_collector",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"payment_terms",
+														"forward_to_debt_collector"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Payment Term",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "9a49f2d0-e958-11eb-9673-ada7f92b7bf0",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/payment_terms/delete",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"payment_terms",
+														"delete"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Items",
+									"item": [
+										{
+											"name": "Invoice Items",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/items?invoice_id=ea59cb30-e8a9-11eb-a1ed-83276baf5416&per_page=20&search=1",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"items"
+													],
+													"query": [
+														{
+															"key": "invoice_id",
+															"value": "ea59cb30-e8a9-11eb-a1ed-83276baf5416"
+														},
+														{
+															"key": "per_page",
+															"value": "20"
+														},
+														{
+															"key": "search",
+															"value": "1"
+														},
+														{
+															"key": "status",
+															"value": "1",
+															"disabled": true
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Store Invoice Item",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "invoice_id",
+															"value": "9065d3b0-e89c-11eb-a38a-b33693c1418a",
+															"type": "text"
+														},
+														{
+															"key": "item_name",
+															"value": "Roof fixing",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "Finishing the broken roof",
+															"type": "text"
+														},
+														{
+															"key": "quantity",
+															"value": "1",
+															"type": "text"
+														},
+														{
+															"key": "quantity_unit",
+															"value": "m2",
+															"type": "text"
+														},
+														{
+															"key": "amount",
+															"value": "100",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/items/store",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"items",
+														"store"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Update Invoice Item",
+											"request": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "245ff870-e8a4-11eb-941d-dd4b6cb5c017",
+															"type": "text"
+														},
+														{
+															"key": "item_name",
+															"value": "Roof fixing",
+															"type": "text"
+														},
+														{
+															"key": "description",
+															"value": "Finishing the broken roof",
+															"type": "text"
+														},
+														{
+															"key": "quantity",
+															"value": "5",
+															"type": "text"
+														},
+														{
+															"key": "quantity_unit",
+															"value": "m2",
+															"type": "text"
+														},
+														{
+															"key": "amount",
+															"value": "100",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/items/update",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"items",
+														"update"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Invoice Item",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "eb3bd6f0-e8a9-11eb-a27f-2b981a746296",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/items/delete",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"invoices",
+														"items",
+														"delete"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Company Invoices",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/invoices?per_page=20&search=1&status=1",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"invoices"
+											],
+											"query": [
+												{
+													"key": "per_page",
+													"value": "20"
+												},
+												{
+													"key": "search",
+													"value": "1"
+												},
+												{
+													"key": "status",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Company Overdue Invoices",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/overdue?per_page=10&search=1",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"invoices",
+												"overdue"
+											],
+											"query": [
+												{
+													"key": "per_page",
+													"value": "10"
+												},
+												{
+													"key": "search",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Invoice",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "52400340-e859-11eb-977c-b7d6ed77470a",
+													"type": "text"
+												},
+												{
+													"key": "payment_method",
+													"value": "2",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"invoices",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Send Invoice",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/invoices/send",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"invoices",
+												"send"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Address",
+							"item": [
+								{
+									"name": "User Addresses",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/addresses",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"addresses"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Employee Addresses",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/addresses/employee?employee_id=31e4b180-e711-11eb-bb4f-db25e7842232",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"addresses",
+												"employee"
+											],
+											"query": [
+												{
+													"key": "employee_id",
+													"value": "31e4b180-e711-11eb-bb4f-db25e7842232"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "User Company",
 							"request": {
 								"method": "GET",
@@ -4131,6 +4896,543 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Meta",
+			"item": [
+				{
+					"name": "Appointment",
+					"item": [
+						{
+							"name": "All Cancellation Vaults",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/appointment/all_cancellation_vaults",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"appointment",
+										"all_cancellation_vaults"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Statuses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/appointment/all_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"appointment",
+										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/appointment/all_types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"appointment",
+										"all_types"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Car",
+					"item": [
+						{
+							"name": "All Statuses",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/car/all_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"car",
+										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Employee",
+					"item": [
+						{
+							"name": "All Employee Types",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/employee/all_types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"employee",
+										"all_types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Employment Statuses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/employee/all_employment_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"employee",
+										"all_employment_statuses"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Execute Work Photo",
+					"item": [
+						{
+							"name": "All Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/execute_work_photo/all_types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"execute_work_photo",
+										"all_types"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Invoice",
+					"item": [
+						{
+							"name": "All Statuses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/invoice/all_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"invoice",
+										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Selectable Statuses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/invoice/selectable_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"invoice",
+										"selectable_statuses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Payment Methods",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/invoice/all_payment_methods",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"invoice",
+										"all_payment_methods"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Payment Term",
+					"item": [
+						{
+							"name": "All Statuses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/payment_term/all_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"payment_term",
+										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Quotation",
+					"item": [
+						{
+							"name": "All Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/quotation/all_types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"quotation",
+										"all_types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Statuses",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/quotation/all_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"quotation",
+										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Payment Methods",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/quotation/all_payment_methods",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"quotation",
+										"all_payment_methods"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All Damage Causes",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"type": "text",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/quotation/all_damage_causes",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"quotation",
+										"all_damage_causes"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Register Invitation",
+					"item": [
+						{
+							"name": "All Statuses",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/register_invitation/all_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"register_invitation",
+										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "ID Card Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/user/all_id_card_types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"user",
+										"all_id_card_types"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Check Email Used",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "",
+										"type": "text",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/user/check_email_used?email=sbensona77@gmail.com",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"user",
+										"check_email_used"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "sbensona77@gmail.com"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Work",
+					"item": [
+						{
+							"name": "All Statuses",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/work/all_statuses",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"work",
+										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
@@ -4156,7 +5458,7 @@
 	"variable": [
 		{
 			"key": "BASE_URL",
-			"value": ""
+			"value": "http://localhost:8000"
 		},
 		{
 			"key": "API_TOKEN",

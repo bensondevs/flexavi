@@ -79,12 +79,6 @@ Route::group(['prefix' => 'auth'], function () {
 			Route::get('{driver}', [AuthController::class, 'socialMediaRegister']);
 		});
 	});
-
-	/*
-		Informations
-	*/
-	Route::get('id_card_types', [UserController::class, 'idCardTypes']);
-	Route::get('check_email_used', [AuthController::class, 'checkEmailUsed']);
 	
 	/*
 		Register

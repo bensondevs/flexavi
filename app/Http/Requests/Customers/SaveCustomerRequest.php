@@ -55,6 +55,13 @@ class SaveCustomerRequest extends FormRequest
             'email' => ['string', 'email', 'unique:customers,email'],
             'phone' => ['required', 'numeric', 'unique:customers,phone'],
             'second_phone' => ['numeric', new NotEqual('phone')],
+
+            'address' => ['required', 'string'],
+            'house_number' => ['required', 'numeric'],
+            'house_number_suffix' => ['required', 'string'],
+            'zipcode' => ['required', 'numeric'],
+            'city' => ['required', 'string'],
+            'province' => ['required', 'string'],
         ]);
 
         return $this->returnRules();

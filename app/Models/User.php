@@ -120,6 +120,11 @@ class User extends Authenticatable
         return Storage::url($this->attributes['profile_picture_path']);
     }
 
+    public function setProfilePictureUrlAttribute($pictureUrl)
+    {
+        $imageFile = file_get_contents($pictureUrl);
+    }
+
     public function getUserRoleAttribute()
     {
         $roleName = $this->roles->first()->name;
@@ -190,5 +195,15 @@ class User extends Authenticatable
     public static function collectAllIdCardTypes()
     {
         return UserIdCardType::asSelectArray();
-    } 
+    }
+
+    public function findBySocialId($driver, $id)
+    {
+        return self::where($driver . '_id', $id)->first();
+    }
+
+    public static function checkEmailUsed($email)
+    {
+        return self::where('email', $email)->count() > 0;
+    }
 }

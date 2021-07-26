@@ -24,35 +24,11 @@ class AuthController extends Controller
 {
     private $auth;
     private $owner;
-    private $address;
 
-    public function __construct(
-    	AuthRepository $auth,
-        OwnerRepository $owner,
-        AddressRepository $address
-    )
+    public function __construct(AuthRepository $auth, OwnerRepository $owner)
     {
     	$this->auth = $auth;
         $this->owner = $owner;
-        $this->address = $address;
-    }
-
-    public function checkEmailUsed(Request $request)
-    {
-        $request->validate(['email' => ['required', 'email']]);
-
-        $email = $request->input('email');
-        if (db('users')->where('email', $email)->count() > 0) {
-            return response()->json([
-                'status' => 'unavailable',
-                'message' => 'This email has been used by other user',
-            ], 422);
-        }
-
-        return response()->json([
-            'status' => 'available',
-            'message' => 'This email is available',
-        ]);
     }
 
     public function login(LoginRequest $request)

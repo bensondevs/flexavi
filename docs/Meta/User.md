@@ -41,3 +41,19 @@ Accept | `application/json`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `email` | Required | string, email | The email thats going to be checked in users table, when it does not exist, it will not be shown up. This check also includes DELETED user, because deleted user is still within the users table but set as DELETED.
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "This email is available."
+}
+```
+
+```json
+{
+    "status": "error",
+    "message": "This email has been taken by other user."
+}
+```
