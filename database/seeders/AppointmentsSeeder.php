@@ -19,47 +19,71 @@ class AppointmentsSeeder extends Seeder
      */
     public function run()
     {
-    	$companies = Company::with('customers')->get();
-
         $rawAppointments = [];
-        for ($index = 0; $index < 5000; $index++) {
-        	$company = $companies->random();
-            $customers = $company->customers;
+        foreach (Company::with('customers')->get() as $company) {
+            foreach ($company->customers as $customer) {
+                for ($index = 0; $index <= rand(1, 10); $index++) {
+                	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
+                	$end = ($start->copy())->addDays(rand(0, 7));
 
-            if (count($customers) < 1) continue;
-        	$customer = $customers->random();
+                	$type = rand(1, 6);
+                	$status = rand(1, 5);
 
-        	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
-        	$end = ($start->copy())->addDays(rand(0, 7));
+                    $rawAppointment = [
+                        'id' => generateUuid(),
 
-        	$type = rand(1, 6);
-        	$status = rand(1, 5);
+                        'company_id' => $company->id,
+                        'customer_id' => $customer->id,
 
-            $rawAppointment = [
-                'id' => generateUuid(),
+                        'start' => $start,
+                        'end' => $end,
+                        'include_weekend' => rand(0, 1),
 
-                'company_id' => $company->id,
-                'customer_id' => $customer->id,
+                        'status' => $status,
+                        'type' => $type,
 
-                'start' => $start,
-                'end' => $end,
-                'include_weekend' => rand(0, 1),
+                        'note' => 'This is seeder appointment',
 
-                'status' => $status,
-                'type' => $type,
+                        'cancellation_cause' => null,
+                        'cancellation_vault' => null,
+                        'cancellation_note' => null,
 
-                'note' => 'This is seeder appointment',
+                        'created_at' => carbon()->now(),
+                        'updated_at' => carbon()->now(),
 
-                'created_at' => carbon()->now(),
-                'updated_at' => carbon()->now(),
-            ];
+                        'in_process_at' => null,
+                        'processed_at' => null,
+                        'calculated_at' => null,
+                        'cancelled_at' => null,
+                    ];
 
-        	array_push($rawAppointments, $rawAppointment);
+                    if ($rawAppointment['status'] > AppointmentStatus::InProcess) {
+                        $rawAppointment['in_process_at'] = carbon()->now()->addDays(rand(1, 3));
+                    }
+
+                    if ($rawAppointment['status'] > AppointmentStatus::Processed) {
+                        $rawAppointment['processed_at'] = carbon()->now()->addDays(rand(1, 3));
+                    }
+
+                    if ($rawAppointment['status'] > AppointmentStatus::Calculated) {
+                        $rawAppointment['calculated_at'] = carbon()->now()->addDays(rand(1, 3));
+                    }
+
+                    if ($rawAppointment['status'] == AppointmentStatus::Cancelled) {
+                        $rawAppointment['cancellation_cause'] = 'Another cause no one knows';
+                        $rawAppointment['cancellation_vault'] = rand(1, 2);
+                        $rawAppointment['cancellation_note'] = 'Random cancellation note for appointment';
+                        $rawAppointment['cancelled_at'] = carbon()->now()->addDays(rand(3, 5));
+                    }
+
+                	$rawAppointments[] = $rawAppointment;
+                }
+            }
+
         }
 
-        $chuckedRawAppontments = array_chunk($rawAppointments, 500);
-        foreach ($chuckedRawAppontments as $_rawAppointments) {
-            Appointment::insert($_rawAppointments);
+        foreach (array_chunk($rawAppointments, 500) as $chunk) {
+            Appointment::insert($chunk);
         }
     }
 }

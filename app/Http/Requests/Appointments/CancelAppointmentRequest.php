@@ -3,8 +3,11 @@
 namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
+
+use App\Enums\Appointment\AppointmentCancellationVault;
 
 use App\Traits\CompanyInputRequest;
 
@@ -31,7 +34,7 @@ class CancelAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return gate()->allows('cancel-appointment', $this->getAppointment());
+        return Gate::allows('cancel-appointment', $this->getAppointment());
     }
 
     /**
@@ -43,7 +46,12 @@ class CancelAppointmentRequest extends FormRequest
     {   
         $this->setRules([
             'cancellation_cause' => ['required', 'string'],
-            'cancellation_vault' => ['required', 'string', new AmongStrings(Appointment::getCancellationVaultValues())],
+            'cancellation_vault' => [
+                'required', 
+                'numeric', 
+                'min:' . AppointmentCancellationVault::Roofer, 
+                'max:' . AppointmentCancellationVault::Customer
+            ],
             'cancellation_note' => ['required', 'string'],
 
             'reschedule' => ['boolean'],

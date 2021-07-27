@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
 
+use App\Rules\Base64File;
+
 use App\Models\Quotation;
 
 class AddQuotationAttachmentRequest extends FormRequest
@@ -47,14 +49,10 @@ class AddQuotationAttachmentRequest extends FormRequest
             'attachment' => ['required', 'file', 'mimes:pdf,doc,docx,png,jpg,png,jpeg,svg', 'max:5000'],
         ]);
 
+        if (is_base64_string($this->attachment)) {
+            $this->rules['attachment'] = ['required', new Base64File('pdf,doc,docx,png,jpg,png,jpeg,svg')];
+        }
+
         return $this->returnRules();
-    }
-
-    public function attachmentData()
-    {
-        $data = $this->onlyInRules();
-        $data['attachment'] = $this->file('attachment');
-
-        return $data;
     }
 }

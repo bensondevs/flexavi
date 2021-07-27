@@ -41,7 +41,6 @@ class SaveUserRequest extends FormRequest
     {
         $this->setRules([
             'fullname' => ['required', 'string'],
-            'salutation' => ['required', 'string', new AmongStrings(['Mr.', 'Mrs.', 'Ms.'])],
             'birth_date' => ['required', 'date'],
             'id_card_type' => [
                 'required', 

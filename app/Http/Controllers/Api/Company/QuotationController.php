@@ -81,7 +81,7 @@ class QuotationController extends Controller
         $quotation = $request->getQuotation();
         $quotation = $this->quotation->setModel($quotation);
 
-        $attachmentData = $request->attachmentData();
+        $attachmentData = $request->validated();
         $quotation = $this->quotation->addAttachment($attachmentData);
 
         activity()->causedBy($request->user())->performedOn($quotation)

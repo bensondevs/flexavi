@@ -51,6 +51,9 @@ class QuotationWorksSeeder extends Seeder
                 ]);
             }
         }
-        Work::insert($rawWorks);
+        
+        foreach (array_chunk($rawWorks, 100) as $chunk) {
+            Work::insert($chunk);
+        }
     }
 }

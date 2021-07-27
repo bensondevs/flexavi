@@ -122,7 +122,18 @@ class User extends Authenticatable
 
     public function setProfilePictureUrlAttribute($pictureUrl)
     {
-        $imageFile = file_get_contents($pictureUrl);
+        // Prepare content and name
+        $tmp = explode('/', $pictureUrl);
+        $pictureName = $tmp[count($tmp) - 1];
+        $pictureContent = file_get_contents($pictureUrl);
+
+        // Upload the downloaded image content to folder
+        $folderPath = 'uploads/users/profile_pictures/';
+        $picturePath = $folderPath . $pictureName;
+        $putFile = Storage::put($picturePath, $pictureContent);
+
+        // Set path to the attribute to database
+        $this->attributes['profile_picture_path'] = $picturePath;
     }
 
     public function getUserRoleAttribute()

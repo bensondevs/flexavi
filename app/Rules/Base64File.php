@@ -6,14 +6,21 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Base64File implements Rule
 {
+    private $allowedExtensions = [];
+
     /**
      * Create a new rule instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($allowedExtensions)
     {
-        //
+        if (is_string($allowedExtensions)) {
+            $allowedExtensions = explode(',', $allowedExtensions);
+        }
+
+        $this->allowedExtensions = $allowedExtensions;
+        $this->errorMessage = 'Unknown error occured';
     }
 
     /**
@@ -25,9 +32,18 @@ class Base64File implements Rule
      */
     public function passes($attribute, $value)
     {
-        $regex = '/^(?:[data]{4}:(text|image|video|application)\/[a-z]*)/';
+        if (! is_base64_string($value)) {
+            $this->errorMessage = 'This is not base64 string file';
+            return false;
+        }
 
-        return preg_match($regex, $value);
+        $fileExtension = base64_extension($value);
+        if (! in_array($fileExtension, $this->allowedExtensions)) {
+            $this->errorMessage = 'The file extension does not match allowed extensions group.';
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -37,6 +53,6 @@ class Base64File implements Rule
      */
     public function message()
     {
-        return 'Incorrect base64 file.';
+        return $this->errorMessage;
     }
 }

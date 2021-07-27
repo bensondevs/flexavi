@@ -34,9 +34,9 @@ class CreateAppointmentsTable extends Migration
 
             $table->datetime('start');
             $table->datetime('end');
-            $table->boolean('include_weekend');
+            $table->boolean('include_weekend')->default(0);
 
-            $table->tinyInteger('status');
+            $table->tinyInteger('status')->default(1);
             $table->tinyInteger('type');
 
             $table->text('note')->nullable();

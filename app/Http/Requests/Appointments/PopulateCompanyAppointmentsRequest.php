@@ -5,6 +5,10 @@ namespace App\Http\Requests\Appointments;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Enums\Appointment\AppointmentType;
+use App\Enums\Appointment\AppointmentStatus;
+use App\Enums\Appointment\AppointmentCancellationVault;
+
 use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateCompanyAppointmentsRequest extends FormRequest
@@ -29,12 +33,50 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'type' => [
+                'numeric', 
+                'min:' . AppointmentType::Inspection, 
+                'max:' . AppointmentType::PaymentReminder
+            ],
+            'status' => [
+                'numeric', 
+                'min:' . AppointmentStatus::Created, 
+                'max:' . AppointmentStatus::Cancelled
+            ],
+            'cancellation_vault' => [
+                'numeric', 
+                'min:' . AppointmentCancellationVault::Roofer, 
+                'max:' . AppointmentCancellationVault::Customer
+            ],
         ];
     }
 
     public function options()
     {
+        if ($type = $this->get('type')) {
+            $this->addWhere([
+                'column' => 'type',
+                'operator' => '=',
+                'value' => $type,
+            ]);
+        }
+
+        if ($status = $this->get('status')) {
+            $this->addWhere([
+                'column' => 'status',
+                'operator' => '=',
+                'value' => $status,
+            ]);
+        }
+
+        if ($cancellationVault = $this->get('cancellation_vault')) {
+            $this->addWhere([
+                'column' => 'cancellation_vault',
+                'operator' => '=',
+                'value' => $cancellationVault,
+            ]);
+        }
+
         return $this->collectCompanyOptions();
     }
 }

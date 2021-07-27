@@ -237,16 +237,21 @@ function flashMessage($repositoryObject)
 
 function uploadFile($fileRequest, string $directory)
 {
-    if (last_character($directory) !== '/')
+    if (last_character($directory) !== '/') {
         $directory = ($directory . '/');
-
-    $path = $directory . Carbon::now()->format('YmdHis'); 
-    $path .= urlencode($fileRequest->getClientOriginalName());
+    }
 
     $storageFile = new \App\Repositories\StorageFileRepository;
-    $file = $storageFile->upload(file_get_contents($fileRequest->getRealPath()), $path);
+    if (is_base64_string($fileRequest)) {
+        $filePath = uploadBase64Image($fileRequest, $directory);
+        return $storageFile->record($filePath);
+    }
 
-    return $file;
+    $path = $directory . Carbon::now()->format('YmdHis');
+    $path .= urlencode($fileRequest->getClientOriginalName());
+    $fileContent = file_get_contents($fileRequest->getRealPath());
+
+    return $storageFile->upload($fileContent, $path);
 }
 
 function uploadBase64File($base64File, $path = 'uploads/documents', $fileName = '')
@@ -255,7 +260,7 @@ function uploadBase64File($base64File, $path = 'uploads/documents', $fileName = 
         File::makeDirectory($path, $mode = 0755, true, true);
 
     $base64String = substr($base64File, strpos($base64File, ",") + 1);
-    $imageData = base64_decode($base64String);
+    $fileData = base64_decode($base64String);
     $extension = explode('/', explode(':', substr($base64File, 0, strpos($base64File, ';')))[1])[1];
 
     // Prepare image path
@@ -263,9 +268,10 @@ function uploadBase64File($base64File, $path = 'uploads/documents', $fileName = 
         $path : 
         $path . '/';
     $fileName = ($fileName ? $fileName : Carbon::now()->format('YmdHis')) . '.' . $extension;
-    $putImage = File::put(public_path($path . $fileName), $imageData);
+    $filePath = $path . $fileName;
+    $putImage = Storage::put($filePath, $fileData);
 
-    return $putImage ? $fileName : false;
+    return $putImage ? $filePath : false;
 }
 
 function uploadBase64Image($base64Image, $imagePath = 'uploads/test', $imageName = '')
@@ -282,10 +288,11 @@ function uploadBase64Image($base64Image, $imagePath = 'uploads/test', $imageName
         $imagePath : 
         $imagePath . '/';
     $fileName = ($imageName ? $imageName : Carbon::now()->format('YmdHis')) . '.' . $extension;
+    $filePath = $imagePath . $fileName;
 
-    $putImage = File::put(public_path($imagePath . $fileName), $imageData);
+    $putImage = Storage::put($filePath, $imageData);
 
-    return $putImage ? $fileName : false;
+    return $putImage ? $filePath : false;
 }
 
 function deleteFile($filePath)
@@ -322,7 +329,34 @@ function isRoute($routeName)
 
 function is_base64_string($string)
 {
+    $temporary = explode(';base64,', $string);
+    if (isset($temporary[1])) {
+        $string = $temporary[1];
+    }
+
     return base64_encode(base64_decode($string, true)) === $string;
+}
+
+function base64_extension($string) 
+{
+    if (! is_base64_string($string)) {
+        return false;
+    }
+
+    $temporary = explode(';base64,', $string);
+    $fileType = $temporary[0];
+    $dataType = explode('data:', $fileType);
+    if (! isset($dataType[1])) {
+        return null;
+    }
+
+    $dataType = $dataType[1];
+    $temporaryDataType = explode('/', $dataType);
+    if (! isset($temporaryDataType[1])) {
+        return null;
+    }
+
+    return $temporaryDataType[1];
 }
 
 function isRouteStartsWith($start, $routeName = '')
@@ -336,16 +370,16 @@ function isRouteStartsWith($start, $routeName = '')
 function convertBase64ToUploadedFile($base64String)
 {
     $fileData = base64_decode($base64String);
+    
     $mimeType = explode(':', substr($base64String, 0, strpos($base64String, ';')))[1];
 
-    $tmpFilePath = sys_get_temp_dir() . '/' . Str::uuid()->toString();
+    $tmpFilePath = sys_get_temp_dir() . '/' . random_string(20);
     file_put_contents($tmpFilePath, $fileData);
 
     $tmpFile = new SymfonyFile($tmpFilePath);
-
     $file = new UploadedFile(
         $tmpFile->getPathname(),
-        $tmpFile->getFilename(),
+        random_string(10),
         $mimeType,
         0,
         false

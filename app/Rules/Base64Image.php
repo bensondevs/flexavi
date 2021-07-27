@@ -6,8 +6,14 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Base64Image implements Rule
 {
-    public $extension;
-    protected $allowedExtensions;
+    protected $allowedExtensions = [
+        'jpg',
+        'png',
+        'svg',
+        'jpeg',
+    ];
+
+    private $errorMessage;
 
     /**
      * Create a new rule instance.
@@ -16,12 +22,7 @@ class Base64Image implements Rule
      */
     public function __construct()
     {
-        $this->allowedExtensions = [
-            'jpg',
-            'png',
-            'svg',
-            'jpeg',
-        ];
+        $this->errorMessage = 'Unknown error occured';
     }
 
     /**
@@ -33,10 +34,18 @@ class Base64Image implements Rule
      */
     public function passes($attribute, $value)
     {
-        $extension = explode('/', explode(':', substr($value, 0, strpos($value, ';')))[1])[1];
-        $this->extension = $extension;
+        if (! is_base64_string($value)) {
+            $this->errorMessage = 'This is not base64 string file';
+            return false;
+        }
 
-        return in_array($extension, $this->allowedExtensions);
+        $fileExtension = base64_extension($value);
+        if (! in_array($fileExtension, $this->allowedExtensions)) {
+            $this->errorMessage = 'The file extension does not match allowed extensions group.';
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -46,6 +55,6 @@ class Base64Image implements Rule
      */
     public function message()
     {
-        return __('The image uplaoded is not Base64 Image! The extension is: ') . $this->extension;
+        return __($this->errorMessage);
     }
 }

@@ -98,7 +98,7 @@ class CarController extends Controller
         $car = $request->getCar();
         $car = $this->car->setModel($car);
 
-        $image = $request->file('car_image');
+        $image = $request->car_image;
         $car = $this->car->setCarImage($image);
 
         return apiResponse($this->car, ['car' => $car]);

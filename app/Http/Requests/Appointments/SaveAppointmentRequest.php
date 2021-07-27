@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
-use App\Traits\CompanyInputRequest;
+use App\Enums\Appointment\AppointmentType;
 
-use App\Rules\AmongStrings;
+use App\Traits\CompanyInputRequest;
 
 class SaveAppointmentRequest extends FormRequest
 {
@@ -19,8 +19,10 @@ class SaveAppointmentRequest extends FormRequest
 
     public function getAppointment()
     {
-        return $this->appointment = $this->model = $this->appointment ?:
-            Appointment::findOrFail($this->input('id'));
+        if ($this->appointment) return $this->appointment;
+
+        $id = $this->input('id') ?: $this->input('appointment_id');
+        return $this->appointment = Appointment::findOrFail($id);
     }
 
     /**
@@ -30,11 +32,12 @@ class SaveAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $appointment = $this->getAppointment();
-
-        return $this->isMethod('POST') ? 
-            Gate::allows('create-appointment', $appointment) :
+        if (! $this->isMethod('POST')) {
+            $appointment = $this->getAppointment();
             Gate::allows('update-appointment', $appointment);
+        }
+
+        return Gate::allows('create-appointment');
     }
 
     /**
@@ -48,16 +51,12 @@ class SaveAppointmentRequest extends FormRequest
             'customer_id' => ['required', 'string', 'exists:customers,id'],
             'start' => ['required', 'date'],
             'end' => ['required', 'date'],
-            'include_weekend' => ['required', 'boolean'],
-            'appointment_type' => [
+            'include_weekend' => ['boolean'],
+            'type' => [
                 'required', 
-                'string', 
-                new AmongStrings(Appointment::getTypeValues())
-            ],
-            'appointment_status' => [
-                'required',
-                'string',
-                new AmongStrings(Appointment::getStatusValues())  
+                'numeric', 
+                'min:' . AppointmentType::Inspection,
+                'max:' . AppointmentType::PaymentReminder,
             ],
             'note' => ['string'],
         ]);

@@ -1,0 +1,516 @@
+## Appointment
+
+-------------------------------------------------------
+### 1. Populate Company Appointments
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through attributes of `cancellation_note`, `note`
+`per_page` | Optional | numeric | Amount of data per page, default amount is 10
+`type` | Optional | numeric, min:1, max:6  | The status code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`status` | Optional | numeric, min:1, max:5 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`cancellation_vault` Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`appointments` | Object | The customer object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "appointments": {
+        "current_page": 2,
+        "data": [
+            {
+                "id": "691051e0-ed23-11eb-a069-8b02febb1280",
+                "customer": {
+                    "id": "5a8668b0-ed23-11eb-8735-d34b492ad6ed",
+                    "addresses": [],
+                    "fullname": "Customer 553 of Company 1",
+                    "email": "customer553@company1.com",
+                    "phone": "8338059136000",
+                    "second_phone": null
+                },
+                "status": 2,
+                "status_description": "In Process",
+                "type": 3,
+                "type_description": "Execute Work",
+                "start": "2021-07-20T08:36:30.000000Z",
+                "end": "2021-07-24T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z",
+                "in_process_at": null
+            },
+            {
+                "id": "6912fd80-ed23-11eb-8dcd-7bf2cf7aa3c2",
+                "customer": {
+                    "id": "5a8a0cc0-ed23-11eb-884d-a9264d379826",
+                    "addresses": [],
+                    "fullname": "Customer 784 of Company 1",
+                    "email": "customer784@company1.com",
+                    "phone": "3836682131320",
+                    "second_phone": null
+                },
+                "status": 1,
+                "status_description": "Created",
+                "type": 6,
+                "type_description": "Payment Reminder",
+                "start": "2021-07-28T08:36:30.000000Z",
+                "end": "2021-07-28T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z"
+            },
+            {
+                "id": "69133c00-ed23-11eb-858e-8fa632462ff2",
+                "customer": {
+                    "id": "5a87c3b0-ed23-11eb-b014-f9dadfd730d7",
+                    "addresses": [],
+                    "fullname": "Customer 645 of Company 1",
+                    "email": "customer645@company1.com",
+                    "phone": "8806705850616",
+                    "second_phone": null
+                },
+                "status": 5,
+                "status_description": "Cancelled",
+                "type": 5,
+                "type_description": "Payment Pick-Up",
+                "start": "2021-07-23T08:36:30.000000Z",
+                "end": "2021-07-25T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z",
+                "in_process_at": null,
+                "processed_at": null,
+                "calculated_at": null,
+                "cancelled_at": null,
+                "cancellation_vault": null,
+                "cancellation_vault_description": "",
+                "cancellation_cause": null,
+                "cancellation_note": null
+            }
+        ],
+        "first_page_url": "/?page=1",
+        "from": 4,
+        "last_page": 35,
+        "last_page_url": "/?page=35",
+        "links": [
+            {
+                "url": "/?page=1",
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": false
+            },
+            {
+                "url": "/?page=2",
+                "label": "2",
+                "active": true
+            },
+            {
+                "url": "/?page=3",
+                "label": "3",
+                "active": false
+            },
+            {
+                "url": "/?page=4",
+                "label": "4",
+                "active": false
+            },
+            {
+                "url": "/?page=5",
+                "label": "5",
+                "active": false
+            },
+            {
+                "url": "/?page=6",
+                "label": "6",
+                "active": false
+            },
+            {
+                "url": "/?page=7",
+                "label": "7",
+                "active": false
+            },
+            {
+                "url": "/?page=8",
+                "label": "8",
+                "active": false
+            },
+            {
+                "url": "/?page=9",
+                "label": "9",
+                "active": false
+            },
+            {
+                "url": "/?page=10",
+                "label": "10",
+                "active": false
+            },
+            {
+                "url": null,
+                "label": "...",
+                "active": false
+            },
+            {
+                "url": "/?page=34",
+                "label": "34",
+                "active": false
+            },
+            {
+                "url": "/?page=35",
+                "label": "35",
+                "active": false
+            },
+            {
+                "url": "/?page=3",
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": "/?page=3",
+        "path": "/",
+        "per_page": "3",
+        "prev_page_url": "/?page=1",
+        "to": 6,
+        "total": 103
+    }
+}
+```
+
+-------------------------------------------------------
+### 2. Populate Customer Appointments
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`customer_id` | 
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through attributes of `cancellation_note`, `note`
+`per_page` | Optional | numeric | Amount of data per page, default amount is 10
+`type` | Optional | numeric, min:1, max:6  | The status code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`status` | Optional | numeric, min:1, max:5 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`cancellation_vault` Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`appointments` | Object | The customer object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "appointments": {
+        "current_page": 2,
+        "data": [
+            {
+                "id": "691051e0-ed23-11eb-a069-8b02febb1280",
+                "customer": {
+                    "id": "5a8668b0-ed23-11eb-8735-d34b492ad6ed",
+                    "addresses": [],
+                    "fullname": "Customer 553 of Company 1",
+                    "email": "customer553@company1.com",
+                    "phone": "8338059136000",
+                    "second_phone": null
+                },
+                "status": 2,
+                "status_description": "In Process",
+                "type": 3,
+                "type_description": "Execute Work",
+                "start": "2021-07-20T08:36:30.000000Z",
+                "end": "2021-07-24T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z",
+                "in_process_at": null
+            },
+            {
+                "id": "6912fd80-ed23-11eb-8dcd-7bf2cf7aa3c2",
+                "customer": {
+                    "id": "5a8a0cc0-ed23-11eb-884d-a9264d379826",
+                    "addresses": [],
+                    "fullname": "Customer 784 of Company 1",
+                    "email": "customer784@company1.com",
+                    "phone": "3836682131320",
+                    "second_phone": null
+                },
+                "status": 1,
+                "status_description": "Created",
+                "type": 6,
+                "type_description": "Payment Reminder",
+                "start": "2021-07-28T08:36:30.000000Z",
+                "end": "2021-07-28T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z"
+            },
+            {
+                "id": "69133c00-ed23-11eb-858e-8fa632462ff2",
+                "customer": {
+                    "id": "5a87c3b0-ed23-11eb-b014-f9dadfd730d7",
+                    "addresses": [],
+                    "fullname": "Customer 645 of Company 1",
+                    "email": "customer645@company1.com",
+                    "phone": "8806705850616",
+                    "second_phone": null
+                },
+                "status": 5,
+                "status_description": "Cancelled",
+                "type": 5,
+                "type_description": "Payment Pick-Up",
+                "start": "2021-07-23T08:36:30.000000Z",
+                "end": "2021-07-25T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z",
+                "in_process_at": null,
+                "processed_at": null,
+                "calculated_at": null,
+                "cancelled_at": null,
+                "cancellation_vault": null,
+                "cancellation_vault_description": "",
+                "cancellation_cause": null,
+                "cancellation_note": null
+            }
+        ],
+        "first_page_url": "/?page=1",
+        "from": 4,
+        "last_page": 35,
+        "last_page_url": "/?page=35",
+        "links": [
+            {
+                "url": "/?page=1",
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": false
+            },
+            {
+                "url": "/?page=2",
+                "label": "2",
+                "active": true
+            },
+            {
+                "url": "/?page=3",
+                "label": "3",
+                "active": false
+            },
+            {
+                "url": "/?page=4",
+                "label": "4",
+                "active": false
+            },
+            {
+                "url": "/?page=5",
+                "label": "5",
+                "active": false
+            },
+            {
+                "url": "/?page=6",
+                "label": "6",
+                "active": false
+            },
+            {
+                "url": "/?page=7",
+                "label": "7",
+                "active": false
+            },
+            {
+                "url": "/?page=8",
+                "label": "8",
+                "active": false
+            },
+            {
+                "url": "/?page=9",
+                "label": "9",
+                "active": false
+            },
+            {
+                "url": "/?page=10",
+                "label": "10",
+                "active": false
+            },
+            {
+                "url": null,
+                "label": "...",
+                "active": false
+            },
+            {
+                "url": "/?page=34",
+                "label": "34",
+                "active": false
+            },
+            {
+                "url": "/?page=35",
+                "label": "35",
+                "active": false
+            },
+            {
+                "url": "/?page=3",
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": "/?page=3",
+        "path": "/",
+        "per_page": "3",
+        "prev_page_url": "/?page=1",
+        "to": 6,
+        "total": 103
+    }
+}
+```
+
+-------------------------------------------------------
+### 3. Store Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/store`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`customer_id` | Required | uuid, string, exists in `customers` table | The customer that requested or will be having appointment with. Put their ID in this payload and it will automatically assigned to the customer
+`start` | Required | date, format (yyyy-mm-dd) | The starting date of appointment
+`end` | Required | date, format (yyyy-mm-dd) | The ending date of appointment
+`include_weekend` | Optional | boolean, boolean string, numeric 1 or 0 | Set to `true` if the appointment include non-working days like saturday and sunday. Defaultly, this payload has value of false.
+`type` | Required | numeric, numeric string, min:1, max:6 | The type of appointment, this represents the meta of appointment type/kind, to see more detail what numbers represent please see [Appointment Meta](/docs/Meta/Appointment.md) 
+`note` | Optional | string, text | This payload can be used to put side note about this appointment and what should be paid attention about the appointment
+
+**Request Body Example:**
+
+```json
+{
+    "customer_id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
+    "start": "2021-05-15",
+    "end": "2021-05-18",
+    "include_weekend": true,
+    "type": 1,
+    "note": "Fixing leaking rooftop",
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully save appointment"
+}
+```
+
+-------------------------------------------------------
+### 4. Update Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/update`
+
+**Method:** `PUT` or `PATCH`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `appointment_id` | Required | string, uuid | The selected ID of appointment that's going to be updated
+`customer_id` | Required | uuid, string, exists in `customers` table | The customer that requested or will be having appointment with. Put their ID in this payload and it will automatically assigned to the customer
+`start` | Required | date, format (yyyy-mm-dd) | The starting date of appointment
+`end` | Required | date, format (yyyy-mm-dd) | The ending date of appointment
+`include_weekend` | Optional | boolean, boolean string, numeric 1 or 0 | Set to `true` if the appointment include non-working days like saturday and sunday. Defaultly, this payload has value of false.
+`type` | Required | numeric, numeric string, min:1, max:6 | The type of appointment, this represents the meta of appointment type/kind, to see more detail what numbers represent please see [Appointment Meta](/docs/Meta/Appointment.md) 
+`note` | Optional | string, text | This payload can be used to put side note about this appointment and what should be paid attention about the appointment
+
+**Request Body Example:**
+
+```json
+{
+    "id": "402d4950-b596-11eb-9dd1-6732e058f436",
+    "customer_id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
+    "start": "2021-05-15",
+    "end": "2021-05-18",
+    "include_weekend": true,
+    "type": 1,
+    "note": "Fixing leaking rooftop",
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully save appointment"
+}
+```
+
+-------------------------------------------------------
+### 5. Cancel Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/cancel`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`

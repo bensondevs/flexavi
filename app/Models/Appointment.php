@@ -24,8 +24,6 @@ class Appointment extends Model
 
     protected $searchable = [
         'cancellation_note',
-        'status',
-        'type',
         'note',
     ];
 

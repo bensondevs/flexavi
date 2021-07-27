@@ -255,13 +255,6 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::post('process', [AppointmentController::class, 'process']);
 
 				/*
-					Select Options
-				*/
-				Route::get('types', [AppointmentController::class, 'appointmentTypes']);
-				Route::get('statuses', [AppointmentController::class, 'appointmentStatuses']);
-				Route::get('cancellation_vaults', [AppointmentController::class, 'appointmentCancellationVaults']);
-
-				/*
 					Sub Appointments Module
 				*/
 				Route::group(['prefix' => 'subs'], function () {

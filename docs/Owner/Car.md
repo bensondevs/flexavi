@@ -258,10 +258,9 @@ Attribute Name  | Type  | Description
 **Headers:**
 
 Header Name | Value 
-------------|--------------
+------------|---9-----------
 Accept | `application/json`
 Authorization | `Bearer {token}`
-Content-Type | `multipart/form-data`
 
 **Parameters:**
 

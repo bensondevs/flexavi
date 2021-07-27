@@ -16,11 +16,9 @@ class CustomersSeeder extends Seeder
      */
     public function run()
     {
-        $companies = Company::all();
-
         $rawCustomers = [];
-        foreach ($companies as $key => $company) {
-            for ($index = 0; $index < 1000; $index++) {
+        foreach (Company::all() as $key => $company) {
+            for ($index = 0; $index < 50; $index++) {
                 array_push($rawCustomers, [
                     'id' => generateUuid(),
 
