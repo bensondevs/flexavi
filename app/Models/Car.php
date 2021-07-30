@@ -73,10 +73,10 @@ class Car extends Model
         $this->attributes['car_image_path'] = $image->path;
     }
 
-    public function getCarImageAttribute()
+    public function getCarImageUrlAttribute()
     {
-        $carImageUrl = Storage::url($this->attributes['car_image_path']);
-        return $carImageUrl;
+        $path = $this->attributes['car_image_path'];
+        return Storage::url($path);
     }
 
     public static function collectAllStatuses()

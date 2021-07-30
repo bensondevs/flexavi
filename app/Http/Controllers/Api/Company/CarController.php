@@ -101,7 +101,7 @@ class CarController extends Controller
         $image = $request->car_image;
         $car = $this->car->setCarImage($image);
 
-        return apiResponse($this->car, ['car' => $car]);
+        return apiResponse($this->car);
     }
 
     public function delete(FindRequest $request)
