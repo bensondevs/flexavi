@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use \Illuminate\Support\Facades\Storage;
 
 class Company extends Model
 {
@@ -35,7 +36,7 @@ class Company extends Model
         'phone_number',
         'vat_number',
         'commerce_chamber_number',
-        'company_logo_url',
+        'company_logo_path',
         'company_website_url',
     ];
 
@@ -240,5 +241,11 @@ class Company extends Model
         $logo = uploadFile($logoFile, $path);
 
         $this->attributes['company_logo_path'] = $logo->path;
+    }
+
+    public function getCompanyLogoUrlAttribute()
+    {
+        $path = $this->attributes['company_logo_path'];
+        return Storage::url($path);
     }
 }

@@ -82,10 +82,8 @@ class RegisterRequest extends FormRequest
             'confirm_password' => ['required', 'string', 'same:password'],
         ]);
 
-        if (is_string($this->input('profile_picture'))) {
-            $picture = convertBase64ToUploadedFile($this->input('profile_picture'));
-            $this->merge(['profile_picture' => $picture]);
-            $this->addRule('profile_picture', ['required']);
+        if (is_base64_string($this->input('profile_picture'))) {
+            $this->rules['profile_picture'] = ['required', new Base64Image()];
         }
 
         // Has no invitation, then it must be owner

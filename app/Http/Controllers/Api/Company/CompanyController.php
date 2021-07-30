@@ -12,6 +12,8 @@ use App\Http\Requests\Companies\PopulateCompanyOwnersRequest as PopulateOwnersRe
 use App\Http\Requests\Companies\RegisterCompanyRequest as RegisterRequest;
 use App\Http\Requests\Companies\UploadCompanyLogoRequest as UploadLogoRequest;
 
+use App\Http\Resources\CompanyResource;
+
 use App\Repositories\CompanyRepository;
 use App\Repositories\CompanyOwnerRepository;
 
@@ -20,10 +22,7 @@ class CompanyController extends Controller
     protected $company;
     protected $owner;
 
-    public function __construct(
-        CompanyRepository $company,
-        CompanyOwnerRepository $owner
-    )
+    public function __construct(CompanyRepository $company, CompanyOwnerRepository $owner)
     {
     	$this->company = $company;
         $this->owner = $owner;
@@ -32,9 +31,12 @@ class CompanyController extends Controller
     public function userCompany()
     {
         $user = auth()->user();
-        $owner = $user->owner;
+        if (! $owner = $user->owner) {
+            return abort(404, 'This user is not owner of company.');
+        }
+        $company = new CompanyResource($owner->company);
 
-        return response()->json(['company' => $owner->company]);
+        return response()->json(['company' => $company]);
     }
 
     public function uploadCompanyLogo(UploadLogoRequest $request)
