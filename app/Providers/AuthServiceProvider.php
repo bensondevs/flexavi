@@ -51,6 +51,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('execute-appointment', [AppointmentPolicy::class, 'execute']);
         Gate::define('process-appointment', [AppointmentPolicy::class, 'process']);
         Gate::define('calculate-appointment', [AppointmentPolicy::class, 'calculate']);
+        Gate::define('reschedule-appointment', [AppointmentPolicy::class, 'reschedule']);
         Gate::define('delete-appointment', [AppointmentPolicy::class, 'delete']);
         Gate::define('restore-appointment', [AppointmentPolicy::class, 'restore']);
         Gate::define('force-delete-appointment', [AppointmentPolicy::class, 'forceDelete']);

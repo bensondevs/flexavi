@@ -9,6 +9,8 @@ use App\Models\Invoice;
 use App\Models\Customer;
 use App\Models\Appointment;
 
+use App\Enums\Appointment\AppointmentStatus;
+
 class AppointmentPolicy
 {
     use HandlesAuthorization;
@@ -35,16 +37,28 @@ class AppointmentPolicy
 
     public function reschedule(User $user, Appointment $appointment)
     {
+        if ($appointment->status != AppointmentStatus::Calculated) {
+            return abort(422, 'This appointment cannot be rescheduled');
+        }
+
         return $user->hasCompanyPermission($appointment->company_id, 'reschedule appointments');
     }
 
     public function update(User $user, Appointment $appointment)
     {
+        if ($appointment->status > AppointmentStatus::Created) {
+            return abort(422, 'This appointment can no longer be edited.');
+        }
+
         return $user->hasCompanyPermission($appointment->company_id, 'edit appointments');
     }
 
     public function cancel(User $user, Appointment $appointment)
     {
+        if ($appointment->status > AppointmentStatus::Created) {
+            return abort(422, 'This appointment can no longer be cancelled.');
+        }
+
         return $user->hasCompanyPermission($appointment->company_id, 'cancel appointments');
     }
 

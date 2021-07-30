@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-use App\Resources\UserResource;
+use App\Http\Resources\UserResource;
 
 use App\Traits\ApiCollectionResource;
 

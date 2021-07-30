@@ -104,8 +104,12 @@ class AppointmentRepository extends BaseRepository
 	{
 		try {
 			$appointment = $this->getModel();
-			$appointment->fill($cancelData);
-			$appointment->save();
+
+			$appointment->cancellation_cause = $cancelData['cancellation_cause'];
+			$appointment->cancellation_vault = $cancelData['cancellation_vault'];
+			$appointment->cancellation_note = $cancelData['cancellation_note'];
+			
+			$appointment->cancel();
 
 			$this->setModel($appointment);
 
@@ -127,9 +131,7 @@ class AppointmentRepository extends BaseRepository
 	{
 		try {
 			$appointment = $this->getModel();
-			$force ?
-				$appointment->forceDelete() :
-				$appointment->delete();
+			$force ? $appointment->forceDelete() : $appointment->delete();
 
 			$this->destroyModel();
 

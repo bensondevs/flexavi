@@ -24,7 +24,7 @@ Payload name | Required | Validation | Description
 `per_page` | Optional | numeric | Amount of data per page, default amount is 10
 `type` | Optional | numeric, min:1, max:6  | The status code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 `status` | Optional | numeric, min:1, max:5 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
-`cancellation_vault` Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`cancellation_vault` | Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 
 **Response Attributes:**
 
@@ -225,7 +225,7 @@ Payload name | Required | Validation | Description
 `per_page` | Optional | numeric | Amount of data per page, default amount is 10
 `type` | Optional | numeric, min:1, max:6  | The status code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 `status` | Optional | numeric, min:1, max:5 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
-`cancellation_vault` Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`cancellation_vault` | Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 
 **Response Attributes:**
 
@@ -514,3 +514,56 @@ Header Name | Value
 ------------|--------------
 Accept | `application/json`
 Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `appointment_id` | Required | string, uuid | The ID of cancelled appointment
+`cancellation_cause` | Required | string, max: 265 characters | The cause of cancellation in short description
+`cancellation_vault` | Required | numeric, min: 1, max: 2 | The vault of the cancellation, this represents who is held responsible to the cancellation of appointment, to see more detail what numbers represent please see [Appointment Meta](/docs/Meta/Appointment.md) 
+`cancellation_note` | Required | string, text | The description or note about the cancellation, this contains the explanation of reason why the appointment is cancelled. This payload will provide the user to explain what he states at `cancellation_cause` in deeper detail and reasonable explanation.
+
+```json
+{
+    "id": "402d4950-b596-11eb-9dd1-6732e058f436",
+    "cancellation_cause": "Roofer is badly late",
+    "cancellation_vault": 1,
+    "cancellation_note": "Roofer agreed to be arrived at 9, but he did't show up until 10. We try to make many calls but get no answer, what a dissapointment. He showed up at 11 and say the excuse about traffic jam and so on and so forth",
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully cancel appointment."
+}
+```
+
+-------------------------------------------------------
+### 5. Reschedule Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/reschedule`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`previous_appointment_id` | Required | string, uuid | The ID of rescheduled appointment
+`start` | Required | date, format (yyyy-mm-dd) | The starting date of appointment
+`end` | Required | date, format (yyyy-mm-dd) | The ending date of appointment
+`include_weekend` | Optional | boolean, boolean string, numeric 1 or 0 | Set to `true` if the appointment include non-working days like saturday and sunday. Defaultly, this payload has value of false.
+`type` | Required | numeric, numeric string, min:1, max:6 | The type of appointment, this represents the meta of appointment type/kind, to see more detail what numbers represent please see [Appointment Meta](/docs/Meta/Appointment.md) 
+`note` | Optional | string, text | This payload can be used to put side note about this appointment and what should be paid attention about the appointment

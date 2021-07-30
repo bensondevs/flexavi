@@ -108,7 +108,7 @@ class AppointmentController extends Controller
         $appointment = $this->appointment->setModel($appointment);
         $appointment = $this->appointment->process();
 
-        return apiResponse($this->appointment, ['appointment' => $appointment]);
+        return apiResponse($this->appointment);
     }
 
     public function cancel(CancelRequest $request)
@@ -119,7 +119,7 @@ class AppointmentController extends Controller
         $cancelData = $request->cancelData();
         $appointment = $this->appointment->cancel($cancelData);
 
-        return apiResponse($this->appointment, ['appointment' => $appointment]);
+        return apiResponse($this->appointment);
     }
 
     public function reschedule(RescheduleRequest $request)
@@ -130,7 +130,7 @@ class AppointmentController extends Controller
         $input = $request->rescheduleData();
         $appointment = $this->appointment->reschedule($input);
 
-        return apiResponse($this->appointment, ['appointment' => $appointment]);
+        return apiResponse($this->appointment);
     }
 
     public function generateInvoice(GenerateInvoiceRequest $request)
@@ -138,7 +138,7 @@ class AppointmentController extends Controller
         $appointment = $request->getAppointment();
         $invoice = $this->invoice->generateFromAppointment($appointment);
 
-        return apiResponse($this->invoice);
+        return apiResponse($this->invoice, ['invoice' => $invoice]);
     }
 
     public function update(SaveRequest $request)

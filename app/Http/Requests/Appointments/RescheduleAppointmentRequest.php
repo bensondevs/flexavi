@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
+use App\Traits\CompanyInputRequest;
+
 use App\Http\Requests\Appointments\SaveAppointmentRequest as SaveRequest;
 
 class RescheduleAppointmentRequest extends FormRequest
@@ -23,6 +25,12 @@ class RescheduleAppointmentRequest extends FormRequest
         return $this->appointment = Appointment::findOrFail($id);
     }
 
+    protected function prepareForValidation()
+    {
+        $previousAppointment = $this->getPreviousAppointment();
+        $this->merge(['customer_id' => $previousAppointment->customer_id]);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -31,7 +39,6 @@ class RescheduleAppointmentRequest extends FormRequest
     public function authorize()
     {
         $appointment = $this->getPreviousAppointment();
-
         return Gate::allows('reschedule-appointment', $appointment);
     }
 
@@ -48,8 +55,10 @@ class RescheduleAppointmentRequest extends FormRequest
 
     public function rescheduleData()
     {
-        $data = $this->ruleWithCompany();
-        $data['previous_appointment_id'] = $this->getPreviousAppointment()->id;
+        $previousAppointment = $this->getPreviousAppointment();
+
+        $data = $this->validated();
+        $data['previous_appointment_id'] = $previousAppointment->id;
 
         return $data;
     }
