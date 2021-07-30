@@ -41,7 +41,7 @@ class UserController extends Controller
         $user = $request->user();
         $this->user->setModel($user);
 
-        $picture = $request->file('profile_picture');
+        $picture = $request->profile_picture;
         $user = $this->user->setProfilePicture($picture);
 
         return apiResponse($this->user, ['profile_picture' => $user->profile_picture]);

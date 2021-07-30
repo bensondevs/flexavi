@@ -39,10 +39,10 @@ class CompanyController extends Controller
 
     public function uploadCompanyLogo(UploadLogoRequest $request)
     {
-        $logo = $request->company_logo;
-
         $company = $request->getCompany();
         $company = $this->company->setModel($company);
+        
+        $logo = $request->company_logo;
         $company = $this->company->uploadCompanyLogo($logo);
 
         return apiResponse($this->company);
