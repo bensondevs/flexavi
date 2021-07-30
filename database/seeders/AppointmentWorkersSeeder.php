@@ -18,15 +18,15 @@ class AppointmentWorkersSeeder extends Seeder
     public function run()
     {
         $appointments = Appointment::with(['company', 'company.employees'])->get();
-        $employeeTypes = ['roofers', 'administrative'];
 
         $rawWorkers = [];
         foreach ($appointments as $appointment) {
         	for ($index = 0; $index < rand(1, 5); $index++) {
         		// Get Random Employee
         		$company = $appointment->company;
-                $companyEmployees = $company->employees;
-        		if (! $companyEmployees) continue;
+        		if (! $companyEmployees = $company->employees) {
+                    continue;
+                } 
         		$employee = $companyEmployees->random();
 
         		array_push($rawWorkers, [
@@ -34,7 +34,6 @@ class AppointmentWorkersSeeder extends Seeder
 
 	        		'company_id' => $appointment->company_id,
 	        		'appointment_id' => $appointment->id,
-	        		'employee_type' => $employeeTypes[rand(0, 1)],
 	        		'employee_id' => $employee->id,
 
 	        		'created_at' => carbon()->now(),

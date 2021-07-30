@@ -19,7 +19,6 @@ class AppointmentWorker extends Model
     protected $fillable = [
         'company_id',
         'appointment_id',
-        'employee_type',
         'employee_id',
     ];
 

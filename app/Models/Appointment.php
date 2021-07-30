@@ -215,20 +215,32 @@ class Appointment extends Model
     {
         $this->attributes['status'] = AppointmentStatus::InProcess;
         $this->attributes['in_process_at'] = carbon()->now();
-        return $this->save();
+        $execute = $this->save();
+
+        $this->fireModelEvent('executed');
+
+        return $execute;
     }
 
     public function process()
     {
         $this->attributes['status'] = AppointmentStatus::Processed;
         $this->attributes['processed_at'] = carbon()->now();
-        return $this->save();
+        $process = $this->save();
+
+        $this->fireModelEvent('processed');
+
+        return $process;
     }
 
     public function cancel()
     {
         $this->attributes['status'] = AppointmentStatus::Cancelled;
         $this->attributes['cancelled_at'] = carbon()->now();
-        return $this->save();
+        $cancel = $this->save();
+
+        $this->fireModelEvent('cancelled');
+
+        return $cancel;
     }
 }

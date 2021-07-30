@@ -27,8 +27,6 @@ class CreateAppointmentWorkersTable extends Migration
                 ->references('id')
                 ->on('appointments')
                 ->onDelete('CASCADE');
-
-            $table->string('employee_type');
             
             $table->uuid('employee_id');
             $table->foreign('employee_id')

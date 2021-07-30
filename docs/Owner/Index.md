@@ -1,6 +1,8 @@
 # Owner API Documentation Index
 
 - [Appointment](Appointment/Appointment.md)
+- [Appointment Worker](Appointment/AppointmentWorker.md)
+- [Sub Appointment](Appointment/SubAppointment.md)
 - [Car](Car.md)
 - [Owner](Owner.md)
 - [Company](Company.md)

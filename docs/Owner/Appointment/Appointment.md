@@ -219,7 +219,7 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-`customer_id` | 
+`customer_id` | Required | uuid, string, exists in `customers` table | Customer with appointment as target
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through attributes of `cancellation_note`, `note`
 `per_page` | Optional | numeric | Amount of data per page, default amount is 10

@@ -29,6 +29,39 @@ class AppointmentObserver
     }
 
     /**
+     * Handle the Appointment "executed" event.
+     *
+     * @param  \App\Models\Appointment  $appointment
+     * @return void
+     */
+    public function executed(Appointment $appointment)
+    {
+        //
+    }
+
+    /**
+     * Handle the Appointment "processed" event.
+     *
+     * @param  \App\Models\Appointment  $appointment
+     * @return void
+     */
+    public function processed(Appointment $appointment)
+    {
+        //
+    }
+
+    /**
+     * Handle the Appointment "cancelled" event.
+     *
+     * @param  \App\Models\Appointment  $appointment
+     * @return void
+     */
+    public function cancelled(Appointment $appointment)
+    {
+        //
+    }
+
+    /**
      * Handle the Appointment "deleted" event.
      *
      * @param  \App\Models\Appointment  $appointment
