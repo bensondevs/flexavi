@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
 
@@ -31,7 +32,7 @@ class SetCarImageRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::allows('set-image-car', $this->getCar());
     }
 
     /**

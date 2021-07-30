@@ -27,7 +27,12 @@ class CarPolicy
         return $user->hasPermissionTo('create cars');
     }
 
-    public function update(User $user, Car $car)
+    public function setImage(User $user, Car $car)
+    {
+        return $user->hasCompanyPermission($car->company_id, 'set image cars');
+    }
+
+    public function edit(User $user, Car $car)
     {
         return $user->hasCompanyPermission($car->company_id, 'edit cars');
     }

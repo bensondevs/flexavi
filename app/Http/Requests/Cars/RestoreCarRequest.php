@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
 
@@ -16,8 +17,10 @@ class RestoreCarRequest extends FormRequest
 
     public function getTrashedCar()
     {
-        return $this->trashedCar = $this->trashedCar ?:
-            Car::withTrashed()->findOrFail($this->input('id'));
+        if ($this->trashedCar) return $this->trashedCar;
+
+        $id = $this->input('id') ?: $this->input('car_id');
+        return $this->trashedCar = Car::withTrashed()->findOrFail($id);
     }
 
     /**
@@ -28,7 +31,7 @@ class RestoreCarRequest extends FormRequest
     public function authorize()
     {
         $car = $this->getTrashedCar();
-        return $this->checkCompanyPermission('restore cars', $car);
+        return Gate::allows('restore-car', $car);
     }
 
     /**

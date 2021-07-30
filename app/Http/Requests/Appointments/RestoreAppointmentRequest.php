@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
@@ -16,8 +17,10 @@ class RestoreAppointmentRequest extends FormRequest
 
     public function getTrashedAppointment()
     {
-        return $this->trashedAppointment = $this->trashedAppointment ?:
-            Appointment::withTrashed()->findOrFail($this->input('id'));
+        if ($this->trashedAppointment) return $this->trashedAppointment;
+
+        $id = $this->input('id') ?: $this->input('appointment_id');
+        return $this->trashedAppointment = Appointment::withTrashed()->findOrFail($id);
     }
 
     /**
@@ -28,7 +31,7 @@ class RestoreAppointmentRequest extends FormRequest
     public function authorize()
     {
         $appointment = $this->getTrashedAppointment();
-        return $this->checkCompanyPermission('restore appointments', $appointment);
+        return Gate::allows('restore-appointment', $appointment);
     }
 
     /**

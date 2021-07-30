@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Auths;
 
 use Illuminate\Foundation\Http\FormRequest;
-use ProtoneMedia\LaravelMixins\Request\ConvertsBase64ToFiles;
 
 use App\Traits\InputRequest;
 

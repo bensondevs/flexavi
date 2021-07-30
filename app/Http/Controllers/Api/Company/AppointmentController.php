@@ -11,6 +11,8 @@ use App\Http\Requests\Appointments\ExecuteAppointmentRequest as ExecuteRequest;
 use App\Http\Requests\Appointments\CancelAppointmentRequest as CancelRequest;
 use App\Http\Requests\Appointments\RescheduleAppointmentRequest as RescheduleRequest;
 use App\Http\Requests\Appointments\DeleteAppointmentRequest as DeleteRequest;
+use App\Http\Requests\Appointments\RestoreAppointmentRequest as RestoreRequest;
+use App\Http\Requests\Appointments\GenerateAppointmentInvoiceRequest as GenerateInvoiceRequest;
 use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest as CompanyPopulateRequest;
 use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as CustomerPopulateRequest;
 
@@ -28,27 +30,6 @@ class AppointmentController extends Controller
     {
     	$this->appointment = $appointment;
         $this->work = $work;
-    }
-
-    public function appointmentTypes()
-    {
-        $appointment = $this->appointment->getModel();
-        $selectOptions = $appointment->typeOptions();
-        return response()->json($selectOptions);
-    }
-
-    public function appointmentStatuses()
-    {
-        $appointment = $this->appointment->getModel();
-        $selectOptions = $appointment->statusOptions();
-        return response()->json($selectOptions);
-    }
-
-    public function appointmentCancellationVaults()
-    {
-        $appointment = $this->appointment->getModel();
-        $selectOptions = $appointment->cancellationVaultOptions();
-        return response()->json($selectOptions);
     }
 
     public function companyAppointments(CompanyPopulateRequest $request)
@@ -73,7 +54,7 @@ class AppointmentController extends Controller
         return response()->json(['appointments' => $appointments]);
     }
 
-    public function trashedAppointments(PopulateRequest $request)
+    public function trashedAppointments(CompanyPopulateRequest $request)
     {
         $options = $request->options();
 
@@ -148,6 +129,7 @@ class AppointmentController extends Controller
 
         $input = $request->ruleWithCompany();
         $appointment = $this->appointment->save($input);
+        $appointment = new AppointmentResource($appointment);
 
         return apiResponse($this->appointment, ['appointment' => $appointment]);
     }
@@ -169,6 +151,7 @@ class AppointmentController extends Controller
 
         $appointment = $this->appointment->setModel($appointment);
         $appointment = $this->appointment->restore();
+        $appointment = new AppointmentResource($appointment);
 
         return apiResponse($this->appointment, ['appointment' => $appointment]);
     }

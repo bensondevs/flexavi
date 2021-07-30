@@ -20,7 +20,7 @@ class AppointmentRepository extends BaseRepository
 {
 	public function __construct()
 	{
-		$this->setModel(new Appointment);
+		$this->setInitModel(new Appointment);
 	}
 
 	public function save(array $appointmentData)
@@ -144,5 +144,22 @@ class AppointmentRepository extends BaseRepository
 		}
 
 		return $this->returnResponse();
+	}
+
+	public function restore()
+	{
+		try {
+			$appointment = $this->getModel();
+			$appointment->restore();
+
+			$this->setModel($appointment);
+
+			$this->setSuccess('Successfully restore appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore appointment.', $error);
+		}
+
+		return $this->getModel();
 	}
 }

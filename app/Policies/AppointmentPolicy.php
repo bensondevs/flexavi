@@ -32,7 +32,7 @@ class AppointmentPolicy
 
     public function generateInvoice(User $user, Invoice $invoice)
     {
-        return $user->hasCompanyPermission('generate-invoice');
+        return $user->hasCompanyPermission('generate invoice appointments');
     }
 
     public function reschedule(User $user, Appointment $appointment)

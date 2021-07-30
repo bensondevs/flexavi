@@ -53,8 +53,6 @@ class CancelAppointmentRequest extends FormRequest
                 'max:' . AppointmentCancellationVault::Customer
             ],
             'cancellation_note' => ['required', 'string'],
-
-            'reschedule' => ['boolean'],
         ]);
 
         return $this->returnRules();

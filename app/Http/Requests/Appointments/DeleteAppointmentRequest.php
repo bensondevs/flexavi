@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
@@ -12,8 +13,15 @@ class DeleteAppointmentRequest extends FormRequest
 
     public function getAppointment()
     {
-        return $this->appointment = $this->appointment ?:
-            Appointment::withTrashed()->findOrFail($this->input('id'));
+        if ($this->appointment) return $this->appointment;
+
+        $appointment = new Appointment;
+        if ($this->force) {
+            $appointment = $appointment->withTrashed();
+        }
+
+        $id = $this->input('id') ?: $this->input('appointment_id');
+        return $this->appointment = $appointment->findOrFail($id);
     }
 
     /**
@@ -23,7 +31,8 @@ class DeleteAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return gate()->allows('delete-appointment', $this->getAppointment());
+        $appointment = $this->getAppointment();
+        return Gate::allows('delete-appointment', $appointment);
     }
 
     /**

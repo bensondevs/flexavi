@@ -16,7 +16,7 @@ class GenerateAppointmentInvoiceRequest extends FormRequest
         if ($this->appointment) return $this->appointment;
 
         $id = $this->input('id') ?: $this->input('appointment_id');
-        return Appointment::findOrFail($id);
+        return $this->appointment = Appointment::findOrFail($id);
     }
 
     /**
@@ -27,8 +27,7 @@ class GenerateAppointmentInvoiceRequest extends FormRequest
     public function authorize()
     {
         $appointment = $this->getAppointment();
-
-        return Gate::define('generate-invoice', $appointment);
+        return Gate::define('generate-invoice-appointment', $appointment);
     }
 
     /**

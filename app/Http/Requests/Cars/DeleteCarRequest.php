@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Car;
 
@@ -12,8 +13,22 @@ class DeleteCarRequest extends FormRequest
 
     public function getCar()
     {
-        return $this->car = $this->car ?:
-            Car::withTrashed()->findOrFail($this->input('id'));
+        if ($this->car) return $this->car;
+
+        $car = new Car();
+        if ($this->input('force')) {
+            $car = $car->withTrashed();
+        }
+
+        $id = $this->input('id') ?: $this->input('car_id');
+        return $this->car = $car->findOrFail($id);
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($force = $this->input('force')) {
+            $this->merge(['force' => strtobool($force)]);
+        }
     }
 
     /**
@@ -23,10 +38,10 @@ class DeleteCarRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $car = $this->getCar();
-
-        return $user->hasCompanyPermission($car->company_id, 'delete cars');
+        return ($this->force) ? 
+            Gate::allows('force-delete-car', $car) :
+            Gate::allows('delete-car', $car);
     }
 
     /**

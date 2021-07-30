@@ -244,10 +244,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			*/
 			Route::group(['prefix' => 'appointments'], function () {
 				Route::get('/', [AppointmentController::class, 'companyAppointments']);
+				Route::get('trasheds', [AppointmentController::class, 'trashedAppointments']);
 				Route::get('of_customer', [AppointmentController::class, 'customerAppointments']);
 				Route::post('store', [AppointmentController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [AppointmentController::class, 'update']);
 				Route::delete('delete', [AppointmentController::class, 'delete']);
+				Route::patch('restore', [AppointmentController::class, 'restore']);
 
 				Route::post('cancel', [AppointmentController::class, 'cancel']);
 				Route::post('reschedule', [AppointmentController::class, 'reschedule']);
@@ -275,6 +277,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 					Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
 					Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
 				});
+
+				Route::post('generate_invoice', [AppointmentController::class, 'generateInvoice']);
 			});
 
 			/*

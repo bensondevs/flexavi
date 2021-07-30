@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
@@ -17,7 +18,7 @@ class PopulateCompanyCarsRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::allows('view-any-cars');
     }
 
     /**

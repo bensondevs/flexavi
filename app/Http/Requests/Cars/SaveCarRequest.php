@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Car;
 use App\Models\Company;
@@ -22,7 +23,7 @@ class SaveCarRequest extends FormRequest
     {
         if ($this->car) return $this->car;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('car_id');
         return $this->car = $this->model = Car::findOrFail($id);
     }
 
@@ -33,7 +34,12 @@ class SaveCarRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->authorizeCompanyAction('cars');
+        if (! $this->isMethod('POST')) {
+            $car = $this->getCar();
+            return Gate::allows('edit-car', $car);
+        }
+
+        return Gate::allows('create-car');
     }
 
     /**

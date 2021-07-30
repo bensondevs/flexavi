@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
+use App\Policies\CarPolicy;
 use App\Policies\WorkPolicy;
 use App\Policies\AddressPolicy;
 use App\Policies\InvoicePolicy;
@@ -45,7 +46,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-appointment', [AppointmentPolicy::class, 'viewAny']);
         Gate::define('view-appointment', [AppointmentPolicy::class, 'view']);
         Gate::define('create-appointment', [AppointmentPolicy::class, 'create']);
-        Gate::define('generate-invoice', [AppointmentPolicy::class, 'generateInvoice']);
+        Gate::define('generate-invoice-appointment', [AppointmentPolicy::class, 'generateInvoice']);
         Gate::define('update-appointment', [AppointmentPolicy::class, 'update']);
         Gate::define('cancel-appointment', [AppointmentPolicy::class, 'cancel']);
         Gate::define('execute-appointment', [AppointmentPolicy::class, 'execute']);
@@ -149,5 +150,15 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-customer', [CustomerPolicy::class, 'delete']);
         Gate::define('restore-customer', [CustomerPolicy::class, 'restore']);
         Gate::define('force-delete-customer', [CustomerPolicy::class, 'forceDelete']);
+
+        // Car
+        Gate::define('view-any-car', [CarPolicy::class, 'viewAny']);
+        Gate::define('view-car', [CarPolicy::class, 'view']);
+        Gate::define('create-car', [CarPolicy::class, 'create']);
+        Gate::define('set-image-car', [CarPolicy::class, 'setImage']);
+        Gate::define('edit-car', [CarPolicy::class, 'edit']);
+        Gate::define('delete-car', [CarPolicy::class, 'delete']);
+        Gate::define('restore-car', [CarPolicy::class, 'restore']);
+        Gate::define('force-delete-car', [CarPolicy::class, 'forceDelete']);
     }
 }

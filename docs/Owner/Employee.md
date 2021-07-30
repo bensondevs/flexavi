@@ -37,230 +37,392 @@ Attribute Name  | Type  | Description
         "current_page": 1,
         "data": [
             {
-                "id": "7cf6c7a0-e0d3-11eb-9ff2-d10f3f87ae90",
+                "id": "171d92a0-f114-11eb-9850-050e7526874a",
+                "title": "Invited Employee",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 3,
+                "employment_status_description": "Fired",
+                "user": null,
+                "addresses": [],
+                "inspections_count": 0
+            },
+            {
+                "id": "176f3cd0-f114-11eb-a729-83330fbc07b9",
+                "title": "Invited Employee",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 2,
+                "employment_status_description": "Inactive",
+                "user": null,
+                "addresses": [],
+                "inspections_count": 0
+            },
+            {
+                "id": "f7e76280-f113-11eb-813a-7fca4c9f4000",
                 "title": "Employee Title",
-                "employee_type": "roofers",
-                "employee_type_description": "",
-                "employment_status": "active",
-                "employment_status_description": "",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 2,
+                "employment_status_description": "Inactive",
                 "user": {
-                    "id": "7a40dab0-e0d3-11eb-b8af-d1f8e529af04",
+                    "id": "f51e96a0-f113-11eb-a28c-0fbb1c3154a1",
                     "fullname": "Flexavi Employee 1",
-                    "birth_date": "1997-07-09",
+                    "birth_date": "1999-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "774978482",
+                    "id_card_number": "733629563",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee1@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
+                "addresses": [
+                    {
+                        "id": "17ac5e00-f114-11eb-9ff4-71a036bb5c2a",
+                        "user_id": "f51e96a0-f113-11eb-a28c-0fbb1c3154a1",
+                        "address": "Flexavi Employee 1 Address 1",
+                        "house_number": "967",
+                        "house_number_suffix": "X",
+                        "zipcode": "461232",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f51e96a0-f113-11eb-a28c-0fbb1c3154a1"
+                    },
+                    {
+                        "id": "17ac61a0-f114-11eb-b591-5ffcf2ed9c92",
+                        "user_id": "f51e96a0-f113-11eb-a28c-0fbb1c3154a1",
+                        "address": "Flexavi Employee 1 Address 2",
+                        "house_number": "643",
+                        "house_number_suffix": "X",
+                        "zipcode": "875605",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f51e96a0-f113-11eb-a28c-0fbb1c3154a1"
+                    }
+                ],
+                "inspections_count": 0
             },
             {
-                "id": "7cf6c9e0-e0d3-11eb-914f-19b8da222f6e",
+                "id": "f7e766d0-f113-11eb-b72e-1188d536aee7",
                 "title": "Employee Title",
-                "employee_type": "roofers",
-                "employee_type_description": "",
-                "employment_status": "inactive",
-                "employment_status_description": "",
+                "employee_type": 1,
+                "employee_type_description": "Administrative",
+                "employment_status": 1,
+                "employment_status_description": "Active",
                 "user": {
-                    "id": "7a4b8260-e0d3-11eb-a897-f3f563ed5849",
+                    "id": "f5297760-f113-11eb-8c04-a30d97501592",
                     "fullname": "Flexavi Employee 2",
-                    "birth_date": "1998-07-09",
+                    "birth_date": "1999-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "485669952",
+                    "id_card_number": "764756656",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee2@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
+                "addresses": [
+                    {
+                        "id": "17ac6530-f114-11eb-bdf5-dd2708703a5f",
+                        "user_id": "f5297760-f113-11eb-8c04-a30d97501592",
+                        "address": "Flexavi Employee 2 Address 1",
+                        "house_number": "608",
+                        "house_number_suffix": "X",
+                        "zipcode": "345881",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f5297760-f113-11eb-8c04-a30d97501592"
+                    }
+                ],
+                "inspections_count": 0
             },
             {
-                "id": "7cf6cae0-e0d3-11eb-b0ff-119df6727a11",
+                "id": "f7e769e0-f113-11eb-8ef8-cfb3b1d0abf1",
                 "title": "Employee Title",
-                "employee_type": "administrative",
-                "employee_type_description": "",
-                "employment_status": "active",
-                "employment_status_description": "",
+                "employee_type": 1,
+                "employee_type_description": "Administrative",
+                "employment_status": 3,
+                "employment_status_description": "Fired",
                 "user": {
-                    "id": "7a563060-e0d3-11eb-b6b1-31821a9c91ce",
+                    "id": "f5345510-f113-11eb-9f17-0f514d65c4c8",
                     "fullname": "Flexavi Employee 3",
-                    "birth_date": "2000-07-09",
+                    "birth_date": "1996-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "228989700",
+                    "id_card_number": "541904122",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee3@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
+                "addresses": [
+                    {
+                        "id": "17ac68d0-f114-11eb-995e-c97772e12753",
+                        "user_id": "f5345510-f113-11eb-9f17-0f514d65c4c8",
+                        "address": "Flexavi Employee 3 Address 1",
+                        "house_number": "119",
+                        "house_number_suffix": "X",
+                        "zipcode": "212657",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f5345510-f113-11eb-9f17-0f514d65c4c8"
+                    }
+                ],
+                "inspections_count": 0
             },
             {
-                "id": "7cf6cbb0-e0d3-11eb-b6c2-eb71d7c71696",
+                "id": "f7e76c90-f113-11eb-b819-bd3514f1e3e9",
                 "title": "Employee Title",
-                "employee_type": "administrative",
-                "employee_type_description": "",
-                "employment_status": "active",
-                "employment_status_description": "",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 2,
+                "employment_status_description": "Inactive",
                 "user": {
-                    "id": "7a60e160-e0d3-11eb-9abd-e3b907eb27b0",
+                    "id": "f53f29b0-f113-11eb-a3b3-a9db5730403e",
                     "fullname": "Flexavi Employee 4",
-                    "birth_date": "1996-07-09",
+                    "birth_date": "1999-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "772838609",
+                    "id_card_number": "764393182",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee4@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
+                "addresses": [
+                    {
+                        "id": "17ac6c80-f114-11eb-99c3-85e54e580924",
+                        "user_id": "f53f29b0-f113-11eb-a3b3-a9db5730403e",
+                        "address": "Flexavi Employee 4 Address 1",
+                        "house_number": "521",
+                        "house_number_suffix": "X",
+                        "zipcode": "142942",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f53f29b0-f113-11eb-a3b3-a9db5730403e"
+                    },
+                    {
+                        "id": "17ac70a0-f114-11eb-9ee7-99345c714774",
+                        "user_id": "f53f29b0-f113-11eb-a3b3-a9db5730403e",
+                        "address": "Flexavi Employee 4 Address 2",
+                        "house_number": "892",
+                        "house_number_suffix": "X",
+                        "zipcode": "291473",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f53f29b0-f113-11eb-a3b3-a9db5730403e"
+                    }
+                ],
+                "inspections_count": 0
             },
             {
-                "id": "7cf6cc80-e0d3-11eb-92fc-851643ef8617",
+                "id": "f7e77000-f113-11eb-80f8-750f9405477a",
                 "title": "Employee Title",
-                "employee_type": "administrative",
-                "employee_type_description": "",
-                "employment_status": "inactive",
-                "employment_status_description": "",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 3,
+                "employment_status_description": "Fired",
                 "user": {
-                    "id": "7a6b92c0-e0d3-11eb-80ad-4928421560e7",
+                    "id": "f54b8ce0-f113-11eb-b57f-9f31960c3639",
                     "fullname": "Flexavi Employee 5",
-                    "birth_date": "1999-07-09",
+                    "birth_date": "1999-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "479439307",
+                    "id_card_number": "510209132",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee5@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
+                "addresses": [
+                    {
+                        "id": "17ac7450-f114-11eb-817f-af1c838764b3",
+                        "user_id": "f54b8ce0-f113-11eb-b57f-9f31960c3639",
+                        "address": "Flexavi Employee 5 Address 1",
+                        "house_number": "699",
+                        "house_number_suffix": "X",
+                        "zipcode": "112220",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f54b8ce0-f113-11eb-b57f-9f31960c3639"
+                    },
+                    {
+                        "id": "17ac77f0-f114-11eb-8a31-5f266625a055",
+                        "user_id": "f54b8ce0-f113-11eb-b57f-9f31960c3639",
+                        "address": "Flexavi Employee 5 Address 2",
+                        "house_number": "852",
+                        "house_number_suffix": "X",
+                        "zipcode": "345579",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f54b8ce0-f113-11eb-b57f-9f31960c3639"
+                    }
+                ],
+                "inspections_count": 0
             },
             {
-                "id": "7cf6cd50-e0d3-11eb-b23f-1507416109c0",
+                "id": "f7e77340-f113-11eb-a798-b9eb9c28b981",
                 "title": "Employee Title",
-                "employee_type": "administrative",
-                "employee_type_description": "",
-                "employment_status": "active",
-                "employment_status_description": "",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 1,
+                "employment_status_description": "Active",
                 "user": {
-                    "id": "7a7629a0-e0d3-11eb-80a8-5975888bc04e",
+                    "id": "f5567470-f113-11eb-908c-011d59acf3bf",
                     "fullname": "Flexavi Employee 6",
-                    "birth_date": "1996-07-09",
+                    "birth_date": "1997-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "980132572",
+                    "id_card_number": "114641193",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee6@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
+                "addresses": [
+                    {
+                        "id": "17ac7ba0-f114-11eb-8ead-43359e6c61c8",
+                        "user_id": "f5567470-f113-11eb-908c-011d59acf3bf",
+                        "address": "Flexavi Employee 6 Address 1",
+                        "house_number": "625",
+                        "house_number_suffix": "X",
+                        "zipcode": "200766",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f5567470-f113-11eb-908c-011d59acf3bf"
+                    }
+                ],
+                "inspections_count": 0
             },
             {
-                "id": "7cf6ce20-e0d3-11eb-b1ae-275f21bc494c",
+                "id": "f7e776b0-f113-11eb-97f7-cf9ec8b02197",
                 "title": "Employee Title",
-                "employee_type": "roofers",
-                "employee_type_description": "",
-                "employment_status": "active",
-                "employment_status_description": "",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 3,
+                "employment_status_description": "Fired",
                 "user": {
-                    "id": "7a808260-e0d3-11eb-9059-df71c8f79e86",
+                    "id": "f562b960-f113-11eb-9bee-0f7a1348f9d9",
                     "fullname": "Flexavi Employee 7",
-                    "birth_date": "2001-07-09",
+                    "birth_date": "2000-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "432298860",
+                    "id_card_number": "429400900",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee7@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
+                "addresses": [
+                    {
+                        "id": "17ac7f40-f114-11eb-96ed-8b2b631f7d7a",
+                        "user_id": "f562b960-f113-11eb-9bee-0f7a1348f9d9",
+                        "address": "Flexavi Employee 7 Address 1",
+                        "house_number": "116",
+                        "house_number_suffix": "X",
+                        "zipcode": "286196",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f562b960-f113-11eb-9bee-0f7a1348f9d9"
+                    },
+                    {
+                        "id": "17ac82e0-f114-11eb-929b-f10fa17dd291",
+                        "user_id": "f562b960-f113-11eb-9bee-0f7a1348f9d9",
+                        "address": "Flexavi Employee 7 Address 2",
+                        "house_number": "533",
+                        "house_number_suffix": "X",
+                        "zipcode": "915290",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f562b960-f113-11eb-9bee-0f7a1348f9d9"
+                    }
+                ],
+                "inspections_count": 0
             },
             {
-                "id": "7cf6cee0-e0d3-11eb-b344-299db28dffe4",
+                "id": "f7e779e0-f113-11eb-a6f3-17307f5532d7",
                 "title": "Employee Title",
-                "employee_type": "administrative",
-                "employee_type_description": "",
-                "employment_status": "fired",
-                "employment_status_description": "",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 3,
+                "employment_status_description": "Fired",
                 "user": {
-                    "id": "7a8b0d20-e0d3-11eb-815a-072e8f8e213d",
+                    "id": "f56e0a10-f113-11eb-83c0-fbe0bb3c421e",
                     "fullname": "Flexavi Employee 8",
-                    "birth_date": "2000-07-09",
+                    "birth_date": "1997-07-30",
                     "id_card_type": "id_card",
-                    "id_card_number": "228111848",
+                    "id_card_number": "715249248",
                     "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
+                    "phone_verified_status": false,
                     "email": "employee8@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
+                    "email_verified_status": false,
+                    "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+                    "role": "employee"
                 },
-            },
-            {
-                "id": "7cf6cfc0-e0d3-11eb-8b34-538251701dd7",
-                "title": "Employee Title",
-                "employee_type": "administrative",
-                "employee_type_description": "",
-                "employment_status": "active",
-                "employment_status_description": "",
-                "user": {
-                    "id": "7a953ce0-e0d3-11eb-9a78-87f0765079bb",
-                    "fullname": "Flexavi Employee 9",
-                    "birth_date": "2001-07-09",
-                    "id_card_type": "id_card",
-                    "id_card_number": "282216992",
-                    "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
-                    "email": "employee9@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
-                },
-            },
-            {
-                "id": "7cf6d080-e0d3-11eb-8755-452677ff5b35",
-                "title": "Employee Title",
-                "employee_type": "administrative",
-                "employee_type_description": "",
-                "employment_status": "active",
-                "employment_status_description": "",
-                "user": {
-                    "id": "7aa0bb30-e0d3-11eb-9835-c9fc5619c9d6",
-                    "fullname": "Flexavi Employee 10",
-                    "birth_date": "1998-07-09",
-                    "id_card_type": "id_card",
-                    "id_card_number": "241825336",
-                    "phone": "999999999999",
-                    "phone_verified_at": null,
-                    "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
-                    "registration_code": null,
-                    "email": "employee10@flexavi.nl",
-                    "email_verified_at": null,
-                    "deleted_at": null
-                },
+                "addresses": [
+                    {
+                        "id": "17ac8680-f114-11eb-842c-5b0cd7fcfd05",
+                        "user_id": "f56e0a10-f113-11eb-83c0-fbe0bb3c421e",
+                        "address": "Flexavi Employee 8 Address 1",
+                        "house_number": "954",
+                        "house_number_suffix": "X",
+                        "zipcode": "574063",
+                        "city": "Randon City",
+                        "province": "Random Province",
+                        "created_at": "2021-07-30T08:56:56.000000Z",
+                        "updated_at": "2021-07-30T08:56:56.000000Z",
+                        "deleted_at": null,
+                        "laravel_through_key": "f56e0a10-f113-11eb-83c0-fbe0bb3c421e"
+                    }
+                ],
+                "inspections_count": 0
             }
         ],
         "first_page_url": "/?page=1",
         "from": 1,
-        "last_page": 2,
-        "last_page_url": "/?page=2",
+        "last_page": 3,
+        "last_page_url": "/?page=3",
         "links": [
             {
                 "url": null,
@@ -278,6 +440,11 @@ Attribute Name  | Type  | Description
                 "active": false
             },
             {
+                "url": "/?page=3",
+                "label": "3",
+                "active": false
+            },
+            {
                 "url": "/?page=2",
                 "label": "Next &raquo;",
                 "active": false
@@ -288,82 +455,7 @@ Attribute Name  | Type  | Description
         "per_page": 10,
         "prev_page_url": null,
         "to": 10,
-        "total": 17
-    }
-}
-```
-
--------------------------------------------------------
-### 2. Populate Inviteable Employees
--------------------------------------------------------
-
-**Endpoint:** `/api/dashboard/companies/employees/inviteable`
-
-**Method:** `GET`
-
-**Headers:**
-
-Header Name | Value 
-------------|--------------
-Accept | `application/json`
-Authorization | `Bearer {token}`
-
-**Parameters:**
-
- Payload name | Required | Validation | Description    
---------------|----------|------------|-------------
-`page` | Optional | number | Page of pagination
-`search` | Optional | string | Searched keyword, will be matched through all attribute of employee
-
-**Response Attributes:**
-
-Attribute Name  | Type  | Description   
-----------------|-------|---------------
-`employees` | Object | The employee object, contains pagination information and array of `data`
-
-**Success Response Example:**
-
-```json
-{
-    "employees": {
-        "current_page": 1,
-        "data": {
-            "27": {
-                "id": "2124a3a0-c5d6-11eb-b76c-09197012e8a7",
-                "title": "Invited Employee",
-                "employee_type": "roofers",
-                "employment_status": 1,
-                "employment_status_description": "Active",
-                "user": null
-            }
-        },
-        "first_page_url": "/?page=1",
-        "from": 1,
-        "last_page": 1,
-        "last_page_url": "/?page=1",
-        "links": [
-            {
-                "url": null,
-                "label": "&laquo; Previous",
-                "active": false
-            },
-            {
-                "url": "/?page=1",
-                "label": "1",
-                "active": true
-            },
-            {
-                "url": null,
-                "label": "Next &raquo;",
-                "active": false
-            }
-        ],
-        "next_page_url": null,
-        "path": "/",
-        "per_page": 10,
-        "prev_page_url": null,
-        "to": 1,
-        "total": 1
+        "total": 29
     }
 }
 ```
@@ -625,7 +717,7 @@ Attribute Name  | Type  | Description
 
 **Endpoint:** `/api/dashboard/companies/employees/restore`
 
-**Method:** `GET`
+**Method:** `PATCH`
 
 **Headers:**
 
@@ -661,16 +753,26 @@ Attribute Name  | Type  | Description
 ```json
 {
     "employee": {
-        "id": "c90c1a80-c922-11eb-b1dc-51d432414c57",
-        "user_id": "c66433c0-c922-11eb-816b-8517c5c75b56",
-        "company_id": "c8844320-c922-11eb-8153-c71677def74d",
-        "photo_url": "https://dummyimage.com/300/09f/fff.png",
+        "id": "7cf6cee0-e0d3-11eb-b344-299db28dffe4",
         "title": "Employee Title",
         "employee_type": "administrative",
-        "employment_s,
-        "created_at": "2021-06-09T13:01:20.000000Z",
-        "updated_at": "2021-06-09T16:49:48.000000Z",
-        "deleted_at": null
+        "employee_type_description": "",
+        "employment_status": "fired",
+        "employment_status_description": "",
+        "user": {
+            "id": "7a8b0d20-e0d3-11eb-815a-072e8f8e213d",
+            "fullname": "Flexavi Employee 8",
+            "birth_date": "2000-07-09",
+            "id_card_type": "id_card",
+            "id_card_number": "228111848",
+            "phone": "999999999999",
+            "phone_verified_at": null,
+            "profile_picture_path": "uploads/profile_pictures/20210503075156pp.jpeg",
+            "registration_code": null,
+            "email": "employee8@flexavi.nl",
+            "email_verified_at": null,
+            "deleted_at": null
+        },
     },
     "status": "success",
     "message": "Successfully restore employee."

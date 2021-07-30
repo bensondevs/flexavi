@@ -3,8 +3,11 @@
 namespace App\Http\Requests\Cars;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Car;
+
+use App\Policies\CarPolicy;
 
 class FindCarRequest extends FormRequest
 {
@@ -12,8 +15,10 @@ class FindCarRequest extends FormRequest
 
     public function getCar()
     {
-        return $this->car = $this->car ?: 
-            Car::findOrFail($this->input('id'));
+        if ($this->car) return $this->car;
+
+        $id = $this->input('id') ?: $this->input('car_id');
+        return $this->car = Car::findOrFail($id);
     }
 
     /**
@@ -23,10 +28,7 @@ class FindCarRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $car = $this->getCar();
-
-        return $user->hasCompanyPermission($car->company_id, 'view cars');
+        return Gate::allows('view-car', $this->getCar());
     }
 
     /**
