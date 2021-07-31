@@ -381,7 +381,7 @@
 													"formdata": []
 												},
 												"url": {
-													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/workers?appointment_id=0bfd8900-f140-11eb-9050-ad179ba7b00f",
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/workers?appointment_id=ce10ee50-f1d1-11eb-8e43-d1c5a100c3e1",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -395,7 +395,7 @@
 													"query": [
 														{
 															"key": "appointment_id",
-															"value": "0bfd8900-f140-11eb-9050-ad179ba7b00f"
+															"value": "ce10ee50-f1d1-11eb-8e43-d1c5a100c3e1"
 														}
 													]
 												}
@@ -515,7 +515,7 @@
 													}
 												],
 												"url": {
-													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs?appointment_id=896b5ed0-d110-11eb-9247-ebd22e8e42b0",
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs?appointment_id=1ab87d70-f21d-11eb-896d-452c0800c7a7",
 													"host": [
 														"{{BASE_URL}}"
 													],
@@ -529,7 +529,7 @@
 													"query": [
 														{
 															"key": "appointment_id",
-															"value": "896b5ed0-d110-11eb-9247-ebd22e8e42b0"
+															"value": "1ab87d70-f21d-11eb-896d-452c0800c7a7"
 														}
 													]
 												}
@@ -557,22 +557,17 @@
 													"formdata": [
 														{
 															"key": "appointment_id",
-															"value": "896b5ed0-d110-11eb-9247-ebd22e8e42b0",
-															"type": "text"
-														},
-														{
-															"key": "status",
-															"value": "created",
+															"value": "ce10ee50-f1d1-11eb-8e43-d1c5a100c3e1",
 															"type": "text"
 														},
 														{
 															"key": "start",
-															"value": "2021-06-20 18:00:00",
+															"value": "2021-08-09 09:34:57",
 															"type": "text"
 														},
 														{
 															"key": "end",
-															"value": "2021-06-22 00:00:00",
+															"value": "2021-08-9 00:00:00",
 															"type": "text"
 														}
 													]
@@ -595,10 +590,94 @@
 											"response": []
 										},
 										{
+											"name": "Reschedule Sub Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "id",
+															"value": "7abea670-f213-11eb-bce2-271ce3ec38c5",
+															"type": "text"
+														},
+														{
+															"key": "start",
+															"value": "2021-08-10 18:10:10",
+															"type": "text"
+														},
+														{
+															"key": "end",
+															"value": "2021-08-07 17:24:49",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/reschedule",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs",
+														"reschedule"
+													]
+												}
+											},
+											"response": []
+										},
+										{
 											"name": "Update Sub Appointment",
 											"request": {
 												"method": "PATCH",
-												"header": [],
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "0ecad2c0-f1c0-11eb-98e8-1df976a1789d",
+															"type": "text"
+														},
+														{
+															"key": "start",
+															"value": "2021-08-10 18:10:10",
+															"type": "text"
+														},
+														{
+															"key": "end",
+															"value": "2021-08-11 00:00:00",
+															"type": "text"
+														}
+													]
+												},
 												"url": {
 													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/update",
 													"host": [
@@ -611,6 +690,193 @@
 														"appointments",
 														"subs",
 														"update"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Execute Sub Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "7abea670-f213-11eb-bce2-271ce3ec38c5",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/execute",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs",
+														"execute"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Process Sub Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "7abea670-f213-11eb-bce2-271ce3ec38c5",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/process",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs",
+														"process"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Cancel Sub Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "7abeadd0-f213-11eb-bc58-5549ca59afb9",
+															"type": "text"
+														},
+														{
+															"key": "cancellation_cause",
+															"value": "Customer is not at home",
+															"type": "text"
+														},
+														{
+															"key": "cancellation_vault",
+															"value": "2",
+															"type": "text"
+														},
+														{
+															"key": "cancellation_note",
+															"value": "Reminder for customer to pay the charge of coming",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/cancel",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs",
+														"cancel"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Sub Appointment",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "urlencoded",
+													"urlencoded": [
+														{
+															"key": "id",
+															"value": "691ba430-f214-11eb-bc72-bf1920eb6406",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/subs/delete",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"subs",
+														"delete"
 													]
 												}
 											},
@@ -635,7 +901,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments?type=1&has_subs_only=true",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -665,6 +931,14 @@
 													"key": "status",
 													"value": "5",
 													"disabled": true
+												},
+												{
+													"key": "type",
+													"value": "1"
+												},
+												{
+													"key": "has_subs_only",
+													"value": "true"
 												}
 											]
 										}
@@ -688,7 +962,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/of_customer?customer_id=f7506360-f113-11eb-99f2-8dbaf0d30003",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/of_customer?customer_id=2367c350-f1d3-11eb-a856-03a00eb802e8",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -702,7 +976,7 @@
 											"query": [
 												{
 													"key": "customer_id",
-													"value": "f7506360-f113-11eb-99f2-8dbaf0d30003"
+													"value": "2367c350-f1d3-11eb-a856-03a00eb802e8"
 												}
 											]
 										}
@@ -999,13 +1273,8 @@
 											"mode": "formdata",
 											"formdata": [
 												{
-													"key": "previous_appointment_id",
+													"key": "id",
 													"value": "2e2c0a20-ee1a-11eb-a809-db2cb7971ea0",
-													"type": "text"
-												},
-												{
-													"key": "customer_id",
-													"value": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
 													"type": "text"
 												},
 												{
@@ -2484,7 +2753,7 @@
 											"formdata": []
 										},
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations?per_page=90&with_customer=1&with_appointment=0",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -2509,6 +2778,18 @@
 													"key": "status",
 													"value": "1",
 													"disabled": true
+												},
+												{
+													"key": "per_page",
+													"value": "90"
+												},
+												{
+													"key": "with_customer",
+													"value": "1"
+												},
+												{
+													"key": "with_appointment",
+													"value": "0"
 												}
 											]
 										}
@@ -2532,7 +2813,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/quotations?customer_id=0856c870-da86-11eb-8476-8dad999b7c5d",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/customers/quotations?customer_id=2367cbe0-f1d3-11eb-b254-9127a41dd936",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -2546,7 +2827,7 @@
 											"query": [
 												{
 													"key": "customer_id",
-													"value": "0856c870-da86-11eb-8476-8dad999b7c5d"
+													"value": "2367cbe0-f1d3-11eb-b254-9127a41dd936"
 												}
 											]
 										}
@@ -5570,7 +5851,7 @@
 	"variable": [
 		{
 			"key": "BASE_URL",
-			"value": "http://localhost:8000"
+			"value": "https://api.daksoftware.nl"
 		},
 		{
 			"key": "API_TOKEN",
