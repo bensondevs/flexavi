@@ -52,20 +52,29 @@ trait PopulateRequestOptions
 		}
 	}
 
-	public function addWhereHas(string $relation, array $condition)
+	public function addWhereHas(string $relation, array $conditions = [])
 	{
-		$this->whereHases[$relation] = [
-			'column' => $condition['column'],
-			'operator' => isset($condition['operator']) ?
-				$condition['operator'] : '=',
-			'value' => $condition['value'],
-		];
+		$this->whereHases[$relation] = [];
+
+		foreach ($conditions as $condition) {
+			$this->whereHases[$relation][] = [
+				'column' => $condition['column'],
+				'operator' => isset($condition['operator']) ?
+					$condition['operator'] : '=',
+				'value' => $condition['value'],
+			];
+		}
+
 	}
 
-	public function setWhereHases(array $conditions)
+	public function setWhereHases(array $queries)
 	{
+		$relation = $queries['relation'];
+		$this->whereHases[$relation] = [];
+
+		$conditions = isset($queries['conditions']) ? $queries['conditions'] : [];
 		foreach ($conditions as $condition) {
-			$this->whereHases[$condition['relation']] = [
+			$this->whereHases[$relation][] = [
 				'column' => $condition['column'],
 				'operator' => isset($condition['operator']) ?
 					$condition['operator'] : '=',

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\SubAppointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 use App\Models\SubAppointment;
@@ -20,7 +21,7 @@ class RescheduleSubAppointmentRequest extends FormRequest
         if ($this->subAppointment) return $this->subAppointment;
 
         $id = $this->input('id');
-        return $this->subAppointment = SubAppointment::findOrFail($id);
+        return $this->subAppointment = SubAppointment::with('appointment')->findOrFail($id);
     }
 
     /**
@@ -30,13 +31,7 @@ class RescheduleSubAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $company = $this->getCompany();
-
-        $subAppointment = $this->getSubAppointment();
-        $appointment = $subAppointment->appointment;
-
-        return $user->hasCompanyPermission($appointment->company_id, 'reschedule sub appointments');
+        return Gate::allows('reschedule-sub-appointment', $this->getSubAppointment());
     }
 
     /**
@@ -46,9 +41,12 @@ class RescheduleSubAppointmentRequest extends FormRequest
      */
     public function rules()
     {
+        $subAppointment = $this->getSubAppointment();
+        $appointment = $subAppointment->appointment;
+
         $this->setRules([
-            'start' => ['required'],
-            'end' => ['required'],
+            'start' => ['required', 'after_or_equal:' . now()],
+            'end' => ['required', 'before_or_equal' . $appointment->end],
         ]);
 
         return $this->returnRules();

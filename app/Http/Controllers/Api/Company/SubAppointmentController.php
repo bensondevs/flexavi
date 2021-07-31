@@ -38,7 +38,7 @@ class SubAppointmentController extends Controller
         $input = $request->onlyInRules();
         $subAppointment = $this->subAppointment->save($input);
 
-        return apiResponse($this->subAppointment, ['sub_appointment' => $subAppointment]);
+        return apiResponse($this->subAppointment);
     }
 
     public function update(SaveRequest $request)
@@ -49,7 +49,7 @@ class SubAppointmentController extends Controller
         $input = $request->onlyInRules();
         $subAppointment = $this->subAppointment->save($input);
 
-        return apiResponse($this->subAppointment, ['sub_appointment' => $subAppointment]);
+        return apiResponse($this->subAppointment);
     }
 
     public function cancel(CancelRequest $request)
@@ -60,7 +60,7 @@ class SubAppointmentController extends Controller
         $input = $request->onlyInRules();
         $subAppointment = $this->subAppointment->cancel($input);
 
-        return apiResponse($this->subAppointment, ['sub_appointment' => $subAppointment]);
+        return apiResponse($this->subAppointment);
     }
 
     public function reschedule(RescheduleRequest $request)
@@ -71,7 +71,7 @@ class SubAppointmentController extends Controller
         $newSchedule = $request->scheduleData();
         $subAppointment = $this->subAppointment->reschedule($newSchedule);
 
-        return apiResponse($this->subAppointment, ['sub_appointment' => $subAppointment]);
+        return apiResponse($this->subAppointment);
     }
 
     public function delete(DeleteRequest $request)

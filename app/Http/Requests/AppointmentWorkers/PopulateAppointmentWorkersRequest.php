@@ -3,6 +3,7 @@
 namespace App\Http\Requests\AppointmentWorkers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
@@ -16,8 +17,10 @@ class PopulateAppointmentWorkersRequest extends FormRequest
 
     public function getAppointment()
     {
-        return $this->appointment = $this->model = $this->appointment ?:
-            Appointment::findOrFail($this->input('appointment_id'));
+        if ($this->appointment) return $this->appointment;
+
+        $id = $this->input('appointment_id');
+        return $this->appointment = Appointment::findOrFail($id);
     }
 
     /**
@@ -27,10 +30,9 @@ class PopulateAppointmentWorkersRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = auth()->user();
         $appointment = $this->getAppointment();
 
-        return $user->hasCompanyPermission($appointment->company_id);
+        return Gate::allows('view-any-appointment-worker', $appointment);
     }
 
     /**

@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
+use App\Enums\SubAppointment\SubAppointmentStatus;
+use App\Enums\SubAppointment\SubAppointmentCancellationVault;
+
 class SubAppointment extends Model
 {
     use Searchable;
@@ -18,37 +21,8 @@ class SubAppointment extends Model
     public $timestamps = true;
     public $incrementing = false;
 
-    const STATUSES = [
-        [
-            'label' => 'Created',
-            'value' => 'created',
-        ],
-        [
-            'label' => 'In Process',
-            'value' => 'in_process',
-        ],
-        [
-            'label' => 'Processed',
-            'value' => 'processed',
-        ],
-        [
-            'label' => 'Cancelled',
-            'value' => 'cancelled',
-        ]
-    ];
-
-    const VAULTS = [
-        [
-            'label' => 'Roofer',
-            'value' => 'roofer',
-        ],
-        [
-            'label' => 'Customer',
-            'value' => 'customer',
-        ]
-    ];
-
     protected $fillable = [
+        'company_id',
         'appointment_id',
 
         'previous_sub_appointment_id',
@@ -76,6 +50,12 @@ class SubAppointment extends Model
     	});
     }
 
+    public function getStatusDescriptionAttribute()
+    {
+        $status = $this->attributes['status'];
+        return SubAppointmentStatus::getDescription($status);
+    }
+
     public function appointment()
     {
         return $this->belongsTo(Appointment::class);
@@ -89,18 +69,6 @@ class SubAppointment extends Model
     public function rescheduledSubAppointment()
     {
         return $this->belongsTo(self::class, 'next_sub_appointment_id');
-    }
-
-    public static function getStatusValues()
-    {
-        $statuses = collect(self::STATUSES);
-        return $statuses->pluck('value')->toArray();
-    }
-
-    public static function getVaultValues()
-    {
-        $vaults = collect(self::VAULTS);
-        return $vaults->pluck('value')->toArray();
     }
 
     public function isLate()

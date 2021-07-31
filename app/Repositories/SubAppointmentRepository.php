@@ -26,10 +26,10 @@ class SubAppointmentRepository extends BaseRepository
 
 			$this->setModel($subAppointment);
 
-			$this->setSuccess('Successfully added sub appointment.');
+			$this->setSuccess('Successfully save sub appointment.');
 		} catch (QueryException $qe) {
 			$error = $qe->getModel();
-			$this->setError('Failed to add sub appointment.', $error);
+			$this->setError('Failed to save sub appointment.', $error);
 		}
 
 		return $this->getModel();
@@ -62,7 +62,7 @@ class SubAppointmentRepository extends BaseRepository
 
 			// New Sub Appointment
 			$newSubAppointment = $subAppointment->replicate();
-			$newSubAppointment->previous_sub_appointment_id = $subAppointment->id
+			$newSubAppointment->previous_sub_appointment_id = $subAppointment->id;
 			$newSubAppointment->start = $newSchedule['start'];
 			$newSubAppointment->end = $newSchedule['end'];
 			$newSubAppointment->push();

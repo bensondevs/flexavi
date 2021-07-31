@@ -3,6 +3,7 @@
 namespace App\Http\Requests\SubAppointments;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Rules\AmongStrings;
 
@@ -21,8 +22,8 @@ class CancelSubAppointmentRequest extends FormRequest
     {
         if ($this->subAppointment) return $this->subAppointment;
 
-        $id = $this->input('id');
-        return $this->subAppointment = subAppointment::findOrFail($id);
+        $id = $this->input('id') ?: $this->input('sub_appointment_id');
+        return $this->subAppointment = SubAppointment::findOrFail($id);
     }
 
     /**

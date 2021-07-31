@@ -25,6 +25,13 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
         return Gate::allows('view-any-appointment');
     }
 
+    protected function prepareForValidation()
+    {
+        if (is_string($this->get('has_subs_only'))) {
+            $this->merge(['has_subs_only' => strtobool($this->get('has_subs_only'))]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -75,6 +82,10 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
                 'operator' => '=',
                 'value' => $cancellationVault,
             ]);
+        }
+
+        if ($withSubs = $this->get('has_subs_only')) {
+            $this->addWhereHas('subs');
         }
 
         return $this->collectCompanyOptions();

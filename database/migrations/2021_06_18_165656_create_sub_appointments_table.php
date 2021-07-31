@@ -16,22 +16,28 @@ class CreateSubAppointmentsTable extends Migration
         Schema::create('sub_appointments', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('appointment_id');
+            $table->uuid('company_id');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('CASCADE');
+
+            $table->uuid('appointment_id')->nullable();
             $table->foreign('appointment_id')
                 ->references('id')
                 ->on('appointments')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->uuid('previous_sub_appointment_id')->nullable();
             $table->uuid('rescheduled_sub_appointment_id')->nullable();
 
-            $table->string('status');
+            $table->tinyInteger('status')->default(1);
 
             $table->datetime('start');
             $table->datetime('end');
 
             $table->string('cancellation_cause')->nullable();
-            $table->string('cancellation_vault')->nullable();
+            $table->tinyInteger('cancellation_vault')->nullable();
             $table->text('cancellation_note')->nullable();
 
             $table->text('note')->nullable();

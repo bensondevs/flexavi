@@ -37,7 +37,7 @@ class AppointmentWorkerController extends Controller
 
     public function store(SaveRequest $request)
     {
-    	$input = $request->ruleWithCompany();
+    	$input = $request->validated();
     	$worker = $this->worker->save($input);
 
     	return apiResponse($this->worker, ['worker' => $worker]);
@@ -45,10 +45,10 @@ class AppointmentWorkerController extends Controller
 
     public function update(SaveRequest $request)
     {
-        $worker = $request->getWorker();
+        $worker = $request->getAppointmentWorker();
     	$worker = $this->worker->setModel($worker);
 
-    	$input = $request->ruleWithCompany();
+    	$input = $request->validated();
     	$worker = $this->worker->save($input);
 
     	return apiResponse($this->worker, ['worker' => $worker]);
@@ -56,7 +56,7 @@ class AppointmentWorkerController extends Controller
 
     public function delete(FindRequest $request)
     {
-        $worker = $request->getWorker();
+        $worker = $request->getAppointmentWorker();
 
     	$this->worker->setModel($worker);
     	$this->worker->delete();

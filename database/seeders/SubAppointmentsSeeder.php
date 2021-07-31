@@ -7,6 +7,9 @@ use Illuminate\Database\Seeder;
 use App\Models\Appointment;
 use App\Models\SubAppointment;
 
+use App\Enums\SubAppointment\SubAppointmentStatus;
+use App\Enums\SubAppointment\SubAppointmentCancellationVault;
+
 class SubAppointmentsSeeder extends Seeder
 {
     /**
@@ -16,20 +19,16 @@ class SubAppointmentsSeeder extends Seeder
      */
     public function run()
     {
-        $appointments = Appointment::inRandomOrder()
-            ->limit(rand(500, 1000))
-            ->get();
-        $statuses = SubAppointment::getStatusValues();
-        $vaults = SubAppointment::getVaultValues();
-
+        $appointments = Appointment::inRandomOrder()->limit(750)->get();
 
         $rawSubAppointments = [];
         foreach ($appointments as $key => $appointment) {
             for ($index = 0; $index < rand(0, 10); $index++) {
                 $rawSubAppointment = [
                     'id' => generateUuid(),
+                    'company_id' => $appointment->company_id,
                     'appointment_id' => $appointment->id,
-                    'status' => $statuses[rand(0, (count($statuses) - 1))],
+                    'status' => rand(SubAppointmentStatus::Created, SubAppointmentStatus::Cancelled),
                     'start' => carbon()->now()->subDays(rand(1, 10)),
                     'end' => carbon()->now()->addDays(rand(1, 10)),
                     'cancellation_cause' => null,
@@ -39,9 +38,9 @@ class SubAppointmentsSeeder extends Seeder
                     'updated_at' => carbon()->now(),
                 ];
 
-                if ($rawSubAppointment['status'] == 'cancelled') {
+                if ($rawSubAppointment['status'] == SubAppointmentStatus::Cancelled) {
                     $rawSubAppointment['cancellation_cause'] = 'Seeder Cause';
-                    $rawSubAppointment['cancellation_vault'] = $vaults[rand(0, (count($vaults) - 1))];
+                    $rawSubAppointment['cancellation_vault'] = rand(SubAppointmentCancellationVault::Roofer, SubAppointmentCancellationVault::Customer);
                     $rawSubAppointment['cancellation_note'] = 'Seeder Note';
                 }
 

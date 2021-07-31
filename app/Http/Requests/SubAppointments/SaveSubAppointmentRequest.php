@@ -3,11 +3,13 @@
 namespace App\Http\Requests\SubAppointments;
 
 use Illuminate\Foundation\Http\FormRequest;
-
-use App\Rules\AmongStrings;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 use App\Models\SubAppointment;
+
+use App\Enums\SubAppointment\SubAppointmentStatus;
+use App\Enums\SubAppointment\SubAppointmentCancellationVault;
 
 use App\Traits\CompanyInputRequest;
 
@@ -22,6 +24,10 @@ class SaveSubAppointmentRequest extends FormRequest
     {
         if ($this->appointment) return $this->appointment;
 
+        if ($subAppointment = $this->subAppointment) {
+            return $this->appointment = $subAppointment->appointment;
+        }
+
         $id = $this->input('appointment_id');
         return $this->appointment = Appointment::findOrFail($id);
     }
@@ -30,8 +36,28 @@ class SaveSubAppointmentRequest extends FormRequest
     {
         if ($this->subAppointment) return $this->subAppointment;
 
-        $id = $this->input('id');
-        return $this->model = $this->subAppointment = SubAppointment::findOrFail($id);
+        $id = $this->input('id') ?: $this->input('sub_appointment_id');
+        $subAppointment = SubAppointment::with('appointment')->findOrFail($id);
+        return $this->model = $this->subAppointment = $subAppointment;
+    }
+
+    protected function prepareForValidation()
+    {
+        if ($this->input('id') || $this->input('sub_appointment_id')) {
+            $subAppointment = $this->getSubAppointment();
+            $this->merge([
+                'appointment_id' => $subAppointment->appointment_id,
+                'company_id' => $subAppointment->company_id,
+            ]);
+
+            return;
+        }
+
+        $appointment = $this->getAppointment();
+        $this->merge([
+            'appointment_id' => $appointment->id,
+            'company_id' => $appointment->company_id,
+        ]);
     }
 
     /**
@@ -41,22 +67,13 @@ class SaveSubAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $company = $this->getCompany();
+        if (! $this->isMethod('POST')) {
+            $subAppointment = $this->getSubAppointment();
+            return Gate::allows('edit-sub-appointment', $subAppointment);
+        }
+
         $appointment = $this->getAppointment();
-
-        if (! $user->hasCompanyPermission($appointment->company_id, 'view appointments')) {
-            return false;
-        }
-
-        if ($this->isMethod('POST')) {
-            return $user->hasCompanyPermission($appointment->company_id, 'create sub appointments');
-        }
-
-        $subAppointment = $this->getSubAppointment();
-        if ($subAppointment->appointment_id != $appointment->id) return false;
-
-        return $user->hasCompanyPermission($appointment->company_id, 'edit sub appointments');
+        return Gate::allows('create-sub-appointment', $appointment);
     }
 
     /**
@@ -71,12 +88,9 @@ class SaveSubAppointmentRequest extends FormRequest
 
         $this->setRules([
             'appointment_id' => ['required', 'string'],
-            'status' => ['required', 'string', new AmongStrings(SubAppointment::getStatusValues())],
+            'company_id' => ['required', 'string'],
             'start' => ['required', 'after_or_equal:' . $start],
             'end' => ['required', 'before_or_equal:' . $end],
-            'cancellation_cause' => ['required_if:status,cancelled', 'string'],
-            'cancellation_vault' => ['required_if:status,cancelled', 'string', new AmongStrings(SubAppointment::getVaultValues())],
-            'cancellation_note' => ['required_if:status,cancelled', 'string'],
         ]);
 
         return $this->returnRules();

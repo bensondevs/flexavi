@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dabfa70a6f19a38f3e796d85475de873",
+    "content-hash": "b98b7571fd39ea5dc7c04aba7f5c5fe4",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -436,6 +436,52 @@
                 }
             ],
             "time": "2020-11-24T19:55:57+00:00"
+        },
+        {
+            "name": "dyrynda/laravel-cascade-soft-deletes",
+            "version": "4.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes.git",
+                "reference": "dcfd120af3467901444a155ece03d8326efb53b3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/michaeldyrynda/laravel-cascade-soft-deletes/zipball/dcfd120af3467901444a155ece03d8326efb53b3",
+                "reference": "dcfd120af3467901444a155ece03d8326efb53b3",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^8.12",
+                "illuminate/events": "^8.12",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.3"
+            },
+            "type": "utility",
+            "autoload": {
+                "psr-4": {
+                    "Dyrynda\\Database\\Support\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dyrynda",
+                    "email": "michael@dyrynda.com.au",
+                    "homepage": "https://dyrynda.com.au"
+                }
+            ],
+            "description": "Cascading deletes for Eloquent models that implement soft deletes",
+            "support": {
+                "issues": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes/issues",
+                "source": "https://github.com/michaeldyrynda/laravel-cascade-soft-deletes/tree/4.1.0"
+            },
+            "time": "2020-12-01T02:43:25+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -5392,6 +5438,80 @@
                 }
             ],
             "time": "2021-06-06T09:51:56+00:00"
+        },
+        {
+            "name": "tightenco/quicksand",
+            "version": "v2.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tighten/quicksand.git",
+                "reference": "e27d2394ffd322841c503b586669cef4b0da38ec"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tighten/quicksand/zipball/e27d2394ffd322841c503b586669cef4b0da38ec",
+                "reference": "e27d2394ffd322841c503b586669cef4b0da38ec",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/config": "~5.6|~5.7|~5.8|~6.0|~7.0|~8.0",
+                "illuminate/console": "~5.6|~5.7|~5.8|~6.0|~7.0|~8.0",
+                "illuminate/log": "~5.6|~5.7|~5.8|~6.0|~7.0|~8.0",
+                "illuminate/support": "~5.6|~5.7|~5.8|~6.0|~7.0|~8.0",
+                "php": "^7.1.3|^8.0"
+            },
+            "require-dev": {
+                "fakerphp/faker": "^1.9.1",
+                "laravel/legacy-factories": "^1.0.4",
+                "mockery/mockery": "^1.3.2",
+                "orchestra/testbench": "~3.0|~4.0|~5.0|~6.0",
+                "phpunit/phpunit": "~9.3"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Tightenco\\Quicksand\\QuicksandServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tightenco\\Quicksand\\": "src"
+                },
+                "classmap": [
+                    "tests"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Benson Lee",
+                    "email": "benson@tighten.co"
+                },
+                {
+                    "name": "Matt Stauffer",
+                    "email": "matt@tighten.co"
+                },
+                {
+                    "name": "Jose Soto",
+                    "email": "jose@tighten.co"
+                },
+                {
+                    "name": "John Bonaccorsi",
+                    "email": "john@tighten.co"
+                }
+            ],
+            "description": "Easily schedule regular cleanup of old soft-deleted Eloquent data.",
+            "homepage": "https://github.com/tighten/quicksand",
+            "support": {
+                "issues": "https://github.com/tighten/quicksand/issues",
+                "source": "https://github.com/tighten/quicksand/tree/v2.4.2"
+            },
+            "time": "2021-04-23T19:59:32+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",

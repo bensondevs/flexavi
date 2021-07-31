@@ -5,14 +5,32 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use \Illuminate\Support\Facades\Storage;
 
 class Company extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, CascadeSoftDeletes;
     use Searchable;
+
+    protected $cascadeDeletes = [
+        'owners', 
+        'employees', 
+        'customers',
+        'appointments',
+        'quotations',
+        'workContracts',
+        'inspections',
+        'invoices',
+        'paymentTerms',
+        'cars',
+        'schedules',
+        'taxtSettings',
+        'workdays',
+    ];
+    protected $dates = ['deleted_at'];
 
     protected $table = 'companies';
     protected $primaryKey = 'id';
@@ -53,128 +71,67 @@ class Company extends Model
 
     public function owners()
     {
-        return $this->hasMany(
-            'App\Models\Owner', 
-            'company_id', 
-            'id'
-        );
+        return $this->hasMany(Owner::class);
     }
 
     public function employees()
     {
-        return $this->hasMany(
-            'App\Models\Employee', 
-            'company_id', 
-            'id'
-        );
+        return $this->hasMany(Employee::class);
     }
 
     public function customers()
     {
-        return $this->hasMany(
-            'App\Models\Customer', 
-            'company_id', 
-            'id'
-        );
+        return $this->hasMany(Customer::class);
     }
 
     public function appointments()
     {
-        return $this->hasMany(
-            'App\Models\Appointment',
-            'company_id',
-            'id'
-        );
+        return $this->hasMany(Appointment::class);
     }
 
     public function quotations()
     {
-        return $this->hasMany(
-            'App\Models\Quotation',
-            'id',
-            'company_id'
-        );
+        return $this->hasMany(Quotation::class);
     }
 
     public function workContracts()
     {
-        return $this->hasMany(
-            'App\Models\WorkContract', 
-            'company_id', 
-            'id'
-        );
+        return $this->hasMany(WorkContract::class);
     }
 
     public function inspections()
     {
-        return $this->hasMany(
-            'App\Models\Inspection',
-            'company_id',
-            'id'
-        );
+        return $this->hasMany(Inspection::class);
     }
 
     public function invoices()
     {
-        return $this->hasMany(
-            'App\Models\Invoice', 
-            'company_id', 
-            'id'
-        );
+        return $this->hasMany(Invoice::class);
     }
 
     public function paymentTerms()
     {
-        return $this->hasMany(
-            'App\Models\PaymentTerm',
-            'company_id',
-            'id'
-        );
+        return $this->hasMany(PaymentTerm::class);
     }
 
     public function cars()
     {
-        return $this->hasMany(
-            'App\Models\Car',
-            'company_id',
-            'id'
-        );
+        return $this->hasMany(Car::class);
     }
 
     public function schedules()
     {
-        return $this->hasMany(
-            'App\Models\Schedule',
-            'company_id',
-            'id'
-        );
-    }
-
-    public function workActivities()
-    {
-        return $this->hasMany(
-            'App\Models\WorkActivity',
-            'company_id',
-            'id'
-        );
+        return $this->hasMany(Schedule::class);
     }
 
     public function taxSetting()
     {
-        return $this->hasOne(
-            'App\Models\TaxSetting',
-            'company_id',
-            'id'
-        );
+        return $this->hasOne(TaxSetting::class);
     }
 
     public function workdays()
     {
-        return $this->hasMany(
-            'App\Models\CompanyWorkday',
-            'company_id',
-            'id'
-        );
+        return $this->hasMany(CompanyWorkday::class);
     }
 
     protected static function boot()

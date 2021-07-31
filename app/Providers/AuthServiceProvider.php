@@ -16,6 +16,7 @@ use App\Policies\AppointmentPolicy;
 use App\Policies\ExecuteWorkPolicy;
 use App\Policies\InvoiceItemPolicy;
 use App\Policies\PaymentTermPolicy;
+use App\Policies\SubAppointmentPolicy;
 use App\Policies\ExecuteWorkPhotoPolicy;
 
 class AuthServiceProvider extends ServiceProvider
@@ -56,6 +57,24 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-appointment', [AppointmentPolicy::class, 'delete']);
         Gate::define('restore-appointment', [AppointmentPolicy::class, 'restore']);
         Gate::define('force-delete-appointment', [AppointmentPolicy::class, 'forceDelete']);
+
+        // Appointment Worker
+        Gate::define('view-any-appointment-worker', [AppointmentWorkerPolicy::class, 'viewAny']);
+        Gate::define('view-appointment-worker', [AppointmentWorkerPolicy::class, 'view']);
+        Gate::define('create-appointment-worker', [AppointmentWorkerPolicy::class, 'create']);
+        Gate::define('edit-appointment-worker', [AppointmentWorkerPolicy::class, 'edit']);
+        Gate::define('delete-appointment-worker', [AppointmentWorkerPolicy::class, 'delete']);
+        Gate::define('restore-appointment-worker', [AppointmentWorkerPolicy::class, 'restore']);
+        Gate::define('force-delete-appointment-worker', [AppointmentWorkerPolicy::class, 'forceDelete']);
+
+        // Sub Appointment
+        Gate::define('view-any-sub-appointment', [SubAppointmentPolicy::class, 'viewAny']);
+        Gate::define('view-sub-appointment', [SubAppointmentPolicy::class, 'view']);
+        Gate::define('create-sub-appointment', [SubAppointmentPolicy::class, 'create']);
+        Gate::define('edit-sub-appointment', [SubAppointmentPolicy::class, 'update']);
+        Gate::define('delete-sub-appointment', [SubAppointmentPolicy::class, 'delete']);
+        Gate::define('restore-sub-appointment', [SubAppointmentPolicy::class, 'restore']);
+        Gate::define('force-delete-sub-appointment', [SubAppointmentPolicy::class, 'forceDelete']);
 
         // Quotation
         Gate::define('view-any-quotation', [QuotationPolicy::class, 'viewAny']);

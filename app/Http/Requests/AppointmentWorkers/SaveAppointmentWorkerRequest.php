@@ -3,6 +3,7 @@
 namespace App\Http\Requests\AppointmentWorkers;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\AppointmentWorker;
 
@@ -14,10 +15,12 @@ class SaveAppointmentWorkerRequest extends FormRequest
 
     private $worker;
 
-    public function getWorker()
+    public function getAppointmentWorker()
     {
-        return $this->worker = $this->model = $this->worker ?:
-            AppointmentWorker::findOrFail($this->input('id'));
+        if ($this->worker) return $this->worker;
+
+        $id = $this->input('id') ?: $this->input('appointment_worker_id');
+        return $this->worker = AppointmentWorker::findOrFail($id);
     }
 
     /**
@@ -26,8 +29,13 @@ class SaveAppointmentWorkerRequest extends FormRequest
      * @return bool
      */
     public function authorize()
-    {
-        return $this->authorizeCompanyAction('appointment workers');
+    {   
+        if (! $this->isMethod('POST')) {
+            $appointment = $this->getAppointmentWorker();
+            return Gate::allows('edit-appointment-worker', $appointment);
+        }
+
+        return Gate::allows('create-appointment-worker');
     }
 
     /**

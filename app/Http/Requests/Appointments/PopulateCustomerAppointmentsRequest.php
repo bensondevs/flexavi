@@ -21,8 +21,10 @@ class PopulateCustomerAppointmentsRequest extends FormRequest
 
     public function getCustomer()
     {
-        return $this->customer = $this->model = $this->customer ?:
-            Customer::findOrFail($this->input('customer_id'));
+        if ($this->customer) return $this->customer;
+
+        $id = $this->input('customer_id');
+        return $this->customer = $this->model = Customer::findOrFail($id);
     }
 
     /**
@@ -34,6 +36,13 @@ class PopulateCustomerAppointmentsRequest extends FormRequest
     {
         $customer = $this->getCustomer();
         return Gate::allows('view-any-appointment', $customer);
+    }
+
+    protected function prepareForValidation()
+    {
+        if (is_string($this->get('has_subs_only'))) {
+            $this->merge(['has_subs_only' => strtobool($this->get('has_subs_only'))]);
+        }
     }
 
     /**
@@ -64,6 +73,11 @@ class PopulateCustomerAppointmentsRequest extends FormRequest
 
     public function options()
     {
+        $this->addWhere([
+            'column' => 'customer_id',
+            'value' => $this->getCustomer()->id,
+        ]);
+
         if ($type = $this->get('type')) {
             $this->addWhere([
                 'column' => 'type',
@@ -88,12 +102,10 @@ class PopulateCustomerAppointmentsRequest extends FormRequest
             ]);
         }
 
-        $options = $this->collectCompanyOptions();
-        array_push($options['wheres'], [
-            'column' => 'customer_id',
-            'value' => $this->getCustomer()->id,
-        ]);
+        if ($withSubs = $this->get('has_subs_only')) {
+            $this->addWhereHas('subs');
+        }
 
-        return $options;
+        return $this->collectCompanyOptions();
     }
 }
