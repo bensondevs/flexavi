@@ -18,7 +18,7 @@ class PopulateCompanyCarsRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('view-any-cars');
+        return Gate::allows('view-any-car');
     }
 
     /**
