@@ -74,14 +74,14 @@ class Invoice extends Model
 
     public function getFormattedTotalAttribute()
     {
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%+.2n', $this->attributes['total']);
+        $total = $this->attributes['total'];
+        return currency_format($total);
     }
 
     public function getFormattedTotalInTermsAttribute()
     {
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%(#1n', $this->attributes['total_in_terms']);
+        $totalInTerms = $this->attributes['total_in_terms'];
+        return currency_format($totalInTerms);
     }
 
     public function getTotalOutTermsAttribute()
@@ -95,14 +95,13 @@ class Invoice extends Model
     public function getFormattedTotalOutTermsAttribute()
     {
         $totalOutTerms = $this->getTotalOutTermsAttribute();
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%+.2n', $totalOutTerms);
+        return currency_format($totalOutTerms);
     }
 
     public function getFormattedTotalPaidAttribute()
     {
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%+.2n', $this->attributes['total_paid']);
+        $totalPaid = $this->attributes['total_paid'];
+        return currency_format($totalPaid);
     }
 
     public function getTotalUnpaidAttribute()
@@ -115,10 +114,8 @@ class Invoice extends Model
 
     public function getFormattedTotalUnpaidAttribute()
     {
-        $unpaid = $this->getTotalUnpaidAttribute();
-
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%+.2n', $unpaid);
+        $totalUnpaid = $this->getTotalUnpaidAttribute();
+        return currency_format($totalUnpaid);
     }
 
     public function items()

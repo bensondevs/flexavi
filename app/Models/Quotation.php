@@ -112,8 +112,7 @@ class Quotation extends Model
 
     public function getFormattedAmountAttribute()
     {
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%(#1n', $this->attributes['amount']);
+        return currency_format($this->attributes['amount']);
     }
 
     public function getFormattedVatPercentageAttribute()
@@ -133,8 +132,7 @@ class Quotation extends Model
     {
         $vatAmount = $this->getVatAmountAttribute();
 
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%(#1n', $vatAmount);
+        return currency_format($vatAmount);
     }
 
     public function getFormattedExpiryDateAttribute()

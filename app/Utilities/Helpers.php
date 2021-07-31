@@ -313,6 +313,12 @@ function formatRupiah($amount)
     return toRupiah($amount);
 }
 
+function currency_format($amount, string $currencyCode = 'EUR', string $locale = 'nl_NL.UTF-8')
+{
+    $formatter = new NumberFormatter($locale, NumberFormatter::CURRENCY);
+    return $formatter->formatCurrency($amount, $currencyCode);
+}
+
 function currentLink()
 {
     return url()->current();
