@@ -7,9 +7,8 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\SubAppointment;
 
-class DeleteSubAppointmentRequest extends FormRequest
+class ProcessSubAppointmentRequest extends FormRequest
 {
-    private $appointment;
     private $subAppointment;
 
     public function getSubAppointment()
@@ -20,15 +19,6 @@ class DeleteSubAppointmentRequest extends FormRequest
         return $this->subAppointment = SubAppointment::findOrFail($id);
     }
 
-    protected function prepareForValidation()
-    {
-        if ($force = $this->has('force')) {
-            $force = strtobool($this->input('force'));
-        }
-
-        $this->merge(['force' => strtobool($force)]);
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -37,12 +27,7 @@ class DeleteSubAppointmentRequest extends FormRequest
     public function authorize()
     {
         $subAppointment = $this->getSubAppointment();
-
-        if ($this->input('force')) {
-            return Gate::allows('force-delete-sub-appointment', $subAppointment);
-        }
-
-        return Gate::allows('delete-sub-appointment', $subAppointment);
+        return Gate::allows('process-sub-appointment', $subAppointment);
     }
 
     /**

@@ -36,12 +36,27 @@ class SubAppointmentsSeeder extends Seeder
                     'cancellation_note' => null,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
+                    'in_process_at' => null,
+                    'processed_at' => null,
+                    'cancelled_at' => null,
                 ];
 
                 if ($rawSubAppointment['status'] == SubAppointmentStatus::Cancelled) {
                     $rawSubAppointment['cancellation_cause'] = 'Seeder Cause';
                     $rawSubAppointment['cancellation_vault'] = rand(SubAppointmentCancellationVault::Roofer, SubAppointmentCancellationVault::Customer);
                     $rawSubAppointment['cancellation_note'] = 'Seeder Note';
+                }
+
+                if ($rawSubAppointment['status'] >= SubAppointmentStatus::InProcess) {
+                    $rawSubAppointment['in_process_at'] = now();
+                }
+
+                if ($rawSubAppointment['status'] >= SubAppointmentStatus::Processed) {
+                    $rawSubAppointment['processed_at'] = now();
+                }
+
+                if ($rawSubAppointment['status'] >= SubAppointmentStatus::Cancelled) {
+                    $rawSubAppointment['cancelled_at'] = now();
                 }
 
                 array_push($rawSubAppointments, $rawSubAppointment);

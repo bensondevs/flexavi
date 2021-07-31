@@ -9,6 +9,9 @@ use App\Http\Requests\SubAppointments\SaveSubAppointmentRequest as SaveRequest;
 use App\Http\Requests\SubAppointments\PopulateSubAppointmentsRequest as PopulateRequest;
 use App\Http\Requests\SubAppointments\CancelSubAppointmentRequest as CancelRequest;
 use App\Http\Requests\SubAppointments\RescheduleSubAppointmentRequest as RescheduleRequest;
+use App\Http\Requests\SubAppointments\ExecuteSubAppointmentRequest as ExecuteRequest;
+use App\Http\Requests\SubAppointments\ProcessSubAppointmentRequest as ProcessRequest;
+use App\Http\Requests\SubAppointments\DeleteSubAppointmentRequest as DeleteRequest;
 
 use App\Http\Resources\SubAppointmentResource;
 
@@ -68,8 +71,28 @@ class SubAppointmentController extends Controller
         $subAppointment = $request->getSubAppointment();
         $subAppointment = $this->subAppointment->setModel($subAppointment);
 
-        $newSchedule = $request->scheduleData();
+        $newSchedule = $request->validated();
         $subAppointment = $this->subAppointment->reschedule($newSchedule);
+
+        return apiResponse($this->subAppointment);
+    }
+
+    public function execute(ExecuteRequest $request)
+    {
+        $subAppointment = $request->getSubAppointment();
+        
+        $this->subAppointment->setModel($subAppointment);
+        $this->subAppointment->execute();
+
+        return apiResponse($this->subAppointment);
+    }
+
+    public function process(ProcessRequest $request)
+    {
+        $subAppointment = $request->getSubAppointment();
+        
+        $this->subAppointment->setModel($subAppointment);
+        $this->subAppointment->process();
 
         return apiResponse($this->subAppointment);
     }

@@ -73,6 +73,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-sub-appointment', [SubAppointmentPolicy::class, 'view']);
         Gate::define('create-sub-appointment', [SubAppointmentPolicy::class, 'create']);
         Gate::define('edit-sub-appointment', [SubAppointmentPolicy::class, 'update']);
+        Gate::define('process-sub-appointment', [SubAppointmentPolicy::class, 'process']);
+        Gate::define('execute-sub-appointment', [SubAppointmentPolicy::class, 'execute']);
+        Gate::define('cancel-sub-appointment', [SubAppointmentPolicy::class, 'cancel']);
+        Gate::define('reschedule-sub-appointment', [SubAppointmentPolicy::class, 'reschedule']);
         Gate::define('delete-sub-appointment', [SubAppointmentPolicy::class, 'delete']);
         Gate::define('restore-sub-appointment', [SubAppointmentPolicy::class, 'restore']);
         Gate::define('force-delete-sub-appointment', [SubAppointmentPolicy::class, 'forceDelete']);

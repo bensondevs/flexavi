@@ -5,10 +5,10 @@ namespace App\Http\Requests\SubAppointments;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Rules\AmongStrings;
-
 use App\Models\Appointment;
 use App\Models\SubAppointment;
+
+use App\Enums\SubAppointment\SubAppointmentCancellationVault;
 
 use App\Traits\CompanyInputRequest;
 
@@ -33,11 +33,8 @@ class CancelSubAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $subAppointment = $this->getSubAppointment();
-        $appointment = $subAppointment->appointment;
-
-        return $user->hasCompanyPermission($appointment->company_id, 'cancel sub appointments');
+        $subAppointment = $this->getSubAppointment(); 
+        return Gate::allows('cancel-sub-appointment', $subAppointment);
     }
 
     /**
@@ -49,7 +46,11 @@ class CancelSubAppointmentRequest extends FormRequest
     {
         $this->setRules([
             'cancellation_cause' => ['required'],
-            'cancellation_vault' => ['required', new AmongStrings(SubAppointment::getVaultValues())],
+            'cancellation_vault' => [
+                'required', 
+                'min:' . SubAppointmentCancellationVault::Roofer, 
+                'max:' . SubAppointmentCancellationVault::Customer
+            ],
             'cancellation_note' => ['required'],
         ]);
 

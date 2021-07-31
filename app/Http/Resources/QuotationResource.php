@@ -25,8 +25,11 @@ class QuotationResource extends JsonResource
     {
         $structure = [
             'id' => $this->id,
-            'customer' => new CustomerResource($this->customer),
+            // 'customer' => new CustomerResource($this->customer),
             // 'appointment' => new AppointmentResource($this->appointment),
+
+            'customer_id' => $this->customer_id,
+            'appointment_id' => $this->appointment_id,
 
             'type' => $this->type,
             'type_description' => $this->type_description,
@@ -61,6 +64,16 @@ class QuotationResource extends JsonResource
             'payment_method' => $this->payment_method,
             'payment_method_description' => $this->payment_method_description,
         ];
+
+        if ($this->relationLoaded('customer')) {
+            $structure['customer'] = new CustomerResource($this->customer);
+            unset($structure['customer_id']);
+        }
+
+        if ($this->relationLoaded('appointment')) {
+            $structure['appointment'] = new AppointmentResource($this->appointment);
+            unset($structure['appointment_id']);
+        }
 
         if ($this->status >= QuotationStatus::Draft) {
             $structure['created_at'] = $this->created_at;

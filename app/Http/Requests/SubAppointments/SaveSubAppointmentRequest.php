@@ -89,8 +89,8 @@ class SaveSubAppointmentRequest extends FormRequest
         $this->setRules([
             'appointment_id' => ['required', 'string'],
             'company_id' => ['required', 'string'],
-            'start' => ['required', 'after_or_equal:' . $start],
-            'end' => ['required', 'before_or_equal:' . $end],
+            'start' => ['required', 'after_or_equal:' . $start, 'before_or_equal:' . $end],
+            'end' => ['required', 'before_or_equal:' . $end, 'after_or_equal:' . $start],
         ]);
 
         return $this->returnRules();

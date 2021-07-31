@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 use App\Traits\ApiCollectionResource;
 
+use App\Enums\SubAppointment\SubAppointmentStatus;
+
 class SubAppointmentResource extends JsonResource
 {
     use ApiCollectionResource;
@@ -27,13 +29,30 @@ class SubAppointmentResource extends JsonResource
             'note' => $this->note,
         ];
 
-        if ($this->status == 'cancelled') {
+        if ($this->status == SubAppointmentStatus::Cancelled) {
             $structure = array_merge($structure, [
                 'cancellation_cause' => $this->cancellation_cause,
                 'cancellation_vault' => $this->cancellation_vault,
                 'cancellation_vault_description' => $this->cancellation_vault_description,
                 'cancellation_note' => $this->cancellation_note,
+                'cancelled_at' => $this->cancelled_at,
             ]);
+        }
+
+        if ($this->status >= SubAppointmentStatus::Created) {
+            $structure['created_at'] = $this->created_at;
+        }
+
+        if ($this->status >= SubAppointmentStatus::InProcess) {
+            $structure['in_process_at'] = $this->in_process_at;
+        }
+
+        if ($this->status >= SubAppointmentStatus::Processed) {
+            $structure['processed_at'] = $this->processed_at;
+        }
+
+        if ($this->status >= SubAppointmentStatus::Cancelled) {
+            $structure['cancelled_at'] = $this->cancelled_at;
         }
 
         return $structure;

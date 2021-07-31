@@ -43,6 +43,9 @@ class CreateSubAppointmentsTable extends Migration
             $table->text('note')->nullable();
 
             $table->timestamps();
+            $table->timestamp('in_process_at')->nullable();
+            $table->timestamp('processed_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
             $table->softDeletes();
         });
     }

@@ -20,14 +20,21 @@ class OwnerResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $structure = [
             'id' => $this->id,
-            'user' => new UserResource($this->user),
+            'user_id' => $this->user_id,
             'is_prime_owner' => $this->is_prime_owner,
             'bank_name' => $this->bank_name,
             'bic_code' => $this->bic_code,
             'bank_account' => $this->bank_account,
             'bank_holder_name' => $this->bank_holder_name,
         ];
+
+        if ($this->relationLoaded('user')) {
+            $structure['user'] = new UserResource($this->user);
+            unset($structure['user_id']);
+        }
+
+        return $structure;
     }
 }

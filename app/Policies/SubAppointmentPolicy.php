@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Models\Appointment;
 use App\Models\SubAppointment;
 
+use App\Enums\SubAppointment\SubAppointmentStatus;
+
 class SubAppointmentPolicy
 {
     use HandlesAuthorization;
@@ -20,7 +22,7 @@ class SubAppointmentPolicy
      */
     public function viewAny(User $user, Appointment $appointment)
     {
-        return $user->hasCompanyPermission($appointment->coompany_id, 'view any sub appointmeents');
+        return $user->hasCompanyPermission($appointment->company_id, 'view any sub appointments');
     }
 
     /**
@@ -55,7 +57,75 @@ class SubAppointmentPolicy
      */
     public function update(User $user, SubAppointment $subAppointment)
     {
+        if ($subAppointment->status > SubAppointmentStatus::Created) {
+            return abort(422, 'Sub-appointment can no longer be updated.');
+        }
+
         return $user->hasCompanyPermission($subAppointment->company_id, 'edit sub appointments');
+    }
+
+    /**
+     * Determine whether the user can execute the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\SubAppointment  $subAppointment
+     * @return mixed
+     */
+    public function execute(User $user, SubAppointment $subAppointment)
+    {
+        if ($subAppointment->status != SubAppointmentStatus::Created) {
+            return abort(422, 'Sub-appointment can no longer be executed.');
+        }
+
+        return $user->hasCompanyPermission($subAppointment->company_id, 'execute sub appointments');
+    }
+
+    /**
+     * Determine whether the user can process the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\SubAppointment  $subAppointment
+     * @return mixed
+     */
+    public function process(User $user, SubAppointment $subAppointment)
+    {
+        if ($subAppointment->status != SubAppointmentStatus::InProcess) {
+            return abort(422, 'Sub-appointment can no longer be processed.');
+        }
+
+        return $user->hasCompanyPermission($subAppointment->company_id, 'process sub appointments');
+    }
+
+    /**
+     * Determine whether the user can reschedule the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\SubAppointment  $subAppointment
+     * @return mixed
+     */
+    public function reschedule(User $user, SubAppointment $subAppointment)
+    {
+        if ($subAppointment->rescheduled_sub_appointment_id) {
+            return abort(422, 'This sub-appointment is already rescheduled.');
+        }
+
+        return $user->hasCompanyPermission($subAppointment->company_id, 'reschedule sub appointments');
+    }
+
+    /**
+     * Determine whether the user can cancel the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\SubAppointment  $subAppointment
+     * @return mixed
+     */
+    public function cancel(User $user, SubAppointment $subAppointment)
+    {
+        if ($subAppointment->status >= SubAppointmentStatus::Processed) {
+            return abort(422, 'This sub-appointment can no longer be cancelled.');
+        }
+
+        return $user->hasCompanyPermission($subAppointment->company_id, 'cancel sub appointments');
     }
 
     /**

@@ -22,6 +22,8 @@ Payload name | Required | Validation | Description
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through all attribute of customer
 `page` | Optional | number | Amount of data per page, default amount is 10
+`with_appointment` | Optional | boolean or boolean string or numeric 1, 0 | Set this to `true` to load the appointment data under the attribute of `appointment` inside the quotation object, if this not set or set to `false` then the object will have attribute of `appointment_id`
+`with_customer` | Optional | boolean or boolean string or numeric 1, 0 | Set this to `true` to load the customer data under the attribute of `customer` inside the quotation object, if this not set or set to `false` then the object will have attribute of `customer_id`
 
 **Response Attributes:**
 

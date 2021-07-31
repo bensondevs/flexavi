@@ -23,6 +23,17 @@ class PopulateCompanyQuotationsRequest extends FormRequest
         return Gate::allows('view-any-appointment');
     }
 
+    protected function prepareForValidation()
+    {
+        if (strtobool($this->input('with_customer'))) {
+            $this->addWith('customer');
+        }
+
+        if (strtobool($this->input('with_appointment'))) {
+            $this->addWith('appointment');
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -35,7 +46,7 @@ class PopulateCompanyQuotationsRequest extends FormRequest
 
     public function options()
     {
-        $this->setWiths(['customer']);
+        // $this->setWiths(['customer', 'appointment']);
 
         if ($status = $this->input('status')) {
             $this->addWhere([

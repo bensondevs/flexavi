@@ -30,10 +30,8 @@ class PopulateSubAppointmentsRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
         $appointment = $this->getAppointment();
-
-        return $user->hasCompanyPermission($appointment->company_id, 'view sub appointments');
+        return Gate::allows('view-any-sub-appointment', $appointment);
     }
 
     /**

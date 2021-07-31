@@ -31,7 +31,8 @@ class RescheduleSubAppointmentRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('reschedule-sub-appointment', $this->getSubAppointment());
+        $subAppointment = $this->getSubAppointment();
+        return Gate::allows('reschedule-sub-appointment', $subAppointment);
     }
 
     /**
@@ -46,7 +47,7 @@ class RescheduleSubAppointmentRequest extends FormRequest
 
         $this->setRules([
             'start' => ['required', 'after_or_equal:' . now()],
-            'end' => ['required', 'before_or_equal' . $appointment->end],
+            'end' => ['required', 'before_or_equal:' . $appointment->end],
         ]);
 
         return $this->returnRules();
