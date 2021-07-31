@@ -45,13 +45,13 @@ class CancelSubAppointmentRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'cancellation_cause' => ['required'],
+            'cancellation_cause' => ['required', 'string'],
             'cancellation_vault' => [
                 'required', 
                 'min:' . SubAppointmentCancellationVault::Roofer, 
                 'max:' . SubAppointmentCancellationVault::Customer
             ],
-            'cancellation_note' => ['required'],
+            'cancellation_note' => ['string'],
         ]);
 
         return $this->returnRules();

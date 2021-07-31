@@ -104,6 +104,7 @@ Header Name | Value
 ------------|--------------
 Accept | `application/json`
 Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
 
 **Response Attributes:**
 
@@ -113,19 +114,173 @@ Payload name | Required | Validation | Description
 `start` | Required | datetime, format (YYYY-MM-DD HH:mm:ss), between or equal to `appointment`.`start` and `appointment`.`end` | The starting of sub appointment
 `end` | Required | datetime, format (YYYY-MM-DD HH:mm:ss), between or equal to `appointment`.`start` and `appointment`.`end` | The ending of sub appointment
 
+**Request Body Example:**
+
+```json
+{
+	"id": "d6ceb440-f1d1-11eb-9fed-bd16258d69d7",
+	"start": "2021-05-15 18:00:00",
+    "end": "2021-05-18 18:00:00",
+}
+```
+
 **Success Response Example:**
 
 ```json
 {
     "status": "success",
-    "message": "Successfully save sub appointment."
+    "message": "Successfully save sub-appointment."
 }
 ```
 
 -------------------------------------------------------
-### 3. Delete Sub-Appointment
+### 4. Execute Sub-Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/subs/execute`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Response Attributes:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `sub_appointment_id` | Required | uuid, string, exists in `sub_appointments` table | Target sub appointment that will be executed
+
+**Request Body Example:**
+
+```json
+{
+	"id": "d6ceb440-f1d1-11eb-9fed-bd16258d69d7"
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully execute sub-appointment."
+}
+```
+
+-------------------------------------------------------
+### 5. Process Sub-Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/subs/process`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Response Attributes:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `sub_appointment_id` | Required | uuid, string, exists in `sub_appointments` table | Target sub appointment that will be processed
+
+**Request Body Example:**
+
+```json
+{
+	"id": "d6ceb440-f1d1-11eb-9fed-bd16258d69d7"
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully process sub-appointment."
+}
+```
+
+-------------------------------------------------------
+### 6. Cancel Sub-Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/subs/cancel`
+
+**Method:** `PUT` or `PATCH`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Response Attributes:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `sub_appointment_id` | Required | uuid, string, exists in `sub_appointments` table | Target sub appointment that will be cancelled
+`cancellation_reason` | Required | string | The main reason why this sub-appointment is cancelled
+`cancellation_vault` | Required | integer, min:1, max:2 | The party held responsible, to see detail about the value representation see [Sub Appointment Meta](/docs/Meta/SubAppointment.md)
+`cancellation_note` | Optional | string | The explanation about the cancellation, this will give chance for user to explain more that has been stated in `cancellation_reason`
+
+**Request Body Example:**
+
+```json
+{
+	"id": "d6ceb440-f1d1-11eb-9fed-bd16258d69d7",
+	"cancellation_reason": "The customer is not at home",
+	"cancellation_vault": 2,
+	"cancellation_note": "The team of roofers have been waiting for 30 minutes or even more since 18.00 and we get no response from anyone inside the house"
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully cancel sub-appointment."
+}
+```
+
+-------------------------------------------------------
+### 7. Delete Sub-Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/subs/delete`
 
 **Method:** `DELETE`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Response Attributes:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `sub_appointment_id` | Required | uuid, string, exists in `sub_appointments` table | Target sub appointment that will be deleted
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully delete sub-appointment."
+}
+```

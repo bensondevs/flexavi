@@ -21,7 +21,7 @@ class RescheduleAppointmentRequest extends FormRequest
     {
         if ($this->appointment) return $this->appointment;
 
-        $id = $this->input('previous_appointment_id');
+        $id = $this->input('appointment_id') ?: $this->input('id');
         return $this->appointment = Appointment::findOrFail($id);
     }
 

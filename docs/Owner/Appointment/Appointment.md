@@ -22,9 +22,8 @@ Payload name | Required | Validation | Description
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through attributes of `cancellation_note`, `note`
 `per_page` | Optional | numeric | Amount of data per page, default amount is 10
-`type` | Optional | numeric, min:1, max:6  | The status code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`type` | Optional | numeric, min:1, max:6  | The type code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 `status` | Optional | numeric, min:1, max:5 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
-`cancellation_vault` | Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 
 **Response Attributes:**
 
@@ -223,9 +222,8 @@ Payload name | Required | Validation | Description
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through attributes of `cancellation_note`, `note`
 `per_page` | Optional | numeric | Amount of data per page, default amount is 10
-`type` | Optional | numeric, min:1, max:6  | The status code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`type` | Optional | numeric, min:1, max:6  | The type code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 `status` | Optional | numeric, min:1, max:5 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
-`cancellation_vault` | Optional | numeric, min:1, max:2 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
 
 **Response Attributes:**
 
@@ -639,7 +637,7 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-`previous_appointment_id` | Required | string, uuid | The ID of rescheduled appointment
+`id` or `appointment_id` | Required | string, uuid | The ID of rescheduled appointment
 `start` | Required | date, format (yyyy-mm-dd) | The starting date of appointment
 `end` | Required | date, format (yyyy-mm-dd) | The ending date of appointment
 `include_weekend` | Optional | boolean, boolean string, numeric 1 or 0 | Set to `true` if the appointment include non-working days like saturday and sunday. Defaultly, this payload has value of false.
@@ -650,7 +648,7 @@ Payload name | Required | Validation | Description
 
 ```json
 {
-    "previous_appointment_id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
+    "appointment_id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
     "start": "2021-05-15",
     "end": "2021-05-18",
     "include_weekend": true,
