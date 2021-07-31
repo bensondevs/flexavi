@@ -29,8 +29,8 @@ class CarResource extends JsonResource
             'car_license' => $this->car_license,
             'insured' => $this->insured,
             'status' => $this->status,
-            'car_image_url' => $this->car_image_url,
             'status_description' => CarStatus::getDescription($this->status),
+            'car_image_url' => $this->car_image_url,
         ];
     }
 }

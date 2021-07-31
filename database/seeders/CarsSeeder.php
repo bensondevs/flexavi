@@ -5,24 +5,10 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 use App\Models\Car;
-
-use App\Repositories\CarRepository;
-use App\Repositories\CompanyRepository;
+use App\Models\Company;
 
 class CarsSeeder extends Seeder
 {
-	private $car;
-	private $company;
-
-	public function __construct(
-		CarRepository $car,
-		CompanyRepository $company
-	)
-	{
-		$this->car = $car;
-		$this->company = $company;
-	}
-
     /**
      * Run the database seeds.
      *
@@ -30,26 +16,26 @@ class CarsSeeder extends Seeder
      */
     public function run()
     {
-        $companies = $this->company->all();
-
-        foreach ($companies as $key => $company) {
+        $rawCars = [];
+        foreach (Company::all() as $key => $company) {
         	for ($index = 0; $index < rand(5, 20); $index++) {
-        		$brand = (['Mercedes', 'Toyota', 'Mitsubishi'])[rand(0, 2)];
-        		$model = (['A', 'B', 'C', 'D'])[rand(0, 3)];
-
-        		$this->car->save([
+        		$rawCars[] = [
+        			'id' => generateUuid(),
         			'company_id' => $company->id,
-        			'car_image_path' => 'https://dummyimage.com/300/09f/fff.png',
-        			'brand' => $brand,
-        			'model' => $model,
-        			'year' => rand(2005, 2015),
-        			'car_name' => $company->company_name . ' Car ' . $brand . ' ' . $model,
-        			'car_license' => rand(100000, 999999),
-        			'insured' => (bool) rand(0, 1),
-        			'status' => rand(1, 2),
-        		]);
-        		$this->car->setModel(new Car);
+        			'car_image_path' => 'uploads/cars/9812378123.jpeg',
+
+        			'brand' => 'Fleet Brand',
+        			'model' => 'Fleet Model',
+        			'year' => rand(2010, 2021),
+        			'car_name' => 'Seeder Car Name',
+        			'car_license' => 'SEEDER_LICENSE_DATA',
+        			'insured' => rand(0, 1),
+        		];
         	}
+        }
+
+        foreach (array_chunk($rawCars, 500) as $chunk) {
+        	Car::insert($chunk);
         }
     }
 }
