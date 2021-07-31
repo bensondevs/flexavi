@@ -9,7 +9,7 @@ return [
 
     // List of models and/or pivot tables to run Quicksand on
     'deletables' => [
-        // \App\Example::class,
+        \App\Activity::class,
 
         // App\Example::class => [
         //     'days' => '30' // override default 'days'

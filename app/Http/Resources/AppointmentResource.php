@@ -26,8 +26,6 @@ class AppointmentResource extends JsonResource
         $structure = [
             'id' => $this->id,
 
-            'customer' => new CustomerResource($this->customer),
-
             'status' => $this->status,
             'status_description' => $this->status_description,
 
@@ -43,6 +41,10 @@ class AppointmentResource extends JsonResource
 
             'note' => $this->note,
         ];
+
+        if (! $request->customer_id) {
+            $structure['customer_id'] = new CustomerResource($this->customer);
+        }
 
         if ($this->status >= ((string) AppointmentStatus::Created)) {
             $structure['created_at'] = $this->created_at;

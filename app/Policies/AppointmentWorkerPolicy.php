@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\Appointment;
 use App\Models\AppointmentWorker;
 
-class AppointmentWorker
+class AppointmentWorkerPolicy
 {
     use HandlesAuthorization;
 
@@ -32,7 +32,7 @@ class AppointmentWorker
      */
     public function view(User $user, AppointmentWorker $appointmentWorker)
     {
-        return $user->hasCompanyPermission($appointmentWorker->company_id, 'view appointment workers')
+        return $user->hasCompanyPermission($appointmentWorker->company_id, 'view appointment workers');
     }
 
     /**

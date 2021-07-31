@@ -18,6 +18,7 @@ use App\Policies\InvoiceItemPolicy;
 use App\Policies\PaymentTermPolicy;
 use App\Policies\SubAppointmentPolicy;
 use App\Policies\ExecuteWorkPhotoPolicy;
+use App\Policies\AppointmentWorkerPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {

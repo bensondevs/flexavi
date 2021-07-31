@@ -44,6 +44,7 @@ class Customer extends Authenticatable
         'fullname',
         'email',
         'phone',
+        'second_phone',
 
         'address',
         'house_number',
@@ -67,18 +68,6 @@ class Customer extends Authenticatable
     public function company()
     {
         return $this->belongsTo(Company::class);
-    }
-
-    public function addresses()
-    {
-        return $this->hasManyThrough(
-            Address::class, 
-            User::class,
-            'id',
-            'user_id',
-            'id',
-            'id'
-        );
     }
 
     public function generateUniqueKey()
