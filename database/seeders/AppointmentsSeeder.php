@@ -21,6 +21,7 @@ class AppointmentsSeeder extends Seeder
     {
         $rawAppointments = [];
         foreach (Company::with('customers')->get() as $company) {
+            $worklists = $company->worklists;
             foreach ($company->customers as $customer) {
                 for ($index = 0; $index <= rand(1, 10); $index++) {
                 	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
@@ -33,6 +34,7 @@ class AppointmentsSeeder extends Seeder
                         'id' => generateUuid(),
 
                         'company_id' => $company->id,
+                        'worklist_id' => null,
                         'customer_id' => $customer->id,
 
                         'start' => $start,
@@ -74,6 +76,11 @@ class AppointmentsSeeder extends Seeder
                         $rawAppointment['cancellation_vault'] = rand(1, 2);
                         $rawAppointment['cancellation_note'] = 'Random cancellation note for appointment';
                         $rawAppointment['cancelled_at'] = carbon()->now()->addDays(rand(3, 5));
+                    }
+
+                    if (rand(0, 1)) {
+                        $worklist = $worklists->random();
+                        $rawAppointment['worklist_id'] = $worklist->id;
                     }
 
                 	$rawAppointments[] = $rawAppointment;

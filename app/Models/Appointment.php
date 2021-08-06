@@ -182,6 +182,11 @@ class Appointment extends Model
         return $this->morphOne(Invoice::class);
     }
 
+    public function calculation()
+    {
+        return $this->hasOne(AppointmentCalculation::class);
+    }
+
     public static function typeOptions()
     {
         return AppointmentType::asSelectArray();

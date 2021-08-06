@@ -17,6 +17,23 @@ class PermissionsSeeder extends Seeder
     public function run()
     {
         $actionNames = [
+            // Workday
+            'view any workdays',
+            'view workdays',
+            'process workdays',
+            'calculate workdays',
+
+            // Worklist
+            'view any worklists',
+            'view worklists',
+            'create worklists',
+            'process worklists',
+            'calculate worklists',
+            'edit worklists',
+            'delete worklists',
+            'restore worklists',
+            'force delete worklists',
+
         	// Appointment
             'view any appointments',
         	'view appointments',
@@ -49,6 +66,13 @@ class PermissionsSeeder extends Seeder
             'edit appointment workers',
             'delete appointment workers',
             'force delete appointment workers',
+
+            // Appointment Cost
+            'view any appointment costs',
+            'view appointment costs',
+            'create appointment costs',
+            'edit appointment costs',
+            'delete appointment costs',
 
         	// Car
             'view any cars',
@@ -277,7 +301,8 @@ class PermissionsSeeder extends Seeder
         Permission::insert($rawPermissions);
 
         $owner = Role::where('name', 'owner')->first();
-        foreach ($actionNames as $actionName) 
+        foreach ($actionNames as $actionName) {
         	$owner->givePermissionTo($actionName);
+        }
     }
 }

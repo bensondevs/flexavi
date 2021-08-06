@@ -28,6 +28,12 @@ class CreateAppointmentsTable extends Migration
                 ->on('customers')
                 ->onDelete('SET NULL');
 
+            $table->uuid('worklist_id')->nullable();
+            $table->foreign('worklist_id')
+                ->references('id')
+                ->on('worklists')
+                ->onDelete('SET NULL');
+
             // Reschedule Information
             $table->uuid('previous_appointment_id')->nullable();
             $table->uuid('next_appointment_id')->nullable();

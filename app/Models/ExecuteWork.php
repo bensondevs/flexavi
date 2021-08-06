@@ -59,13 +59,18 @@ class ExecuteWork extends Model
             ->where('photo_condition_type', PhotoConditionType::After);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function appointment()
     {
-        return $this->belongsTo('App\Models\Appointment', 'id', 'appointment_id');
+        return $this->belongsTo(Appointment::class);
     }
 
     public function work()
     {
-        return $this->hasOne('App\Models\Work', 'work_id', 'id');
+        return $this->belongsTo(Work::class);
     }
 }

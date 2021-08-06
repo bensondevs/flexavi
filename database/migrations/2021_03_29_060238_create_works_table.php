@@ -40,6 +40,8 @@ class CreateWorksTable extends Migration
                 ->on('work_contracts')
                 ->onDelete('SET NULL');
 
+            // $table->nullableUuidMorphs('workable');
+
             $table->tinyInteger('status')->default(1);
 
             $table->double('quantity', 8, 2)->default(0);

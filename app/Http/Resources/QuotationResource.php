@@ -67,12 +67,10 @@ class QuotationResource extends JsonResource
 
         if ($this->relationLoaded('customer')) {
             $structure['customer'] = new CustomerResource($this->customer);
-            unset($structure['customer_id']);
         }
 
         if ($this->relationLoaded('appointment')) {
             $structure['appointment'] = new AppointmentResource($this->appointment);
-            unset($structure['appointment_id']);
         }
 
         if ($this->status >= QuotationStatus::Draft) {

@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Meta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\SubAppointment;
+
 class SubAppointmentController extends Controller
 {
     public function allCancellationVaults()

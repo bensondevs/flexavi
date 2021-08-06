@@ -26,8 +26,8 @@ class AppointmentCostController extends Controller
     {
         $options = $request->options();
 
-        $costs = $this->costs->all($options);
-        $costs = $this->costs->paginate();
+        $costs = $this->cost->all($options);
+        $costs = $this->cost->paginate();
         $costs = AppointmentCostResource::apiCollection($costs);
 
         return response()->json(['appointment_costs' => $costs]);
@@ -35,7 +35,7 @@ class AppointmentCostController extends Controller
 
     public function store(SaveRequest $request)
     {
-        $input = $request->onlyInRules();
+        $input = $request->validated();
         $this->cost->save($input);
 
         return apiResponse($this->cost);
@@ -46,7 +46,7 @@ class AppointmentCostController extends Controller
         $cost = $request->getAppointmentCost();
         $this->cost->setModel($cost);
 
-        $input = $request->onlyInRules();
+        $input = $request->validated();
         $this->cost->save($input);
 
         return apiResponse($this->cost);

@@ -9,6 +9,8 @@ use App\Policies\CarPolicy;
 use App\Policies\WorkPolicy;
 use App\Policies\AddressPolicy;
 use App\Policies\InvoicePolicy;
+use App\Policies\WorkdayPolicy;
+use App\Policies\WorklistPolicy;
 use App\Policies\CustomerPolicy;
 use App\Policies\EmployeePolicy;
 use App\Policies\QuotationPolicy;
@@ -17,6 +19,7 @@ use App\Policies\ExecuteWorkPolicy;
 use App\Policies\InvoiceItemPolicy;
 use App\Policies\PaymentTermPolicy;
 use App\Policies\SubAppointmentPolicy;
+use App\Policies\AppointmentCostPolicy;
 use App\Policies\ExecuteWorkPhotoPolicy;
 use App\Policies\AppointmentWorkerPolicy;
 
@@ -80,6 +83,15 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-sub-appointment', [SubAppointmentPolicy::class, 'delete']);
         Gate::define('restore-sub-appointment', [SubAppointmentPolicy::class, 'restore']);
         Gate::define('force-delete-sub-appointment', [SubAppointmentPolicy::class, 'forceDelete']);
+
+        // Appointment Cost
+        Gate::define('view-any-appointment-cost', [AppointmentCostPolicy::class, 'viewAny']);
+        Gate::define('view-appointment-cost', [AppointmentCostPolicy::class, 'view']);
+        Gate::define('create-appointment-cost', [AppointmentCostPolicy::class, 'create']);
+        Gate::define('edit-appointment-cost', [AppointmentCostPolicy::class, 'update']);
+        Gate::define('delete-appointment-cost', [AppointmentCostPolicy::class, 'delete']);
+        Gate::define('restore-appointment-cost', [AppointmentCostPolicy::class, 'restore']);
+        Gate::define('force-delete-appointment-cost', [AppointmentCostPolicy::class, 'forceDelete']);
 
         // Quotation
         Gate::define('view-any-quotation', [QuotationPolicy::class, 'viewAny']);
@@ -184,5 +196,22 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-car', [CarPolicy::class, 'delete']);
         Gate::define('restore-car', [CarPolicy::class, 'restore']);
         Gate::define('force-delete-car', [CarPolicy::class, 'forceDelete']);
+
+        // Workday
+        Gate::define('view-any-workday', [WorkdayPolicy::class, 'viewAny']);
+        Gate::define('view-workday', [WorkdayPolicy::class, 'view']);
+        Gate::define('process-workday', [WorkdayPolicy::class, 'process']);
+        Gate::define('calculate-workday', [WorkdayPolicy::class, 'calculate']);
+    
+        // Worklist
+        Gate::define('view-any-worklist', [WorklistPolicy::class, 'viewAny']);
+        Gate::define('view-any-worklist-workday', [WorklistPolicy::class, 'viewAnyWorkday']);
+        Gate::define('view-worklist', [WorklistPolicy::class, 'view']);
+        Gate::define('create-worklist', [WorklistPolicy::class, 'create']);
+        Gate::define('edit-worklist', [WorklistPolicy::class, 'update']);
+        Gate::define('process-worklist', [WorklistPolicy::class, 'process']);
+        Gate::define('calculate-worklist', [WorklistPolicy::class, 'calculate']);
+        Gate::define('delete-worklist', [WorklistPolicy::class, 'delete']);
+        Gate::define('force-delete-worklist', [WorklistPolicy::class, 'forceDelete']);
     }
 }

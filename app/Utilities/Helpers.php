@@ -100,7 +100,7 @@ function executor()
 
 function strtobool($string = null)
 {   
-    if (! $string) return false;
+    if ($string === null) return false;
 
     if ($string == 'true' || $string == 'false') {
         return filter_var($string, FILTER_VALIDATE_BOOLEAN);
@@ -173,6 +173,16 @@ function carbonStartOfDay($date)
 function carbonEndOfDay($date)
 {
     return Carbon::parse($date)->copy()->endOfDay();
+}
+
+function current_date()
+{
+    return now()->copy()->startOfDay()->toDateString();
+}
+
+function month_start_date()
+{
+    return now()->copy()->startOfMonth()->toDateString();
 }
 
 function gate()

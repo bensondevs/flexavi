@@ -29,9 +29,12 @@ use App\Http\Controllers\Api\Company\QuotationController;
 use App\Http\Controllers\Api\Company\OwnerController;
 use App\Http\Controllers\Api\Company\InspectorController;
 use App\Http\Controllers\Api\Company\PaymentTermController;
-use App\Http\Controllers\Api\Company\AppointmentController;
-	use App\Http\Controllers\Api\Company\SubAppointmentController;
-use App\Http\Controllers\Api\Company\AppointmentWorkerController;
+use App\Http\Controllers\Api\Company\WorkdayController;
+	use App\Http\Controllers\Api\Company\WorklistController;
+		use App\Http\Controllers\Api\Company\AppointmentController;
+			use App\Http\Controllers\Api\Company\SubAppointmentController;
+			use App\Http\Controllers\Api\Company\AppointmentWorkerController;
+			use App\Http\Controllers\Api\Company\AppointmentCostController;
 use App\Http\Controllers\Api\Company\RegisterInvitationController;
 use App\Http\Controllers\Api\Company\WorkController;
 use App\Http\Controllers\Api\Company\WorkContractController;
@@ -102,6 +105,14 @@ Route::group(['prefix' => 'meta'], function () {
 		Route::get('all_cancellation_vaults', [MetaAppointmentController::class, 'allCancellationVaults']);
 		Route::get('all_statuses', [MetaAppointmentController::class, 'allStatuses']);
 		Route::get('all_types', [MetaAppointmentController::class, 'allTypes']);
+	});
+
+	/*
+		Sub Appointment Meta
+	*/
+	Route::group(['prefix' => 'sub_appointment'], function () {
+		Route::get('all_cancellation_vaults', [MetaAppointmentController::class, 'allCancellationVaults']);
+		Route::get('all_statuses', [MetaAppointmentController::class, 'allStatuses']);
 	});
 
 	/*
@@ -240,6 +251,31 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 			});
 
 			/*
+				Company Workday Module
+			*/
+			Route::group(['prefix' => 'workdays'], function () {
+				Route::get('/', [WorkdayController::class, 'companyWorkdays']);
+				Route::get('current', [WorkdayController::class, 'currentWorkday']);
+				Route::post('process', [WorkdayController::class, 'process']);
+				Route::post('calculate', [WorkdayController::class, 'calculate']);
+			});
+
+			/*
+				Company Worlist Module
+			*/
+			Route::group(['prefix' => 'worklists'], function () {
+				Route::get('/', [WorklistController::class, 'companyWorklists']);
+				Route::get('/of_workday', [WorklistController::class, 'workdayWorklists']);
+				Route::get('trasheds', [WorklistController::class, 'trashedWorklists']);
+				Route::post('store', [WorklistController::class, 'store']);
+				Route::post('process', [WorklistController::class, 'process']);
+				Route::post('calculate', [WorklistController::class, 'calculate']);
+				Route::match(['PUT', 'PATCH'], 'update', [WorklistController::class, 'update']);
+				Route::delete('delete', [WorklistController::class, 'delete']);
+				Route::patch('restore', [WorklistController::class, 'restore']);
+			});
+
+			/*
 				Company Appointment Module
 			*/
 			Route::group(['prefix' => 'appointments'], function () {
@@ -255,6 +291,8 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::post('reschedule', [AppointmentController::class, 'reschedule']);
 				Route::post('execute', [AppointmentController::class, 'execute']);
 				Route::post('process', [AppointmentController::class, 'process']);
+
+				Route::post('generate_invoice', [AppointmentController::class, 'generateInvoice']);
 
 				/*
 					Sub Appointments Module
@@ -280,7 +318,12 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 					Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
 				});
 
-				Route::post('generate_invoice', [AppointmentController::class, 'generateInvoice']);
+				/*
+					Appointment Costs Module
+				*/
+				Route::group(['prefix' => 'costs'], function () {
+					Route::get('/', [AppointmentCostController::class, 'appointmentCosts']);
+				});
 			});
 
 			/*

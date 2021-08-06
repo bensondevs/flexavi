@@ -1,0 +1,222 @@
+## {{modelName}}
+
+-------------------------------------------------------
+### 1. Populate {{modelName}}
+-------------------------------------------------------
+
+**Endpoint:** `/`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through all attribute of owner
+`per_page` | Optional | number | Amount of data per page, default amount is 10
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`{{modelNameLowerCase}}` | Object | The owner object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    
+}
+```
+
+-------------------------------------------------------
+### 2. Store {{modelName}}
+-------------------------------------------------------
+
+**Endpoint:** `/store`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+
+
+**Request Body Example:**
+
+```json
+{
+    
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`status` | String | Update {{modelNameLowerCase}} status
+`message` | String | Message response for the user
+
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully save {{modelNameLowerCase}}."
+}
+```
+
+-------------------------------------------------------
+### 3. Update {{modelName}}
+-------------------------------------------------------
+
+**Endpoint:** `/update`
+
+**Method:** `PUT` or `PATCH`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` | Required | string | ID of updated {{modelNameLowerCase}}
+
+**Request Body Example:**
+
+```json
+{
+    "id": "ecaf9900-c5d5-11eb-8078-b52a94774856",
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`status` | String | Execution of update {{modelName}} status
+`message` | String | Message response for the user
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully save {{modelNameLowerCase}}."
+}
+```
+
+-------------------------------------------------------
+### 4. Delete {{modelName}}
+-------------------------------------------------------
+
+**Endpoint:** `/delete`
+
+**Method:** `DELETE`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` | Required | string | ID of deleted {{modelNameLowerCase}}
+
+**Request Body Example:**
+
+```json
+{
+    "id": "ecaf9900-c5d5-11eb-8078-b52a94774856"
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`status` | String | Execution of delete {{modelNameLowerCase}} status
+`message` | String | Message response for the user
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully delete {{modelNameLowerCase}}"
+}
+```
+
+-------------------------------------------------------
+### 5. Restore {{modelName}}
+-------------------------------------------------------
+
+**Endpoint:** `/restore`
+
+**Method:** `PATCH`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` | Required | string | ID of updated {{modelNameLowerCase}}
+
+**Request Body Example:**
+
+```json
+{
+    "id": "ecaf9900-c5d5-11eb-8078-b52a94774856",
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`status` | String | Execution of restore {{modelNameLowerCase}} status
+`message` | String | Message response for the user
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully restore {{modelNameLowerCase}}."
+}
+```

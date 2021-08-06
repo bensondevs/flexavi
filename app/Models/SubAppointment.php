@@ -53,6 +53,16 @@ class SubAppointment extends Model
     	});
     }
 
+    public static function collectAllCancellationVaults()
+    {
+        return SubAppointmentStatus::asSelectArray();
+    }
+
+    public static function collectAllStatuses()
+    {
+        return SubAppointmentStatus::asSelectArray();
+    }
+
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];

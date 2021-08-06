@@ -122,22 +122,22 @@ class Work extends Model
 
     public function conditionPhotos()
     {
-        return $this->hasMany('App\Models\WorkConditionPhoto', 'work_id', 'id');
+        return $this->hasMany(WorkConditionPhoto::class);
     }
 
     public function quotation()
     {
-        return $this->belongsTo('App\Models\Quotation', 'quotation_id', 'id');
+        return $this->belongsTo(Quotation::class);
     }
 
     public function appointment()
     {
-        return $this->belongsTo('App\Models\Appointment', 'appointment_id', 'id');
+        return $this->belongsTo(Appointment::class);
     }
 
     public function contract()
     {
-        return $this->belongsTo('App\Models\WorkContract', 'work_contract_id', 'id');
+        return $this->belongsTo(WorkContract::class);
     }
 
     public static function collectAllStatuses()

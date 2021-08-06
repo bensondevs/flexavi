@@ -39,9 +39,13 @@ class RepositoryGenerator extends Command
     {
         $repositoryTemplate = str_replace([
                 '{{repositoryName}}',
+                '{{variableName}}',
+                '{{modelName}}'
             ],
             [
                 $name,
+                lcfirst(str_replace('Repository', '', $name)),
+                str_replace('Repository', '', $name)
             ],
             $this->getStub('Repository')
         );

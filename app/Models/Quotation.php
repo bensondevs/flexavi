@@ -212,9 +212,14 @@ class Quotation extends Model
         return $this->hasMany(QuotationRevision::class);
     }
 
+    public function quotation()
+    {
+        //
+    }
+
     public function invoice()
     {
-        return $this->morphOne(Invoice::class, 'referenceable');
+        return $this->hasOne(Invoice::class);
     }
 
     public static function getTypeValues()

@@ -134,6 +134,11 @@ class Company extends Model
         return $this->hasMany(CompanyWorkday::class);
     }
 
+    public function worklists()
+    {
+        return $this->hasMany(Worklist::class);
+    }
+
     protected static function boot()
     {
     	parent::boot();

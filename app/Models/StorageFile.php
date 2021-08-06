@@ -42,8 +42,10 @@ class StorageFile extends Model
         return Storage::disk($disk)->get($path);
     }
 
-    public static function findByPath(string $path)
+    public static function findByPath(string $path = '')
     {
+        if (! $path) return;
+
         $record = self::where('path', $path)->first();
 
         if ((! $record) && Storage::get($path)) {

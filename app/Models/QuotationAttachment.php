@@ -69,6 +69,6 @@ class QuotationAttachment extends Model
 
     public function quotation()
     {
-        return $this->belongsTo('App\Models\Quotation', 'quotation_id', 'id');
+        return $this->belongsTo(Quotation::class);
     }
 }

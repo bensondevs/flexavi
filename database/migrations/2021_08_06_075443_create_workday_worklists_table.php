@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkListsTable extends Migration
+class CreateWorkdayWorklistsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,8 @@ class CreateWorkListsTable extends Migration
      */
     public function up()
     {
-        Schema::create('work_lists', function (Blueprint $table) {
-            $table->uuid('id')->primary();
-
-            $table->string('name');
-
+        Schema::create('workday_worklists', function (Blueprint $table) {
+            $table->id();
             $table->timestamps();
         });
     }
@@ -29,6 +26,6 @@ class CreateWorkListsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('work_lists');
+        Schema::dropIfExists('workday_worklists');
     }
 }

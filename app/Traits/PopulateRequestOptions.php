@@ -54,7 +54,8 @@ trait PopulateRequestOptions
 
 	public function addWhereHas(string $relation, array $conditions = [])
 	{
-		$this->whereHases[$relation] = [];
+		$this->whereHases[$relation] = isset($this->whereHases[$relation]) ? 
+			$this->whereHases[$relation] : [];
 
 		foreach ($conditions as $condition) {
 			$this->whereHases[$relation][] = [
