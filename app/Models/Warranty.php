@@ -15,7 +15,7 @@ class Warranty extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'work_contract_id',
+        'work_id',
         'warranty_due',
         'internal_note',
     ];

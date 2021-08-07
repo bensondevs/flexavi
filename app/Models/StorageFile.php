@@ -48,7 +48,11 @@ class StorageFile extends Model
 
         $record = self::where('path', $path)->first();
 
-        if ((! $record) && Storage::get($path)) {
+        if (! $fileExists = file_exists(storage_path($path))) {
+            return;
+        }
+
+        if ((! $record)) {
             $record = self::create([
                 'path' => $path,
                 'disk' => config('filesystems.default'),

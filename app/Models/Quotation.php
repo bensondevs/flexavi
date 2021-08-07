@@ -212,11 +212,6 @@ class Quotation extends Model
         return $this->hasMany(QuotationRevision::class);
     }
 
-    public function quotation()
-    {
-        //
-    }
-
     public function invoice()
     {
         return $this->hasOne(Invoice::class);

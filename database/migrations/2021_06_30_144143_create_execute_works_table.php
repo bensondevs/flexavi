@@ -28,19 +28,23 @@ class CreateExecuteWorksTable extends Migration
                 ->on('appointments')
                 ->onDelete('SET NULL');
 
+            $table->uuid('sub_appointment_id')->nullable();
+            $table->foreign('sub_appointment_id')
+                ->references('id')
+                ->on('sub_appointments')
+                ->onDelete('SET NULL');
+
             $table->uuid('work_id')->nullable();
             $table->foreign('work_id')
                 ->references('id')
                 ->on('works')
                 ->onDelete('SET NULL');
 
-            $table->boolean('is_finished')->nullable();
-            $table->boolean('is_continuation')->default(false);
-            $table->uuid('previous_execute_work_id')->nullable();
-
+            $table->string('description');
             $table->text('note')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

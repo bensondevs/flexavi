@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Znck\Eloquent\Traits\BelongsToThrough;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
@@ -16,7 +18,9 @@ class Appointment extends Model
 {
     use SoftDeletes;
     use Searchable;
-    
+    use HasRelationships;
+    use BelongsToThrough;
+
     protected $table = 'appointments';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -112,6 +116,16 @@ class Appointment extends Model
         return AppointmentCancellationVault::getDescription($cancellationVaultCode);
     }
 
+    public function getDurationInDaysAttribute()
+    {
+        $start = $this->attributes['start'];
+        $startDate = carbon()->parse($start)->startOfDay();
+        $end = $this->attributes['end'];
+        $endDate = carbon()->parse($end)->startOfDay();
+
+        return $startDate->diffInDays($endDate);
+    }
+
     public static function collectAllCancellationVaults()
     {
         return AppointmentCancellationVault::asSelectArray();
@@ -174,7 +188,12 @@ class Appointment extends Model
 
     public function costs()
     {
-        return $this->hasMany(AppointmentCost::class);
+        return $this->morphToMany(Cost::class, 'costable');
+    }
+
+    public function revenues()
+    {
+        return $this->hasMany(Revenue::class);
     }
 
     public function invoice()
@@ -185,6 +204,16 @@ class Appointment extends Model
     public function calculation()
     {
         return $this->hasOne(AppointmentCalculation::class);
+    }
+
+    public function worklist()
+    {
+        return $this->belongsTo(Worklist::class);
+    }
+
+    public function workday()
+    {
+        return $this->belongsToThrough(Workday::class, [Worklist::class]);
     }
 
     public static function typeOptions()

@@ -49,6 +49,11 @@ function last_character(string $string)
     return substr($string, -1);
 }
 
+function str_to_singular(string $string)
+{
+    return Str::singular($string);
+}
+
 function numbertofloat($number)
 {
     return sprintf('%.2f', $number);

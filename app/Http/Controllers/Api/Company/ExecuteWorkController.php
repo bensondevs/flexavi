@@ -29,35 +29,13 @@ class ExecuteWorkController extends Controller
         return apiResponse($this->execute);
     }
 
-    public function markUnfinished(MarkUnfinishedRequest $request)
+    public function delete(DeleteRequest $request)
     {
-        $execute = $request->getExecuteWork();
-        $this->execute->setModel($execute);
+        $executeWork = $request->getExecuteWork();
+        $this->execute->setModel($executeWork);
 
-        $input = $request->unfinishData();
-        $this->execute->markUnfinished($input);
-
-        return apiResponse($this->execute);
-    }
-
-    public function markFinished(MarkFinishedRequest $request)
-    {
-        $execute = $request->getExecuteWork();
-        $this->execute->setModel($execute);
-
-        $input = $request->finishData();
-        $this->execute->markFinsihed($input);
-
-        return apiResponse($this->execute);
-    }
-
-    public function makeContinuation(MakeContinuationRequest $request)
-    {
-        $execute = $request->getExecuteWork();
-        $this->execute->setModel($execute);
-
-        $input = $request->onlyInRules();
-        $this->execute->makeContinuation($input);
+        $force = $request->input('force');
+        $this->execute->delete($force);
 
         return apiResponse($this->execute);
     }

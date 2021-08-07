@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWorkdayWorklistsTable extends Migration
+class CreateAppointmentablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,20 +13,17 @@ class CreateWorkdayWorklistsTable extends Migration
      */
     public function up()
     {
-        Schema::create('workday_worklists', function (Blueprint $table) {
+        Schema::create('appointmentables', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->uuid('workday_id');
-            $table->foreign('workday_id')
+            $table->uuid('appointment_id');
+            $table->foreign('appointment_id')
                 ->references('id')
-                ->on('workdays')
+                ->on('appointments')
                 ->onDelete('CASCADE');
 
-            $table->uuid('worklist_id');
-            $table->foreign('worklist_id')
-                ->references('id')
-                ->on('worklists')
-                ->onDelete('CASCADE');
+            $table->uuid('appointmentable_id');
+            $table->string('appointmentable_type');
 
             $table->timestamps();
             $table->softDeletes();
@@ -40,6 +37,6 @@ class CreateWorkdayWorklistsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('workday_worklists');
+        Schema::dropIfExists('appointmentables');
     }
 }

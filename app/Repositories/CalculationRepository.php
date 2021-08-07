@@ -32,11 +32,16 @@ class CalculationRepository extends BaseRepository
 			return $calculation;
 		}
 
+		// Collect cashflows information
 		$costs = $appointment->costs;
-		$revenues = $appointment->revenues;
-
-		$totalRevenues = $revenues->sum('amount');
 		$totalCosts = $costs->sum('amount');
+		$revenues = $appointment->revenues;
+		$totalRevenues = $revenues->sum('amount');
+
+		// KPIs
+		$durationInDays = $appointment->durantion_in_days;
+		$averageCost = $totalCosts / $durationInDays;
+		$averageRevenue = $totalRevenues / $durationInDays;
 
 		// 
 	}

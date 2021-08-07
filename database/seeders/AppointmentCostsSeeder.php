@@ -17,13 +17,14 @@ class AppointmentCostsSeeder extends Seeder
     public function run()
     {
         $rawCosts = [];
-        foreach (Appointment::all() as $appointment) {
-            for ($index = 0; $index < 5; $index++) {
+        $rawCostables = [];
+        foreach (Appointment::with(['worklist', 'workday'])->get() as $appointment) {
+            for ($index = 0; $index < 2; $index++) {
+                $costId = generateUuid();
+
                 $rawCosts[] = [
-                    'id' => generateUuid(),
+                    'id' => $costId,
                     'company_id' => $appointment->company_id,
-                    'costable_id' => $appointment->id,
-                    'costable_type' => get_class($appointment),
                     'cost_name' => 'Appointment Cost Seeder #' . ($index + 1),
                     'amount' => 1000,
                     'paid_amount' => 200,
@@ -31,11 +32,43 @@ class AppointmentCostsSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+
+                $rawCostables[] = [
+                    'cost_id' => $costId,
+                    'costable_id' => $appointment->id,
+                    'costable_type' => get_class($appointment),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+
+                if ($worklist = $appointment->worklist) {
+                    $rawCostables[] = [
+                        'cost_id' => $costId,
+                        'costable_id' => $worklist->id,
+                        'costable_type' => get_class($worklist),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
+
+                if ($workday = $appointment->workday) {
+                    $rawCostables[] = [
+                        'cost_id' => $costId,
+                        'costable_id' => $workday->id,
+                        'costable_type' => get_class($workday),
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                }
             }
         }
 
         foreach (array_chunk($rawCosts, 5000) as $chunk) {
             Cost::insert($chunk);
+        }
+
+        foreach (array_chunk($rawCostables, 5000) as $chunk) {
+            db('costables')->insert($chunk);
         }
     }
 }

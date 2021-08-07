@@ -60,4 +60,9 @@ class Worklist extends Model
     {
         return $this->hasMany(Appointment::class);
     }
+
+    public function costs()
+    {
+        return $this->morphToMany(Cost::class, 'costable');
+    }
 }

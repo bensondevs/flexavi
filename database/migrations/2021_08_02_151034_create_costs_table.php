@@ -22,7 +22,19 @@ class CreateCostsTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->uuidMorphs('costable');
+            /*$table->uuid('workday_id')->nullable();
+            $table->foreign('workday_id')
+                ->references('id')
+                ->on('workdays')
+                ->onDelete('CASCADE');
+
+            $table->uuid('worklist_id')->nullable();
+            $table->foreign('worklist_id')
+                ->references('id')
+                ->on('worklists')
+                ->onDelete('CASCADE');
+
+            $table->uuidMorphs('costable');*/
 
             $table->string('cost_name');
             $table->double('amount', 8, 2);

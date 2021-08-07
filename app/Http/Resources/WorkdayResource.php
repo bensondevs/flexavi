@@ -23,8 +23,6 @@ class WorkdayResource extends JsonResource
         $structure = [
             'id' => $this->id,
             'date' => $this->date,
-            'total_worklists' => $this->worklists_count,
-            'total_appointments' => $this->appointments_count,
             'status' => $this->status,
             'status_description' => $this->status_description,
         ];
@@ -33,8 +31,20 @@ class WorkdayResource extends JsonResource
             $structure['company'] = new CompanyResource($this->company);
         }
 
+        if ($this->worklists_count !== null) {
+            $structure['worklists_count'] = $this->worklists_count;
+        }
+
+        if ($this->appointments_count !== null) {
+            $structure['appointments_count'] = $this->appointments_count;
+        }
+
         if ($this->relationLoaded('worklists')) {
             $structure['worklists'] = WorklistResource::collection($this->worklists);
+        }
+
+        if ($this->relationLoaded('appointments')) {
+            $structure['appointments'] = AppointmentResource::collection($this->appointments);
         }
 
         if ($this->status >= WorkdayStatus::Processed) {

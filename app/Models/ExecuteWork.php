@@ -10,6 +10,8 @@ use App\Traits\Searchable;
 
 use App\Enums\ExecuteWorkPhoto\PhotoConditionType;
 
+use App\Observers\ExecuteWorkObserver;
+
 class ExecuteWork extends Model
 {
     use Searchable;
@@ -41,6 +43,7 @@ class ExecuteWork extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(ExecuteWorkObserver::class);
 
     	self::creating(function ($executeWork) {
             $executeWork->id = Uuid::generate()->string;

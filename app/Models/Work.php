@@ -10,6 +10,8 @@ use App\Traits\Searchable;
 
 use App\Enums\Work\WorkStatus;
 
+use App\Observers\WorkObserver;
+
 class Work extends Model
 {
     use Searchable;
@@ -19,6 +21,13 @@ class Work extends Model
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
+
+    protected $observeables = [
+        'executed',
+        'processed', 
+        'markFinsihed', 
+        'markUnfinished'
+    ];
 
     protected $fillable = [
         'appointment_id',
@@ -43,6 +52,7 @@ class Work extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(WorkObserver::class);
 
     	self::creating(function ($work) {
             $work->id = Uuid::generate()->string;
@@ -86,8 +96,7 @@ class Work extends Model
     {
         $unitTotal = $this->getUnitTotalAttribute();
 
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%(#1n', $unitTotal);
+        return currency_format($unitTotal);
     }
 
     public function getFormattedTaxPercentageAttribute()
@@ -108,16 +117,21 @@ class Work extends Model
     {
         $taxAmount = $this->getTaxAmountAttribute();
 
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%(#1n', $taxAmount);
+        return currency_format($taxAmount);
     }
 
     public function getFormattedTotalPriceAttribute()
     {
         $totalPrice = $this->attributes['total_price'];
 
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        return money_format('%(#1n', $totalPrice);
+        return currency_format($totalPrice);
+    }
+
+    public function getFormattedTotalPaidAttribute()
+    {
+        $totalPaid = $this->attributes['total_paid'];
+
+        return currency_format($totalPaid);
     }
 
     public function conditionPhotos()
@@ -140,8 +154,57 @@ class Work extends Model
         return $this->belongsTo(WorkContract::class);
     }
 
+    public function executeWorks()
+    {
+        return $this->hasMany(ExecuteWork::class);
+    }
+
     public static function collectAllStatuses()
     {
         return WorkStatus::asSelectArray();
-    } 
+    }
+
+    public function execute()
+    {
+        $this->attributes['status'] = WorkStatus::InProcess;
+        $execute = $this->save();
+
+        $this->fireModelEvent('executed');
+
+        return $execute;
+    }
+
+    public function process()
+    {
+        $this->attributes['status'] = WorkStatus::Processed;
+        $this->attributes['executed_at'] = now();
+        $process = $this->save();
+
+        $this->fireModelEvent('processed');
+
+        return $process;
+    }
+
+    public function markFinished(string $finishNote = '')
+    {
+        $this->attributes['status'] = WorkStatus::Finished;
+        $this->attributes['finished_at'] = now();
+        $markFinsih = $this->save();
+
+        $this->fireModelEvent('markFinsihed');
+
+        return $markFinsih;
+    }
+
+    public function markUnfinished(string $unfinishNote = '')
+    {
+        $this->attributes['status'] = WorkStatus::Unfinished;
+        $this->attributes['marked_unfinished_at'] = now();
+        $this->attributes['unfinish_note'] = $unfinishNote;
+        $markUnfinish = $this->save();
+
+        $this->fireModelEvent('markUnfinished');
+
+        return $markUnfinish;
+    }
 }

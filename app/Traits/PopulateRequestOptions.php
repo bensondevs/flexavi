@@ -8,6 +8,7 @@ trait PopulateRequestOptions
 	private $withs = [];
 	private $withCounts = [];
 	private $wheres = [];
+	private $whereRaws = [];
 	private $whereHases = [];
 
 	public function addWith(string $relation)
@@ -50,6 +51,16 @@ trait PopulateRequestOptions
 				'value' => $condition['value'],
 			]);
 		}
+	}
+
+	public function addWhereRaw(string $query)
+	{
+		$this->whereRaws[] = $query;
+	}
+
+	public function setWhereRaws(array $queries)
+	{
+		$this->whereRaws = $queries;
 	}
 
 	public function addWhereHas(string $relation, array $conditions = [])
@@ -102,6 +113,7 @@ trait PopulateRequestOptions
             'withs' => $this->withs,
             'with_counts' => $this->withCounts,
             'wheres' => $this->wheres,
+            'where_raws' => $this->where_raws,
             'where_hases' => $this->whereHases,
         ];
 

@@ -55,6 +55,16 @@ class Workday extends Model
         return $this->hasMany(Worklist::class);
     }
 
+    public function appointments()
+    {
+        return $this->hasManyThrough(Appointment::class, Worklist::class);
+    }
+
+    public function costs()
+    {
+        return $this->morphToMany(Cost::class, 'costable');
+    }
+
     public function process()
     {
         $this->attributes['status'] = WorkdayStatus::Processed;

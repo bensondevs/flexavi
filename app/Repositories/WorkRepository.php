@@ -44,6 +44,40 @@ class WorkRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	public function markUnfinished(string $unfinishNote = '')
+	{
+		try {
+			$work = $this->getModel();
+			$work->markUnfinished($unfinishNote);
+
+			$this->setModel($work);
+
+			$this->setSuccess('Successfully mark work as unfinished.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to mark work as unfinished.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function markFinsihed(string $finishNote = '')
+	{
+		try {
+			$work = $this->getModel();
+			$work->markFinsihed($finishNote);
+
+			$this->setModel($work);
+
+			$this->setSuccess('Successfully mark work as finished.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to mark work as finsihed.', $error);
+		}
+
+		return $this->getModel();
+	}
+
 	public function delete(bool $force = false)
 	{
 		try {
@@ -61,10 +95,8 @@ class WorkRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete work.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete work.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete work.', $error);
 		}
 
 		return $this->returnResponse();

@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\UserController;
 
 use App\Http\Controllers\Meta\CarController as MetaCarController;
 use App\Http\Controllers\Meta\UserController as MetaUserController;
+use App\Http\Controllers\Meta\CostController as MetaCostController;
 use App\Http\Controllers\Meta\WorkController as MetaWorkController;
 use App\Http\Controllers\Meta\InvoiceController as MetaInvoiceController;
 use App\Http\Controllers\Meta\EmployeeController as MetaEmployeeController;
@@ -34,7 +35,7 @@ use App\Http\Controllers\Api\Company\WorkdayController;
 		use App\Http\Controllers\Api\Company\AppointmentController;
 			use App\Http\Controllers\Api\Company\SubAppointmentController;
 			use App\Http\Controllers\Api\Company\AppointmentWorkerController;
-			use App\Http\Controllers\Api\Company\AppointmentCostController;
+use App\Http\Controllers\Api\Company\CostController;
 use App\Http\Controllers\Api\Company\RegisterInvitationController;
 use App\Http\Controllers\Api\Company\WorkController;
 use App\Http\Controllers\Api\Company\WorkContractController;
@@ -120,6 +121,13 @@ Route::group(['prefix' => 'meta'], function () {
 	*/
 	Route::group(['prefix' => 'car'], function () {
 		Route::get('all_statuses', [MetaCarController::class, 'allStatuses']);
+	});
+
+	/*
+		Cost Meta
+	*/
+	Route::group(['prefix' => 'cost'], function () {
+		Route::get('all_costable_types', [MetaCostController::class, 'allCostableTypes']);
 	});
 
 	/*
@@ -317,13 +325,13 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 					Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
 					Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
 				});
+			});
 
-				/*
-					Appointment Costs Module
-				*/
-				Route::group(['prefix' => 'costs'], function () {
-					Route::get('/', [AppointmentCostController::class, 'appointmentCosts']);
-				});
+			/*
+				Company Cost Module
+			*/
+			Route::group(['prefix' => 'costs'], function () {
+				Route::get('of_appointment', [CostController::class, 'appointmentCosts']);
 			});
 
 			/*
@@ -469,11 +477,10 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Company Work Module
 			*/
 			Route::group(['prefix' => 'works'], function () {
-				Route::get('quotation_works', [WorkController::class, 'quotationWorks']);
-				Route::get('contract_works', [WorkController::class, 'contractWorks']);
-				Route::get('appointment_works', [WorkController::class, 'appointmentWorks']);
-				Route::get('finished_works', [WorkController::class, 'finishedWorks']);
-				Route::get('unfinished_works', [WorkController::class, 'unfinishedWorks']);
+				Route::get('of_quotation', [WorkController::class, 'quotationWorks']);
+				Route::get('of_appointment', [WorkController::class, 'appointmentWorks']);
+				Route::get('finisheds', [WorkController::class, 'finishedWorks']);
+				Route::get('unfinisheds', [WorkController::class, 'unfinishedWorks']);
 
 				Route::post('store', [WorkController::class, 'store']);
 				Route::match(['PUT', 'PATCH'], 'update', [WorkController::class, 'update']);
@@ -484,9 +491,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				*/
 				Route::group(['prefix' => 'execute'], function () {
 					Route::post('execute', [ExecuteWorkController::class, 'execute']);
-					Route::post('mark_unfinished', [ExecuteWorkController::class, 'markUnfinished']);
-					Route::post('mark_finished', [ExecuteWorkController::class, 'markFinished']);
-					Route::post('make_continuation', [ExecuteWorkController::class, 'makeContinuation']);
+					Route::delete('delete', [ExecuteWorkController::class, 'delete']);
 
 					/*
 						Execute Work Photo Module

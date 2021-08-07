@@ -131,6 +131,14 @@ class BaseRepository
 			}
 		}
 
+		if (isset($options['where_raws'])) {
+			if ($options['where_raws']) {
+				foreach ($options['where_raws'] as $query) {
+					$models = $models->whereRaw($query);
+				}
+			}
+		}
+
 		if (isset($options['where_hases'])) {
 			if ($options['where_hases']) {
 				foreach ($options['where_hases'] as $relation => $conditions) {

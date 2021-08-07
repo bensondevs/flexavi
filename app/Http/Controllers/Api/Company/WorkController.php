@@ -12,7 +12,7 @@ use App\Http\Requests\Works\PopulateUnfinishedWorksRequest as PopulateUnfinished
 use App\Http\Requests\Works\PopulateCompanyWorksRequest as CompanyPopulateRequest;
 use App\Http\Requests\Works\PopulateContractWorksRequest as ContractPopulateRequest;
 use App\Http\Requests\Works\PopulateQuotationWorksRequest as QuotationPopulateRequest;
-use App\Http\Requests\Works\PopulateAppointmentWorkersRequest as AppointmentPopulateRequest;
+use App\Http\Requests\Works\PopulateAppointmentWorksRequest as AppointmentPopulateRequest;
 
 use App\Http\Resources\WorkResource;
 
@@ -64,6 +64,7 @@ class WorkController extends Controller
     {
         $options = $request->options();
 
+
         $works = $this->work->all($options);
         $works = $this->work->paginate();
         $works = WorkResource::apiCollection($works);
@@ -103,7 +104,7 @@ class WorkController extends Controller
 
     public function update(SaveRequest $request)
     {
-        $work = $request->getWork()
+        $work = $request->getWork();
         $this->work->setModel($work);
 
         $input = $request->onlyInRules();

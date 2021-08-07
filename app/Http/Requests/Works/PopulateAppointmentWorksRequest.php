@@ -31,7 +31,7 @@ class PopulateAppointmentWorksRequest extends FormRequest
     public function authorize()
     {
         $appointment = $this->getAppointment();
-        return Gate::allows('view-any-appointment-works', $appointment);
+        return Gate::allows('view-any-appointment-work', $appointment);
     }
 
     /**

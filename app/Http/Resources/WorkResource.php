@@ -21,6 +21,9 @@ class WorkResource extends JsonResource
         $structure = [
             'id' => $this->id,
 
+            'appointment_id' => $this->appointment_id,
+            'quotation_id' => $this->quotation_id,
+
             'quantity' => $this->quantity,
             'quantity_unit' => $this->quantity_unit,
             'quantity_with_unit' => $this->quantity . ' ' . $this->quantity_unit,
@@ -41,6 +44,9 @@ class WorkResource extends JsonResource
 
             'total_price' => $this->total_price,
             'formatted_total_price' => $this->formatted_total_price,
+
+            'total_paid' => $this->total_paid,
+            'formatted_total_paid' => $this->formatted_total_paid,
         ];
 
         return $structure;

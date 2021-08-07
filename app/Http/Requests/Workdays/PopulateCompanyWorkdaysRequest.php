@@ -47,6 +47,11 @@ class PopulateCompanyWorkdaysRequest extends FormRequest
             $this->addWith('worklists');
         }
 
+        $this->addWithCount('appointments');
+        if ($withAppointments = $this->input('with_appointments')) {
+            $this->addWith('appointments');
+        }
+
         return $this->collectCompanyOptions();
     }
 }

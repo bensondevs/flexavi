@@ -5,6 +5,8 @@ use App\Enums\User\UserIdCardType;
 use App\Enums\Appointment\AppointmentStatus;
 use App\Enums\Appointment\AppointmentType;
 
+use App\Enums\Cost\CostableType;
+
 use App\Enums\Quotation\QuotationStatus;
 use App\Enums\Quotation\QuotationDamageCause;
 use App\Enums\Quotation\QuotationPaymentMethod;
@@ -40,6 +42,13 @@ return [
         AppointmentType::Warranty => 'Warranty',
         AppointmentType::PaymentPickUp => 'Payment Pick-Up',
         AppointmentType::PaymentReminder => 'Payment Reminder',
+    ],
+
+    // Cost
+    CostableType::class => [
+        CostableType::Appointment => 'App\Models\Appointment',
+        CostableType::Worklist => 'App\Models\Worklist',
+        CostableType::Workday => 'App\Models\Workday',
     ],
 
     // Quotation

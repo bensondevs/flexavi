@@ -16,14 +16,15 @@ class CreateWarrantiesTable extends Migration
         Schema::create('warranties', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('work_contract_id')->nullable();
-            $table->foreign('work_contract_id')
+            $table->uuid('work_id');
+            $table->foreign('work_id')
                 ->references('id')
-                ->on('work_contracts')
-                ->onDelete('SET NULL');
+                ->on('works')
+                ->onDelete('CASCADE');
 
             $table->date('warranty_due');
             $table->text('internal_note')->nullable();
+            $table->text('customer_note')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

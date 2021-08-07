@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
+use App\Enums\Cost\CostableType;
+
 class Cost extends Model
 {
     use SoftDeletes;
@@ -39,10 +41,13 @@ class Cost extends Model
     	});
     }
 
-    public function getUnpaidCostAttribute()
+    public function getUnpaidAmountAttribute()
     {
         $amount = $this->attributes['amount'];
-        $paid = $this->attributes['paid_amount'];
+
+        if (! $paid = $this->attributes['paid_amount']) {
+            return 0;
+        }
 
         return $amount - $paid;
     }
@@ -77,8 +82,16 @@ class Cost extends Model
             return;
         }
 
-        $file = StorageFile::findByPath($path);
+        if (! $file = StorageFile::findByPath($path)) {
+            return;
+        }
+
         return $file->getDownloadUrl();
+    }
+
+    public static function collectAllCostableTypes()
+    {
+        return CostableType::asSelectArray();
     }
 
     public function company()
@@ -86,8 +99,33 @@ class Cost extends Model
         return $this->belongsTo(Company::class);
     }
 
-    public function costable()
+    public function appointments()
     {
-        return $this->morphTo();
+        return $this->morphedByMany(Appointment::class, 'costable');
+    }
+
+    public function getAppointmentAttribute()
+    {
+        return $this->appointments()->first();
+    }
+
+    public function worklists()
+    {
+        return $this->morphedByMany(Worklist::class, 'costable');
+    }
+
+    public function getWorklistAttribute()
+    {
+        return $this->worklists()->first();
+    }
+
+    public function workdays()
+    {
+        return $this->morphedByMany(Workday::class, 'costable');
+    }
+
+    public function getWorkdayAttribute()
+    {
+        return $this->workdays()->first();
     }
 }

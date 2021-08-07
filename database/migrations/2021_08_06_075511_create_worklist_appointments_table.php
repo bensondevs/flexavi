@@ -14,7 +14,20 @@ class CreateWorklistAppointmentsTable extends Migration
     public function up()
     {
         Schema::create('worklist_appointments', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+
+            $table->uuid('worklist_id');
+            $table->foreign('worklist_id')
+                ->references('id')
+                ->on('worklists')
+                ->onDelete('CASCADE');
+
+            $table->uuid('appointment_id');
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('CASCADE');
+
             $table->timestamps();
         });
     }

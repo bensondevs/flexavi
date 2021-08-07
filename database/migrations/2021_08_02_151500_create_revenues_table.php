@@ -26,7 +26,6 @@ class CreateRevenuesTable extends Migration
 
             $table->string('revenue_name');
             $table->double('amount', 8, 2);
-            $table->double('paid_amount', 8, 2)->default(0);
 
             $table->string('receipt_path')->nullable();
 

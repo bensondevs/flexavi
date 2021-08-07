@@ -8,7 +8,7 @@ use \Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\Appointment;
-use App\Models\AppointmentCost as Cost;
+use App\Models\Cost;
 
 class AppointmentCostRepository extends BaseRepository
 {

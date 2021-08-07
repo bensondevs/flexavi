@@ -31,4 +31,12 @@ class CalculationController extends Controller
 
         return apiResponse($this->calculation);
     }
+
+    public function workdayCalculation(CalculateWorkdayRequest $request)
+    {
+        $workday = $request->getWorkday();
+        $calculation = $this->calculation->calculateWorkday($workday);
+
+        return apiResponse($this->calculation);
+    }
 }

@@ -1,0 +1,44 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+use App\Traits\ApiCollectionResource;
+
+class CostResource extends JsonResource
+{
+    use ApiCollectionResource;
+
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        $structure = [
+            'id' => $this->id,
+            'cost_name' => $this->cost_name,
+            'amount' => $this->amount,
+            'paid_amoun' => $this->paid_amount,
+            'unpaid_amount' => $this->unpaid_amount,
+            'receipt' => $this->receipt_url,
+        ];
+
+        if ($this->relationLoaded('appointments')) {
+            $structure['appointment'] = new AppointmentResource($this->appointment);
+        }
+
+        if ($this->relationLoaded('worklists')) {
+            $structure['worklist'] = new WorklistResource($this->worklist);
+        }
+
+        if ($this->relationLoaded('workdays')) {
+            $structure['workday'] = new WorkdayResource($this->workday);
+        }
+
+        return $structure;
+    }
+}

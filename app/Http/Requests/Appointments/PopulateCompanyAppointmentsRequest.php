@@ -84,8 +84,20 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
             ]);
         }
 
-        if ($withSubs = $this->get('has_subs_only')) {
+        if ($this->get('has_subs_only')) {
             $this->addWhereHas('subs');
+        }
+
+        if ($withWorklist = $this->get('with_worklist')) {
+            $this->addWith('worklist');
+        }
+
+        if ($withWorkday = $this->get('with_workday')) {
+            $this->addWith('workday');
+        }
+
+        if ($withWorks = $this->get('with_works')) {
+            $this->addWith('works');
         }
 
         return $this->collectCompanyOptions();

@@ -49,6 +49,18 @@ class AppointmentResource extends JsonResource
             unset($structure['customer_id']);
         }
 
+        if ($this->relationLoaded('worklist')) {
+            $structure['worklist'] = new WorklistResource($this->worklist);
+        }
+
+        if ($this->relationLoaded('workday')) {
+            $structure['workday'] = new WorkdayResource($this->workday);
+        }
+
+        if ($this->relationLoaded('works')) {
+            $structure['works'] = WorkResource::collection($this->works);
+        }
+
         if ($this->status >= ((string) AppointmentStatus::Created)) {
             $structure['created_at'] = $this->created_at;
         }
