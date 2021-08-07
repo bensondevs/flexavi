@@ -19,17 +19,19 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description
 -------------|----------|------------|-------------
-`employee_id` | Required | string, uuid | The ID of the employee access that will be used by the invited user
 `invited_email` | Required | string, email | The email of the invited company
 `expiry_time` | Optional | datetime | The expiry time of the invitation, if not filled, the invitation will be expired within 3 days
+`title` | Required | string | The title of employee
+`employee_type` | Required | integer | Type of employee, for detail see the meta documentation (section of Employee Types) at [Employee Meta](/docs/Meta/Employee.md)
 
 **Request Body Example:**
 
 ```json
 {
-    "employee_id": "439f7bc0-c82d-11eb-bd70-e1fef1016ac9",
 	"invited_email": "test@email.com",
 	"expiry_time": "2021-06-11",
+    "title": "Roof Cleaner Specialist",
+    "employee_type": 2,
 }
 ```
 

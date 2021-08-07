@@ -22,6 +22,7 @@ use App\Policies\SubAppointmentPolicy;
 use App\Policies\AppointmentCostPolicy;
 use App\Policies\ExecuteWorkPhotoPolicy;
 use App\Policies\AppointmentWorkerPolicy;
+use App\Policies\RegisterInvitationPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -213,5 +214,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('calculate-worklist', [WorklistPolicy::class, 'calculate']);
         Gate::define('delete-worklist', [WorklistPolicy::class, 'delete']);
         Gate::define('force-delete-worklist', [WorklistPolicy::class, 'forceDelete']);
+
+        // Register Invitation
+        Gate::define('send-employee-register-invitation', [RegisterInvitationPolicy::class, 'sendEmployeeRegisterInvitation']);
+        Gate::define('send-owner-register-invitation', [RegisterInvitationPolicy::class, 'sendOwnerRegisterInvitation']);
     }
 }

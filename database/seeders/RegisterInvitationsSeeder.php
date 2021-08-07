@@ -28,35 +28,14 @@ class RegisterInvitationsSeeder extends Seeder
             $role = rand(0, 1) ? 'owner' : 'employee';
             
             $company = $companies->random();
-            if ($role == 'owner') {
-                $owner = Owner::create([
-                    'company_id' => $company->id,
-                    'is_prime_owner' => false,
-                    'bank_name' => 'Invited Bank',
-                    'bic_code' => '001',
-                    'bank_account' => '1010101010',
-                    'bank_holder_name' => 'Invited User',
-                ]);
-
+            
+            $attachments = [];
+            if ($role == 'employee') {
                 $attachments = [
-                    'role' => $role,
-                    'model' => 'App\Models\Owner',
-                    'model_id' => $owner->id,
-                    'related_column' => 'user_id',
-                ];
-            } else {
-                $employee = Employee::create([
                     'company_id' => $company->id,
-                    'title' => 'Invited Employee',
-                    'employee_type' => rand(EmployeeType::Administrative, EmployeeType::Roofer),
-                    'employment_status' => rand(EmploymentStatus::Active, EmploymentStatus::Fired),
-                ]);
-
-                $attachments = [
-                    'role' => $role,
-                    'model' => 'App\Models\Employee',
-                    'model_id' => $employee->id,
-                    'related_column' => 'user_id',
+                    'title' => 'Employee Title',
+                    'employee_type' => rand(1, 2),
+                    'employment_status' => 1,
                 ];
             }
 
@@ -64,6 +43,7 @@ class RegisterInvitationsSeeder extends Seeder
                 'registration_code' => 'register' . ($index + 1),
                 'invited_email' => 'register' . ($index + 1) . '@flexavi.com',
                 'expiry_time' => carbon()->now()->addYears(100),
+                'role' => $role,
                 'attachments' => json_encode($attachments),
             ]);
         }

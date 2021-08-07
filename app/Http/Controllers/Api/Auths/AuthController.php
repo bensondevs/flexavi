@@ -18,17 +18,26 @@ use App\Http\Resources\UserResource;
 
 use App\Repositories\AuthRepository;
 use App\Repositories\CompanyOwnerRepository as OwnerRepository;
+use App\Repositories\RegisterInvitationRepository;
 use App\Repositories\AddressRepository;
 
 class AuthController extends Controller
 {
     private $auth;
     private $owner;
+    private $address;
+    private $invitation;
 
-    public function __construct(AuthRepository $auth, OwnerRepository $owner)
+    public function __construct(
+        AuthRepository $auth, 
+        OwnerRepository $owner, 
+        AddressRepository $address,
+        RegisterInvitationRepository $invitation) 
     {
     	$this->auth = $auth;
         $this->owner = $owner;
+        $this->address = $address;
+        $this->invitation = $invitation;
     }
 
     public function login(LoginRequest $request)
@@ -67,39 +76,39 @@ class AuthController extends Controller
     }
 
     public function register(RegisterRequest $request)
-    {
-        if ($invitation = $request->getInvitation()) {
-            if ($invitation->invited_email !== $request->input('email'))
-                return response()->json(['message' => 'This invitation is not for this email'], 403);
-        }
-
-    	$input = $request->userData();
-        if (! $attachments = $request->getAttachments()) {
-            $owner = $this->owner->save($request->getOwnerData());
-            if ($this->owner->status == 'error') {
-                abort(500, $this->owner->queryError);
-            }
-
-            $attachments = [
-                'model' => 'App\Models\Owner',
-                'model_id' => $owner->id,
-                'related_column' => 'user_id',
-                'role' => 'owner',
-            ];
-        }
-
+    {   
         // Register User
-    	$user = new User();
-        if ($profilePicture = $request->profile_picture) {
-            $user->profile_picture = $profilePicture;
+        $input = $request->userData();
+    	$input['profile_picture'] = $request->profile_picture;
+    	$user = $this->auth->register($input);
+
+        if ($this->auth->status == 'error') {
+            return abort(500, $this->auth->message . '[' . $this->auth->queryError . ']');
         }
-        $user = $this->auth->setModel($user);
-    	$user = $this->auth->register($input, $attachments);
+
+        // Handle registration data attached
+        if ($invitation = $request->getInvitation()) {
+            $this->invitation->setModel($invitation);
+            $this->invitation->handleInvitationFulfilled();
+
+            if ($this->invitation->status == 'error') {
+                // Revert change
+                $user->forceDelete();
+
+                return abort(500, $this->invitation->message . '[' . $this->invitation->queryError . ']');
+            }
+        }
 
         // Save address
         $addressData = $request->getAddressData();
         $addressData['user_id'] = $user->id;
         $this->address->save($addressData);
+
+        if ($this->address->status == 'error') {
+            // Revert change
+            $user->forceDelete();
+            return abort(500, $this->address->message . '[' . $this->address->queryError . ']');
+        }
 
         // Send Email Verification
         $this->auth->sendEmailVerification();

@@ -18,6 +18,7 @@ class CreateRegisterInvitationsTable extends Migration
 
             $table->string('registration_code');
             $table->string('invited_email');
+            $table->string('role')->default('employee');
             $table->json('attachments')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->datetime('expiry_time');

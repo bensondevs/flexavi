@@ -19,7 +19,7 @@ class AppointmentCostsSeeder extends Seeder
         $rawCosts = [];
         $rawCostables = [];
         foreach (Appointment::with(['worklist', 'workday'])->get() as $appointment) {
-            for ($index = 0; $index < 2; $index++) {
+            for ($index = 0; $index < 1; $index++) {
                 $costId = generateUuid();
 
                 $rawCosts[] = [

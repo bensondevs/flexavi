@@ -43,7 +43,6 @@ class SendInvitationRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            // Invitation Data
             'invited_email' => ['required', 'string', 'email'],
             'expiry_time' => ['datetime'],
         ]);
@@ -53,15 +52,5 @@ class SendInvitationRequest extends FormRequest
         ]);
 
         return $this->returnRules();
-    }
-
-    public function invitationData()
-    {
-
-    }
-
-    public function attachmentsData()
-    {
-
     }
 }

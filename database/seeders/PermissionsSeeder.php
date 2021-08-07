@@ -207,7 +207,8 @@ class PermissionsSeeder extends Seeder
 
         	// Register Invitation
         	'view register invitations',
-        	'send register invitations',
+            'send owner register invitations',
+            'send employee register invitations',
 
         	// Schedule
             'view any schedules',

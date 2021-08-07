@@ -21,53 +21,21 @@ use App\Repositories\Base\BaseRepository;
 
 class AuthRepository extends BaseRepository
 {
-	private $employee;
-	private $owner;
-	private $invitation;
-
 	public function __construct()
 	{
 		$this->setInitModel(new User);
-		$this->employee = new EmployeeRepository();
-		$this->invitation = new RegisterInvitationRepository();
 	}
 
-	public function register(array $registerData, array $attachments = [])
+	public function register(array $registerData)
 	{
 		try {
 			$user = $this->getModel();
 			$user->fill($registerData);
 			$user->unhashed_password = $registerData['password'];
-			if (! $user->save()) {
-				abort(500, 'Failed to register user.');
+			if ($profilePicture = $registerData['profile_picture']) {
+				$user->profile_picture = $profilePicture;
 			}
-
-			// Attachment exist
-			if ($attachments) {
-				$roleModel = $attachments['model']::findOrFail($attachments['model_id']);
-				$roleModel->{$attachments['related_column']} = $user->id;
-
-				if (! $roleModel->save()) {
-					// Unsave the user
-					$user->forceDelete();
-
-					// Abort the process
-					abort(500, 'Failed to assign role, role data insertion failed.');
-				}
-
-				if (isset($attachments['registration_code'])) {
-					$code = $attachments['registration_code'];
-
-					$user->registration_code = $code;
-					$user->save();
-
-					// Invalidate the invitation
-					$this->invitation->findByCode($code);
-					$this->invitation->markAsUsed();
-				}
-
-				$user->assignRole($attachments['role']);
-			}
+			$user->save();
 
 			$this->setModel($user);
 

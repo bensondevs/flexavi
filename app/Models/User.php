@@ -16,6 +16,8 @@ use App\Traits\Searchable;
 
 use App\Models\EmailVerification;
 
+use App\Observers\UserObserver;
+
 use App\Enums\User\UserIdCardType;
 
 class User extends Authenticatable
@@ -54,6 +56,9 @@ class User extends Authenticatable
 
         // Authentication
         'email',
+
+        // Registration Code
+        'registration_code',
     ];
 
     /**
@@ -80,6 +85,7 @@ class User extends Authenticatable
     protected static function boot()
     {
         parent::boot();
+        self::observe(UserObserver::class);
 
         self::creating(function ($user) {
             $user->incrementing = false;
@@ -100,6 +106,11 @@ class User extends Authenticatable
     public function employee()
     {
         return $this->hasOne(Employee::class);
+    }
+
+    public function register_invitation()
+    {
+        return $this->belongsTo(RegisterInvitation::class, 'registration_code', 'registration_code');
     }
 
     public function setUnhashedPasswordAttribute(string $value)

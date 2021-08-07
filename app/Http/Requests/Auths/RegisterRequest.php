@@ -25,15 +25,21 @@ class RegisterRequest extends FormRequest
 
     public function getInvitation()
     {
+        if ($this->invitation) {
+            return $this->invitation;
+        }
+
         $invitationCode = $this->input('invitation_code');
         if (! $invitationCode) {
             return null;
         }
 
-        if ($this->invitation) {
-            return $this->invitation;
+        $invitation = RegisterInvitation::findByCode($invitationCode);
+        if ($invitation->status != RegisterInvitationStatus::Active) {
+            return abort(422, 'Cannot use this register invitation');
         }
-        return $this->invitation = RegisterInvitation::findByCode($invitationCode);
+
+        return $this->invitation = $invitation;
     }
 
     /**
@@ -85,39 +91,21 @@ class RegisterRequest extends FormRequest
             $this->rules['profile_picture'] = ['required', new Base64Image()];
         }
 
-        // Has no invitation, then it must be owner
-        if (! $this->input('invitation_code')) {
-            $this->addRule('bank_name', ['required', 'string']);
-            $this->addRule('bic_code', ['required', 'string']);
-            $this->addRule('bank_account', ['required', 'string']);
-            $this->addRule('bank_holder_name', ['required', 'string']);
-        }
-
         return $this->returnRules();
     }
 
     public function userData()
     {
-        return $this->except([
+        $userData = $this->except([
             'profile_picture',
-
             'confirm_password',
-
-            'bank_name',
-            'bic_code',
-            'bank_account',
-            'bank_holder_name',
         ]);
-    }
 
-    public function getOwnerData()
-    {
-        return $this->only([
-            'bank_name',
-            'bic_code',
-            'bank_account',
-            'bank_holder_name',
-        ]);
+        if ($invitation = $this->getInvitation()) {
+            $userData['registration_code'] = $invitation->registration_code;
+        }
+
+        return $userData;
     }
 
     public function getAddressData()

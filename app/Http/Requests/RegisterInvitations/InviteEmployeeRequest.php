@@ -3,22 +3,18 @@
 namespace App\Http\Requests\RegisterInvitations;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
 
 use App\Models\Employee;
 
+use App\Enums\Employee\EmployeeType;
+use App\Enums\Employee\EmployeeStatus;
+
 class InviteEmployeeRequest extends FormRequest
 {
     use CompanyInputRequest;
-
-    private $employee;
-
-    public function getEmployee()
-    {
-        return $this->employee = $this->employee ?:
-            Employee::findOrFail($this->input('employee_id'));
-    }
 
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +23,7 @@ class InviteEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $employee = $this->getEmployee();
-
-        return $this->authorizeCompanyAction(
-            $employee->company_id, 
-            'send register invitations'
-        );
+        return Gate::allows('send-employee-register-invitation');
     }
 
     /**
@@ -44,8 +34,16 @@ class InviteEmployeeRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'invited_email' => ['required', 'string', 'email'],
+            'invited_email' => ['required', 'string', 'email', 'unique:users,email'],
             'expiry_time' => ['date'],
+
+            'title' => ['required', 'string'],
+            'employee_type' => [
+                'required', 
+                'numeric', 
+                'min:' . EmployeeType::Administrative, 
+                'max:' . EmployeeType::Roofer
+            ],
         ]);
 
         return $this->returnRules();
@@ -53,14 +51,16 @@ class InviteEmployeeRequest extends FormRequest
 
     public function invitationData()
     {
-        $data = $this->onlyInRules();
-        $data['attachments'] = [
-            'model' => 'App\Models\Employee',
-            'model_id' => $this->getEmployee()->id,
-            'related_column' => 'user_id',
-            'role' => 'employee',
-        ];
+        $input = $this->only(['invited_email', 'expiry_time']);
+        $input['attachments'] = $this->attachments();
+        return $input;
+    }
 
-        return $data;
+    public function attachments()
+    {
+        $attachments = $this->except(['invited_email', 'expiry_time']);
+        $attachments['company_id'] = $this->getCompany()->id;
+
+        return $attachments;
     }
 }

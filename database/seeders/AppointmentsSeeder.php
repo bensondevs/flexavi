@@ -23,7 +23,7 @@ class AppointmentsSeeder extends Seeder
         foreach (Company::with('customers')->get() as $company) {
             $worklists = $company->worklists;
             foreach ($company->customers as $customer) {
-                for ($index = 0; $index <= rand(1, 10); $index++) {
+                for ($index = 0; $index <= rand(1, 3); $index++) {
                 	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
                 	$end = ($start->copy())->addDays(rand(0, 7));
 

@@ -5,8 +5,11 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasEvents;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+
+use App\Observers\RegisterInvitationObserver;
 
 use App\Enums\RegisterInvitation\RegisterInvitationStatus;
 
@@ -14,6 +17,7 @@ class RegisterInvitation extends Model
 {
     use Searchable;
     use SoftDeletes;
+    use HasEvents;
 
     protected $table = 'register_invitations';
     protected $primaryKey = 'id';
@@ -23,6 +27,7 @@ class RegisterInvitation extends Model
     protected $fillable = [
         'invited_email',
         'expiry_time',
+        'role',
     ];
 
     protected $searchable = [
@@ -36,6 +41,7 @@ class RegisterInvitation extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(RegisterInvitationObserver::class);
 
         self::retrieved(function ($invitation) {
             // Check expired whenever retrieved
@@ -49,6 +55,11 @@ class RegisterInvitation extends Model
             $invitation->expiry_time = $invitation->expiry_time ?:
                 carbon()->now()->addDays(3);
     	});
+    }
+
+    public function invitedUser()
+    {
+        return $this->hasOne(User::class, 'registration_code', 'registration_code');
     }
 
     public static function findByCode($code)
@@ -82,14 +93,27 @@ class RegisterInvitation extends Model
 
         if (! $attachments) return [];
 
-        $registrationCode = $this->attributes['registration_code'];
-        $attachments['registration_code'] = $registrationCode;
-
         return $attachments;
+    }
+
+    public function getRoleModelAttribute()
+    {
+        $role = $this->attributes['role'];
+
+        if ($role == 'owner') $roleModel = new Owner();
+        else if ($role == 'employee') $roleModel = new Employee();
+
+        return $roleModel;
     }
 
     public static function collectAllStatuses()
     {
         return RegisterInvitationStatus::asSelectArray();
+    }
+
+    public function setUsed()
+    {
+        $this->attributes['status'] = RegisterInvitationStatus::Used;
+        $this->save();
     }
 }

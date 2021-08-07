@@ -3,6 +3,7 @@
 namespace App\Http\Requests\RegisterInvitations;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
 
@@ -12,14 +13,6 @@ class InviteOwnerRequest extends FormRequest
 {
     use CompanyInputRequest;
 
-    private $owner;
-
-    public function getOwner()
-    {
-        return $this->owner = $this->owner ?:
-            Owner::findOrFail($this->input('owner_id'));
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -27,8 +20,7 @@ class InviteOwnerRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        return $this->getOwner();
+        return Gate::allows('send-owner-register-invitation');
     }
 
     /**
@@ -39,7 +31,7 @@ class InviteOwnerRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'invited_email' => ['required', 'string', 'email'],
+            'invited_email' => ['required', 'string', 'email', 'unique:users,email'],
             'expiry_time' => ['date'],
         ]);
 
@@ -48,14 +40,13 @@ class InviteOwnerRequest extends FormRequest
 
     public function invitationData()
     {
-        $data = $this->onlyInRules();
-        $data['attachments'] = [
-            'model' => 'App\Models\Owner',
-            'model_id' => $this->getOwner()->id,
-            'related_column' => 'user_id',
-            'role' => 'owner',
+        $input = $this->validated();
+        $input['role'] = 'owner';
+        $input['attachments'] = [
+            'is_prime_owner' => false,
+            'company_id' => $this->getCompany()->id,
         ];
 
-        return $data;
+        return $input;
     }
 }
