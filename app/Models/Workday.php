@@ -71,7 +71,7 @@ class Workday extends Model
         $this->attributes['processed_at'] = now();
         $process = $this->save();
 
-        $this->fireModelEvent('processed');
+        // $this->fireModelEvent('processed');
 
         return $process;
     }
@@ -85,7 +85,7 @@ class Workday extends Model
         $this->attributes['calculated_at'] = now();
         $calculate = $this->save();
 
-        $this->fireModelEvent('calculate');
+        // $this->fireModelEvent('calculate');
 
         return $calculate;
     }

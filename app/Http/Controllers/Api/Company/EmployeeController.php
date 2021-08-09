@@ -68,6 +68,15 @@ class EmployeeController extends Controller
     	return apiResponse($this->employee);
     }
 
+    public function view(FindRequest $request)
+    {
+        $employee = $request->getEmployee();
+        $employee->load(['user', 'addresses', 'company', 'todayInspections']);
+        $employee = new EmployeeResource($employee);
+
+        return response()->json(['employee' => $employee]);
+    }
+
     public function update(SaveRequest $request)
     {
         $employee = $request->getEmployee();

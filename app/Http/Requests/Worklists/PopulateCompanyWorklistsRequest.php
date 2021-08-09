@@ -26,6 +26,14 @@ class PopulateCompanyWorklistsRequest extends FormRequest
         $this->merge([
             'with_appointments' => strtobool($this->input('with_appointments')),
         ]);
+
+        if ($start = $this->input('start')) {
+            $this->merge(['start' => carbon()->parse($start)->toDateString()]);
+        }
+
+        if ($end = $this->input('end')) {
+            $this->merge(['end' => carbon()->parse($end)->toDateString()]);
+        }
     }
 
     /**
@@ -49,7 +57,7 @@ class PopulateCompanyWorklistsRequest extends FormRequest
             [
                 'column' => 'date',
                 'operator' => '>=',
-                'value' => month_start_date(),
+                'value' => $start,
             ],
             [
                 'column' => 'date',

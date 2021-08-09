@@ -61,6 +61,10 @@ class AppointmentResource extends JsonResource
             $structure['works'] = WorkResource::collection($this->works);
         }
 
+        if ($this->relationLoaded('costs')) {
+            $structure['costs'] = CostResource::collection($this->costs);
+        }
+
         if ($this->status >= ((string) AppointmentStatus::Created)) {
             $structure['created_at'] = $this->created_at;
         }

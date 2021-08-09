@@ -30,12 +30,11 @@ class CompanyController extends Controller
 
     public function userCompany()
     {
-        $user = auth()->user();
-        if (! $owner = $user->owner) {
+        if (! $owner = (auth()->user())->owner) {
             return abort(404, 'This user is not owner of company.');
         }
+        
         $company = new CompanyResource($owner->company);
-
         return response()->json(['company' => $company]);
     }
 

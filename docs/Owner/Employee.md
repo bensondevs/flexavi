@@ -512,6 +512,114 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
+### 4. View Employee
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/employees/view`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+ Payload name | Required | Validation | Description    
+--------------|----------|------------|-------------
+`id` or `employee_id` | Required | uuid, string | The ID of viewed employee
+
+
+**Request Body Example:**
+
+```json
+{
+    "id": "07f69c00-c7b5-11eb-b290-d11f6e46c68e"
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`employee` | Object | Object data of updated employee
+
+**Success Response Example:**
+
+```json
+{
+    "employee": {
+        "id": "023d4300-f8e2-11eb-b6cb-f1ef24693c4c",
+        "title": "Employee Title",
+        "employee_type": 1,
+        "employee_type_description": "Administrative",
+        "employment_status": 1,
+        "employment_status_description": "Active",
+        "user": {
+            "id": "0006a940-f8e2-11eb-ab6c-6df85b9247e7",
+            "fullname": "Flexavi Employee 13",
+            "birth_date": "2000-08-09",
+            "id_card_type": "id_card",
+            "id_card_number": "335297237",
+            "phone": "999999999999",
+            "phone_verified_status": false,
+            "email": "employee13@flexavi.nl",
+            "email_verified_status": false,
+            "profile_picture": "http://localhost:8000/storage/uploads/profile_pictures/20210503075156pp.jpeg",
+            "role": "employee"
+        },
+        "addresses": [
+            {
+                "address": "Flexavi Employee 13 Address 1",
+                "house_number": "99",
+                "house_number_suffix": "X",
+                "zipcode": "218782",
+                "city": "Randon City",
+                "province": "Random Province"
+            },
+            {
+                "address": "Flexavi Employee 13 Address 2",
+                "house_number": "203",
+                "house_number_suffix": "X",
+                "zipcode": "874689",
+                "city": "Randon City",
+                "province": "Random Province"
+            }
+        ],
+        "company": {
+            "id": "01a35d40-f8e2-11eb-9988-bb964bca54a7",
+            "company_name": "Company 1",
+            "email": "company1@flexavi.com",
+            "phone_number": "84113120",
+            "vat_number": "28338180",
+            "commerce_chamber_number": "1",
+            "company_logo_url": "http://localhost:8000/storage/uploads/companies/logos/20210730125714.jpeg",
+            "company_website_url": "www.randomwebsite.com",
+            "visiting_address": {
+                "city": "Random City",
+                "street": "Custom Road",
+                "zip_code": "67312",
+                "house_number": 259,
+                "house_number_suffix": "X"
+            },
+            "invoicing_address": {
+                "city": "Random City",
+                "street": "Custom Street",
+                "zip_code": "65123",
+                "house_number": 38,
+                "house_number_suffix": "X"
+            }
+        },
+        "today_inspections": []
+    }
+}
+```
+
+
+-------------------------------------------------------
 ### 4. Update Employee
 -------------------------------------------------------
 

@@ -52,6 +52,26 @@ class PopulateCompanyWorkdaysRequest extends FormRequest
             $this->addWith('appointments');
         }
 
+        $startDate = now()->toDateString();
+        if ($start = $this->input('start')) {
+            $startDate = $start;
+        }
+        $this->addWhere([
+            'column' => 'date',
+            'operator' => '>=',
+            'value' => $startDate,
+        ]);
+
+        $endDate = now()->copy()->addDays(30)->toDateString();
+        if ($end = $this->input('end')) {
+            $endDate = $end;
+        }
+        $this->addWhere([
+            'column' => 'date',
+            'operator' => '<=',
+            'value' => $endDate,
+        ]);
+
         return $this->collectCompanyOptions();
     }
 }

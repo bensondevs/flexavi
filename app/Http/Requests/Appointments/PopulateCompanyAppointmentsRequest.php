@@ -100,6 +100,10 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
             $this->addWith('works');
         }
 
+        if ($withCosts = $this->get('with_costs')) {
+            $this->addWith('costs');
+        }
+
         return $this->collectCompanyOptions();
     }
 }

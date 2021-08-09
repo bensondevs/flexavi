@@ -128,4 +128,9 @@ class Cost extends Model
     {
         return $this->workdays()->first();
     }
+
+    public function costables()
+    {
+        return $this->hasMany(Costable::class);
+    }
 }

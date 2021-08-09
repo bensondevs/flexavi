@@ -176,6 +176,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-employee', [EmployeePolicy::class, 'viewAny']);
         Gate::define('create-employee', [EmployeePolicy::class, 'create']);
         Gate::define('edit-employee', [EmployeePolicy::class, 'update']);
+        Gate::define('view-employee', [EmployeePolicy::class, 'view']);
         Gate::define('delete-employee', [EmployeePolicy::class, 'delete']);
         Gate::define('restore-employee', [EmployeePolicy::class, 'restore']);
         Gate::define('force-delete-employee', [EmployeePolicy::class, 'forceDelete']);

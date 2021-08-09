@@ -238,6 +238,7 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function
 				Route::get('inviteables', [EmployeeController::class, 'inviteableEmployees']);
 				Route::get('trasheds', [EmployeeController::class, 'trashedEmployees']);
 				Route::post('store', [EmployeeController::class, 'store']);
+				Route::get('view', [EmployeeController::class, 'view']);
 				Route::match(['PUT', 'PATCH'], 'update', [EmployeeController::class, 'update']);
 				Route::delete('delete', [EmployeeController::class, 'delete']);
 				Route::patch('restore', [EmployeeController::class, 'restore']);
