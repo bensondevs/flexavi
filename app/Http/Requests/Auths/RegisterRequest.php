@@ -34,12 +34,15 @@ class RegisterRequest extends FormRequest
             return null;
         }
 
-        $invitation = RegisterInvitation::findByCode($invitationCode);
-        if ($invitation->status != RegisterInvitationStatus::Active) {
-            return abort(422, 'Cannot use this register invitation');
+        if ($invitation = RegisterInvitation::findByCode($invitationCode)) {
+            if ($invitation->status != RegisterInvitationStatus::Active) {
+                return abort(422, 'Cannot use this register invitation');
+            }
+
+            return $this->invitation = $invitation;
         }
 
-        return $this->invitation = $invitation;
+        return null;
     }
 
     /**
