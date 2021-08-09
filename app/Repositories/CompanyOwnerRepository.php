@@ -5,6 +5,7 @@ namespace App\Repositories;
 use \Illuminate\Support\Facades\DB;
 use \Illuminate\Database\QueryException;
 
+use App\Models\User;
 use App\Models\Owner;
 use App\Models\Company;
 
@@ -43,6 +44,12 @@ class CompanyOwnerRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function assignUser(User $user)
+	{
+		$user->assignRole('owner');
+		return $this->save(['user_id' => $user->id]);
 	}
 
 	public function assignCompany(Company $company)

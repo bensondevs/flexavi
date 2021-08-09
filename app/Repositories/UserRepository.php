@@ -92,7 +92,8 @@ class UserRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete user data.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to delete user data.', $qe->getMessage());
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete user data.', $error);
 		}
 
 		return $delete;

@@ -97,6 +97,15 @@ class AuthController extends Controller
 
                 return abort(500, $this->invitation->message . '[' . $this->invitation->queryError . ']');
             }
+        } else {
+            $this->owner->assignUser($user);
+
+            if ($this->owner->status == 'error') {
+                // Revert Change
+                $user->forceDelete();
+
+                return abort(500, $this->owner->message . '[' . $this->owner->queryError . ']');
+            }
         }
 
         // Save address
