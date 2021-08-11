@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix' => 'auth'], base_path('routes/api/auth.php'));
 Route::group(['prefix' => 'meta'], base_path('routes/api/meta.php'));
 
-Route::group(['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], function () {
-	
-});
+Route::group(
+	['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], 
+	base_path('routes/api/dashboard.php')
+);
