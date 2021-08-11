@@ -4,6 +4,10 @@ namespace App\Observers;
 
 use App\Models\Cost;
 
+use App\Models\Workday;
+use App\Models\Worklist;
+use App\Models\Appointment;
+
 class CostObserver
 {
     /**
@@ -25,7 +29,10 @@ class CostObserver
      */
     public function updated(Cost $cost)
     {
-        //
+        dd($cost);
+        if ($cost->costables()->count() < 1) {
+            $cost->delete();
+        }
     }
 
     /**

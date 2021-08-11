@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Costs;
+namespace App\Http\Requests\Costs\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
@@ -30,8 +30,7 @@ class PopulateAppointmentCostsRequest extends FormRequest
      */
     public function authorize()
     {
-        $appointment = $this->getAppointment();
-        return Gate::allows('view-any-appointment-cost', $appointment);
+        return Gate::allows('view-any-cost');
     }
 
     /**

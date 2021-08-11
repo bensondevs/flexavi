@@ -67,12 +67,15 @@ class PermissionsSeeder extends Seeder
             'delete appointment workers',
             'force delete appointment workers',
 
-            // Appointment Cost
-            'view any appointment costs',
-            'view appointment costs',
-            'create appointment costs',
-            'edit appointment costs',
-            'delete appointment costs',
+            // Cost
+            'view any costs',
+            'view costs',
+            'create costs',
+            'record costs',
+            'unrecord costs',
+            'truncate costs',
+            'edit costs',
+            'delete costs',
 
         	// Car
             'view any cars',

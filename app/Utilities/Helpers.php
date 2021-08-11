@@ -54,6 +54,22 @@ function str_to_singular(string $string)
     return Str::singular($string);
 }
 
+function str_to_plural(string $string)
+{
+    return Str::plural($string);
+}
+
+function get_lower_class($class)
+{
+    $lowerClassname = strtolower(get_class($class));
+
+    if ($explode = explode('\\', $lowerClassname)) {
+        return $explode[count($explode) - 1];
+    }
+
+    return $lowerClassname;
+}
+
 function numbertofloat($number)
 {
     return sprintf('%.2f', $number);
@@ -105,10 +121,16 @@ function executor()
 
 function strtobool($string = null)
 {   
-    if ($string === null) return false;
+    if ($string === null) {
+        return false;
+    }
 
     if ($string == 'true' || $string == 'false') {
         return filter_var($string, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    if ($string == '1' || $string == '0') {
+        return boolval($string);
     }
 
     return true;
@@ -219,21 +241,29 @@ function apiResponse($repositoryObject, $responseData = null)
     if (is_array($responseData)) {
         $attribute = array_keys($responseData)[0];
         $response[$attribute] = $responseData[$attribute];
-    } else if ($responseData) {
+    } else if ($responseData !== null) {
         $response['data'] = $responseData;
     }
     
-    if ($repositoryObject->status)
-        $response['status'] = $repositoryObject->status;
-    if ($repositoryObject->message)
-        $response['message'] = $repositoryObject->message;
-    if ($repositoryObject->queryError)
-        $response['query_error'] = $repositoryObject->queryError;
+    if ($status = $repositoryObject->status) {
+        $response['status'] = (count($repositoryObject->statuses) > 1) ? 
+            $repositoryObject->statuses :
+            $status;
+    }
 
-    return response()->json(
-        $response, 
-        $repositoryObject->httpStatus
-    );
+    if ($message = $repositoryObject->message) {
+        $response['message'] = (count($repositoryObject->messages) > 1) ?
+            $repositoryObject->messages : 
+            $message;
+    }
+
+    if ($queryError = $repositoryObject->queryError) {
+        $response['query_error'] = (count($repositoryObject->queryErrors) > 1) ?
+            $repositoryObject->queryErrors :
+            $queryError;
+    }
+
+    return response()->json($response, $repositoryObject->httpStatus);
 }
 
 function uppercaseArray($array)

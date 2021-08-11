@@ -18,7 +18,13 @@ class RevenueController extends Controller
 
     public function appointmentRevenue(AppointmentPopulateRequest $request)
     {
-        //
+        $options = $request->options();
+
+        $revenues = $this->revenue->all($options);
+        $revenues = $this->revenue->paginate();
+        $revenues = RevenueResource::apiCollection($revenues);
+
+        return response()->json(['revenues' => $revenues]);
     }
 
     public function worklistRevenue(WorklistPopulateRequest $request)

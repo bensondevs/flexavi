@@ -30,7 +30,7 @@ class CreateInvoicesTable extends Migration
                 ->on('customers')
                 ->onDelete('CASCADE');
 
-            $table->uuidMorphs('referenceable');
+            $table->uuidMorphs('invoiceable');
 
             $table->double('total', 10, 2);
             $table->double('total_in_terms')->default(0);

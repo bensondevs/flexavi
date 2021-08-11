@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Costs\PopulateAppointmentCostsRequest as AppointmentPopulateRequest;
 use App\Http\Requests\Costs\PopulateWorklistCostsRequest as WorklistPopulateRequest;
 use App\Http\Requests\Costs\PopulateWorkdayCostsRequest as WorkdayPopulateRequest;
 
@@ -20,16 +19,6 @@ class CostController extends Controller
     public function __construct(CostRepository $cost)
     {
         $this->cost = $cost;
-    }
-
-    public function appointmentCosts(AppointmentPopulateRequest $request)
-    {
-        $options = $request->options();
-
-        $costs = $this->cost->all($options, true);
-        $costs = CostResource::apiCollection($costs);
-
-        return response()->json(['costs' => $costs]);
     }
 
     public function worklistCosts(WorklistPopulateRequest $request)

@@ -17,24 +17,7 @@ class CostableObserver
      */
     public function created(Costable $costable)
     {
-        /*if ($costable->costable_type == get_class(Appointment::class)) {
-            $cost = $costable->cost;
-
-            if (! $cost->worklist) {
-                $appointment = $cost->appointment;
-                if ($appointment->worklist) {
-                    
-                }
-            }
-        }
-
-        if ($costable->costable_type == get_class(Worklist::class)) {
-            $cost = $costable->cost;
-
-            if (! $cost->workday) {
-
-            }
-        }*/
+        //
     }
 
     /**

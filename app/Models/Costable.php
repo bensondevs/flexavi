@@ -4,14 +4,15 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
-use App\Traits\Searchable;
 
-class Costable extends Model
+use App\Observers\CostableObserver;
+
+class Costable extends Pivot
 {
     use SoftDeletes;
-    use Searchable;
 
     protected $table = 'costables';
     protected $primaryKey = 'id';
@@ -21,6 +22,12 @@ class Costable extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(CostableObserver::class);
+    }
+
+    public function scopeWhereType($query, $type)
+    {
+        return $query->where('costable_type', $type);
     }
 
     public function cost()
@@ -31,5 +38,15 @@ class Costable extends Model
     public function costable()
     {
         return $this->morphTo();
+    }
+
+    public static function isAlreadyAttached(Cost $cost, $costable)
+    {
+        $costableType = get_class($costable);
+
+        return self::where('cost_id', $cost->id)
+            ->where('costable_type', $costableType)
+            ->where('costable_id', $costable->id)
+            ->count() > 0;
     }
 }

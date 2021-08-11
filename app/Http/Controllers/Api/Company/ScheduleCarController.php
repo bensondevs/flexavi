@@ -14,9 +14,7 @@ class ScheduleCarController extends Controller
 {
     private $scheduleCar;
 
-    public function __construct(
-    	ScheduleCarRepository $scheduleCar
-    )
+    public function __construct(ScheduleCarRepository $scheduleCar)
     {
     	$this->scheduleCar = $scheduleCar;
     }

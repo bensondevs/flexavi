@@ -6,6 +6,7 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 
 use App\Policies\CarPolicy;
+use App\Policies\CostPolicy;
 use App\Policies\WorkPolicy;
 use App\Policies\AddressPolicy;
 use App\Policies\InvoicePolicy;
@@ -19,7 +20,6 @@ use App\Policies\ExecuteWorkPolicy;
 use App\Policies\InvoiceItemPolicy;
 use App\Policies\PaymentTermPolicy;
 use App\Policies\SubAppointmentPolicy;
-use App\Policies\AppointmentCostPolicy;
 use App\Policies\ExecuteWorkPhotoPolicy;
 use App\Policies\AppointmentWorkerPolicy;
 use App\Policies\RegisterInvitationPolicy;
@@ -85,14 +85,19 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('restore-sub-appointment', [SubAppointmentPolicy::class, 'restore']);
         Gate::define('force-delete-sub-appointment', [SubAppointmentPolicy::class, 'forceDelete']);
 
-        // Appointment Cost
-        Gate::define('view-any-appointment-cost', [AppointmentCostPolicy::class, 'viewAny']);
-        Gate::define('view-appointment-cost', [AppointmentCostPolicy::class, 'view']);
-        Gate::define('create-appointment-cost', [AppointmentCostPolicy::class, 'create']);
-        Gate::define('edit-appointment-cost', [AppointmentCostPolicy::class, 'update']);
-        Gate::define('delete-appointment-cost', [AppointmentCostPolicy::class, 'delete']);
-        Gate::define('restore-appointment-cost', [AppointmentCostPolicy::class, 'restore']);
-        Gate::define('force-delete-appointment-cost', [AppointmentCostPolicy::class, 'forceDelete']);
+        // Costs
+        Gate::define('view-any-cost', [CostPolicy::class, 'viewAny']);
+        Gate::define('view-cost', [CostPolicy::class, 'view']);
+        Gate::define('create-cost', [CostPolicy::class, 'create']);
+        Gate::define('record-cost', [CostPolicy::class, 'record']);
+        Gate::define('record-many-cost', [CostPolicy::class, 'recordMany']);
+        Gate::define('unrecord-cost', [CostPolicy::class, 'unrecord']);
+        Gate::define('unrecord-many-cost', [CostPolicy::class, 'unrecordMany']);
+        Gate::define('truncate-cost', [CostPolicy::class, 'truncate']);
+        Gate::define('edit-cost', [CostPolicy::class, 'update']);
+        Gate::define('delete-cost', [CostPolicy::class, 'delete']);
+        Gate::define('restore-cost', [CostPolicy::class, 'restore']);
+        Gate::define('force-delete-cost', [CostPolicy::class, 'forceDelete']);
 
         // Quotation
         Gate::define('view-any-quotation', [QuotationPolicy::class, 'viewAny']);

@@ -40,26 +40,6 @@ class AppointmentCostsSeeder extends Seeder
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
-
-                if ($worklist = $appointment->worklist) {
-                    $rawCostables[] = [
-                        'cost_id' => $costId,
-                        'costable_id' => $worklist->id,
-                        'costable_type' => get_class($worklist),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                }
-
-                if ($workday = $appointment->workday) {
-                    $rawCostables[] = [
-                        'cost_id' => $costId,
-                        'costable_id' => $workday->id,
-                        'costable_type' => get_class($workday),
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                }
             }
         }
 

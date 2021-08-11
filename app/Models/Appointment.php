@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Znck\Eloquent\Traits\BelongsToThrough;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
@@ -18,6 +19,7 @@ class Appointment extends Model
 {
     use SoftDeletes;
     use Searchable;
+    use PivotEventTrait;
     use HasRelationships;
     use BelongsToThrough;
 
@@ -193,12 +195,12 @@ class Appointment extends Model
 
     public function revenues()
     {
-        return $this->hasMany(Revenue::class);
+        return $this->morphToMany(Revenue::class, 'revenueable');
     }
 
     public function invoice()
     {
-        return $this->morphOne(Invoice::class);
+        return $this->morphOne(Invoice::class, 'invoiceable');
     }
 
     public function calculation()
@@ -208,12 +210,12 @@ class Appointment extends Model
 
     public function worklist()
     {
-        return $this->belongsTo(Worklist::class);
+        return $this->morphedByMany(Worklist::class, 'appointmentable');
     }
 
     public function workday()
     {
-        return $this->belongsToThrough(Workday::class, [Worklist::class]);
+        return $this->morphedByMany(Workday::class, 'appointmentable');
     }
 
     public static function typeOptions()

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
@@ -14,6 +15,7 @@ class Workday extends Model
 {
     use SoftDeletes;
     use Searchable;
+    use HasRelationships;
 
     protected $table = 'workdays';
     protected $primaryKey = 'id';
@@ -57,12 +59,17 @@ class Workday extends Model
 
     public function appointments()
     {
-        return $this->hasManyThrough(Appointment::class, Worklist::class);
+        return $this->morphToMany(Appointment::class, 'appointmentable');
     }
 
     public function costs()
     {
         return $this->morphToMany(Cost::class, 'costable');
+    }
+
+    public function worklistsCosts()
+    {
+        return $this->hasManyThrough(Cost::class, Worklist::class);
     }
 
     public function process()

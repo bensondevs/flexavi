@@ -58,7 +58,7 @@ class Worklist extends Model
 
     public function appointments()
     {
-        return $this->hasMany(Appointment::class);
+        return $this->morphToMany(Appointment::class, 'appointmentable');
     }
 
     public function costs()

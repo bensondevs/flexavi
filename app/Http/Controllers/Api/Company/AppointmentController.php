@@ -73,6 +73,28 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment);
     }
 
+    public function view(FindRequest $request)
+    {
+        $appointment = $request->getAppointment();
+        $appointment->load([
+            'customer', 
+            'subs', 
+            'quotation', 
+            'works',
+            'worklist',
+            'workday',
+            //'executeWorks', 
+            'costs', 
+            'revenues', 
+            /*'warranty', 
+            'paymentReminder', 
+            'invoice', 
+            'calculation',*/
+        ]);
+
+        return response()->json(['appointment' => new AppointmentResource($appointment)]);
+    }
+
     public function execute(ExecuteRequest $request)
     {
         $appointment = $request->getAppointment();

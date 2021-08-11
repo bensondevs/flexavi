@@ -11,15 +11,13 @@ use App\Http\Requests\PopulateInspectorsRequest as PopulateRequest;
 
 use App\Models\Inspector;
 
-use App\Repositories\InspectorRepository;
+// use App\Repositories\InspectorRepository;
 
 class InspectorController extends Controller
 {
     private $inspector;
 
-    public function __construct(
-    	InspectorRepository $inspector
-    )
+    /*public function __construct(InspectorRepository $inspector)
     {
     	$this->inspector = $inspectorRepository;
     }
@@ -49,5 +47,5 @@ class InspectorController extends Controller
     	$this->inspector->delete();
 
     	return apiResponse($this->inspector);
-    }
+    }*/
 }

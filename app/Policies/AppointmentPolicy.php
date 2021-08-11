@@ -15,9 +15,13 @@ class AppointmentPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(User $user)
+    public function viewAny(User $user, $appointmentable = null)
     {
-        return $user->hasPermissionTo('view appointments');
+        if ($appointmentable !== null) {
+            return $user->hasCompanyPermission($appointmentable->company_id, 'view any appointments');
+        }
+
+        return $user->hasPermissionTo('view any appointments');
     }
 
     public function view(User $user, Appointment $appointment)
