@@ -41,6 +41,17 @@ class Workday extends Model
     	});
     }
 
+    public function scopeWhereCompany($query, $companyId)
+    {
+        return $query->where('company_id', $companyId);
+    }
+
+    public function scopeInAppointmentRange(Appointment $appointment)
+    {
+        return $query->whereCompany($appointment->company_id)
+            ->whereBetween('date', [$appointment->start, $appointment->end]);
+    }
+
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
@@ -65,6 +76,11 @@ class Workday extends Model
     public function costs()
     {
         return $this->morphToMany(Cost::class, 'costable');
+    }
+
+    public function receipts()
+    {
+        return $this->morphMany(Receipt::class, 'receiptable');
     }
 
     public function worklistsCosts()

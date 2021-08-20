@@ -1,19 +1,25 @@
 <?php
 
-namespace App\Http\Requests\Works;
+namespace App\Http\Requests\Workdays\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\PopulateRequestOptions;
-
+use App\Models\Worklist;
 use App\Models\Appointment;
 
-class PopulateAppointmentWorksRequest extends FormRequest
+class AttachAppointmentRequest extends FormRequest
 {
-    use PopulateRequestOptions;
-
+    private $workday;
     private $appointment;
+
+    public function getWorkday()
+    {
+        if ($this->workday) return $this->workday;
+
+        $id = $this->input('workday_id');
+        return $this->workday = Worklist::findOrFail($id);
+    }
 
     public function getAppointment()
     {
@@ -30,8 +36,9 @@ class PopulateAppointmentWorksRequest extends FormRequest
      */
     public function authorize()
     {
+        $workday = $this->getWorkday();
         $appointment = $this->getAppointment();
-        return Gate::allows('view-any-appointment-work', $appointment);
+        return Gate::allows('attach-appointment-workday', [$workday, $appointment]);
     }
 
     /**
@@ -44,16 +51,5 @@ class PopulateAppointmentWorksRequest extends FormRequest
         return [
             //
         ];
-    }
-
-    public function options()
-    {
-        $this->addWhere([
-            'column' => 'appointment_id',
-            'operator' => '=',
-            'value' => $this->getAppointment()->id,
-        ]);
-
-        return $this->collectOptions();
     }
 }

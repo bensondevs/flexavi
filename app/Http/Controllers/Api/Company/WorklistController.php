@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\Worklists\PopulateCompanyWorklistsRequest as CompanyPopulateRequest;
 use App\Http\Requests\Worklists\PopulateWorkdayWorklistsRequest as WorkdayPopulateRequest;
 use App\Http\Requests\Worklists\SaveWorklistRequest as SaveRequest;
+use App\Http\Requests\Worklists\FindWorklistRequest as FindRequest;
 use App\Http\Requests\Worklists\DeleteWorklistRequest as DeleteRequest;
 
 use App\Http\Resources\WorklistResource;
@@ -79,6 +80,15 @@ class WorklistController extends Controller
         $this->worklist->calculate();
 
         return apiResponse($this->worklist);
+    }
+
+    public function view(FindRequest $request)
+    {
+        $worklist = $request->getWorklist();
+        $worklist->load(['workday', 'appointments', 'costs']);
+        $worklist = new WorklistResource($worklist);
+
+        return response()->json(['worklist' => $worklist]);
     }
 
     public function update(SaveRequest $request)

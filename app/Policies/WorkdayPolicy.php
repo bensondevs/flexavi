@@ -6,6 +6,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 use App\Models\User;
 use App\Models\Workday;
+use App\Models\Appointmentable;
 
 use App\Enums\Workday\WorkdayStatus;
 
@@ -45,6 +46,86 @@ class WorkdayPolicy
     public function create(User $user)
     {
         return false;
+    }
+
+    /**
+     * Determine whether the user can attach appointment to models.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Workday $workday 
+     * @param  \App\Models\Appointment  $appointment
+     * @return mixed
+     */
+    public function attachAppointment(User $user, Workday $workday, Appointment $appointment)
+    {
+        if ($workday->company_id !== $appointment->company_id) {
+            return abort(403, 'Cannot use data from other company.');
+        }
+
+        if (Appointmentable::isAlreadyAttached($appointment, $workday)) {
+            return abort(422, 'This appointment has been attached to the workday');
+        }
+
+        return $user->hasCompanyPermission($workday->company_id, 'attach appointment workdays');
+    }
+
+    /**
+     * Determine whether the user can attach many appointments to models.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Workday $workday 
+     * @param  array  $appointmentIds
+     * @return mixed
+     */
+    public function attachManyAppointments(User $user, Workday $workday)
+    {
+        return $user->hasCompanyPermission($workday->company_id, 'attach many appointments workdays');
+    }
+
+    /**
+     * Determine whether the user can detach appointment from models.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Workday $workday 
+     * @param  \App\Models\Appointment  $appointment
+     * @return mixed
+     */
+    public function detachAppointment(User $user, Workday $workday, Appointment $appointment)
+    {
+        if ($workday->company_id !== $appointment->company_id) {
+            return abort(403, 'Cannot use data from other company.');
+        }
+
+        if (! Appointmentable::isAlreadyAttached($appointment, $workday)) {
+            return abort(422, 'This appointment has been attached to the workday');
+        }
+
+        return $user->hasCompanyPermission($workday->company_id, 'detach appointment workdays');
+    }
+
+    /**
+     * Determine whether the user can detach appointment from models.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Workday $workday 
+     * @param  array  $appointmentIds
+     * @return mixed
+     */
+    public function detachManyAppointments(User $user, Workday $workday, array $appointmentIds)
+    {
+        return $user->hasCompanyPermission($workday->company_id, 'detach many appointments workdays');
+    }
+
+    /**
+     * Determine whether the user can detach appointment from models.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Workday $workday 
+     * @return mixed
+     */
+    public function truncateAppointments(User $user, Workday $workday)
+    {
+        return $user->hasCompanyPermission($workday->company_id, 'truncate appointments workdays');
     }
 
     /**

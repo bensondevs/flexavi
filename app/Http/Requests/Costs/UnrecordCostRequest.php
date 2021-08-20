@@ -18,16 +18,6 @@ class UnrecordCostRequest extends FormRequest
     use CostableRequest;
     use CompanyInputRequest;
 
-    private $cost;
-
-    public function getCost()
-    {
-        if ($this->cost) return $this->cost;
-
-        $id = $this->input('cost_id');
-        return $this->cost = Cost::findOrFail($id);
-    }
-
     protected function prepareForValidation()
     {
         if ($recordInWorklist = $this->input('unrecord_from_worklist')) {

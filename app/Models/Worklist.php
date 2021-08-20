@@ -65,4 +65,9 @@ class Worklist extends Model
     {
         return $this->morphToMany(Cost::class, 'costable');
     }
+
+    public function receipts()
+    {
+        return $this->morphMany(Receipt::class, 'receiptable');
+    }
 }

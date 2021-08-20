@@ -29,10 +29,7 @@ class CostObserver
      */
     public function updated(Cost $cost)
     {
-        dd($cost);
-        if ($cost->costables()->count() < 1) {
-            $cost->delete();
-        }
+        //
     }
 
     /**

@@ -9,6 +9,7 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
 use App\Enums\Work\WorkStatus;
+use App\Enums\ExecuteWork\ExecuteWorkStatus;
 
 use App\Observers\WorkObserver;
 
@@ -22,6 +23,14 @@ class Work extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    protected $searchable = [
+        'quantity_unit',
+        'description',
+        'note',
+        'unfinish_note',
+        'finish_note',
+    ];
+
     protected $observeables = [
         'executed',
         'processed', 
@@ -30,12 +39,7 @@ class Work extends Model
     ];
 
     protected $fillable = [
-        'appointment_id',
-        'quotation_id',
-        'work_contract_id',
-
         'status',
-
         'quantity',
         'quantity_unit',
         'description',
@@ -80,7 +84,6 @@ class Work extends Model
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
-
         return WorkStatus::getDescription($status);
     }
 
@@ -134,24 +137,14 @@ class Work extends Model
         return currency_format($totalPaid);
     }
 
-    public function conditionPhotos()
+    public function quotations()
     {
-        return $this->hasMany(WorkConditionPhoto::class);
+        return $this->morphedByMany(Quotation::class, 'workable');
     }
 
-    public function quotation()
+    public function appointments()
     {
-        return $this->belongsTo(Quotation::class);
-    }
-
-    public function appointment()
-    {
-        return $this->belongsTo(Appointment::class);
-    }
-
-    public function contract()
-    {
-        return $this->belongsTo(WorkContract::class);
+        return $this->morphedByMany(Appointment::class, 'workable');
     }
 
     public function executeWorks()
@@ -159,17 +152,21 @@ class Work extends Model
         return $this->hasMany(ExecuteWork::class);
     }
 
+    public function currentExecuteWork()
+    {
+        return $this->hasOne(ExecuteWork::class)
+            ->where('status', ExecuteWorkStatus::InProcess);
+    }
+
     public static function collectAllStatuses()
     {
         return WorkStatus::asSelectArray();
     }
 
-    public function execute()
+    public function execute(Appointment $appointment)
     {
         $this->attributes['status'] = WorkStatus::InProcess;
         $execute = $this->save();
-
-        $this->fireModelEvent('executed');
 
         return $execute;
     }
@@ -180,8 +177,6 @@ class Work extends Model
         $this->attributes['executed_at'] = now();
         $process = $this->save();
 
-        $this->fireModelEvent('processed');
-
         return $process;
     }
 
@@ -190,8 +185,6 @@ class Work extends Model
         $this->attributes['status'] = WorkStatus::Finished;
         $this->attributes['finished_at'] = now();
         $markFinsih = $this->save();
-
-        $this->fireModelEvent('markFinsihed');
 
         return $markFinsih;
     }
@@ -202,8 +195,6 @@ class Work extends Model
         $this->attributes['marked_unfinished_at'] = now();
         $this->attributes['unfinish_note'] = $unfinishNote;
         $markUnfinish = $this->save();
-
-        $this->fireModelEvent('markUnfinished');
 
         return $markUnfinish;
     }

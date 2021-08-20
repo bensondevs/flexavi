@@ -21,8 +21,8 @@ class WorkResource extends JsonResource
         $structure = [
             'id' => $this->id,
 
-            'appointment_id' => $this->appointment_id,
-            'quotation_id' => $this->quotation_id,
+            'status' => $this->status,
+            'status_description' => $this->status_description,
 
             'quantity' => $this->quantity,
             'quantity_unit' => $this->quantity_unit,
@@ -48,6 +48,14 @@ class WorkResource extends JsonResource
             'total_paid' => $this->total_paid,
             'formatted_total_paid' => $this->formatted_total_paid,
         ];
+
+        if ($this->relationLoaded('appointments')) {
+            $structure['appointments'] = AppointmentResource::collection($this->appointments);
+        }
+
+        if ($this->relationLoaded('quotations')) {
+            $structure['quotation'] = new QuotationResource($this->quotations->first());
+        }
 
         return $structure;
     }

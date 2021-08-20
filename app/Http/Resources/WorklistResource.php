@@ -37,9 +37,16 @@ class WorklistResource extends JsonResource
             $structure['workday'] = new WorkdayResource($this->workday);
         }
 
-        $structure['total_appointments'] = $this->appointments_count;
+        if ($this->appointments_count) {
+            $structure['total_appointments'] = $this->appointments_count;
+        }
+
         if ($this->relationLoaded('appointments')) {
             $structure['appointments'] = AppointmentResource::collection($this->appointments);
+        }
+
+        if ($this->relationLoaded('costs')) {
+            $structure['costs'] = CostResource::collection($this->costs);
         }
 
         $structure['created_at'] = $this->created_at;

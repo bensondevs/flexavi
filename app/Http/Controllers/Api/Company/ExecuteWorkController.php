@@ -29,6 +29,17 @@ class ExecuteWorkController extends Controller
         return apiResponse($this->execute);
     }
 
+    public function finish(FinishRequest $request)
+    {
+        $executeWork = $request->getExecuteWork();
+        $this->execute->setModel($executeWork);
+
+        $finishData = $request->validated();
+        $this->execute->finish($finishData);
+
+        return apiResponse($this->execute);
+    }
+
     public function delete(DeleteRequest $request)
     {
         $executeWork = $request->getExecuteWork();

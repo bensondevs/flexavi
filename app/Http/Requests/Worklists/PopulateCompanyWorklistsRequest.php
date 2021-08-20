@@ -50,23 +50,31 @@ class PopulateCompanyWorklistsRequest extends FormRequest
 
     public function options()
     {
-        $start = $this->input('start') ?: month_start_date();
-        $end = $this->input('end') ?: current_date();
+        if (! $fromDate = $this->input('from_date')) {
+            $fromDate = month_start_date();              
+        }
+
+        if (! $toDate = $this->input('to_date')) {
+            $toDate = current_date();
+        }
 
         $this->addWhereHas('workday', [
             [
                 'column' => 'date',
                 'operator' => '>=',
-                'value' => $start,
+                'value' => $fromDate,
             ],
             [
                 'column' => 'date',
                 'operator' => '<=',
-                'value' => $end,
+                'value' => $toDate,
             ]
         ]);
 
-        $this->addWithCount('appointments');
+        if ($withTotalAppointments = $this->input('with_total_appointments')) {
+            $this->addWithCount('appointments');
+        }
+
         if ($withAppointments = $this->input('with_appointments')) {
             $this->addWith('appointments');
         }

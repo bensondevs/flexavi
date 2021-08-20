@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests\Workdays\PopulateCompanyWorkdaysRequest as CompanyPopulateRequest;
 use App\Http\Requests\Workdays\ProcessWorkdayRequest as ProcessRequest;
+use App\Http\Requests\Workdays\FindWorkdayRequest as FindRequest;
 use App\Http\Requests\Workdays\CalculateWorkdayRequest as CalculateRequest;
 
 use App\Http\Resources\WorkdayResource;
@@ -41,6 +42,15 @@ class WorkdayController extends Controller
         $workday = $this->workday->current($company);
 
         return response()->json(['workday' => new WorkdayResource($workday)]);
+    }
+
+    public function view(FindRequest $request)
+    {
+        $workday = $request->getWorkday();
+        $workday->load(['worklists', 'appointments', 'costs']);
+        $workday = new WorkdayResource($workday);
+
+        return response()->json(['workday' => $workday]);
     }
 
     public function process(ProcessRequest $request)

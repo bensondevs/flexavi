@@ -42,7 +42,7 @@ class MakeDocumentation extends Command
         // Check file exist in documentation
         $filePath = base_path('docs/' . $model) . '.md';
         if (file_exists($filePath)) {
-            return $this->error('Documentation exists.');
+            return $this->error('Documentation already exists.');
         }
 
         // Get model name

@@ -170,7 +170,7 @@ class Appointment extends Model
 
     public function works()
     {
-        return $this->hasMany(Work::class);
+        return $this->morphToMany(Work::class, 'workable');
     }
 
     public function executeWorks()
@@ -193,6 +193,11 @@ class Appointment extends Model
         return $this->morphToMany(Cost::class, 'costable');
     }
 
+    public function receipts()
+    {
+        return $this->morphMany(Receipt::class, 'receiptable');
+    }
+
     public function revenues()
     {
         return $this->morphToMany(Revenue::class, 'revenueable');
@@ -208,12 +213,12 @@ class Appointment extends Model
         return $this->hasOne(AppointmentCalculation::class);
     }
 
-    public function worklist()
+    public function worklists()
     {
         return $this->morphedByMany(Worklist::class, 'appointmentable');
     }
 
-    public function workday()
+    public function workdays()
     {
         return $this->morphedByMany(Workday::class, 'appointmentable');
     }
@@ -231,6 +236,12 @@ class Appointment extends Model
     public static function cancellationVaultOptions()
     {
         return AppointmentCancellationVault::asSelectArray();
+    }
+
+    public function syncWorkdays()
+    {
+        $workdays = Workday::inAppointmentRange($this)->get();
+        return $this->workdays()->sync($workdays);
     }
 
     public function isLate()

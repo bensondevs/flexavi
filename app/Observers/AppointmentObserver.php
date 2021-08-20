@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\Workday;
 use App\Models\Appointment;
 
 class AppointmentObserver
@@ -14,7 +15,7 @@ class AppointmentObserver
      */
     public function created(Appointment $appointment)
     {
-        //
+        $appointment->syncWorkdays();
     }
 
     /**
@@ -25,7 +26,9 @@ class AppointmentObserver
      */
     public function updated(Appointment $appointment)
     {
-        //
+        if ($appointment->isDirty('start') || $appointment->isDirty('end')) {
+            $appointment->syncWorkdays();
+        }
     }
 
     /**

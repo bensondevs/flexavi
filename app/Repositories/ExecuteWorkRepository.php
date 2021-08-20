@@ -26,15 +26,29 @@ class ExecuteWorkRepository extends BaseRepository
 			$execute->fill($executionData);
 			$execute->save();
 
-			$work->status = WorkStatus::InProcess;
-			$work->save();
-
 			$this->setModel($execute);
 
 			$this->setSuccess('Successfully execute work.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to execute work.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function finish(array $finishData = [])
+	{
+		try {
+			$execute = $this->getModel();
+			$execute->finish($finishData);
+
+			$this->setModel($execute);
+
+			$this->setSuccess('Successfully finish execute work.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to finish execute work.', $error);
 		}
 
 		return $this->getModel();

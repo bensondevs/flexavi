@@ -35,15 +35,67 @@ class CalculationRepository extends BaseRepository
 		// Collect cashflows information
 		$costs = $appointment->costs;
 		$totalCosts = $costs->sum('amount');
+		$totalPaidCosts = $costs->sum('paid_amount');
+		$totalUnpaidCosts = $totalCosts - $totalPaidCosts;
+
 		$revenues = $appointment->revenues;
 		$totalRevenues = $revenues->sum('amount');
+		$totalPaidRevenues = $revenues->sum('paid_amount');
+		$totalUnpaidRevenues = $totalRevenues - $totalPaidRevenues;
+
+		// VAT Amount
+		$companyVatPercentage = $appointment->company->settings->vatPercentage();
+		$totalVat = $totalRevenues * $companyVatPercentage / 100;
+
+		// Gross Profit
+		$grossProfit = $totalPaidRevenues - $totalCosts - $totalUnpaidCosts + $totalUnpaidRevenues - $totalVat;
 
 		// KPIs
 		$durationInDays = $appointment->durantion_in_days;
 		$averageCost = $totalCosts / $durationInDays;
 		$averageRevenue = $totalRevenues / $durationInDays;
+		$averageProfit = $grossProfit / $durationInDays;
 
-		// 
+		// Calculation Data
+		$calculationData = [
+			'costs' => $costs,
+			'total_costs' => $totalCosts,
+			'total_paid_costs' => $totalPaidCosts,
+			'total_unpaid_costs' => $totalUnpaidCosts,
+
+			'revenues' => $revenues,
+			'total_revenues' => $totalRevenues,
+			'total_paid_revenues' => $totalPaidRevenues,
+			'total_unpaid_revenues' => $totalUnpaidRevenues,
+			
+			'total_vat' => $totalVat,
+			
+			'gross_profit' => $grossProfit,
+
+			'kpi' => [
+				'duration_day' => $durationInDays,
+				'average_revenue' => $averageRevenue,
+				'average_cost' => $averageCost,
+				'average_profit' => $averageProfit,
+			]
+		];
+
+		try {
+			$calculation = $this->getModel();
+			$calculation->calculationable_type = get_class($appointment);
+			$calculation->calculationable_id = $appointment->id;
+			$calculation->calculation = $calculationData;
+			$calculation->save();
+
+			$this->setModel($calculation);
+
+			$this->setSuccess('Successfully calculate appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to calculate appointment.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	public function calculateWorklist(Worklist $worklist)

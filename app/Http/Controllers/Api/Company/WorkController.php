@@ -6,13 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\Works\DeleteWorkRequest as DeleteRequest;
-use App\Http\Requests\Works\AddAppointmentWorkRequest as AppointmentAddRequest;
 use App\Http\Requests\Works\PopulateFinishedWorksRequest as PopulateFinishedRequest;
 use App\Http\Requests\Works\PopulateUnfinishedWorksRequest as PopulateUnfinishedRequest;
 use App\Http\Requests\Works\PopulateCompanyWorksRequest as CompanyPopulateRequest;
-use App\Http\Requests\Works\PopulateContractWorksRequest as ContractPopulateRequest;
-use App\Http\Requests\Works\PopulateQuotationWorksRequest as QuotationPopulateRequest;
-use App\Http\Requests\Works\PopulateAppointmentWorksRequest as AppointmentPopulateRequest;
 
 use App\Http\Resources\WorkResource;
 
@@ -38,32 +34,9 @@ class WorkController extends Controller
         return response()->json(['works' => $works]);
     }
 
-    public function quotationWorks(QuotationPopulateRequest $request)
-    {
-        $options = $request->options();
-
-        $works = $this->work->all($options);
-        $works = $this->work->paginate();
-        $works = WorkResource::apiCollection($works);
-
-        return response()->json(['works' => $works]);
-    }
-
     public function contractWorks(ContractPopulateRequest $request)
     {
         $options = $request->options();
-
-        $works = $this->work->all($options);
-        $works = $this->work->paginate();
-        $works = WorkResource::apiCollection($works);
-
-        return response()->json(['works' => $works]);
-    }
-
-    public function appointmentWorks(AppointmentPopulateRequest $request)
-    {
-        $options = $request->options();
-
 
         $works = $this->work->all($options);
         $works = $this->work->paginate();
@@ -96,8 +69,50 @@ class WorkController extends Controller
 
     public function store(SaveRequest $request)
     {
-        $input = $request->onlyInRules();
+        $input = $request->validated();
         $works = $this->work->save($input);
+
+        return apiResponse($this->work);
+    }
+
+    public function execute(ExecuteRequest $request)
+    {
+        $work = $request->getWork();
+        $this->work->setModel($work);
+
+        $appointment = $request->getAppointment();
+        $this->work->execute($appointment);
+
+        return apiResponse($this->work);
+    }
+
+    public function process(ProcessRequest $request)
+    {
+        $work = $request->getWork();
+
+        $this->work->setModel($work);
+        $this->work->process();
+
+        return apiResponse($this->work);
+    }
+
+    public function markFinished(MarkFinishRequest $request)
+    {
+        $work = $request->getWork();
+
+        $this->work->setModel($work);
+        $this->work->markFinished();
+
+        return apiResponse($this->work);
+    }
+
+    public function markUnfinish(MarkUnfinishRequest $request)
+    {
+        $work = $request->getWork();
+        $this->work->setModel($work);
+
+        $unfinishData = $request->validated();
+        $this->work->markUnfinish($unfinishData);
 
         return apiResponse($this->work);
     }

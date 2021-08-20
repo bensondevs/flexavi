@@ -20,6 +20,8 @@ class InvoiceItem extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    protected $touches = ['invoice'];
+
     protected $fillable = [
         'company_id',
         'invoice_id',

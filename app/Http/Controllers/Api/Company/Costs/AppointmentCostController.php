@@ -19,13 +19,29 @@ use App\Http\Resources\CostResource;
 
 class AppointmentCostController extends Controller
 {
+    /**
+     * Repository Container 
+     * 
+     * @var \App\Repositories\CostRepository
+     */
     private $cost;
 
+    /**
+     * Create New Controller Instance
+     * 
+     * @return void
+     */
     public function __construct(CostRepository $cost)
     {
         $this->cost = $cost;
     }
 
+    /**
+     * Populate costs recorded under an appointment
+     * 
+     * @param PopulateRequest $request
+     * @return json
+     */
     public function appointmentCosts(PopulateRequest $request)
     {
         $options = $request->options();
@@ -36,7 +52,13 @@ class AppointmentCostController extends Controller
         return response()->json(['costs' => $costs]);
     }
 
-    public function store(SaveRequest $request)
+    /**
+     * Store cost and attach it to appointment with settings to record to parents level like worklist and workday as well
+     * 
+     * @param SaveRequest $request
+     * @return json
+     */
+    public function storeRecord(SaveRequest $request)
     {
         $input = $request->validated();
         $cost = $this->cost->save($input);
@@ -55,6 +77,12 @@ class AppointmentCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Record cost to appointment
+     * 
+     * @param RecordRequest $request
+     * @return json
+     */
     public function record(RecordRequest $request)
     {
         $cost = $request->getCost();
@@ -74,6 +102,12 @@ class AppointmentCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Record many costs to appointment
+     * 
+     * @param RecordManyRequest $request
+     * @return json
+     */
     public function recordMany(RecordManyRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -91,6 +125,12 @@ class AppointmentCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Unrecord cost from appointment
+     * 
+     * @param UnrecordRequest $request
+     * @return json
+     */
     public function unrecord(UnrecordRequest $request)
     {
         $cost = $request->getCost();
@@ -110,6 +150,12 @@ class AppointmentCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Unrecord many costs from appointment
+     * 
+     * @param UnrecordManyRequest $request
+     * @return json
+     */
     public function unrecordMany(UnrecordManyRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -127,6 +173,12 @@ class AppointmentCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Truncate costs from appointment
+     * 
+     * @param UnrecordManyRequest $request
+     * @return json
+     */
     public function truncate(TruncateRequest $request)
     {
         $appointment = $request->getAppointment();

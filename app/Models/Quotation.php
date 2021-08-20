@@ -192,6 +192,11 @@ class Quotation extends Model
         return $this->belongsTo(Appointment::class);
     }
 
+    public function works()
+    {
+        return $this->morphedByMany(Work::class, 'workable');
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

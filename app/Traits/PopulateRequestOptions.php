@@ -7,9 +7,13 @@ trait PopulateRequestOptions
 	private $search = '';
 	private $withs = [];
 	private $withCounts = [];
+	private $withTrashed = false;
 	private $wheres = [];
 	private $whereRaws = [];
 	private $whereHases = [];
+	private $whereHasMorphs = [];
+	private $joins = [];
+	private $orderBys = [];
 
 	public function addWith(string $relation)
 	{
@@ -29,6 +33,21 @@ trait PopulateRequestOptions
 	public function setWithCounts(array $countRelations)
 	{
 		$this->withCounts = $countRelations;
+	}
+
+	public function withTrashed(bool $setting = false)
+	{
+		$this->withTrashed = $setting;
+	}
+
+	public function addJoin(array $join)
+	{
+		$this->join[] = [
+			'relation' => $join['relation'],
+			'relation_column' => $join['relation_column'],
+			'operator' => isset($join['operator']) ? $join['operator'] : '=',
+			'model_column' => $join['model_column'],
+		];
 	}
 
 	public function addWhere(array $condition)
@@ -95,15 +114,47 @@ trait PopulateRequestOptions
 		}
 	}
 
+	public function addWhereHasMorph(string $relation, array $morphClasses, array $conditions = [])
+	{
+		$this->whereHasMorphs[$relation] = [
+			'classes' => $morphClasses,
+			'conditions' => $conditions,
+		];
+	}
+
+	public function setWhereHasMorphs(array $whereHasMorphs = [])
+	{
+		$this->whereHasMorphs = $whereHasMorphs;
+	}
+
 	public function setSearch(string $search)
 	{
 		$this->search = $search;
 	}
 
+	public function addOrderBy($column, $type = 'DESC')
+	{
+		$this->orderBy[] = [
+			'column' => $column,
+			'type' => $type,
+		];
+	}
+
+	public function setOrderBys(array $orderBys)
+	{
+		$this->orderBys = $orderBys;
+	}
+
     public function collectOptions()
     {
-    	if ($search = $this->input('search'))
+    	if ($search = $this->input('search')) {
     		$this->setSearch($search);
+    	}
+
+    	if ($withTrashed = $this->input('with_trashed')) {
+            $withTrashed = strtobool($withTrashed);
+            $this->withTrashed($withTrashed);
+        }
 
     	$perPage = is_numeric($this->input('per_page')) ?
     		$this->input('per_page') : 10;
@@ -112,9 +163,11 @@ trait PopulateRequestOptions
         	'search' => $this->search,
             'withs' => $this->withs,
             'with_counts' => $this->withCounts,
+            'with_trashed' => $this->withTrashed,
             'wheres' => $this->wheres,
             'where_raws' => $this->where_raws,
             'where_hases' => $this->whereHases,
+            'where_has_morphs' => $this->whereHasMorphs,
         ];
 
         return $options;

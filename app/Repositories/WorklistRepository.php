@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\Worklist;
+use App\Models\Appointment;
 
 class WorklistRepository extends BaseRepository
 {
@@ -29,6 +30,96 @@ class WorklistRepository extends BaseRepository
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to save worklist.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function attachAppointment(Appointment $appointment)
+	{
+		try {
+			$worklist = $this->getModel();
+			$worklist->appointments()->attach($appointment);
+			$worklist->save();
+
+			$this->setModel($worklist);
+
+			$this->setSuccess('Successfully attach appointment to worklist.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to attach appointment to worklist', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function attachManyAppointments(array $appointmentIds)
+	{
+		try {
+			$worklist = $this->getModel();
+			$worklist->appointments()->attach($appointmentIds);
+			$worklist->save();
+
+			$this->setModel($worklist);
+
+			$this->setSuccess('Successfully attach many appointments to worklist.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to attach many appointment to worklist.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function detachAppointment(Appointment $appointment)
+	{
+		try {
+			$worklist = $this->getModel();
+			$worklist->appointments()->detach($appointment);
+			$worklist->save();
+
+			$this->setModel($worklist);
+
+			$this->setSuccess('Successfully detach appointment from worklist.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to detach appointment from worklist.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function detachManyAppointments(array $appointmentIds)
+	{
+		try {
+			$worklist = $this->getModel();
+			$worklist->appointments()->detach($appointmentIds);
+			$worklist->save();
+
+			$this->setModel($worklist);
+
+			$this->setSuccess('Successfully detach many appointments from worklist.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to detach many appointments from worklist.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function truncateAppointments()
+	{
+		try {
+			$worklist = $this->getModel();
+			$worklist->appointments()->detach();
+			$worklist->save();
+
+			$this->setModel($worklist);
+
+			$this->setSuccess('Successfully truncate appointments inside worklist.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to truncate appointments inside worklist.');
 		}
 
 		return $this->getModel();

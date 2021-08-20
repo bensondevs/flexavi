@@ -27,6 +27,11 @@ class PermissionsSeeder extends Seeder
             'view any worklists',
             'view worklists',
             'create worklists',
+            'attach appointment worklists',
+            'attach many appointments worklists',
+            'detach appointment worklists',
+            'detach many appointments worklists',
+            'truncate appointments worklists',
             'process worklists',
             'calculate worklists',
             'edit worklists',
@@ -207,6 +212,15 @@ class PermissionsSeeder extends Seeder
         	'delete quotation photos',
             'restore quotation photos',
             'force delete quotation photos',
+
+            // Receipt
+            'view any receipts',
+            'view receipts',
+            'create receipts',
+            'edit receipts',
+            'delete receipts',
+            'restore receipts',
+            'force delete receipts',
 
         	// Register Invitation
         	'view register invitations',

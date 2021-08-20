@@ -22,7 +22,7 @@ class CreateWorksTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->uuid('appointment_id')->nullable();
+            /*$table->uuid('appointment_id')->nullable();
             $table->foreign('appointment_id')
                 ->references('id')
                 ->on('appointments')
@@ -38,7 +38,7 @@ class CreateWorksTable extends Migration
             $table->foreign('work_contract_id')
                 ->references('id')
                 ->on('work_contracts')
-                ->onDelete('SET NULL');
+                ->onDelete('SET NULL');*/
 
             // $table->nullableUuidMorphs('workable');
 

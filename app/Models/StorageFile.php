@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 
+use App\Observers\StorageFileObserver;
+
 class StorageFile extends Model
 {
     protected $table = 'storage_files';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'path';
     public $timestamps = true;
     public $incrementing = false;
 
@@ -26,6 +28,7 @@ class StorageFile extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(StorageFileObserver::class);
     }
 
     public function getDownloadUrl()
@@ -42,20 +45,19 @@ class StorageFile extends Model
         return Storage::disk($disk)->get($path);
     }
 
-    public static function findByPath(string $path = '')
+    public static function findByPath(string $path = '', string $disk = null)
     {
         if (! $path) return;
 
-        $record = self::where('path', $path)->first();
-
-        if (! $fileExists = file_exists(storage_path($path))) {
+        $disk = $disk ?: config('filesystems.default');
+        if (! Storage::disk($disk)->has($path)) {
             return;
         }
 
-        if ((! $record)) {
+        if ((! $record = self::where('path', $path)->first())) {
             $record = self::create([
                 'path' => $path,
-                'disk' => config('filesystems.default'),
+                'disk' => $disk,
             ]);
         }
 

@@ -24,8 +24,11 @@ class CostResource extends JsonResource
             'amount' => $this->amount,
             'paid_amoun' => $this->paid_amount,
             'unpaid_amount' => $this->unpaid_amount,
-            'receipt' => $this->receipt_url,
         ];
+
+        if (issetval($this->receipt_path)) {
+            $structure['receipt'] = $this->receipt_url;
+        }
 
         if ($this->relationLoaded('appointments')) {
             $structure['appointment'] = new AppointmentResource($this->appointment);

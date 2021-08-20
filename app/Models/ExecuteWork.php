@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
+use App\Enums\ExecuteWork\ExecuteWorkStatus;
 use App\Enums\ExecuteWorkPhoto\PhotoConditionType;
 
 use App\Observers\ExecuteWorkObserver;
@@ -75,5 +76,13 @@ class ExecuteWork extends Model
     public function work()
     {
         return $this->belongsTo(Work::class);
+    }
+
+    public function finish(array $finishData)
+    {
+        $this->attributes['finish_note'] = isset($finishData['finish_note']) ?: null;
+        $this->attributes['finished_at'] = now();
+        $this->attributes['status'] = ExecuteWorkStatus::Finish;
+        return $this->save();
     }
 }

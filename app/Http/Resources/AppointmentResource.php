@@ -84,12 +84,12 @@ class AppointmentResource extends JsonResource
             $structure['works'] = WorkResource::collection($this->works);
         }
 
-        if ($this->relationLoaded('worklist')) {
-            $structure['worklist'] = new WorklistResource($this->worklist);
+        if ($this->relationLoaded('worklists')) {
+            $structure['worklists'] = WorklistResource::apiCollection($this->worklists);
         }
 
-        if ($this->relationLoaded('workday')) {
-            $structure['workday'] = new WorkdayResource($this->workday);
+        if ($this->relationLoaded('workdays')) {
+            $structure['workdays'] = WorkdayResource::apiCollection($this->workday);
         }
 
         /*if ($this->relationLoaded('executeWorks')) {

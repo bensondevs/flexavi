@@ -22,6 +22,12 @@ class CreateExecuteWorksTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
+            $table->uuid('work_id')->nullable();
+            $table->foreign('work_id')
+                ->references('id')
+                ->on('works')
+                ->onDelete('SET NULL');
+
             $table->uuid('appointment_id')->nullable();
             $table->foreign('appointment_id')
                 ->references('id')
@@ -34,16 +40,14 @@ class CreateExecuteWorksTable extends Migration
                 ->on('sub_appointments')
                 ->onDelete('SET NULL');
 
-            $table->uuid('work_id')->nullable();
-            $table->foreign('work_id')
-                ->references('id')
-                ->on('works')
-                ->onDelete('SET NULL');
+            $table->tinyInteger('status')->default(1);
 
             $table->string('description');
             $table->text('note')->nullable();
+            $table->text('finish_note')->nullable();
 
             $table->timestamps();
+            $table->timestamp('finished_at');
             $table->softDeletes();
         });
     }

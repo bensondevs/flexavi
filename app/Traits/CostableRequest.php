@@ -2,17 +2,28 @@
 
 namespace App\Traits;
 
+use App\Models\Cost;
 use App\Models\Workday;
 use App\Models\Worklist;
 use App\Models\Appointment;
 
 trait CostableRequest 
 {
+    private $cost;
+
     private $costable;
     
     private $workday;
     private $worklist;
     private $appointment;
+
+    public function getCost()
+    {
+        if ($this->cost) return $this->cost;
+
+        $id = $this->input('cost_id');
+        return $this->cost = Cost::findOrFail($id);
+    }
 
     public function getCostable()
     {
@@ -21,18 +32,18 @@ trait CostableRequest
         }
 
         if ($this->input('appointment_id')) {
-            return $this->getAppointment();
+            return $this->costable = $this->getAppointment();
         }
 
         if ($this->input('worklist_id')) {
-            return $this->getWorklist();
+            return $this->costable = $this->getWorklist();
         }
 
         if ($this->input('workday_id')) {
-            return $this->getWorkday();
+            return $this->costable = $this->getWorkday();
         }
 
-        return abort(404, 'No cost-able type that has been loaded.');
+        return abort(404, 'No cost recordable type that has been loaded.');
     }
 
     public function getWorklist()

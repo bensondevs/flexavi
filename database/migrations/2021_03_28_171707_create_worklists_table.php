@@ -28,6 +28,9 @@ class CreateWorklistsTable extends Migration
                 ->on('workdays')
                 ->onDelete('CASCADE');
 
+            $table->date('start')->nullable();
+            $table->date('end')->nullable();
+
             $table->tinyInteger('status')->default(1);
 
             $table->string('worklist_name')->default('Untitled Worklist');

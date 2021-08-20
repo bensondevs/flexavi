@@ -66,29 +66,6 @@ class Cost extends Model
         return $this->attributes['receipt_path'] = $receipt->path;
     }
 
-    public function getReceiptFileAttribute()
-    {
-        if (! $path = $this->attributes['receipt_path']) {    
-            return;
-        }
-
-        $file = StorageFile::findByPath($path);
-        return $file->getFileContent();
-    }
-
-    public function getReceiptUrlAttribute()
-    {
-        if (! $path = $this->attributes['receipt_path']) {
-            return;
-        }
-
-        if (! $file = StorageFile::findByPath($path)) {
-            return;
-        }
-
-        return $file->getDownloadUrl();
-    }
-
     public static function collectAllCostableTypes()
     {
         return CostableType::asSelectArray();

@@ -1,25 +1,37 @@
 <?php
 
-namespace App\Http\Requests\Works;
+namespace App\Http\Requests\Works\Quotations;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\PopulateRequestOptions;
+use App\Http\Requests\Works\SaveWorkRequest;
+
+use App\Traits\InputRequest;
 
 use App\Models\Quotation;
 
-class PopulateQuotationWorksRequest extends FormRequest
+class SaveQuotationWorkRequest extends FormRequest
 {
-    use PopulateRequestOptions;
+    use InputRequest;
 
+    /**
+     * Found quotation model container
+     * 
+     * @var \App\Models\Appointment|null
+     */
     private $quotation;
 
+    /**
+     * Find Appointment or abort 404
+     * 
+     * @return \App\Models\Appointment
+     */
     public function getQuotation()
     {
         if ($this->quotation) return $this->quotation;
 
-        $id = $this->input('quotation_id');
+        $id = $this->input('id');
         return $this->quotation = Quotation::findOrFail($id);
     }
 
@@ -31,7 +43,7 @@ class PopulateQuotationWorksRequest extends FormRequest
     public function authorize()
     {
         $quotation = $this->getQuotation();
-        return Gate::allows('view-any-work', $quotation);
+        return Gate::allows('create-work');
     }
 
     /**
@@ -41,21 +53,9 @@ class PopulateQuotationWorksRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
-    }
+        $saveRequest = new SaveWorkRequest();
+        $rules = $saveRequest->rules();
 
-    public function options()
-    {
-        $this->addWhere([
-            'column' => 'quotation_id',
-            'operator' => '=',
-            'value' => $this->getQuotation()->id,
-        ]);
-
-        $this->setWiths(['quotation', 'contract']);
-
-        return $this->collectOptions();
+        return $rules;
     }
 }

@@ -37,12 +37,7 @@ class SyncWorkdayAppointments implements ShouldQueue
     {
         $appointments = Appointment::all();
         foreach ($appointments as $appointment) {
-            $workdays = Workday::where('date', '>=', $appointment->start)
-                ->where('date', '<=', $appointment->end)
-                ->where('company_id', $appointment->company_id)
-                ->get()
-                ->toArray();
-            $appointment->attach($workdays);
+            $appointment->syncWorkdays();
         }
     }
 }

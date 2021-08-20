@@ -18,7 +18,7 @@ class AppointmentCostsSeeder extends Seeder
     {
         $rawCosts = [];
         $rawCostables = [];
-        foreach (Appointment::with(['worklist', 'workday'])->get() as $appointment) {
+        foreach (Appointment::all() as $appointment) {
             for ($index = 0; $index < 1; $index++) {
                 $costId = generateUuid();
 
@@ -28,7 +28,6 @@ class AppointmentCostsSeeder extends Seeder
                     'cost_name' => 'Appointment Cost Seeder #' . ($index + 1),
                     'amount' => 1000,
                     'paid_amount' => 200,
-                    'receipt_path' => 'uploads/appointments/costs/receipts/9812378123.jpeg',
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];

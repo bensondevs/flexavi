@@ -37,6 +37,12 @@ class BaseRepository
 		return $this->model = $model;
 	}
 
+	public function setModelSuccess($model, $message = '')
+	{
+		$this->setModel($model);
+		$this->setSuccess($message);
+	}
+
 	public function getModel()
 	{
 		return $this->model;
@@ -112,59 +118,83 @@ class BaseRepository
 			}
 		}
 
-		if (isset($options['wheres'])) {
-			if ($options['wheres']) {
-				foreach ($options['wheres'] as $condition) {
-					$operator = isset($condition['operator']) ? 
-						$condition['operator'] : 
-						'=';
-					$clause = isset($condition['clause']) ?
-						$condition['clause'] :
-						'where';
+		if (isset($options['with_trashed'])) {
+			if ($options['with_trashed'] === true) {
+				$models = $models->withTrashed();
+			}
+		}
 
-					$models = $models->{$clause}(
-						$condition['column'], 
-						$operator, 
-						$condition['value']
-					);
-				}
+		if (isset($options['wheres'])) {
+			foreach ($options['wheres'] as $condition) {
+				$operator = isset($condition['operator']) ? 
+					$condition['operator'] : 
+					'=';
+				$clause = isset($condition['clause']) ?
+					$condition['clause'] :
+					'where';
+
+				$models = $models->{$clause}(
+					$condition['column'], 
+					$operator, 
+					$condition['value']
+				);
 			}
 		}
 
 		if (isset($options['where_raws'])) {
-			if ($options['where_raws']) {
-				foreach ($options['where_raws'] as $query) {
-					$models = $models->whereRaw($query);
-				}
+			foreach ($options['where_raws'] as $query) {
+				$models = $models->whereRaw($query);
 			}
 		}
 
 		if (isset($options['where_hases'])) {
-			if ($options['where_hases']) {
-				foreach ($options['where_hases'] as $relation => $conditions) {
-					$models = $models->whereHas($relation, function ($query) use ($conditions) {
-						foreach ($conditions as $condition) {
-							$operator = isset($condition['operator']) ? 
-								$condition['operator'] : 
-								'=';
-							$clause = isset($condition['clause']) ?
-								$condition['clause'] :
-								'where';
-							
-							$query->{$clause}(
-								$condition['column'], 
-								$operator, 
-								$condition['value']
-							);
-						}
-					});
-				}
+			foreach ($options['where_hases'] as $relation => $conditions) {
+				$models = $models->whereHas($relation, function ($query) use ($conditions) {
+					foreach ($conditions as $condition) {
+						$operator = isset($condition['operator']) ? 
+							$condition['operator'] : 
+							'=';
+						$clause = isset($condition['clause']) ?
+							$condition['clause'] :
+							'where';
+						
+						$query->{$clause}(
+							$condition['column'], 
+							$operator, 
+							$condition['value']
+						);
+					}
+				});
+			}
+		}
+
+		if (isset($options['where_has_morphs'])) {
+			foreach ($options['where_has_morphs'] as $relation => $morph) {
+				$morphClasses = $morph['classes'];
+				$morphConditions = $morph['conditions'];
+
+				$models = $models->whereHasMorph($relation, $morphClasses, function ($query) use ($morphConditions) {
+					foreach ($morphConditions as $condition) {
+						$operator = isset($condition['operator']) ? 
+							$condition['operator'] : 
+							'=';
+						$clause = isset($condition['clause']) ?
+							$condition['clause'] :
+							'where';
+						
+						$query->{$clause}(
+							$condition['column'], 
+							$operator, 
+							$condition['value']
+						);
+					}
+				});
 			}
 		}
 
 		if (isset($options['search'])) {
 			if ($options['search']) {
-				$searchableColumns = $this->getModel()->getSearchable();
+				$searchableColumns = $this->getModel()->getModel()->getSearchable();
 				foreach ($searchableColumns as $key => $column) {
 					$models = ($key == 0) ?
 						$models->where($column, 'like', '%' . $options['search'] . '%') :
@@ -173,13 +203,22 @@ class BaseRepository
 			}
 		}
 
-		if (isset($options['per_page'])) {
-			if ($options['per_page']) {
-				$this->defaultPaginationPerPage = $options['per_page'];
+		if (isset($options['order_bys'])) {
+			foreach ($options['order_bys'] as $orderBy) {
+				$column = $orderBy['column'];
+				$orderType = isset($orderBy['type']) ? 	
+					$orderBy['type'] : 'DESC';
+
+				$models = $models->orderBy($column, $orderType);
 			}
 		}
 
+		if (isset($options['per_page'])) {
+			$this->defaultPaginationPerPage = $options['per_page'];
+		}
+
 		$models = $models->get();
+		// dd(DB::getQueryLog());
 		$this->setCollection($models);
 
 		return ($pagination) ? $this->paginate() : $models;

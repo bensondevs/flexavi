@@ -10,6 +10,7 @@ use App\Policies\CostPolicy;
 use App\Policies\WorkPolicy;
 use App\Policies\AddressPolicy;
 use App\Policies\InvoicePolicy;
+use App\Policies\ReceiptPolicy;
 use App\Policies\WorkdayPolicy;
 use App\Policies\WorklistPolicy;
 use App\Policies\CustomerPolicy;
@@ -99,6 +100,15 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('restore-cost', [CostPolicy::class, 'restore']);
         Gate::define('force-delete-cost', [CostPolicy::class, 'forceDelete']);
 
+        // Receipts
+        Gate::define('view-any-receipt', [ReceiptPolicy::class, 'viewAny']);
+        Gate::define('view-receipt', [ReceiptPolicy::class, 'view']);
+        Gate::define('create-receipt', [ReceiptPolicy::class, 'create']);
+        Gate::define('edit-receipt', [ReceiptPolicy::class, 'update']);
+        Gate::define('delete-receipt', [ReceiptPolicy::class, 'delete']);
+        Gate::define('restore-receipt', [ReceiptPolicy::class, 'restore']);
+        Gate::define('force-delete-receipt', [ReceiptPolicy::class, 'forceDelete']);
+
         // Quotation
         Gate::define('view-any-quotation', [QuotationPolicy::class, 'viewAny']);
         Gate::define('view-any-customer-quotation', [QuotationPolicy::class, 'viewAnyCustomer']);
@@ -152,6 +162,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-appointment-work', [WorkPolicy::class, 'viewAnyAppointment']);
         Gate::define('view-work', [WorkPolicy::class, 'view']);
         Gate::define('create-work', [WorkPolicy::class, 'create']);
+        Gate::define('attach-work', [WorkPolicy::class, 'attach']);
+        Gate::define('attach-many-work', [WorkPolicy::class, 'attachMany']);
+        Gate::define('detach-work', [WorkPolicy::class, 'detach']);
+        Gate::define('detach-many-work', [WorkPolicy::class, 'detachMany']);
+        Gate::define('truncate-work', [WorkPolicy::class, 'truncate']);;
         Gate::define('update-work', [WorkPolicy::class, 'update']);
         Gate::define('delete-work', [WorkPolicy::class, 'delete']);
         Gate::define('restore-work', [WorkPolicy::class, 'restore']);
@@ -207,6 +222,11 @@ class AuthServiceProvider extends ServiceProvider
         // Workday
         Gate::define('view-any-workday', [WorkdayPolicy::class, 'viewAny']);
         Gate::define('view-workday', [WorkdayPolicy::class, 'view']);
+        Gate::define('attach-appointment-workday', [WorkdayPolicy::class, 'attachAppointment']);
+        Gate::define('attach-many-appointments-workday', [WorkdayPolicy::class, 'attachManyAppointments']);
+        Gate::define('detach-appointment-workday', [WorkdayPolicy::class, 'detachAppointment']);
+        Gate::define('detach-many-appointments-workday', [WorkdayPolicy::class, 'detachManyAppointments']);
+        Gate::define('truncate-appointments-workday', [WorkdayPolicy::class, 'truncateAppointments']);
         Gate::define('process-workday', [WorkdayPolicy::class, 'process']);
         Gate::define('calculate-workday', [WorkdayPolicy::class, 'calculate']);
     
@@ -215,6 +235,11 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-worklist-workday', [WorklistPolicy::class, 'viewAnyWorkday']);
         Gate::define('view-worklist', [WorklistPolicy::class, 'view']);
         Gate::define('create-worklist', [WorklistPolicy::class, 'create']);
+        Gate::define('attach-appointment-worklist', [WorklistPolicy::class, 'attachAppointment']);
+        Gate::define('attach-many-appointments-worklist', [WorklistPolicy::class, 'attachManyAppointments']);
+        Gate::define('detach-appointment-worklist', [WorklistPolicy::class, 'detachAppointment']);
+        Gate::define('detach-many-appointments-worklist', [WorklistPolicy::class, 'detachManyAppointments']);
+        Gate::define('truncate-appointments-worklist', [WorklistPolicy::class, 'truncateAppointments']);
         Gate::define('edit-worklist', [WorklistPolicy::class, 'update']);
         Gate::define('process-worklist', [WorklistPolicy::class, 'process']);
         Gate::define('calculate-worklist', [WorklistPolicy::class, 'calculate']);

@@ -70,6 +70,11 @@ function get_lower_class($class)
     return $lowerClassname;
 }
 
+function get_plural_lower_class($class)
+{
+    return str_to_plural(get_lower_class($class));
+}
+
 function numbertofloat($number)
 {
     return sprintf('%.2f', $number);
@@ -289,11 +294,11 @@ function uploadFile($fileRequest, string $directory)
 
     $storageFile = new \App\Repositories\StorageFileRepository;
     if (is_base64_string($fileRequest)) {
-        $filePath = uploadBase64Image($fileRequest, $directory);
+        $filePath = uploadBase64File($fileRequest, $directory);
         return $storageFile->record($filePath);
     }
 
-    $path = $directory . Carbon::now()->format('YmdHis');
+    $path = $directory . Carbon::now()->format('YmdHis') . random_string(5);
     $path .= urlencode($fileRequest->getClientOriginalName());
     $fileContent = file_get_contents($fileRequest->getRealPath());
 
@@ -313,7 +318,7 @@ function uploadBase64File($base64File, $path = 'uploads/documents', $fileName = 
     $path = (substr($path, -1) == '/') ?
         $path : 
         $path . '/';
-    $fileName = ($fileName ? $fileName : Carbon::now()->format('YmdHis')) . '.' . $extension;
+    $fileName = random_string(5) . ($fileName ? $fileName : Carbon::now()->format('YmdHis')) . '.' . $extension;
     $filePath = $path . $fileName;
     $putImage = Storage::put($filePath, $fileData);
 
@@ -333,7 +338,7 @@ function uploadBase64Image($base64Image, $imagePath = 'uploads/test', $imageName
     $imagePath = (substr($imagePath, -1) == '/') ?
         $imagePath : 
         $imagePath . '/';
-    $fileName = ($imageName ? $imageName : Carbon::now()->format('YmdHis')) . '.' . $extension;
+    $fileName = random_string(5) . ($imageName ? $imageName : Carbon::now()->format('YmdHis')) . '.' . $extension;
     $filePath = $imagePath . $fileName;
 
     $putImage = Storage::put($filePath, $imageData);
@@ -387,6 +392,19 @@ function is_base64_string($string)
     }
 
     return base64_encode(base64_decode($string, true)) === $string;
+}
+
+function issetval($arrayable)
+{
+    if (! isset($arrayable)) {
+        return false;
+    }
+
+    if (is_null($arrayable)) {
+        return false;
+    }
+
+    return true;
 }
 
 function base64_extension($string) 

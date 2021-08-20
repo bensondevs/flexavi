@@ -1,24 +1,40 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers{{namespace}};
 
 use Illuminate\Http\Request;
 
-use Auth;
-use Session;
+use App\Http\Requests\{{baseControllerName}}s\Populate{{baseControllerName}}Request as PopulateRequest;
 
-// Models
-use App\Models\{{modelName}};
+use App\Repositories\{{baseControllerName}}Repository;
 
-// Repositories
-use App\Repositories\{{modelName}}Repository;
-
-class {{modelName}}Controller extends Controller
+class {{controllerName}} extends Controller
 {
-    protected ${{modelNameSingularLowerCase}};
+    /**
+     * Repository Container 
+     * 
+     * @var \App\Repositories\{{modelName}}Repository
+     */
+    private ${{baseControllerName}};
 
-    public function __construct({{modelName}}Repository ${{modelNameSingularLowerCase}}Repository)
+    /**
+     * Create New Controller Instance
+     * 
+     * @return void
+     */
+    public function __construct({{baseControllerName}}Repository ${{baseControllerName}}Repository)
     {
-        $this->{{modelNameSingularLowerCase}} = ${{modelNameSingularLowerCase}}Repository;
+        $this->{{baseControllerName}} = ${{baseControllerName}}Repository;
+    }
+
+    /**
+     * Populate records from database using parameters and options
+     * 
+     * @param 
+     * @return json  
+     */
+    public function {{baseControllerName}}s(PopulateRequest $request)
+    {
+        //
     }
 }

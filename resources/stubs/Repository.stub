@@ -11,6 +11,11 @@ use App\Models\{{modelName}};
 
 class {{repositoryName}} extends BaseRepository
 {
+	/**
+	 * Create New Repository Instance
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new {{modelName}});

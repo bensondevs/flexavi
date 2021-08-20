@@ -1,15 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Inspectors;
+namespace App\Http\Requests\Works;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PopulateCoInspectorsRequest extends FormRequest
+class DetachManyWorksRequest extends FormRequest
 {
-    private $withs = [];
-    private $wheres = [];
-    private $whereHases = [];
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -29,16 +25,6 @@ class PopulateCoInspectorsRequest extends FormRequest
     {
         return [
             //
-        ];
-    }
-
-    public function options()
-    {
-        $wheres = [
-            [
-                'column' => 'company_id',
-                'value' => $this->get('company_id'),
-            ]
         ];
     }
 }

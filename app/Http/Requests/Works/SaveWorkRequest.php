@@ -20,39 +20,12 @@ class SaveWorkRequest extends FormRequest
 
     private $work;
 
-    private $contract;
-    private $quotation;
-
     public function getWork()
     {
         if ($this->work) return $this->work;
 
         $id = $this->input('id');
         return $this->work = $this->model = Work::findOrFail($id);
-    }
-
-    public function getWorkContract()
-    {
-        if ($this->contract) return $this->contract;
-
-        $id = $this->input('work_contract_id');
-        return $this->contract = WorkContract::findOrFail($id);
-    }
-
-    public function getQuotation()
-    {
-        if ($this->quotation) return $this->quotation;
-
-        $id = $this->input('quotation_id');
-        return $this->quotation = Quotation::findOrFail($id);
-    }
-
-    public function getAppointment()
-    {
-        if ($this->appointment) return $this->appointment;
-
-        $id = $this->input('appointment_id');
-        return $this->quotation = Appointment::findOrFail($id);
     }
 
     protected function prepareForValidation()
@@ -62,7 +35,7 @@ class SaveWorkRequest extends FormRequest
 
             'quantity' => (int) $this->input('quantity'),
             'unit_price' => (float) $this->input('unit_price'),
-            'include_tax' => filter_var($this->input('include_tax'), FILTER_VALIDATE_BOOLEAN),
+            'include_tax' => strtobool($this->input('include_tax')),
         ]);
 
         if ($this->input('include_tax')) {
@@ -77,33 +50,11 @@ class SaveWorkRequest extends FormRequest
      */
     public function authorize()
     {
-        if ($this->input('appointment_id')) {
-            $attached = $this->getAppointment();
+        if (! $this->isMethod('POST')) {
+            return Gate::allows('edit-work', $this->getWork());
         }
 
-        if ($this->input('work_contract_id')) {
-            $attached = $this->getWorkContract();
-        }
-
-        if ($this->input('quotation_id')) {
-            $attached = $this->getQuotation();
-        }
-
-        if ($this->contract && $this->quotation) {
-            if ($this->contract->company_id != $this->quotation->company_id) {
-                return false;
-            }
-        }
-
-        if ($this->appointment) {
-            if ($this->appointment->company_id != $this->getCompany()->id) {
-                return false;
-            }
-        }
-
-        return $this->isMethod('POST') ?
-            Gate::allows('create-work', $attached) :
-            Gate::allows('update-work', $this->getWork());
+        return Gate::allows('create-work');
     }
 
     /**
@@ -115,9 +66,6 @@ class SaveWorkRequest extends FormRequest
     {
         $this->setRules([
             'company_id' => ['string'],
-            'quotation_id' => ['string'],
-            'work_contract_id' => ['string'],
-            'appointment_id' => ['string'],
 
             'quantity' => ['required', 'integer'],
             'quantity_unit' => ['required', 'string'],

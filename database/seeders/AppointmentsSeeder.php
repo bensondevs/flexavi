@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 
 use App\Models\Company;
 use App\Models\Appointment;
+use App\Models\Appointmentable;
 
 use App\Enums\Appointment\AppointmentType;
 use App\Enums\Appointment\AppointmentStatus;
@@ -20,10 +21,14 @@ class AppointmentsSeeder extends Seeder
     public function run()
     {
         $rawAppointments = [];
+        $rawAppointmentables = [];
         foreach (Company::with('customers')->get() as $company) {
             $worklists = $company->worklists;
             foreach ($company->customers as $customer) {
                 for ($index = 0; $index <= rand(1, 3); $index++) {
+                    $worklist = $worklists->random();
+
+                    $id = generateUuid();
                 	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
                 	$end = ($start->copy())->addDays(rand(0, 7));
 
@@ -31,7 +36,7 @@ class AppointmentsSeeder extends Seeder
                 	$status = rand(1, 5);
 
                     $rawAppointment = [
-                        'id' => generateUuid(),
+                        'id' => $id,
 
                         'company_id' => $company->id,
                         'customer_id' => $customer->id,
@@ -78,13 +83,31 @@ class AppointmentsSeeder extends Seeder
                     }
 
                 	$rawAppointments[] = $rawAppointment;
+                    $rawAppointmentables[] = [
+                        'appointment_id' => $id,
+                        'appointmentable_type' => get_class($worklist),
+                        'appointmentable_id' => $worklist->id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                    $rawAppointmentables[] = [
+                        'appointment_id' => $id,
+                        'appointmentable_type' => Workday::class,
+                        'appointmentable_id' => $worklist->workday_id,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
                 }
             }
 
         }
 
-        foreach (array_chunk($rawAppointments, 500) as $chunk) {
-            Appointment::insert($chunk);
+        foreach (array_chunk($rawAppointments, 500) as $rawAppointmentsChunk) {
+            Appointment::insert($rawAppointmentsChunk);
+        }
+
+        foreach (array_chunk($rawAppointmentables, 500) as $rawAppointmentablesChunk) {
+            Appointmentable::insert($rawAppointmentablesChunk);
         }
     }
 }

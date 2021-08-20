@@ -17,13 +17,7 @@ class CreateCalculationsTable extends Migration
             $table->uuid('id')->primary();
 
             $table->uuidMorphs('calculationable');
-
-            $table->json('kpi_data')->nullable();
-
-            $table->double('total_revenues', 15, 2)->default(0);
-            $table->double('total_costs', 15, 2)->default(0);
-            $table->double('vat_amount', 14, 2)->default(0);
-            $table->double('gross_profit', 15, 2)->default(0);
+            $table->json('calculation');
 
             $table->timestamps();
             $table->softDeletes();

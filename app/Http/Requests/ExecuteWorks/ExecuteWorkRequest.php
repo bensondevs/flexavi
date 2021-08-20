@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Traits\InputRequest;
 
 use App\Models\Work;
+use App\Models\Appointment;
 
 class ExecuteWorkRequest extends FormRequest
 {
@@ -21,7 +22,13 @@ class ExecuteWorkRequest extends FormRequest
         if ($this->work) return $this->work;
 
         $id = $this->input('work_id');
-        return $this->work = Work::findOrFail($id);
+        $work = Work::findOrFail($id);
+
+        if ($appointment = $work->appointment) {
+            $this->appointment = $appointment;
+        }
+
+        return $this->work = $work;
     }
 
     public function getAppointment()
