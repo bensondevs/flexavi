@@ -147,9 +147,8 @@
 							"formdata": [
 								{
 									"key": "invitation_code",
-									"value": "register1",
-									"type": "text",
-									"disabled": true
+									"value": "ML8bns",
+									"type": "text"
 								},
 								{
 									"key": "fullname",
@@ -189,7 +188,7 @@
 								},
 								{
 									"key": "email",
-									"value": "register22@flexavi.com",
+									"value": "test@email.com",
 									"type": "text"
 								},
 								{
@@ -351,6 +350,900 @@
 				{
 					"name": "Company",
 					"item": [
+						{
+							"name": "Workday",
+							"item": [
+								{
+									"name": "Worklist",
+									"item": []
+								},
+								{
+									"name": "Appointment",
+									"item": []
+								},
+								{
+									"name": "Company Workdays",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/workdays",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"workdays"
+											],
+											"query": [
+												{
+													"key": "with_worklists",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "with_appointments",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "with_worklists_count",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "with_appointments_count",
+													"value": "true",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Current Workday",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/workdays/current",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"workdays",
+												"current"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "View Workday",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/workdays/view?id=c59e8db0-fba7-11eb-b3c9-c3eab5e4efc5",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"workdays",
+												"view"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "c59e8db0-fba7-11eb-b3c9-c3eab5e4efc5"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Process Workday",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "c12e8800-f606-11eb-b197-c734d81afbff",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/workdays/process",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"workdays",
+												"process"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Calculate Workday",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "id",
+													"value": "c1d36d00-f544-11eb-a83d-8f2d4774a0cc",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/workdays/calculate",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"workdays",
+												"calculate"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Worklist",
+							"item": [
+								{
+									"name": "Cost",
+									"item": [
+										{
+											"name": "Worklist Costs",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs?worklist_id=fed82470-f6d3-11eb-90b9-7d20f9d99db5",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs"
+													],
+													"query": [
+														{
+															"key": "worklist_id",
+															"value": "fed82470-f6d3-11eb-90b9-7d20f9d99db5"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Appointment",
+									"item": [
+										{
+											"name": "Worklist Appointments",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/appointments?worklist_id=c6324300-fba7-11eb-8d1a-b38d3a2edad3",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"worklists",
+														"appointments"
+													],
+													"query": [
+														{
+															"key": "worklist_id",
+															"value": "c6324300-fba7-11eb-8d1a-b38d3a2edad3"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Attach Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "c69e2480-fba7-11eb-8a19-bd17c3739c28",
+															"type": "text"
+														},
+														{
+															"key": "worklist_id",
+															"value": "c6324300-fba7-11eb-8d1a-b38d3a2edad3",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/appointments/attach",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"worklists",
+														"appointments",
+														"attach"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Attach Many Appointments",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "worklist_id",
+															"value": "c6324300-fba7-11eb-8d1a-b38d3a2edad3",
+															"type": "text"
+														},
+														{
+															"key": "appointment_ids[]",
+															"value": "c69e2480-fba7-11eb-8a19-bd17c3739c28",
+															"type": "text"
+														},
+														{
+															"key": "appointment_ids[]",
+															"value": "c69e3270-fba7-11eb-b21e-d79c1882d164",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/appointments/attach_many",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"worklists",
+														"appointments",
+														"attach_many"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Detach Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "c69e2480-fba7-11eb-8a19-bd17c3739c28",
+															"type": "text"
+														},
+														{
+															"key": "worklist_id",
+															"value": "c6324300-fba7-11eb-8d1a-b38d3a2edad3",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/appointments/detach",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"worklists",
+														"appointments",
+														"detach"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Detach Many Appointments",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"url": {
+													"raw": ""
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Truncate Appointments",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"url": {
+													"raw": ""
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Company Worklists",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists"
+											],
+											"query": [
+												{
+													"key": "with_appointments",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "with_workday",
+													"value": "true",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Workday Worklists",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "workday_id",
+													"value": "562a64e0-f5fb-11eb-a393-cf1a52a63e0f",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/of_workday?workday_id=a61f1300-fac2-11eb-993a-03bd4df1521c",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"of_workday"
+											],
+											"query": [
+												{
+													"key": "workday_id",
+													"value": "a61f1300-fac2-11eb-993a-03bd4df1521c"
+												},
+												{
+													"key": "per_page",
+													"value": "100",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Trashed Worklists",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/trasheds",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"trasheds"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Worklist",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "workday_id",
+													"value": "c12e7160-f606-11eb-ad20-eb66e242cb72",
+													"type": "text"
+												},
+												{
+													"key": "worklist_name",
+													"value": "Worklist from Home",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "View Worklist",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/view?id=c6324300-fba7-11eb-8d1a-b38d3a2edad3",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"view"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "c6324300-fba7-11eb-8d1a-b38d3a2edad3"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Process Worklist",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "worklist_id",
+													"value": "",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/process",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"process"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Calculate Worklist",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/calculate",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"calculate"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Worklist",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "df70b230-f603-11eb-ab07-7b0aa4383084",
+													"type": "text"
+												},
+												{
+													"key": "worklist_name",
+													"value": "Updated Worklist",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Worklist",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "df70b230-f603-11eb-ab07-7b0aa4383084",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Restore Worklist",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/worklists/restore",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"worklists",
+												"restore"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
 						{
 							"name": "Appointment",
 							"item": [
@@ -885,6 +1778,379 @@
 									]
 								},
 								{
+									"name": "Cost",
+									"item": [
+										{
+											"name": "Appointment Costs",
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs?appointment_id=a70c5540-fac2-11eb-9c97-63c3b182ae3e",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs"
+													],
+													"query": [
+														{
+															"key": "appointment_id",
+															"value": "a70c5540-fac2-11eb-9c97-63c3b182ae3e"
+														},
+														{
+															"key": "with_appointment",
+															"value": "true",
+															"disabled": true
+														},
+														{
+															"key": "with_worklist",
+															"value": "true",
+															"disabled": true
+														},
+														{
+															"key": "with_workday",
+															"value": "true",
+															"disabled": true
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Store Appointment Cost",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "a70c5540-fac2-11eb-9c97-63c3b182ae3e",
+															"type": "text"
+														},
+														{
+															"key": "cost_name",
+															"value": "Gasonline from Postman",
+															"type": "text"
+														},
+														{
+															"key": "amount",
+															"value": "900",
+															"type": "text"
+														},
+														{
+															"key": "paid_amount",
+															"value": "850",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs/store",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs",
+														"store"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Record Cost To Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "3dbf2510-f929-11eb-a671-d16b3dda0e67",
+															"type": "text"
+														},
+														{
+															"key": "cost_id",
+															"value": "43cad8e0-f929-11eb-a5cb-7701e351dfc3",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs/record",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs",
+														"record"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Unrecord Cost From Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "a70c5540-fac2-11eb-9c97-63c3b182ae3e",
+															"type": "text"
+														},
+														{
+															"key": "cost_id",
+															"value": "aa8bf2b0-fac3-11eb-946f-81867615d021",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs/unrecord",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs",
+														"unrecord"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Record Many Costs To Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "cost_ids[]",
+															"value": "dsffsdfds",
+															"type": "text",
+															"disabled": true
+														},
+														{
+															"key": "cost_ids[]",
+															"value": "gtgergerge",
+															"type": "text",
+															"disabled": true
+														},
+														{
+															"key": "cost_ids[]",
+															"value": "sadasdasdas",
+															"type": "text",
+															"disabled": true
+														},
+														{
+															"key": "appointment_id",
+															"value": "3dbf2510-f929-11eb-a671-d16b3dda0e67",
+															"type": "text"
+														},
+														{
+															"key": "cost_ids",
+															"value": "[\"43cad8e0-f929-11eb-a5cb-7701e351dfc3\", \"b64bd550-f929-11eb-bc73-87038cf7b07c\"]",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs/record_many",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs",
+														"record_many"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Unrecord Many Costs From Appointment",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "3dbf2510-f929-11eb-a671-d16b3dda0e67",
+															"type": "text"
+														},
+														{
+															"key": "cost_ids",
+															"value": "[\"43cad8e0-f929-11eb-a5cb-7701e351dfc3\", \"b64bd550-f929-11eb-bc73-87038cf7b07c\"]",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs/unrecord_many",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs",
+														"unrecord_many"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Truncate Appointment Costs",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json",
+														"type": "text"
+													},
+													{
+														"key": "Authorization",
+														"value": "Bearer {{API_TOKEN}}",
+														"type": "text"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "appointment_id",
+															"value": "8c91c3e0-f9d9-11eb-b56e-772957a08ea8",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/costs/truncate",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"appointments",
+														"costs",
+														"truncate"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Revenue",
+									"item": []
+								},
+								{
 									"name": "Company Appointments",
 									"request": {
 										"method": "GET",
@@ -901,7 +2167,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments?type=1&has_subs_only=true",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments?status=1",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -929,16 +2195,27 @@
 												},
 												{
 													"key": "status",
-													"value": "5",
-													"disabled": true
-												},
-												{
-													"key": "type",
 													"value": "1"
 												},
 												{
+													"key": "type",
+													"value": "1",
+													"disabled": true
+												},
+												{
 													"key": "has_subs_only",
-													"value": "true"
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "with_works",
+													"value": "true",
+													"disabled": true
+												},
+												{
+													"key": "with_costs",
+													"value": "true",
+													"disabled": true
 												}
 											]
 										}
@@ -962,7 +2239,7 @@
 											}
 										],
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/of_customer?customer_id=2367c350-f1d3-11eb-a856-03a00eb802e8",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/of_customer?customer_id=a54b8e20-fac2-11eb-9b56-4f7b448d84b8",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -976,7 +2253,7 @@
 											"query": [
 												{
 													"key": "customer_id",
-													"value": "2367c350-f1d3-11eb-a856-03a00eb802e8"
+													"value": "a54b8e20-fac2-11eb-9b56-4f7b448d84b8"
 												}
 											]
 										}
@@ -1077,6 +2354,44 @@
 												"companies",
 												"appointments",
 												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "VIew Appointment",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/appointments/view?id=de95f700-f9e1-11eb-ae78-2119e97618a7",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"appointments",
+												"view"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "de95f700-f9e1-11eb-ae78-2119e97618a7"
+												}
 											]
 										}
 									},
@@ -1449,6 +2764,320 @@
 							]
 						},
 						{
+							"name": "Receipt",
+							"item": [
+								{
+									"name": "Company Receipts",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/receipts/",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"receipts",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Trashed Receipts",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/receipts/trasheds",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"receipts",
+												"trasheds"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Appointment Receipts",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": []
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/receipts/?appointment_id=f10c67d0-016f-11ec-95ea-a33889bf0348",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"receipts",
+												""
+											],
+											"query": [
+												{
+													"key": "appointment_id",
+													"value": "f10c67d0-016f-11ec-95ea-a33889bf0348"
+												},
+												{
+													"key": "with_trashed",
+													"value": "true",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Receipt",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "appointment_id",
+													"value": "f10c67d0-016f-11ec-95ea-a33889bf0348",
+													"type": "text"
+												},
+												{
+													"key": "receipt_image",
+													"type": "file",
+													"src": "/home/benson/Downloads/webcam.jpeg"
+												},
+												{
+													"key": "description",
+													"value": "Image upload example",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/receipts/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"receipts",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Receipt",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "appointment_id",
+													"value": "f10c67d0-016f-11ec-95ea-a33889bf0348",
+													"type": "text",
+													"disabled": true
+												},
+												{
+													"key": "description",
+													"value": "Image Test",
+													"type": "text"
+												},
+												{
+													"key": "id",
+													"value": "1a8d5150-0177-11ec-8f8c-6d525515bf18",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/receipts/update",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"receipts",
+												"update"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete Receipt",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "cccd56c0-0192-11ec-98d9-018456babddf",
+													"type": "text"
+												},
+												{
+													"key": "force",
+													"value": "true",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/receipts/delete",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"receipts",
+												"delete"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Restore Receipt",
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "id",
+													"value": "5b1faca0-0192-11ec-919f-d5059f59ac89",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/receipts/restore",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"receipts",
+												"restore"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "Employee",
 							"item": [
 								{
@@ -1630,6 +3259,44 @@
 									"response": []
 								},
 								{
+									"name": "View Employee",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/employees/view?id=023d4300-f8e2-11eb-b6cb-f1ef24693c4c",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"employees",
+												"view"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "023d4300-f8e2-11eb-b6cb-f1ef24693c4c"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
 									"name": "Update Employee",
 									"request": {
 										"method": "PATCH",
@@ -1720,7 +3387,7 @@
 											"urlencoded": [
 												{
 													"key": "id",
-													"value": "48f5a740-ea4c-11eb-a0cf-db19228a927f",
+													"value": "023d4300-f8e2-11eb-b6cb-f1ef24693c4c",
 													"type": "text"
 												},
 												{
@@ -2753,7 +4420,7 @@
 											"formdata": []
 										},
 										"url": {
-											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations?per_page=90&with_customer=1&with_appointment=0",
+											"raw": "{{BASE_URL}}/api/dashboard/companies/quotations",
 											"host": [
 												"{{BASE_URL}}"
 											],
@@ -2781,15 +4448,18 @@
 												},
 												{
 													"key": "per_page",
-													"value": "90"
+													"value": "90",
+													"disabled": true
 												},
 												{
 													"key": "with_customer",
-													"value": "1"
+													"value": "1",
+													"disabled": true
 												},
 												{
 													"key": "with_appointment",
-													"value": "0"
+													"value": "0",
+													"disabled": true
 												}
 											]
 										}
@@ -3746,18 +5416,23 @@
 											"mode": "formdata",
 											"formdata": [
 												{
-													"key": "employee_id",
-													"value": "439f7bc0-c82d-11eb-bd70-e1fef1016ac9",
-													"type": "text"
-												},
-												{
 													"key": "invited_email",
 													"value": "sbensona77@gmail.com",
 													"type": "text"
 												},
 												{
 													"key": "expiry_time",
-													"value": "2021-06-11",
+													"value": "2021-08-11",
+													"type": "text"
+												},
+												{
+													"key": "title",
+													"value": "Roof clean master",
+													"type": "text"
+												},
+												{
+													"key": "employee_type",
+													"value": "2",
 													"type": "text"
 												}
 											]
@@ -3798,13 +5473,13 @@
 											"mode": "formdata",
 											"formdata": [
 												{
-													"key": "owner_id",
-													"value": "77e48ce0-c82e-11eb-ba37-c990286d2c1c",
+													"key": "invited_email",
+													"value": "test@email.com",
 													"type": "text"
 												},
 												{
-													"key": "invited_email",
-													"value": "test@email.com",
+													"key": "expiry_time",
+													"value": "2021-08-11",
 													"type": "text"
 												}
 											]
@@ -3830,6 +5505,216 @@
 						{
 							"name": "Work",
 							"item": [
+								{
+									"name": "Execute Work",
+									"item": [
+										{
+											"name": "Execute Work",
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "work_id",
+															"value": "f888c740-016f-11ec-8d71-bfa511b61f49",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/works/execute/execute",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"works",
+														"execute",
+														"execute"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Delete Execute Work",
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"type": "text",
+														"value": "application/json"
+													},
+													{
+														"key": "Authorization",
+														"type": "text",
+														"value": "Bearer {{API_TOKEN}}"
+													}
+												],
+												"url": {
+													"raw": "{{BASE_URL}}/api/dashboard/companies/works/execute/delete",
+													"host": [
+														"{{BASE_URL}}"
+													],
+													"path": [
+														"api",
+														"dashboard",
+														"companies",
+														"works",
+														"execute",
+														"delete"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Company Works",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/works",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"works"
+											],
+											"query": [
+												{
+													"key": "status",
+													"value": "1",
+													"disabled": true
+												},
+												{
+													"key": "created_from",
+													"value": "2020-08-17",
+													"disabled": true
+												},
+												{
+													"key": "created_to",
+													"value": "2021-08-19",
+													"disabled": true
+												},
+												{
+													"key": "appointment_id",
+													"value": "6f21c7f0-ff78-11eb-a262-0f3aade58b1c",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Appointment Works",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/works/of_appointment?appointment_id=2e201d00-f6ce-11eb-8656-25459745a3ec",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"works",
+												"of_appointment"
+											],
+											"query": [
+												{
+													"key": "appointment_id",
+													"value": "2e201d00-f6ce-11eb-8656-25459745a3ec"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Quotation Works",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"type": "text",
+												"value": "application/json"
+											},
+											{
+												"key": "Authorization",
+												"type": "text",
+												"value": "Bearer {{API_TOKEN}}"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/works/of_quotation?quotation_id=3f40c980-f6ce-11eb-b49b-6b0ea5d65ec2",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"works",
+												"of_quotation"
+											],
+											"query": [
+												{
+													"key": "quotation_id",
+													"value": "3f40c980-f6ce-11eb-b49b-6b0ea5d65ec2"
+												}
+											]
+										}
+									},
+									"response": []
+								},
 								{
 									"name": "Store Work",
 									"request": {
@@ -3904,6 +5789,17 @@
 												"works",
 												"store"
 											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "View Work",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
 										}
 									},
 									"response": []
@@ -4836,6 +6732,105 @@
 							]
 						},
 						{
+							"name": "Cost",
+							"item": [
+								{
+									"name": "Company Costs",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/costs",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"costs"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Store Cost",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json",
+												"type": "text"
+											},
+											{
+												"key": "Authorization",
+												"value": "Bearer {{API_TOKEN}}",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "cost_name",
+													"value": "Stored Cost Name",
+													"type": "text"
+												},
+												{
+													"key": "amount",
+													"value": "10000",
+													"type": "text"
+												},
+												{
+													"key": "paid_amount",
+													"value": "8000",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/api/dashboard/companies/costs/store",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"api",
+												"dashboard",
+												"companies",
+												"costs",
+												"store"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Update Cost",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": ""
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "User Company",
 							"request": {
 								"method": "GET",
@@ -5394,6 +7389,37 @@
 										"meta",
 										"car",
 										"all_statuses"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Cost",
+					"item": [
+						{
+							"name": "All Costable Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/api/meta/cost/all_costable_types",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"meta",
+										"cost",
+										"all_costable_types"
 									]
 								}
 							},
