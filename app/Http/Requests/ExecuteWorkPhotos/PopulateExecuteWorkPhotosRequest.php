@@ -49,7 +49,8 @@ class PopulateExecuteWorkPhotosRequest extends FormRequest
     public function options()
     {
         $this->addWhere([
-            'execute_work_id' => $this->getExecuteWork()->id,
+            'column' => 'execute_work_id',
+            'value' => $this->getExecuteWork()->id,
         ]);
 
         return $this->collectOptions();

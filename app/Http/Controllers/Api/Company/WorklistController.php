@@ -62,6 +62,22 @@ class WorklistController extends Controller
         return apiResponse($this->worklist, ['worklist' => $worklist]);
     }
 
+    public function assignCar(AssignCarRequest $request)
+    {
+        $worklist = $request->getWorklist();
+        $this->worklist->setModel($worklist);
+
+        $car = $request->getCar();
+        $this->worklist->assignCar($car);
+
+        return apiResponse($this->worklist);
+    }
+
+    public function route(RouteRequest $request)
+    {
+        //
+    }
+
     public function process(ProcessRequest $request)
     {
         $worklist = $request->getWorklist();
@@ -85,7 +101,14 @@ class WorklistController extends Controller
     public function view(FindRequest $request)
     {
         $worklist = $request->getWorklist();
-        $worklist->load(['workday', 'appointments', 'costs']);
+        $worklist->load([
+            'workday', 
+            'appointments', 
+            'costs', 
+            'worklistCars.employeeInCharge',
+            // 'appointEmployees',
+            'employees'
+        ]);
         $worklist = new WorklistResource($worklist);
 
         return response()->json(['worklist' => $worklist]);

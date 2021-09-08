@@ -5,6 +5,9 @@ namespace App\Http\Requests\Works;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Models\Quotation;
+use App\Models\Appointment;
+
 use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateCompanyWorksRequest extends FormRequest
@@ -33,32 +36,82 @@ class PopulateCompanyWorksRequest extends FormRequest
         ];
     }
 
+    /**
+     * Manipulate received input to be validated.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->has('status')) {
+            $status = $this->input('status');
+            $status = is_numeric($status) ? 
+                $status : ((int) $status);
+            $this->merge(['status' => $status]);
+        }
+
+        if ($this->has('min_quantity')) {
+            $minQuantity = $this->input('min_quantity');
+            $minQuantity = is_numeric($minQuantity) ? 
+                $minQuantity : ((int) $minQuantity);
+            $this->merge(['min_quantity' => $minQuantity]);
+        }
+
+        if ($this->has('max_quantity')) {
+            $maxQuantity = $this->input('max_quantity');
+            $maxQuantity = is_numeric($maxQuantity) ? 
+                $maxQuantity : ((int) $maxQuantity);
+            $this->merge(['max_quantity' => $maxQuantity]);
+        }
+
+        if ($this->has('min_unit_price')) {
+            $minUnitPrice = $this->input('min_unit_price');
+            $minUnitPrice = is_numeric($minUnitPrice) ? 
+                $minUnitPrice : ((double) $minUnitPrice);
+            $this->merge(['min_unit_price' => $minUnitPrice]);
+        }
+
+        if ($this->has('max_unit_price')) {
+            $maxUnitPrice = $this->input('max_unit_price');
+            $maxUnitPrice = is_numeric($maxUnitPrice) ?
+                $maxUnitPrice : ((double) $maxUnitPrice);
+            $this->merge(['max_unit_price' => $maxUnitPrice]);
+        }
+
+        if ($this->has('min_total_price')) {
+            $minTotalPrice = $this->input('min_total_price');
+            $minTotalPrice = is_numeric($minTotalPrice) ?
+                $minTotalPrice : ((double) $minTotalPrice);
+            $this->merge(['min_total_price' => $minTotalPrice]);
+        }
+
+        if ($this->has('max_total_price')) {
+            $maxTotalPrice = $this->input('max_total_price');
+            $maxTotalPrice = is_numeric($maxTotalPrice) ?
+                $maxTotalPrice : ((double) $maxTotalPrice);
+            $this->merge(['max_total_price' => $maxTotalPrice]);
+        }
+    }
+
     public function options()
     {
-        if ($this->input('appointment_id')) {
+        /*if ($this->input('appointment_id')) {
             $this->addWhereHas('appointments', [
                 [
                     'column' => 'appointments.id',
                     'value' => $this->input('appointment_id'),
                 ]
             ]);
-        }
+        }*/
 
-        if ($this->input('quotation_id')) {
-            $this->addWhereHas('quotations', [
+        /*if ($this->input('quotation_id')) {
+            $this->addWhereHasMorph('quotations', [Quotation::class], [
                 [
                     'column' => 'quotations.id',
                     'value' => $this->input('quotation_id'),
                 ]
             ]);
-        }
-
-        if ($this->input('work_contract_id')) {
-            $this->addWhere([
-                'column' => 'work_contract_id',
-                'value' => $this->input('work_contract_id'),
-            ]);
-        }
+        }*/
 
         if ($status = $this->input('status')) {
             $this->addWhere([
@@ -67,131 +120,139 @@ class PopulateCompanyWorksRequest extends FormRequest
             ]);
         }
 
-        if ($createdFrom = $this->input('created_from')) {
-            $createdFrom = carbon()->parse($createdFrom)
+        if ($createdAfter = $this->input('created_after')) {
+            $createdAfter = carbon()->parse($createdAfter)
                 ->startOfDay()
                 ->toDateTimeString();
             $this->addWhere([
                 'column' => 'created_at',
                 'operator' => '>=',
-                'value' => $createdFrom,
+                'value' => $createdAfter,
             ]);
         }
 
-        if ($createdTo = $this->input('created_to')) {
-            $createdTo = carbon()->parse($createdTo)
+        if ($createdBefore = $this->input('created_before')) {
+            $createdBefore = carbon()->parse($createdBefore)
                 ->endOfDay()
                 ->toDateTimeString();
             $this->addWhere([
                 'column' => 'created_at',
                 'operator' => '<=',
-                'value' => $createdTo,
+                'value' => $createdBefore,
             ]);
         }
 
-        if ($lastUpdatedFrom = $this->input('last_updated_from')) {
-            $lastUpdatedFrom = carbon()->parse($lastUpdatedFrom)
+        if ($lastUpdatedBefore = $this->input('last_updated_before')) {
+            $lastUpdatedBefore = carbon()->parse($lastUpdatedBefore)
                 ->startOfDay()
                 ->toDateTimeString();
             $this->addWhere([
                 'column' => 'updated_at',
                 'operator' => '>=',
-                'value' => $lastUpdatedFrom,
+                'value' => $lastUpdatedBefore,
             ]);
         }
 
-        if ($lastUpdatedTo = $this->input('last_updated_to')) {
-            $lastUpdatedTo = carbon()->parse($lastUpdatedTo)
+        if ($lastUpdatedAfter = $this->input('last_updated_after')) {
+            $lastUpdatedAfter = carbon()->parse($lastUpdatedAfter)
                 ->endOfDay()
                 ->toDateTimeString();
             $this->addWhere([
                 'column' => 'updated_at',
                 'operator' => '<=',
-                'value' => $lastUpdatedTo,
+                'value' => $lastUpdatedAfter,
             ]);
         }
 
-        if ($executedFrom = $this->input('executed_from')) {
-            $executedFrom = carbon()->parse($executedFrom)
+        if ($executedAfter = $this->input('executed_after')) {
+            $executedAfter = carbon()->parse($executedAfter)
                 ->startOfDay()
                 ->toDateTimeString();
             $this->addWhere([
-                'column' => 'executed_from',
+                'column' => 'executed_at',
                 'operator' => '>=',
-                'value' => $executedFrom,
+                'value' => $executedAfter,
             ]);
         }
 
-        if ($executedTo = $this->input('executed_to')) {
-            $executedTo = carbon()->parse($executedTo)
+        if ($executedBefore = $this->input('executed_before')) {
+            $executedBefore = carbon()->parse($executedBefore)
                 ->endOfDay()
                 ->toDateTimeString();
             $this->addWhere([
-                'column' => 'executed_to',
+                'column' => 'executed_at',
                 'operator' => '<=',
-                'value' => $executedTo,
+                'value' => $executedBefore,
             ]);
         }
 
-        if ($finishedFrom = $this->input('finished_from')) {
-            $finishedFrom = carbon()->parse($finishedFrom)
+        if ($finishedAfter = $this->input('finished_after')) {
+            $finishedAfter = carbon()->parse($finishedAfter)
                 ->startOfDay()
                 ->toDateTimeString();
             $this->addWhere([
                 'column' => 'finished_at',
                 'operator' => '>=',
-                'value' => $finishedFrom,
+                'value' => $finishedAfter,
             ]);
         }
 
-        if ($finishedTo = $this->input('finished_to')) {
-            $finishedTo = carbon()->parse($finishedTo)
+        if ($finishedBefore = $this->input('finished_before')) {
+            $finishedBefore = carbon()->parse($finishedBefore)
                 ->endOfDay()
                 ->toDateTimeString();
             $this->addWhere([
                 'column' => 'finished_at',
                 'operator' => '<=',
-                'value' => $finishedTo,
+                'value' => $finishedBefore,
             ]);
         }
 
-        if ($unitPriceFrom = $this->input('unit_price_from')) {
+         if ($minQuantity = $this->input('min_quantity')) {
+            $this->addWhere([
+                'column' => 'quantity',
+                'operator' => '>=',
+                'value' => $minQuantity,
+            ]);
+        }
+
+        if ($maxQuantity = $this->input('max_quantity')) {
+            $this->addWhere([
+                'column' => 'quantity',
+                'operator' => '<=',
+                'value' => $maxQuantity,
+            ]);
+        }
+
+        if ($minUnitPrice = $this->input('min_unit_price')) {
             $this->addWhere([
                 'column' => 'unit_price',
                 'operator' => '>=',
-                'value' => $unitPriceFrom,
+                'value' => $minUnitPrice,
             ]);
         }
 
-        if ($unitPriceTo = $this->input('unit_price_to')) {
+        if ($maxUnitPrice = $this->input('max_unit_price')) {
             $this->addWhere([
                 'column' => 'unit_price',
                 'operator' => '<=',
-                'value' => $unitPriceTo,
+                'value' => $maxUnitPrice,
             ]);
         }
 
-        if ($totalPriceFrom = $this->input('total_price_from')) {
+        if ($minTotalPrice = $this->input('min_total_price')) {
             $this->addWhere([
                 'column' => 'total_price',
                 'operator' => '>=',
-                'value' => $totalPriceFrom,
+                'value' => $minTotalPrice,
             ]);
         }
 
-        if ($totalPriceTo = $this->input('total_price_to')) {
+        if ($maxTotalPrice = $this->input('max_total_price')) {
             $this->addWhere([
                 'column' => 'total_price',
                 'operator' => '<=',
-                'value' => $totalPriceTo,
-            ]);
-        }
-
-        if ($includeTaxOnly = $this->input('include_tax_only')) {
-            $includeTaxOnly = strtobool($includeTaxOnly);
-            $this->addWhere([
-                'column' => 'include_tax',
-                'value' => $includeTaxOnly,
+                'value' => $maxTotalPrice,
             ]);
         }
 
@@ -201,6 +262,18 @@ class PopulateCompanyWorksRequest extends FormRequest
 
         if ($withExecutionsCount = $this->input('with_executions_count')) {
             $this->addWithCount('executeWorks');
+        }
+
+        if ($orderByQuantity = $this->input('order_by_quantity')) {
+            $this->addOrderBy('quantity', $orderByQuantity);
+        }
+
+        if ($orderByUnitPrice = $this->input('order_by_unit_price')) {
+            $this->addOrderBy('unit_price', $orderByUnitPrice);
+        }
+
+        if ($orderByTotalPrice = $this->input('order_by_total_price')) {
+            $this->addOrderBy('total_price', $orderByTotalPrice);
         }
 
         return $this->collectCompanyOptions();

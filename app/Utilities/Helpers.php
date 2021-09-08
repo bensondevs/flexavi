@@ -59,6 +59,16 @@ function str_to_plural(string $string)
     return Str::plural($string);
 }
 
+function str_snake_case(string $string)
+{
+    return Str::snake($string);
+}
+
+function str_camel_case(string $string)
+{
+    return Str::camel($string);
+}
+
 function get_lower_class($class)
 {
     $lowerClassname = strtolower(get_class($class));
@@ -122,6 +132,32 @@ function executor()
     return auth()->check() ?
         auth()->user()->id :
         'SYSTEM';
+}
+
+function clean_filename(string $filename)
+{
+    // Replace > with space
+    $filename = str_replace('/', ' ', $filename);
+
+    // Replace > with space
+    $filename = str_replace('>', ' ', $filename);
+
+    // Replace | with space
+    $filename = str_replace('|', ' ', $filename);
+
+    // Replace : with space
+    $filename = str_replace(':', ' ', $filename);
+
+    // Replace & with space
+    $filename = str_replace('&', ' ', $filename);
+
+    // Replace ? with space
+    $filename = str_replace(' ', '_', $filename);
+    
+    // Replace spaces with _
+    $filename = str_replace(' ', '_', $filename);
+
+    return $filename;
 }
 
 function strtobool($string = null)
@@ -299,7 +335,8 @@ function uploadFile($fileRequest, string $directory)
     }
 
     $path = $directory . Carbon::now()->format('YmdHis') . random_string(5);
-    $path .= urlencode($fileRequest->getClientOriginalName());
+    $filename = str_replace(' ', '_', $fileRequest->getClientOriginalName());
+    $path .= urlencode(clean_filename($filename));
     $fileContent = file_get_contents($fileRequest->getRealPath());
 
     return $storageFile->upload($fileContent, $path);

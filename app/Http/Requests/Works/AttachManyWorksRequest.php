@@ -23,6 +23,20 @@ class AttachManyWorksRequest extends FormRequest
     }
 
     /**
+     * Prepare for validation.
+     *
+     * @return void
+     */
+    public function prepareForValidation()
+    {
+        if (! is_array($this->input('work_ids'))) {
+            $workIds = $this->input('work_ids');
+            $workIds = json_decode($workIds, true);
+            $this->merge(['work_ids' => $workIds]);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -30,7 +44,8 @@ class AttachManyWorksRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'work_ids' => ['required', 'array'],
+            'work_ids.*' => ['required', 'string', 'exists:works,id'],
         ];
     }
 }

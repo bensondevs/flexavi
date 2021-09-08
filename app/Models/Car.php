@@ -59,11 +59,10 @@ class Car extends Model
         return $car->where('status', CarStatus::Out);
     }
 
-    public function getStatusLabelAttribute()
+    public function getStatusDescriptionAttribute()
     {
-        $status = $this->findByValue('CAR_STATUSES', $this->attributes['status']);
-
-        return $status['label'];
+        $status = $this->attributes['status'];
+        return CarStatus::getDescription($status);
     }
 
     public function setCarImageAttribute($carImageFile)
@@ -86,10 +85,16 @@ class Car extends Model
 
     public function company()
     {
-        return $this->belongsTo(
-            'App\Models\Company', 
-            'company_id', 
-            'id'
-        );
+        return $this->belongsTo(Company::class);
+    }
+
+    public function worklists()
+    {
+        return $this->belongsToMany(Worklist::class)
+            ->withPivot(
+                'employee_in_charge_id',
+                'should_return_at',
+                'returned_at'
+            );
     }
 }

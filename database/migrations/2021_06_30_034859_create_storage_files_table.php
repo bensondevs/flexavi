@@ -17,6 +17,8 @@ class CreateStorageFilesTable extends Migration
             $table->string('disk')->default('public');
             $table->string('path')->primary();
 
+            $table->date('destroy_at')->nullable();
+
             $table->timestamps();
         });
     }

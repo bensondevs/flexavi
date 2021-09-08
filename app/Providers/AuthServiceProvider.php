@@ -12,6 +12,7 @@ use App\Policies\AddressPolicy;
 use App\Policies\InvoicePolicy;
 use App\Policies\ReceiptPolicy;
 use App\Policies\WorkdayPolicy;
+use App\Policies\RevenuePolicy;
 use App\Policies\WorklistPolicy;
 use App\Policies\CustomerPolicy;
 use App\Policies\EmployeePolicy;
@@ -100,6 +101,15 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('restore-cost', [CostPolicy::class, 'restore']);
         Gate::define('force-delete-cost', [CostPolicy::class, 'forceDelete']);
 
+        // Revenues
+        Gate::define('view-any-revenue', [RevenuePolicy::class, 'viewAny']);
+        Gate::define('view-revenue', [RevenuePolicy::class, 'view']);
+        Gate::define('create-revenue', [RevenuePolicy::class, 'create']);
+        Gate::define('update-revenue', [RevenuePolicy::class, 'update']);
+        Gate::define('delete-revenue', [RevenuePolicy::class, 'delete']);
+        Gate::define('restore-revenue', [RevenuePolicy::class, 'restore']);
+        Gate::define('force-delete-revenue', [RevenuePolicy::class, 'forceDelete']);
+
         // Receipts
         Gate::define('view-any-receipt', [ReceiptPolicy::class, 'viewAny']);
         Gate::define('view-receipt', [ReceiptPolicy::class, 'view']);
@@ -159,29 +169,32 @@ class AuthServiceProvider extends ServiceProvider
 
         // Work
         Gate::define('view-any-work', [WorkPolicy::class, 'viewAny']);
-        Gate::define('view-any-appointment-work', [WorkPolicy::class, 'viewAnyAppointment']);
         Gate::define('view-work', [WorkPolicy::class, 'view']);
         Gate::define('create-work', [WorkPolicy::class, 'create']);
         Gate::define('attach-work', [WorkPolicy::class, 'attach']);
         Gate::define('attach-many-work', [WorkPolicy::class, 'attachMany']);
         Gate::define('detach-work', [WorkPolicy::class, 'detach']);
         Gate::define('detach-many-work', [WorkPolicy::class, 'detachMany']);
-        Gate::define('truncate-work', [WorkPolicy::class, 'truncate']);;
-        Gate::define('update-work', [WorkPolicy::class, 'update']);
+        Gate::define('truncate-work', [WorkPolicy::class, 'truncate']);
+        Gate::define('mark-finish-work', [WorkPolicy::class, 'markFinish']);
+        Gate::define('edit-work', [WorkPolicy::class, 'update']);
         Gate::define('delete-work', [WorkPolicy::class, 'delete']);
         Gate::define('restore-work', [WorkPolicy::class, 'restore']);
         Gate::define('force-delete-work', [WorkPolicy::class, 'forceDelete']);
 
         // Execute Work
+        Gate::define('view-any-execute-works', [ExecuteWorkPolicy::class, 'viewAny']);
         Gate::define('execute-work', [ExecuteWorkPolicy::class, 'execute']);
         Gate::define('mark-unfinish-execute-work', [ExecuteWorkPolicy::class, 'markUnfinish']);
         Gate::define('mark-finish-execute-work', [ExecuteWorkPolicy::class, 'markFinish']);
         Gate::define('make-continuation-execute-work', [ExecuteWorkPolicy::class, 'makeContinuation']);
+        Gate::define('delete-execute-work', [ExecuteWorkPolicy::class, 'delete']);
+        Gate::define('restore-execute-work', [ExecuteWorkPolicy::class, 'restore']);
 
         // Execute Work Photo
         Gate::define('view-any-execute-work-photo', [ExecuteWorkPhotoPolicy::class, 'viewAny']);
         Gate::define('upload-execute-work-photo', [ExecuteWorkPhotoPolicy::class, 'upload']);
-        Gate::define('delete-execute-work-photos', [ExecuteWorkPhotoPolicy::class, 'delete']);
+        Gate::define('delete-execute-work-photo', [ExecuteWorkPhotoPolicy::class, 'delete']);
 
         // Address
         Gate::define('view-any-address', [AddressPolicy::class, 'viewAny']);

@@ -14,7 +14,7 @@ class CreateAppointmentablesTable extends Migration
     public function up()
     {
         Schema::create('appointmentables', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id')->primary();
 
             $table->uuid('appointment_id');
             $table->foreign('appointment_id')

@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Costs\SaveCostRequest as SaveRequest;
-use App\Http\Requests\Costs\FindCostRequest as FindRequest;
-use App\Http\Requests\Costs\DeleteCostRequest as DeleteRequest;
-use App\Http\Requests\Costs\RestoreCostRequest as RestoreRequest;
-use App\Http\Requests\Costs\PopulateCompanyCostsRequest as PopulateRequest;
+use App\Http\Requests\Costs\{
+    SaveCostRequest as SaveRequest,
+    FindCostRequest as FindRequest,
+    DeleteCostRequest as DeleteRequest,
+    RestoreCostRequest as RestoreRequest,
+    PopulateCompanyCostsRequest as PopulateRequest
+};
 
 use App\Http\Resources\CostResource;
 
@@ -73,7 +75,7 @@ class CostController extends Controller
     public function view(FindRequest $request)
     {
         $cost = $request->getCost();
-        $cost->load(['appointments', 'worklists', 'workdays']);
+        $cost->load(['appointments.worklists', 'worklists', 'workdays']);
         $cost = new CostResource($cost);
 
         return response()->json(['cost' => $cost]);

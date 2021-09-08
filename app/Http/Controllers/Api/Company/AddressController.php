@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Addresses\PopulateUserAddressesRequest as UserPopulateRequest;
-use App\Http\Requests\Addresses\PopulateEmployeeAddressesRequest as EmployeePopulateRequest;
+use App\Http\Requests\Addresses\{
+    PopulateUserAddressesRequest as UserPopulateRequest,
+    PopulateEmployeeAddressesRequest as EmployeePopulateRequest
+};
 
 use App\Http\Resources\AddressResource;
 

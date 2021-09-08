@@ -6,22 +6,38 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
+
+use App\Enums\Warranty\WarrantyStatus;
 
 class Warranty extends Model
 {
+    use Searchable;
+    use SoftDeletes;
+
     protected $table = 'warranties';
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = false;
 
-    protected $fillable = [
-        'work_id',
-        'warranty_due',
+    protected $searchable = [
+        'problem_description',
+        'fixing_description',
         'internal_note',
+        'customer_note',
     ];
 
-    protected $hidden = [
-        
+    protected $fillable = [
+        'company_id',
+        'appointment_id',
+        'work_id',
+        'status',
+        'problem_description',
+        'fixing_description',
+        'internal_note',
+        'customer_note',
+        'amount',
+        'paid_amount',
     ];
 
     protected static function boot()
@@ -33,8 +49,18 @@ class Warranty extends Model
     	});
     }
 
-    public function workContract()
+    public function company()
     {
-        return $this->belongsTo(WorkContract::class);
+        return $this->belongsTo(Company::class);
+    }
+
+    public function appointment()
+    {
+        return $this->belongsTo(Appointment::class);
+    }
+
+    public function work()
+    {
+        return $this->belongsTo(Work::class);
     }
 }

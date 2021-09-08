@@ -84,17 +84,21 @@ class AppointmentResource extends JsonResource
             $structure['works'] = WorkResource::collection($this->works);
         }
 
+        if ($this->relationLoaded('finishedWorks')) {
+            $structure['finished_works'] = WorkResource::collection($this->finishedWorks);
+        }
+
         if ($this->relationLoaded('worklists')) {
-            $structure['worklists'] = WorklistResource::apiCollection($this->worklists);
+            $structure['worklists'] = WorklistResource::collection($this->worklists);
         }
 
         if ($this->relationLoaded('workdays')) {
-            $structure['workdays'] = WorkdayResource::apiCollection($this->workday);
+            $structure['workdays'] = WorkdayResource::collection($this->workdays);
         }
 
-        /*if ($this->relationLoaded('executeWorks')) {
+        if ($this->relationLoaded('executeWorks')) {
             $structure['execute_works'] = $this->executeWorks;
-        }*/
+        }
 
         /*if ($this->relationLoaded('warranty')) {
             $structure['warranty'] = new WarrantyResource($this->warranty);
@@ -104,21 +108,25 @@ class AppointmentResource extends JsonResource
             $structure['payment_reminder'] = new PaymentReminderResource($this->paymentReminder);
         }*/
 
+        if ($this->relationLoaded('employees')) {
+            $structure['employees'] = EmployeeResource::collection($this->employees);
+        }
+
         if ($this->relationLoaded('costs')) {
             $structure['costs'] = CostResource::collection($this->costs);
         }
 
-        /*if ($this->relationLoaded('revenues')) {
+        if ($this->relationLoaded('revenues')) {
             $structure['revenues'] = RevenueResource::collection($this->revenues);
-        }*/
+        }
 
         if ($this->relationLoaded('invoice')) {
             $structure['invoice'] = new InvoiceResource($this->invoice);
         }
 
-        /*if ($this->relationLoaded('calculation')) {
+        if ($this->relationLoaded('calculation')) {
             $structure['calculation'] = new CalculationResource($this->calculation);
-        }*/
+        }
 
         return $structure;
     }

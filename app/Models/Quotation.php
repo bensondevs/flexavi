@@ -100,9 +100,9 @@ class Quotation extends Model
             }
     	});
 
-        self::saved(function ($quotation) {
-            $quotation->countAmount();
-        });
+        /*self::saved(function ($quotation) {
+            $quotation->countWorkAmount();
+        });*/
     }
 
     public function getTypeDescriptionAttribute()
@@ -177,14 +177,11 @@ class Quotation extends Model
         $this->attributes['discount_amount'] = $amount * $percentage;
     }
 
-    public function setTotalAmountAttribute($amount)
+    public function setAmountAttribute($amount)
     {
         $this->attributes['amount'] = $amount;
         $vatAmount = $this->getVatAmountAttribute();
-        $discountAmount = $this->attributes['discount_amount'];
-        $total = $amount + $vatAmount - $discountAmount;
-
-        $this->attributes['total_amount'] = $total;
+        $this->calculateTotal();
     }
 
     public function appointment()
@@ -242,12 +239,21 @@ class Quotation extends Model
         return QuotationCanceller::getValues();
     }
 
-    public function countAmount()
+    public function countWorksAmount()
     {
         $total = db('works')
             ->where('quotation_id', $this->attributes['id'])
             ->sum('works.total_price');
-        $this->setTotalAmountAttribute($total);
+        $this->setAmountAttribute($total);
+    }
+
+    public function calculateTotal()
+    {
+        $amount = $this->attributes['amount'];
+        $vatAmount = $this->getVatAmountAttribute();
+        $discountAmount = $this->attributes['discount_amount'];
+
+        return $this->attributes['total_amount'] = $amount + $vatAmount - $discountAmount;
     }
 
     public static function collectAllTypes()

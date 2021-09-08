@@ -20,7 +20,7 @@ class CarResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $structure = [
             'id' => $this->id,
             'brand' => $this->brand,
             'model' => $this->model,
@@ -29,8 +29,18 @@ class CarResource extends JsonResource
             'car_license' => $this->car_license,
             'insured' => $this->insured,
             'status' => $this->status,
-            'status_description' => CarStatus::getDescription($this->status),
+            'status_description' => $this->status_description,
             'car_image_url' => $this->car_image_url,
         ];
+
+        if ($this->relationLoaded('company')) {
+            $structure['company'] = new CompanyResource($this->company);
+        }
+
+        if ($this->relationLoaded('worklists')) {
+            $structure['worklists'] = WorklistResource::collection($this->worklists);
+        }
+
+        return $structure;
     }
 }

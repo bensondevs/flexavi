@@ -3,8 +3,9 @@
 namespace App\Observers;
 
 use App\Models\User;
+use App\Models\StorageFile;
 
-use App\Repositories\RegisterInvitationRepository;
+use App\Repositories\AuthRepository;
 
 class UserObserver
 {
@@ -16,7 +17,9 @@ class UserObserver
      */
     public function created(User $user)
     {
-        //
+        if (! $user->email_verified_at) {
+            $user->sendEmailVerification();
+        }
     }
 
     /**
@@ -27,7 +30,16 @@ class UserObserver
      */
     public function updated(User $user)
     {
-        //
+        if ($user->isDirty('email')) {
+            $user->unverifyEmail();
+            $user->sendEmailVerification();
+        }
+
+        if ($user->isDirty('profile_picture_path')) {
+            $originalPath = $user->getOriginal('profile_picture_path');
+            $file = StorageFile::findByPath($originalPath);
+            $file->delete();
+        }
     }
 
     /**
@@ -38,7 +50,10 @@ class UserObserver
      */
     public function deleted(User $user)
     {
-        //
+        if ($file = StorageFile::findByPath($user->profile_picture_path)) {
+            $date = now()->addDays(3);
+            $file->setDestroyCountDown($date);
+        }
     }
 
     /**
@@ -49,7 +64,9 @@ class UserObserver
      */
     public function restored(User $user)
     {
-        //
+        if ($file = StorageFile::findByPath($user->profile_picture_path)) {
+            $file->stopDestroyCountDown();
+        }
     }
 
     /**
@@ -60,6 +77,8 @@ class UserObserver
      */
     public function forceDeleted(User $user)
     {
-        //
+        if ($file = StorageFile::findByPath($user->profile_picture_path)) {
+            $file->delete();
+        }
     }
 }

@@ -7,9 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+
 use App\Enums\ExecuteWorkPhoto\PhotoConditionType;
 
 use App\Models\StorageFile;
+
+use App\Observers\ExecuteWorkPhotoObserver;
 
 class ExecuteWorkPhoto extends Model
 {
@@ -37,6 +40,7 @@ class ExecuteWorkPhoto extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(ExecuteWorkPhotoObserver::class);
 
     	self::creating(function ($executeWorkPhoto) {
             $executeWorkPhoto->id = Uuid::generate()->string;
@@ -45,7 +49,7 @@ class ExecuteWorkPhoto extends Model
 
     public function setPhotoAttribute($photoFile)
     {
-        $directory = 'uploads/executeworks/';
+        $directory = 'uploads/execute_works/';
         $photo = uploadFile($photoFile, $directory);
 
         $this->attributes['photo_path'] = $photo->path;
@@ -54,12 +58,26 @@ class ExecuteWorkPhoto extends Model
     public function getPhotoUrlAttribute()
     {
         $path = $this->attributes['photo_path'];
-        $file = StorageFile::findByPath($path);
+        if (! $file = StorageFile::findByPath($path)) {
+            return null;
+        }
+
         return $file->getDownloadUrl();
+    }
+
+    public function getPhotoConditionTypeDescriptionAttribute()
+    {
+        $type = $this->attributes['photo_condition_type'];
+        return PhotoConditionType::getDescription($type);
     }
 
     public static function collectAllPhotoConditionTypes()
     {
         return PhotoConditionType::asSelectArray();
+    }
+
+    public function executeWork()
+    {
+        return $this->belongsTo(ExecuteWork::class);
     }
 }

@@ -24,17 +24,19 @@ class ExecuteWork extends Model
     public $incrementing = false;
 
     protected $searchable = [
-        'note'
+        'description',
+        'note',
+        'finish_note',
     ];
 
     protected $fillable = [
         'company_id',
-        'appointment_id',
         'work_id',
-        'is_finished',
-        'is_continuation',
-        'previous_execute_work_id',
+        'appointment_id',
+        'sub_appointment_id',
+        'description',
         'note',
+        'finish_note',
     ];
 
     protected $hidden = [
@@ -51,16 +53,10 @@ class ExecuteWork extends Model
     	});
     }
 
-    public function beforeWorkPhotos()
+    public function getStatusDescriptionAttribute()
     {
-        return $this->hasMany('App\Models\ExecuteWorkPhoto', 'execute_work_id', 'id')
-            ->where('photo_condition_type', PhotoConditionType::Before);
-    }
-
-    public function afterWorkPhotos()
-    {
-        return $this->hasMany('App\Models\ExecuteWorkPhoto', 'execute_work_id', 'id')
-            ->where('photo_condition_type', PhotoConditionType::After);
+        $status = $this->attributes['status'];
+        return ExecuteWorkStatus::getDescription($status);
     }
 
     public function company()
@@ -78,11 +74,32 @@ class ExecuteWork extends Model
         return $this->belongsTo(Work::class);
     }
 
+    public function previousExecuteWork()
+    {
+        return $this->belongsTo(self::class, 'previous_execute_work_id');
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(ExecuteWorkPhoto::class);
+    }
+
+    public function beforeWorkPhotos()
+    {
+        return $this->photos()->where('photo_condition_type', PhotoConditionType::Before);
+    }
+
+    public function afterWorkPhotos()
+    {
+        return $this->photos()->where('photo_condition_type', PhotoConditionType::After);
+    }
+
     public function finish(array $finishData)
     {
-        $this->attributes['finish_note'] = isset($finishData['finish_note']) ?: null;
+        $this->attributes['finish_note'] = isset($finishData['finish_note']) ?
+            $finishData['finish_note'] : null;
         $this->attributes['finished_at'] = now();
-        $this->attributes['status'] = ExecuteWorkStatus::Finish;
+        $this->attributes['status'] = ExecuteWorkStatus::Finished;
         return $this->save();
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\User;
 use App\Models\Work;
 use App\Models\Appointment;
+use App\Models\Workable;
 
 class WorkPolicy
 {
@@ -62,6 +63,10 @@ class WorkPolicy
     {
         if ($work->company_id !== $workable->company_id) {
             return abort(403, 'Cannot use data from another company.');
+        }
+
+        if (Workable::isAlreadyAttached($work, $workable)) {
+            return abort(422, 'This work has been attached');
         }
 
         return $user->hasCompanyPermission($work->company_id, 'attach works');
@@ -121,11 +126,34 @@ class WorkPolicy
     }
 
     /**
-     * Determine whether the user can record many models.
+     * Determine whether the user can execute models.
      *
      * @param  \App\Models\User  $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
+    public function execute(User $user, Work $work, Appointment $appointment)
+    {
+        if ($work->status > 1 && $work->status < 4) {
+            return abort(403,  'Can no longer execute this work');
+        }
+
+        if ($work->company_id !== $appointment->company_id) {
+            return abort(403, 'Cannot use data from another company.');
+        }
+
+        return $user->hasCompanyPermission($appointment->company_id, 'execute works');
+    }
+
+    /**
+     * Determine whether the user can mark finished models.
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Auth\Access\Response|bool
+     */
+    public function markFinish(User $user, Work $work)
+    {
+        return $user->hasCompanyPermission($work->company_id, 'mark finish works');
+    }
 
     /**
      * Determine whether the user can unrecord models.
@@ -135,6 +163,10 @@ class WorkPolicy
      */
     public function update(User $user, Work $work)
     {
+        if ($work->status > WorkStatus::Created) {
+            return abort(403, 'This work can no longer be updated.');
+        }
+
         return $user->hasCompanyPermission($work->company_id, 'update works');
     }
 
@@ -146,6 +178,10 @@ class WorkPolicy
      */
     public function delete(User $user, Work $work)
     {
+        if ($work->status == 3) {
+            return abort(403, 'This work can no longer be deleted');
+        }
+
         return $user->hasCompanyPermission($work->company_id, 'delete works');
     }
 

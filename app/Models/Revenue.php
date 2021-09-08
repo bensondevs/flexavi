@@ -25,11 +25,12 @@ class Revenue extends Model
     protected $fillable = [
         'company_id',
 
+        'revenueable_type',
+        'revenueable_id',
+
         'revenue_name',
         'amount',
         'paid_amount',
-
-        'receipt_path',
     ];
 
     protected static function boot()
@@ -41,7 +42,7 @@ class Revenue extends Model
     	});
     }
 
-    public function getUnpaidRevenueAttribute()
+    public function getUnpaidAmountAttribute()
     {
         $amount = $this->attributes['amount'];
         $paid = $this->attributes['paid_amount'];
@@ -55,34 +56,6 @@ class Revenue extends Model
         return $unpaid <= 0;
     }
 
-    public function setReceiptFileAttribute($receiptFile)
-    {
-        $directory = 'uploads/revenues/receipts/';
-        $receipt = uploadFile($receiptFile, $directory);
-
-        return $this->attributes['receipt_path'] = $receipt->path;
-    }
-
-    public function getReceiptFileAttribute()
-    {
-        if (! $path = $this->attributes['receipt_path']) {    
-            return;
-        }
-
-        $file = StorageFile::findByPath($path);
-        return $file->getFileContent();
-    }
-
-    public function getReceiptUrlAttribute()
-    {
-        if (! $path = $this->attributes['receipt_path']) {
-            return;
-        }
-
-        $file = StorageFile::findByPath($path);
-        return $file->getDownloadUrl();
-    }
-
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -91,5 +64,10 @@ class Revenue extends Model
     public function revenueable()
     {
         return $this->morphTo();
+    }
+
+    public function receipt()
+    {
+        return $this->morphOne(Receipt::class);
     }
 }

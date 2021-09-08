@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Employees\SaveEmployeeRequest as SaveRequest;
-use App\Http\Requests\Employees\FindEmployeeRequest as FindRequest;
-use App\Http\Requests\Employees\DeleteEmployeeRequest as DeleteRequest;
-use App\Http\Requests\Employees\RestoreEmployeeRequest as RestoreRequest;
-use App\Http\Requests\Employees\PopulateEmployeesRequest as PopulateRequest;
+use App\Http\Requests\Employees\{
+    SaveEmployeeRequest as SaveRequest,
+    FindEmployeeRequest as FindRequest,
+    DeleteEmployeeRequest as DeleteRequest,
+    RestoreEmployeeRequest as RestoreRequest,
+    PopulateEmployeesRequest as PopulateRequest
+};
 
 use App\Http\Resources\EmployeeResource;
 

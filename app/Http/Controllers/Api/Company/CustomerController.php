@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Customers\SaveCustomerRequest as SaveRequest;
-use App\Http\Requests\Customers\FindCustomerRequest as FindRequest;
-use App\Http\Requests\Customers\DeleteCustomerRequest as DeleteRequest;
-use App\Http\Requests\Customers\RestoreCustomerRequest as RestoreRequest;
-use App\Http\Requests\Customers\PopulateCompanyCustomersRequest as PopulateRequest;
+use App\Http\Requests\Customers\{
+    SaveCustomerRequest as SaveRequest,
+    FindCustomerRequest as FindRequest,
+    DeleteCustomerRequest as DeleteRequest,
+    RestoreCustomerRequest as RestoreRequest,
+    PopulateCompanyCustomersRequest as PopulateRequest
+};
 
 use App\Http\Resources\CustomerResource;
 

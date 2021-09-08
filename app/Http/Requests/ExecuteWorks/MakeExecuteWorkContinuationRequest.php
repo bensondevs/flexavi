@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Gate;
 use App\Traits\InputRequest;
 
 use App\Models\Work;
-use App\Models\ExecuteWork
+use App\Models\ExecuteWork;
 use App\Models\Appointment;
 
 class MakeExecuteWorkContinuationRequest extends FormRequest

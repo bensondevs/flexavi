@@ -5,31 +5,42 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Appointments\SaveAppointmentRequest as SaveRequest;
-use App\Http\Requests\Appointments\FindAppointmentRequest as FindRequest;
-use App\Http\Requests\Appointments\ExecuteAppointmentRequest as ExecuteRequest;
-use App\Http\Requests\Appointments\CancelAppointmentRequest as CancelRequest;
-use App\Http\Requests\Appointments\RescheduleAppointmentRequest as RescheduleRequest;
-use App\Http\Requests\Appointments\DeleteAppointmentRequest as DeleteRequest;
-use App\Http\Requests\Appointments\RestoreAppointmentRequest as RestoreRequest;
-use App\Http\Requests\Appointments\GenerateAppointmentInvoiceRequest as GenerateInvoiceRequest;
-use App\Http\Requests\Appointments\PopulateCompanyAppointmentsRequest as CompanyPopulateRequest;
-use App\Http\Requests\Appointments\PopulateCustomerAppointmentsRequest as CustomerPopulateRequest;
+use App\Http\Requests\Appointments\{
+    SaveAppointmentRequest as SaveRequest,
+    FindAppointmentRequest as FindRequest,
+    ExecuteAppointmentRequest as ExecuteRequest,
+    CalculateAppointmentRequest as CalculateRequest,
+    CancelAppointmentRequest as CancelRequest,
+    RescheduleAppointmentRequest as RescheduleRequest,
+    DeleteAppointmentRequest as DeleteRequest,
+    RestoreAppointmentRequest as RestoreRequest,
+    GenerateAppointmentInvoiceRequest as GenerateInvoiceRequest,
+    PopulateCompanyAppointmentsRequest as CompanyPopulateRequest,
+    PopulateCustomerAppointmentsRequest as CustomerPopulateRequest
+};
 
 use App\Http\Resources\AppointmentResource;
 
-use App\Repositories\AppointmentRepository;
-use App\Repositories\WorkRepository;
+use App\Repositories\{
+    AppointmentRepository,
+    WorkRepository,
+    CalculationRepository
+};
 
 class AppointmentController extends Controller
 {
     private $appointment;
     private $work;
+    private $calculation;
 
-    public function __construct(AppointmentRepository $appointment, WorkRepository $work)
-    {
+    public function __construct(
+        AppointmentRepository $appointment, 
+        WorkRepository $work,
+        CalculationRepository $calculation
+    ) {
     	$this->appointment = $appointment;
         $this->work = $work;
+        $this->calculation = $calculation;
     }
 
     public function companyAppointments(CompanyPopulateRequest $request)
@@ -76,23 +87,11 @@ class AppointmentController extends Controller
     public function view(FindRequest $request)
     {
         $appointment = $request->getAppointment();
-        $appointment->load([
-            'customer', 
-            'subs', 
-            'quotation', 
-            'works',
-            'worklist',
-            'workday',
-            //'executeWorks', 
-            'costs', 
-            'revenues', 
-            /*'warranty', 
-            'paymentReminder', 
-            'invoice', 
-            'calculation',*/
-        ]);
+        $relations = $request->relations();
+        $appointment->load($relations);
 
-        return response()->json(['appointment' => new AppointmentResource($appointment)]);
+        $appointment = new AppointmentResource($appointment);
+        return response()->json(['appointment' => $appointment]);
     }
 
     public function execute(ExecuteRequest $request)
@@ -134,6 +133,20 @@ class AppointmentController extends Controller
         $appointment = $this->appointment->reschedule($input);
 
         return apiResponse($this->appointment);
+    }
+
+    public function calculate(CalculateRequest $request)
+    {
+        $appointment = $request->getAppointment();
+        $appointment = $this->appointment->setModel($appointment);
+        $appointment = $this->appointment->syncRevenues();
+
+        if ($this->appointment->status == 'error') {
+            return apiResponse($this->appointment);
+        }
+
+        $calculation = $this->calculation->calculateAppointment($appointment);
+        return apiResponse($this->calculation, ['calculation' => $calculation]);
     }
 
     public function generateInvoice(GenerateInvoiceRequest $request)

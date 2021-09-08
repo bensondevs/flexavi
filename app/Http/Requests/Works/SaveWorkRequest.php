@@ -20,12 +20,31 @@ class SaveWorkRequest extends FormRequest
 
     private $work;
 
+    private $quotation;
+    private $appointment;
+
     public function getWork()
     {
         if ($this->work) return $this->work;
 
         $id = $this->input('id');
         return $this->work = $this->model = Work::findOrFail($id);
+    }
+
+    public function getQuotation()
+    {
+        if ($this->quotation) return $this->quotation;
+
+        $id = $this->input('quotation_id');
+        return $this->quotation = Quotation::findOrFail($id);
+    }
+
+    public function getAppointment()
+    {
+        if ($this->appointment) return $this->appointment;
+
+        $id = $this->input('appointment_id');
+        return $this->appointment = Appointment::findOrFail($id);
     }
 
     protected function prepareForValidation()
@@ -72,6 +91,9 @@ class SaveWorkRequest extends FormRequest
             'description' => ['required', 'string'],
             'unit_price' => ['required', new FloatValue(true)],
             'include_tax' => ['required', 'boolean'],
+
+            'appointment_id' => ['required', 'string', 'required_without:quotation_id'],
+            'quotation_id' => ['required', 'string', 'required_without:appointment_id'],
         ]);
 
         if ($this->input('include_tax')) {

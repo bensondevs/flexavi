@@ -41,7 +41,7 @@ class AppointmentPolicy
 
     public function reschedule(User $user, Appointment $appointment)
     {
-        if ($appointment->status != AppointmentStatus::Calculated) {
+        if ($appointment->status !== AppointmentStatus::Calculated) {
             return abort(422, 'This appointment cannot be rescheduled');
         }
 
@@ -78,16 +78,21 @@ class AppointmentPolicy
 
     public function process(User $user, Appointment $appointment)
     {
-        if ($appointment->status != AppointmentStatus::InProcess) {
+        if ($appointment->status !== AppointmentStatus::InProcess) {
             return $this->deny('You can only process appointment that has been in process only');
         }
 
         return $user->hasCompanyPermission($appointment->company_id, 'process appointments');
     }
 
-    public function calculate(User $user, Appointment $appointment) {
-        if ($appointment->status != AppointmentStatus::Processed) {
+    public function calculate(User $user, Appointment $appointment) 
+    {
+        if ($appointment->status !== AppointmentStatus::Processed) {
             return $this->deny('You can only calculate processed appointment.');
+        }
+
+        if ($appointment->hasActiveWorks()) {
+            return $this->deny('This appointment has works that needs to be marked finish or unfinished.');
         }
 
         return $user->hasCompanyPermission($appointment->company_id, 'calculate appointments');

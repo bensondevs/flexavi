@@ -5,6 +5,8 @@ namespace App\Http\Requests\Works;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Models\Work;
+
 class FindWorkRequest extends FormRequest
 {
     private $work;
@@ -13,7 +15,16 @@ class FindWorkRequest extends FormRequest
     {
         if ($this->work) return $this->work;
 
-        return $this->work = Work::findOrFail($this->input('id'));
+        $id = $this->input('id') ?: $this->input('work_id');
+
+        $withs = [
+            'appointments', 
+            'quotations', 
+            'finishedAtAppointment',
+            'executeWorks',
+            'currentExecuteWork',
+        ];
+        return $this->work = Work::with($withs)->findOrFail($id);
     }
 
     /**

@@ -7,6 +7,8 @@ use \Illuminate\Database\QueryException;
 
 use App\Models\Car;
 
+use App\Enums\Car\CarStatus;
+
 use App\Repositories\Base\BaseRepository;
 
 class CarRepository extends BaseRepository
@@ -20,7 +22,7 @@ class CarRepository extends BaseRepository
 	{
 		array_push($options['wheres'], [
 			'column' => 'status',
-			'value' => 'free',
+			'value' => CarStatus::Free,
 		]);
 
 		return $this->all($options);

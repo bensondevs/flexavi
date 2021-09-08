@@ -22,26 +22,6 @@ class CreateWorksTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            /*$table->uuid('appointment_id')->nullable();
-            $table->foreign('appointment_id')
-                ->references('id')
-                ->on('appointments')
-                ->onDelete('SET NULL');
-
-            $table->uuid('quotation_id')->nullable();
-            $table->foreign('quotation_id')
-                ->references('id')
-                ->on('quotations')
-                ->onDelete('SET NULL');
-
-            $table->uuid('work_contract_id')->nullable();
-            $table->foreign('work_contract_id')
-                ->references('id')
-                ->on('work_contracts')
-                ->onDelete('SET NULL');*/
-
-            // $table->nullableUuidMorphs('workable');
-
             $table->tinyInteger('status')->default(1);
 
             $table->double('quantity', 8, 2)->default(0);
@@ -58,10 +38,18 @@ class CreateWorksTable extends Migration
             $table->text('unfinish_note')->nullable();
             $table->text('finish_note')->nullable();
 
+            $table->uuid('finished_at_appointment_id')->nullable();
+            $table->foreign('finished_at_appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('SET NULL');
+
+            $table->boolean('revenue_recorded')->default(false);
+
             $table->timestamps();
             $table->timestamp('executed_at')->nullable();
             $table->timestamp('finished_at')->nullable();
-            $table->timestamp('marked_unfinished_at')->nullable();
+            $table->timestamp('unfinished_at')->nullable();
             $table->softDeletes();
         });
     }

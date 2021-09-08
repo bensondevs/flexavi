@@ -3,41 +3,47 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Api\Company\CarController;
-use App\Http\Controllers\Api\Company\InvoiceController;
-	use App\Http\Controllers\Api\Company\InvoiceItemController;
-use App\Http\Controllers\Api\Company\CompanyController;
-use App\Http\Controllers\Api\Company\AddressController;
-use App\Http\Controllers\Api\Company\EmployeeController;
-use App\Http\Controllers\Api\Company\CustomerController;
-use App\Http\Controllers\Api\Company\QuotationController;
-	use App\Http\Controllers\Api\Company\Works\QuotationWorkController;
-use App\Http\Controllers\Api\Company\OwnerController;
-use App\Http\Controllers\Api\Company\InspectorController;
-use App\Http\Controllers\Api\Company\PaymentTermController;
-use App\Http\Controllers\Api\Company\WorkdayController;
-	use App\Http\Controllers\Api\Company\WorkdayWorklistController;
-	use App\Http\Controllers\Api\Company\Company\Costs\WorkdayCostController;
-	use App\Http\Controllers\Api\Company\WorklistController;
-		use App\Http\Controllers\Api\Company\WorklistAppointmentController;
-		use App\Http\Controllers\Api\Company\AppointmentController;
-			use App\Http\Controllers\Api\Company\SubAppointmentController;
-			use App\Http\Controllers\Api\Company\AppointmentWorkerController;
-			use App\Http\Controllers\Api\Company\Costs\AppointmentCostController;
-			use App\Http\Controllers\Api\Company\Works\AppointmentWorkController;
-use App\Http\Controllers\Api\Company\CostController;
-use App\Http\Controllers\Api\Company\RevenueController;
-use App\Http\Controllers\Api\Company\ReceiptController;
-use App\Http\Controllers\Api\Company\RegisterInvitationController;
-use App\Http\Controllers\Api\Company\WorkController;
-use App\Http\Controllers\Api\Company\WorkContractController;
-use App\Http\Controllers\Api\Company\ExecuteWorkController;
-	use App\Http\Controllers\Api\Company\ExecuteWorkPhotoController;
+use App\Http\Controllers\Api\Company\{
+	CarController,
+	InvoiceController,
+		InvoiceItemController,
+	CompanyController,
+	AddressController,
+	EmployeeController,
+	CustomerController,
+	QuotationController,
+		QuotationWorkController,
+	OwnerController,
+	InspectorController,
+	PaymentTermController,
+	WorkdayController,
+		WorkdayWorklistController,
+		Costs\WorkdayCostController,
+		WorklistController,
+			WorklistAppointmentController,
+			AppointmentController,
+				SubAppointmentController,
+					SubAppointmentWorkController,
+				AppointmentWorkerController,
+				Costs\AppointmentCostController,
+				AppointmentWorkController,
+	CostController,
+		Receipts\CostReceiptController,
+	RevenueController,
+		Receipts\RevenueReceiptController,
+	ReceiptController,
+	RegisterInvitationController,
+	WorkController,
+	WorkContractController,
+	ExecuteWorkController,
+		ExecuteWorkPhotoController
+};
 
 Route::post('register', [CompanyController::class, 'register']);
 
 Route::group(['middleware' => ['has_company']], function () {
 	Route::get('user', [CompanyController::class, 'userCompany']);
+	Route::get('settings', [CompanyController::class, 'settings']);
 	Route::post('upload_logo', [CompanyController::class, 'uploadCompanyLogo']);
 	Route::match(['PUT', 'PATCH'], 'update', [CompanyController::class, 'update']);
 
@@ -171,6 +177,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::post('reschedule', [AppointmentController::class, 'reschedule']);
 		Route::post('execute', [AppointmentController::class, 'execute']);
 		Route::post('process', [AppointmentController::class, 'process']);
+		Route::post('calculate', [AppointmentController::class, 'calculate']);
 
 		Route::post('generate_invoice', [AppointmentController::class, 'generateInvoice']);
 
@@ -186,6 +193,19 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('execute', [SubAppointmentController::class, 'execute']);
 			Route::post('process', [SubAppointmentController::class, 'process']);
 			Route::delete('delete', [SubAppointmentController::class, 'delete']);
+
+			/*
+				Sub Appointment Work Module 
+			*/
+			Route::group(['prefix' => 'works'], function () {
+				Route::get('/', [SubAppointmentWorkController::class, 'subAppointmentWorks']);
+				Route::post('store', [SubAppointmentWorkController::class, 'store']);
+				Route::post('attach', [SubAppointmentWorkController::class, 'attach']);
+				Route::post('attach_many', [SubAppointmentWorkController::class, 'attachMany']);
+				Route::post('detach', [SubAppointmentWorkController::class, 'detach']);
+				Route::post('detach_many', [SubAppointmentWorkController::class, 'detachMany']);
+				Route::post('truncate', [SubAppointmentWorkController::class, 'truncate']);
+			});
 		});
 
 		/*
@@ -226,17 +246,6 @@ Route::group(['middleware' => ['has_company']], function () {
 	});
 
 	/*
-		Company Cost Module
-	*/
-	Route::group(['prefix' => 'costs'], function () {
-		Route::get('/', [CostController::class, 'companyCosts']);
-		Route::post('store', [CostController::class, 'store']);
-		Route::match(['PUT', 'PATCH'], 'update', [CostController::class, 'update']);
-		Route::delete('delete', [CostController::class, 'delete']);
-		Route::patch('restore', [CostController::class, 'restore']);
-	});
-
-	/*
 		Company Receipt Module
 	*/
 	Route::group(['prefix' => 'receipts'], function () {
@@ -249,14 +258,36 @@ Route::group(['middleware' => ['has_company']], function () {
 	});
 
 	/*
+		Company Cost Module
+	*/
+	Route::group(['prefix' => 'costs'], function () {
+		Route::get('/', [CostController::class, 'companyCosts']);
+		Route::post('store', [CostController::class, 'store']);
+		Route::get('view', [CostController::class, 'view']);
+		Route::match(['PUT', 'PATCH'], 'update', [CostController::class, 'update']);
+		Route::delete('delete', [CostController::class, 'delete']);
+		Route::patch('restore', [CostController::class, 'restore']);
+
+		Route::group(['prefix' => 'receipt'], function () {
+			Route::post('attach', [CostReceiptController::class, 'attach']);
+			Route::post('replace', [CostReceiptController::class, 'replace']);
+		});
+	});
+
+	/*
 		Company Revenue Module
 	*/
-	Route::group(['prefix' => 'revenue'], function () {
+	Route::group(['prefix' => 'revenues'], function () {
 		Route::get('/', [RevenueController::class, 'companyRevenues']);
 		Route::post('store', [RevenueController::class, 'store']);
 		Route::match(['PUT', 'PATCH'], 'update', [RevenueController::class, 'update']);
 		Route::delete('delete', [RevenueController::class, 'delete']);
 		Route::patch('restore', [RevenueController::class, 'restore']);
+
+		Route::group(['prefix' => 'receipt'], function () {
+			Route::post('attach', [RevenueReceiptController::class, 'attach']);
+			Route::post('replace', [RevenueReceiptController::class, 'replace']);
+		});
 	});
 
 	/*
@@ -372,30 +403,42 @@ Route::group(['middleware' => ['has_company']], function () {
 	*/
 	Route::group(['prefix' => 'works'], function () {
 		Route::get('/', [WorkController::class, 'companyWorks']);
+		Route::get('appointment_finisheds', [WorkController::class, 'appointmentFinishedWorks']);
 		Route::get('finisheds', [WorkController::class, 'finishedWorks']);
 		Route::get('unfinisheds', [WorkController::class, 'unfinishedWorks']);
+		Route::get('trasheds', [WorkController::class, 'trashedWorks']);
 		Route::post('store', [WorkController::class, 'store']);
+		Route::get('view', [WorkController::class, 'view']);
 		Route::match(['PUT', 'PATCH'], 'update', [WorkController::class, 'update']);
 		Route::delete('delete', [WorkController::class, 'delete']);
+		Route::patch('restore', [WorkController::class, 'restore']);
 
 		/*
 			Execute Work Module
 		*/
-		Route::group(['prefix' => 'execute'], function () {
+		Route::group(['prefix' => 'executes'], function () {
+			Route::get('/', [ExecuteWorkController::class, 'executeWorks']);
+			Route::get('trasheds', [ExecuteWorkController::class, 'trashedExecuteWorks']);
 			Route::post('execute', [ExecuteWorkController::class, 'execute']);
-			Route::post('finish', [ExecuteWorkController::class, 'finish']);
+			Route::post('mark_finished', [ExecuteWorkController::class, 'markFinished']);
+			Route::post('mark_unfinished', [ExecuteWorkController::class, 'markUnfinished']);
 			Route::delete('delete', [ExecuteWorkController::class, 'delete']);
+			Route::patch('restore', [ExecuteWorkController::class, 'restore']);
 
 			/*
 				Execute Work Photo Module
 			*/
 			Route::group(['prefix' => 'photos'], function () {
-				Route::get('/', [ExecuteWorkPhotoController::class, 'exeuteWorkPhotos']);
-				Route::post('upload_before', [ExecuteWorkPhotoController::class, 'uploadBefore']);
-				Route::post('upload_after', [ExecuteWorkPhotoController::class, 'uploadAfter']);
+				Route::get('/', [ExecuteWorkPhotoController::class, 'executeWorkPhotos']);
+				Route::get('trasheds', [ExecuteWorkPhotoController::class, 'trashedExecuteWorkPhotos']);
+				Route::post('upload', [ExecuteWorkPhotoController::class, 'upload']);
+				Route::post('upload_many', [ExecuteWorkPhotoController::class, 'uploadMany']);
 				Route::delete('delete', [ExecuteWorkPhotoController::class, 'delete']);
 			});
 		});
+		Route::post('process', [WorkController::class, 'process']);
+		Route::post('mark_finish', [WorkController::class, 'markFinish']);
+		Route::post('mark_unfinish', [WorkController::class, 'markUnfinsih']);
 	});
 
 	/*

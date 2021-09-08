@@ -81,6 +81,16 @@ class PermissionsSeeder extends Seeder
             'truncate costs',
             'edit costs',
             'delete costs',
+            'force delete costs',
+
+            // Revenue
+            'view any revenues',
+            'view revenues',
+            'create revenues',
+            'edit revenues',
+            'delete revenues',
+            'restore revenues',
+            'force delete revenues',
 
         	// Car
             'view any cars',
@@ -276,16 +286,27 @@ class PermissionsSeeder extends Seeder
             'view any works',
         	'view works',
         	'create works',
+            'execute works',
+            'process works',
+            'mark finish works',
+            'mark unfinish works',
         	'edit works',
         	'delete works',
             'restore works',
             'force delete works',
 
             // Execute Work
-            'execute works',
+            'view any execute works',
             'mark finished execute works',
             'mark unfinished execute works',
             'make continuation execute works',
+            'delete execute works',
+            'restore execute works',
+
+            // Execute Work
+            'view any execute work photos',
+            'upload execute work photos',
+            'delete execute work photos',
 
         	// Work Contract
             'view any work contracts',

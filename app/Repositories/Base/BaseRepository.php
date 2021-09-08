@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use \Illuminate\Database\QueryException;
+use Illuminate\Database\Eloquent\Builder;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -94,7 +95,7 @@ class BaseRepository
 		return $this->paginations = null;
 	}
 
-	public function all(array $options = [], bool $pagination = false)
+	public function all(array $options = [], bool $pagination = false, bool $skipGet = false)
 	{
 		$models = $this->getModel();
 
@@ -173,7 +174,7 @@ class BaseRepository
 				$morphClasses = $morph['classes'];
 				$morphConditions = $morph['conditions'];
 
-				$models = $models->whereHasMorph($relation, $morphClasses, function ($query) use ($morphConditions) {
+				$models = $models->whereHasMorph($relation, $morphClasses, function (Builder $query) use ($morphConditions) {
 					foreach ($morphConditions as $condition) {
 						$operator = isset($condition['operator']) ? 
 							$condition['operator'] : 
@@ -217,7 +218,9 @@ class BaseRepository
 			$this->defaultPaginationPerPage = $options['per_page'];
 		}
 
-		$models = $models->get();
+		if (! $skipGet) {
+			$models = $models->get();
+		}
 		// dd(DB::getQueryLog());
 		$this->setCollection($models);
 

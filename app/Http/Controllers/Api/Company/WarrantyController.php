@@ -26,19 +26,18 @@ class WarrantyController extends Controller
     {
     	$options = $request->options();
 
-    	$warranties = $this->warranty->all($options);
-    	$warranties = $this->warranty->paginate();
-    	$warranties->data = WarrantyResource::collection($warranties);
+    	$warranties = $this->warranty->all($options, true);
+    	$warranties = WarrantyResource::apiCollection($warranties);
 
     	return response()->json(['warranties' => $warranties]);
     }
 
     public function store(SaveRequest $request)
     {
-    	$input = $request->onlyInRules();
+    	$input = $request->validated();
     	$warranty = $this->warranty->save($input);
 
-    	return apiResponse($this->warranty, ['warranty' => $warranty]);
+    	return apiResponse($this->warranty);
     }
 
     public function update(SaveRequest $request)
@@ -46,18 +45,19 @@ class WarrantyController extends Controller
     	$warranty = $request->getWarranty();
     	$this->warranty->setModel($warranty);
 
-    	$input = $request->onlyInRules();
+    	$input = $request->validated();
     	$this->warranty->save($input);
 
-    	return apiResponse($this->warranty, ['warranty' => $warranty]);
+    	return apiResponse($this->warranty);
     }
 
     public function delete(FindRequest $request)
     {
     	$warranty = $request->getWarranty();
-    	
     	$this->warranty->setModel($warranty);
-    	$this->warranty->delete();
+
+        $force = $request->force;
+    	$this->warranty->delete($force);
 
     	return apiResponse($this->warranty);
     }

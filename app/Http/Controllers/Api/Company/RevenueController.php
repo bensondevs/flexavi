@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Http\Requests\Revenues\PopulateCompanyRevenuesRequest as PopulateRequest;
+
+use App\Http\Resources\RevenueResource;
+
 use App\Repositories\RevenueRepository;
 
 class RevenueController extends Controller

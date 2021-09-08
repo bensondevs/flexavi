@@ -23,7 +23,10 @@ class Revenueable extends Model
     ];
 
     protected $fillable = [
+        'revenue_id',
 
+        'revenueable_type',
+        'revenueable_id',
     ];
 
     protected static function boot()
@@ -33,5 +36,15 @@ class Revenueable extends Model
     	self::creating(function ($revenueable) {
             $revenueable->id = Uuid::generate()->string;
     	});
+    }
+
+    public function revenue()
+    {
+        return $this->belongsTo(Revenue::class);
+    }
+
+    public function revenueable()
+    {
+        return $this->morphTo();
     }
 }

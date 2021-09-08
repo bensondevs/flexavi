@@ -16,6 +16,8 @@ use App\Traits\Searchable;
 
 use App\Models\EmailVerification;
 
+use App\Repositories\AuthRepository;
+
 use App\Observers\UserObserver;
 
 use App\Enums\User\UserIdCardType;
@@ -53,6 +55,9 @@ class User extends Authenticatable
         'id_card_type',
         'id_card_number',
         'phone',
+
+        // Photo
+        'profile_picture_path',
 
         // Authentication
         'email',
@@ -229,5 +234,18 @@ class User extends Authenticatable
     public static function checkEmailUsed($email)
     {
         return self::where('email', $email)->count() > 0;
+    }
+
+    public function sendEmailVerification()
+    {
+        $authRepository = new AuthRepository();
+        $authRepository->setModel($this);
+        $authRepository->sendEmailVerification();
+    }
+
+    public function unverifyEmail()
+    {
+        $this->attributes['email_verified_at'] = null;
+        return $this->save();
     }
 }

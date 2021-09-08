@@ -31,6 +31,16 @@ class StorageFile extends Model
         self::observe(StorageFileObserver::class);
     }
 
+    public function scopeExpired($query)
+    {
+        return $query->where('destroy_at', '<=', now());
+    }
+
+    public static function destroyFile($path, $disk = 'public')
+    {
+        return Storage::disk($disk)->delete($path);
+    }
+
     public function getDownloadUrl()
     {
         $disk = $this->attributes['disk'];
@@ -62,5 +72,41 @@ class StorageFile extends Model
         }
 
         return $record;
+    }
+
+    public function deleteFile()
+    {
+        $disk = $this->attributes['disk'];
+        $path = $this->attributes['path'];
+
+        if (! Storage::disk($disk)->has($path)) {
+            return $this->delete();
+        }
+
+        if (Storage::disk($disk)->delete($path)) {
+            return $this->delete();
+        }
+
+        return false;
+    }
+
+    public function detonateFile()
+    {
+        $disk = $this->attributes['disk'];
+        $path = $this->attributes['path'];
+
+        return Storage::disk($disk)->delete($path);
+    }
+
+    public function setDestroyCountDown($date)
+    {
+        $this->attributes['destroy_at'] = $date;
+        return $this->save();
+    }
+
+    public function stopDestroyCountDown()
+    {
+        $this->attributes['destroy_at'] = null;
+        return $this->save();
     }
 }

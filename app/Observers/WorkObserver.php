@@ -4,6 +4,10 @@ namespace App\Observers;
 
 use App\Models\Work;
 
+use App\Enums\Work\WorkStatus;
+
+use App\Repositories\RevenueRepository;
+
 class WorkObserver
 {
     /**
@@ -14,7 +18,10 @@ class WorkObserver
      */
     public function created(Work $work)
     {
-        //
+        if ($quotation = $work->quotation) {
+            $quotation->countWorksAmount();
+            $quotation->save();
+        }
     }
 
     /**
@@ -25,7 +32,19 @@ class WorkObserver
      */
     public function updated(Work $work)
     {
-        //
+        if ($work->isDirty('quantity') || $work->isDirty('unit_price')) {
+            if ($work->quotation) {
+                $quotation->countWorksAmount();
+                $quotation->save();
+            }
+        }
+
+        if ($work->isDirty('status') && $work->status == WorkStatus::Finished) {
+            if (! $work->revenue_recorded) {
+                $revenueRepository = new RevenueRepository();
+                $revenueRepository->recordWork($work);
+            }
+        }
     }
 
     /**
@@ -58,7 +77,8 @@ class WorkObserver
      */
     public function markedFinished(Work $work)
     {
-        //
+        $revenueRepository = new RevenueRepository();
+        $revenueRepository->recordWork($work);
     }
 
     /**
@@ -80,7 +100,10 @@ class WorkObserver
      */
     public function deleted(Work $work)
     {
-        //
+        if ($quotation = $work->quotation) {
+            $quotation->amount -= $work->total_price;
+            $quotation->save();
+        }
     }
 
     /**
@@ -91,7 +114,7 @@ class WorkObserver
      */
     public function restored(Work $work)
     {
-        //
+        $this->created($work);
     }
 
     /**
@@ -102,6 +125,6 @@ class WorkObserver
      */
     public function forceDeleted(Work $work)
     {
-        //
+        $this->deleted($work);
     }
 }

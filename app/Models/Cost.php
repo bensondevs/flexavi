@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 use App\Enums\Cost\CostableType;
 
@@ -14,6 +15,7 @@ class Cost extends Model
 {
     use SoftDeletes;
     use Searchable;
+    use HasRelationships;
 
     protected $table = 'costs';
     protected $primaryKey = 'id';
@@ -81,6 +83,11 @@ class Cost extends Model
         return $this->morphedByMany(Appointment::class, 'costable');
     }
 
+    public function appointment()
+    {
+        return $this->appointments()->latest();
+    }
+
     public function getAppointmentAttribute()
     {
         return $this->appointments()->first();
@@ -109,5 +116,10 @@ class Cost extends Model
     public function costables()
     {
         return $this->hasMany(Costable::class);
+    }
+
+    public function receipt()
+    {
+        return $this->morphOne(Receipt::class, 'receiptable');
     }
 }

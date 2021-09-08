@@ -90,6 +90,11 @@ class SubAppointment extends Model
         return $this->belongsTo(self::class, 'next_sub_appointment_id');
     }
 
+    public function works()
+    {
+        return $this->morphToMany(Work::class, 'workable');
+    }
+
     public function isLate()
     {
         $end = carbon()->parse($this->attributes['end']);

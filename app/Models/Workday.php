@@ -88,6 +88,16 @@ class Workday extends Model
         return $this->hasManyThrough(Cost::class, Worklist::class);
     }
 
+    public function employees()
+    {
+        return $this->hasManyDeep(
+            Employee::class,
+            [Appointmentable::class, Appointment::class, AppointmentEmployee::class],
+            [['appointmentable_type', 'appointmentable_id'], 'id', 'appointment_id', 'id'],
+            [null, 'appointment_id', 'id', 'employee_id']
+        );
+    }
+
     public function process()
     {
         $this->attributes['status'] = WorkdayStatus::Processed;

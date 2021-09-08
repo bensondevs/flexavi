@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Models\ExecuteWork;
 
+use App\Enums\ExecuteWork\ExecuteWorkStatus;
+
 class ExecuteWorkObserver
 {
     /**
@@ -15,7 +17,7 @@ class ExecuteWorkObserver
     public function created(ExecuteWork $executeWork)
     {
         $work = $executeWork->work;
-        $work->process();
+        $work->execute($executeWork->appointment);
     }
 
     /**

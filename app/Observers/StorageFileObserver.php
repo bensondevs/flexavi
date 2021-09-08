@@ -25,7 +25,12 @@ class StorageFileObserver
      */
     public function updated(StorageFile $storageFile)
     {
-        //
+        if ($storageFile->isDirty('path') || $storageFile->isDirty('disk')) {
+            $path = $storageFile->getOriginal('path');
+            $disk = $storageFile->getOriginal('disk');
+
+            StorageFile::destroyFile($path, $disk);
+        }
     }
 
     /**
@@ -36,7 +41,7 @@ class StorageFileObserver
      */
     public function deleted(StorageFile $storageFile)
     {
-        //
+        $storageFile->detonateFile();
     }
 
     /**
@@ -58,6 +63,6 @@ class StorageFileObserver
      */
     public function forceDeleted(StorageFile $storageFile)
     {
-        //
+        $storageFile->detonateFile();
     }
 }

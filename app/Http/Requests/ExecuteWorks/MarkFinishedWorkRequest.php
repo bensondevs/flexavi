@@ -19,7 +19,7 @@ class MarkFinishedWorkRequest extends FormRequest
     {
         if ($this->executeWork) return $this->executeWork;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('execute_work_id');
         return $this->executeWork = ExecuteWork::findOrFail($id);
     }
 
@@ -44,5 +44,7 @@ class MarkFinishedWorkRequest extends FormRequest
         $this->setRules([
             'finish_note' => ['string'],
         ]);
+
+        return $this->returnRules();
     }
 }

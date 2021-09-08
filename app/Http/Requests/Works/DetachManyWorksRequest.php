@@ -3,9 +3,14 @@
 namespace App\Http\Requests\Works;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+
+use App\Traits\WorkableRequest;
 
 class DetachManyWorksRequest extends FormRequest
 {
+    use WorkableRequest;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +18,22 @@ class DetachManyWorksRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $workable = $this->getWorkable();
+        return Gate::allows('detach-many-work', $workable);
+    }
+
+    /**
+     * Prepare for validation.
+     *
+     * @return void
+     */
+    public function prepareForValidation()
+    {
+        if (! is_array($this->input('work_ids'))) {
+            $workIds = $this->input('work_ids');
+            $workIds = json_decode($workIds, true);
+            $this->merge(['work_ids' => $workIds]);
+        }
     }
 
     /**
@@ -24,7 +44,8 @@ class DetachManyWorksRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'work_ids' => ['required', 'array'],
+            'work_ids.*' => ['required', 'string', 'exists:works,id'],
         ];
     }
 }

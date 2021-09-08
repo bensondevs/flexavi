@@ -7,7 +7,7 @@ use \Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
-use App\Enums\PhotoConditionType;
+use App\Enums\ExecuteWorkPhoto\PhotoConditionType;
 
 use App\Models\ExecuteWorkPhoto;
 
@@ -25,7 +25,7 @@ class ExecuteWorkPhotoRepository extends BaseRepository
 		$photos = $this->getCollection();
 
 		$type = PhotoConditionType::Before;
-		return $photos->where('photo_condition_type', $type);
+		return $photos->where('photo_condition_type', $type)->values();
 	}
 
 	public function afterWorkPhotos()
@@ -33,7 +33,7 @@ class ExecuteWorkPhotoRepository extends BaseRepository
 		$photos = $this->getCollection();
 
 		$type = PhotoConditionType::After;
-		return $photos->where('photo_condition_type', $type);
+		return $photos->where('photo_condition_type', $type)->values();
 	}
 
 	public function uploadPhoto(array $photoData = [])
@@ -71,11 +71,13 @@ class ExecuteWorkPhotoRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
-	public function delete()
+	public function delete(bool $force = false)
 	{
 		try {
 			$photo = $this->getModel();
-			$photo->delete();
+			$force ?
+				$photo->forceDelete() :
+				$photo->delete();
 
 			$this->destroyModel();
 

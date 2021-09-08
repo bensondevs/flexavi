@@ -15,6 +15,8 @@ use App\Enums\Appointment\AppointmentType;
 use App\Enums\Appointment\AppointmentStatus;
 use App\Enums\Appointment\AppointmentCancellationVault;
 
+use App\Enums\Work\WorkStatus;
+
 class Appointment extends Model
 {
     use SoftDeletes;
@@ -58,10 +60,6 @@ class Appointment extends Model
         'include_weekend' => 'boolean',
         'start' => 'datetime',
         'end' => 'datetime',
-
-        'status' => AppointmentStatus::class,
-        'type' => AppointmentType::class,
-        'cancellation_vault' => AppointmentCancellationVault::class,
     ];
 
     protected static function boot()
@@ -153,6 +151,18 @@ class Appointment extends Model
         return $this->belongsTo(Customer::class);
     }
 
+    public function employees()
+    {
+        return $this->hasManyThrough(
+            Employee::class, 
+            AppointmentEmployee::class, 
+            'appointment_id', 
+            'id', 
+            'id',
+            'employee_id'
+        );
+    }
+
     public function subs()
     {
         return $this->hasMany(SubAppointment::class);
@@ -171,6 +181,11 @@ class Appointment extends Model
     public function works()
     {
         return $this->morphToMany(Work::class, 'workable');
+    }
+
+    public function finishedWorks()
+    {
+        return $this->hasMany(Work::class, 'finished_at_appointment_id');
     }
 
     public function executeWorks()
@@ -198,6 +213,11 @@ class Appointment extends Model
         return $this->morphMany(Receipt::class, 'receiptable');
     }
 
+    public function revenueables()
+    {
+        return $this->morphMany(Revenueable::class, 'revenueable');
+    }
+
     public function revenues()
     {
         return $this->morphToMany(Revenue::class, 'revenueable');
@@ -210,7 +230,7 @@ class Appointment extends Model
 
     public function calculation()
     {
-        return $this->hasOne(AppointmentCalculation::class);
+        return $this->morphOne(Calculation::class, 'calculationable');
     }
 
     public function worklists()
@@ -238,9 +258,25 @@ class Appointment extends Model
         return AppointmentCancellationVault::asSelectArray();
     }
 
+    public function hasActiveWorks()
+    {
+        return $this->works()
+            ->where('status', WorkStatus::Active)->count() > 0;
+    }
+
+    public function hasUnfinishedWorks()
+    {
+        return $this->works()->where('status', WorkStatus::Unfinished)->count() > 0;
+    }
+
+    public function getNumFinishedWorksAttribute()
+    {
+        return $this->works()->where('status', WorkStatus::Finished)->count();
+    }
+
     public function syncWorkdays()
     {
-        $workdays = Workday::inAppointmentRange($this)->get();
+        $workdays = Workday::inAppointmentRange($this->first())->get();
         return $this->workdays()->sync($workdays);
     }
 
@@ -289,5 +325,16 @@ class Appointment extends Model
         $this->fireModelEvent('cancelled');
 
         return $cancel;
+    }
+
+    public function markCalculated()
+    {
+        $this->attributes['status'] = AppointmentStatus::Calculated;
+        $this->attributes['calculated_at'] = now();
+        $calculate = $this->save();
+
+        $this->fireModelEvent('calculated');
+
+        return $calculate;
     }
 }

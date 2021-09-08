@@ -134,7 +134,7 @@ trait PopulateRequestOptions
 
 	public function addOrderBy($column, $type = 'DESC')
 	{
-		$this->orderBy[] = [
+		$this->orderBys[] = [
 			'column' => $column,
 			'type' => $type,
 		];
@@ -168,6 +168,7 @@ trait PopulateRequestOptions
             'where_raws' => $this->where_raws,
             'where_hases' => $this->whereHases,
             'where_has_morphs' => $this->whereHasMorphs,
+            'order_bys' => $this->orderBys,
         ];
 
         return $options;

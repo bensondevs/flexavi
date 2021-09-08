@@ -49,7 +49,7 @@ class ExecuteWorkRequest extends FormRequest
         $work = $this->getWork();
         $appointment = $this->getAppointment();
 
-        return Gate::allows('execute-work', $work, $appointment);
+        return Gate::allows('execute-work', [$work, $appointment]);
     }
 
     /**
@@ -62,6 +62,7 @@ class ExecuteWorkRequest extends FormRequest
         $this->setRules([
             'appointment_id' => ['required', 'string'],
             'work_id' => ['required', 'string'],
+            'description' => ['required', 'string'],
         ]);
 
         return $this->returnRules();
@@ -69,7 +70,7 @@ class ExecuteWorkRequest extends FormRequest
 
     public function executeData()
     {
-        $input = $request->onlyInRules();
+        $input = $this->validated();
         $input['company_id'] = $this->getAppointment()->company_id;
         return $input;
     }

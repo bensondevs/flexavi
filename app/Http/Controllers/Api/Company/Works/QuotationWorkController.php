@@ -123,7 +123,7 @@ class QuotationWorkController extends Controller
         $quotation = $request->getQuotation();
         $workIds = $request->work_ids;
 
-        $this->work->detachFromMany($quotation, $workIds);
+        $this->work->detachManyFrom($quotation, $workIds);
         return apiResponse($this->work);
     }
 

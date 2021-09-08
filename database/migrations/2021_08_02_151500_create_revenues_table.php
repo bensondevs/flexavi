@@ -22,12 +22,11 @@ class CreateRevenuesTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->uuidMorphs('revenueable');
+            // $table->uuidMorphs('revenueable');
 
             $table->string('revenue_name');
             $table->double('amount', 8, 2);
-
-            $table->string('receipt_path')->nullable();
+            $table->double('paid_amount', 8, 2);
 
             $table->timestamps();
             $table->softDeletes();

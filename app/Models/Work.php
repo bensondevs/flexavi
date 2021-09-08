@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 use App\Enums\Work\WorkStatus;
 use App\Enums\ExecuteWork\ExecuteWorkStatus;
@@ -17,6 +18,7 @@ class Work extends Model
 {
     use Searchable;
     use SoftDeletes;
+    use HasRelationships;
 
     protected $table = 'works';
     protected $primaryKey = 'id';
@@ -34,8 +36,8 @@ class Work extends Model
     protected $observeables = [
         'executed',
         'processed', 
-        'markFinsihed', 
-        'markUnfinished'
+        'markedFinsihed', 
+        'markedUnfinished'
     ];
 
     protected $fillable = [
@@ -44,9 +46,11 @@ class Work extends Model
         'quantity_unit',
         'description',
         'unit_price',
-        'include_tax',
-        'tax_percentage',
         'total_price',
+
+        'finished_at_appointment_id',
+
+        'revenue_recorded',
     ];
 
     protected $casts = [
@@ -73,12 +77,17 @@ class Work extends Model
         $unitPrice = $this->attributes['unit_price'];
         $total = $quantity * $unitPrice;
 
-        if ($this->attributes['include_tax']) {
-            $taxPercentage = $this->attributes['tax_percentage'];
-            $total += ($total * ($taxPercentage / 100));
-        }
-
         return $this->attributes['total_price'] = $total;
+    }
+
+    public function scopeOnlyStatus($query, int $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    public function scopeFinishedAt($query, Appointment $appointment)
+    {
+        return $query->where('finished_at_appointment_id', $appointment->id);
     }
 
     public function getStatusDescriptionAttribute()
@@ -142,9 +151,28 @@ class Work extends Model
         return $this->morphedByMany(Quotation::class, 'workable');
     }
 
+    public function getQuotationAttribute()
+    {
+        return $this->quotations->first();
+    }
+
     public function appointments()
     {
         return $this->morphedByMany(Appointment::class, 'workable');
+    }
+
+    public function getAppointmentAttribute()
+    {
+        return $this->appointments->first();
+    }
+
+    public function finishedAtAppointment()
+    {
+        return $this->belongsTo(
+            Appointment::class, 
+            'finished_at_appointment_id', 
+            'id'
+        );
     }
 
     public function executeWorks()
@@ -156,6 +184,12 @@ class Work extends Model
     {
         return $this->hasOne(ExecuteWork::class)
             ->where('status', ExecuteWorkStatus::InProcess);
+    }
+
+    public function revenueable()
+    {
+        return $this->morphOne(Revenueable::class, 'revenueable')
+            ->oldestOfMany();
     }
 
     public static function collectAllStatuses()
@@ -171,20 +205,25 @@ class Work extends Model
         return $execute;
     }
 
-    public function process()
+    public function attachRevenue($revenue)
     {
-        $this->attributes['status'] = WorkStatus::Processed;
-        $this->attributes['executed_at'] = now();
-        $process = $this->save();
-
-        return $process;
+        $revenueable = new Revenueable();
+        $revenueable->revenueable_type = Work::class;
+        $revenueable->revenueable_id = $this->attributes['id'];
+        $revenueable->revenue_id = is_string($revenue) ? 
+            $revenue : $revenue->id;
+        return $revenueable->save();
     }
 
-    public function markFinished(string $finishNote = '')
+    public function markFinished(Appointment $appointment, string $finishNote = '')
     {
         $this->attributes['status'] = WorkStatus::Finished;
+        $this->attributes['finish_note'] = $finishNote;
         $this->attributes['finished_at'] = now();
+        $this->attributes['finished_at_appointment_id'] = $appointment->id;
         $markFinsih = $this->save();
+
+        $this->fireModelEvent('markedFinished');
 
         return $markFinsih;
     }
@@ -196,6 +235,22 @@ class Work extends Model
         $this->attributes['unfinish_note'] = $unfinishNote;
         $markUnfinish = $this->save();
 
+        $this->fireModelEvent('markedUnfinished');
+
         return $markUnfinish;
+    }
+
+    public function markRevenueRecorded()
+    {
+        if (! $this->attributes['revenue_recorded']) {
+            $this->attributes['revenue_recorded'] = true;
+        }
+        return $this->save();
+    }
+
+    public function unmarkRevenueRecorded()
+    {
+        $this->attributes['revenue_recorded'] = false;
+        return $this->save();
     }
 }

@@ -37,7 +37,11 @@ class ReceiptObserver
      */
     public function deleted(Receipt $receipt)
     {
-        //
+        $filePath = $receipt->receipt_path;
+        if ($file = StorageFile::findByPath($filePath)) {
+            $date = now()->addDays(3);
+            $file->setDestroyCountDown($date);
+        }
     }
 
     /**
@@ -48,7 +52,10 @@ class ReceiptObserver
      */
     public function restored(Receipt $receipt)
     {
-        //
+        $filePath = $receipt->receipt_path;
+        if ($file = StorageFile::findByPath($filePath)) {
+            $file->stopDestroyCountDown();
+        }
     }
 
     /**

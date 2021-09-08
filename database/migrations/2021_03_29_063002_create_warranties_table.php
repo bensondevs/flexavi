@@ -16,17 +16,39 @@ class CreateWarrantiesTable extends Migration
         Schema::create('warranties', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('work_id');
+            $table->uuid('company_id');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('CASCADE');
+
+            $table->uuid('appointment_id');
+            $table->foreign('appointment_id')
+                ->references('id')
+                ->on('appointments')
+                ->onDelete('CASCADE');
+
+            $table->uuid('work_id')->nullable();
             $table->foreign('work_id')
                 ->references('id')
                 ->on('works')
                 ->onDelete('CASCADE');
 
-            $table->date('warranty_due');
+            $table->tinyInteger('status')->default(1);
+
+            $table->text('problem_description')->nullable();
+            $table->text('fixing_description')->nullable();
+
             $table->text('internal_note')->nullable();
             $table->text('customer_note')->nullable();
 
+            $table->double('amount', 8, 2)->default(0);
+            $table->double('paid_amount', 8, 2)->default(0);
+
             $table->timestamps();
+            $table->timestamp('in_process_at')->nullable();
+            $table->timestamp('fixed_at')->nullable();
+            $table->timestamp('unfixed_at')->nullable();
             $table->softDeletes();
         });
     }

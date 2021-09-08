@@ -3,9 +3,14 @@
 namespace App\Http\Requests\Works;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+
+use App\Traits\WorkableRequest;
 
 class DetachWorkRequest extends FormRequest
 {
+    use WorkableRequest;
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +18,10 @@ class DetachWorkRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $work = $this->getWork();
+        $workable = $this->getWorkable();
+
+        return Gate::allows('detach-work', [$work, $workable]);
     }
 
     /**

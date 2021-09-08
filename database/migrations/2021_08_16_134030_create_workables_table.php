@@ -14,9 +14,10 @@ class CreateWorkablesTable extends Migration
     public function up()
     {
         Schema::create('workables', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id')->primary();
 
-            $table->uuid('work_id')
+            $table->uuid('work_id');
+            $table->foreign('work_id')    
                 ->references('id')
                 ->on('works')
                 ->onDelete('CASCADE');

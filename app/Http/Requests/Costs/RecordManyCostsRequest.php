@@ -22,9 +22,10 @@ class RecordManyCostsRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $costIds = $this->input('cost_ids');
-        if (! is_array($costIds)) {
-            $this->merge(['cost_ids' => json_decode($costIds)]);
+        if (! is_array($this->input('cost_ids'))) {
+            $costIds = $this->input('cost_ids');
+            $costIds = json_decode($costIds, true);
+            $this->merge(['cost_ids' => $costIds]);
         }
     }
 

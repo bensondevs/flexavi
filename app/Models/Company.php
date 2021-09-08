@@ -139,6 +139,11 @@ class Company extends Model
         return $this->hasMany(Worklist::class);
     }
 
+    public function settings()
+    {
+        return $this->morphMany(Setting::class, 'settingable');
+    }
+
     protected static function boot()
     {
     	parent::boot();

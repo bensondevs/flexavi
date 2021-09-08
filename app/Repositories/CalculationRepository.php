@@ -2,16 +2,26 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
-use App\Repositories\CostRepository;
-use App\Repositories\RevenueRepository;
+use App\Repositories\{
+	CostRepository,
+	RevenueRepository
+};
 
-use App\Models\Calculation;
-use App\Models\Appointment;
+use App\Models\{
+	Calculation,
+	Appointment
+};
+
+use App\Http\Resources\{
+	CalculationCostResource,
+	CalculationWorkResource,
+	CalculationRevenueResource
+};
 
 class CalculationRepository extends BaseRepository
 {
@@ -29,7 +39,7 @@ class CalculationRepository extends BaseRepository
 	public function calculateAppointment(Appointment $appointment)
 	{
 		if ($calculation = $appointment->calculation) {
-			return $calculation;
+			$calculation->delete();
 		}
 
 		// Collect cashflows information
@@ -44,26 +54,28 @@ class CalculationRepository extends BaseRepository
 		$totalUnpaidRevenues = $totalRevenues - $totalPaidRevenues;
 
 		// VAT Amount
-		$companyVatPercentage = $appointment->company->settings->vatPercentage();
+		$companyVatPercentage = /*$appointment->company->settings->vatPercentage()*/0;
 		$totalVat = $totalRevenues * $companyVatPercentage / 100;
 
 		// Gross Profit
-		$grossProfit = $totalPaidRevenues - $totalCosts - $totalUnpaidCosts + $totalUnpaidRevenues - $totalVat;
+		$grossProfit = $totalRevenues - $totalCosts;
 
 		// KPIs
-		$durationInDays = $appointment->durantion_in_days;
+		$durationInDays = $appointment->duration_in_days ?: 1;
 		$averageCost = $totalCosts / $durationInDays;
 		$averageRevenue = $totalRevenues / $durationInDays;
 		$averageProfit = $grossProfit / $durationInDays;
 
 		// Calculation Data
 		$calculationData = [
-			'costs' => $costs,
+			'costs' => CalculationCostResource::collection($costs),
 			'total_costs' => $totalCosts,
 			'total_paid_costs' => $totalPaidCosts,
 			'total_unpaid_costs' => $totalUnpaidCosts,
 
-			'revenues' => $revenues,
+			'finished_works' => CalculationWorkResource::collection($appointment->finishedWorks),
+
+			'revenues' => CalculationRevenueResource::collection($revenues),
 			'total_revenues' => $totalRevenues,
 			'total_paid_revenues' => $totalPaidRevenues,
 			'total_unpaid_revenues' => $totalUnpaidRevenues,
@@ -72,7 +84,7 @@ class CalculationRepository extends BaseRepository
 			
 			'gross_profit' => $grossProfit,
 
-			'kpi' => [
+			'kpis' => [
 				'duration_day' => $durationInDays,
 				'average_revenue' => $averageRevenue,
 				'average_cost' => $averageCost,
@@ -95,7 +107,7 @@ class CalculationRepository extends BaseRepository
 			$this->setError('Failed to calculate appointment.', $error);
 		}
 
-		return $this->getModel();
+		return $calculationData;
 	}
 
 	public function calculateWorklist(Worklist $worklist)

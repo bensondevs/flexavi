@@ -47,7 +47,7 @@ class CreateExecuteWorksTable extends Migration
             $table->text('finish_note')->nullable();
 
             $table->timestamps();
-            $table->timestamp('finished_at');
+            $table->timestamp('finished_at')->nullable();
             $table->softDeletes();
         });
     }

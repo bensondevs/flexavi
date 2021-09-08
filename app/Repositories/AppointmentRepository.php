@@ -8,6 +8,7 @@ use Illuminate\Database\QueryException;
 
 use App\Enums\AppointmentableType;
 
+use App\Models\Work;
 use App\Models\Appointment;
 use App\Models\Appointmentable;
 
@@ -122,9 +123,38 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function calculate()
+	public function syncRevenues()
 	{
-		//
+		try {
+			$appointment = $this->getModel();
+
+			$revenues = [];
+			foreach (Work::with('revenueable.revenue')->finishedAt($appointment)->get() as $work) {
+				if (! $revenueable = $work->revenueable) {
+					$revenueRepository = new RevenueRepository;
+					$revenue = $revenueRepository->recordWork($work);
+					$revenueable = $work->attachRevenue($revenue);
+					$revenues[$revenue->id] = ['id' => generateUuid()];
+
+					continue;
+				}
+				
+				$revenue = $revenueable->revenue;
+				$revenues[$revenue->id] = ['id' => generateUuid()];
+			}
+
+			// Sync collected revenues
+			$appointment->revenues()->sync($revenues);
+
+			$this->getModel();
+			
+			$this->setSuccess('Successfully syncronize work revenues to appointment.');			
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to syncronize work revenues to appointment.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	public function delete(bool $force = false)
@@ -137,10 +167,8 @@ class AppointmentRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete appointment.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete appointment.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete appointment.', $error);
 		}
 
 		return $this->returnResponse();

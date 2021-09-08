@@ -42,6 +42,52 @@ class ReceiptRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	public function replace($receiptable)
+	{
+		try {
+			DB::beginTransaction();
+
+			$oldReceipt = $receiptable->receipt;
+			$oldReceipt->delete();
+
+			$receipt = $this->getModel();
+			$receipt->receiptable_type = get_class($receiptable);
+			$receipt->receiptable_id = $receiptable->id;
+			$receipt->save();
+
+			DB::commit();
+
+			$this->setModel($receipt);
+
+			$this->setSuccess('Successfully replace receipt.');
+		} catch (QueryException $qe) {
+			DB::rollBack();
+			$error = $qe->getMessage();
+			$this->setError('Failed to replace receipt.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function attachTo($receiptable)
+	{
+		try {
+			$receipt = $this->getModel();
+			$receipt->receiptable_type = get_class($receiptable);
+			$receipt->receiptable_id = $receiptable->id;
+			$receipt->save();
+
+			$this->setModel($receipt);
+
+			$this->setSuccess('Successfully attach receipt.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to attach receipt.', $error);
+		}
+
+		return $this->getModel();
+	}
+
 	public function delete(bool $force = false)
 	{
 		try {

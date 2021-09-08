@@ -5,17 +5,25 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Resources\Users\UserCompanyResource;
+use App\Http\Requests\Companies\{
+    SaveCompanyRequest as SaveRequest,
+    PopulateCompanyOwnersRequest as PopulateOwnersRequest,
+    RegisterCompanyRequest as RegisterRequest,
+    UploadCompanyLogoRequest as UploadLogoRequest
+};
 
-use App\Http\Requests\Companies\SaveCompanyRequest as SaveRequest;
-use App\Http\Requests\Companies\PopulateCompanyOwnersRequest as PopulateOwnersRequest;
-use App\Http\Requests\Companies\RegisterCompanyRequest as RegisterRequest;
-use App\Http\Requests\Companies\UploadCompanyLogoRequest as UploadLogoRequest;
+use App\Http\Resources\{
+    CompanyResource,
+    SettingResource,
+    Users\UserCompanyResource
+};
 
-use App\Http\Resources\CompanyResource;
+use App\Models\Setting;
 
-use App\Repositories\CompanyRepository;
-use App\Repositories\CompanyOwnerRepository;
+use App\Repositories\{
+    CompanyRepository,
+    CompanyOwnerRepository
+};
 
 class CompanyController extends Controller
 {
@@ -36,6 +44,17 @@ class CompanyController extends Controller
         
         $company = new CompanyResource($owner->company);
         return response()->json(['company' => $company]);
+    }
+
+    public function settings()
+    {
+        if (! $owner = (auth()->user())->owner) {
+            return abort(404, 'This user is not owner of company.');
+        }
+        
+        $company = $owner->company;
+        $settings = Setting::ofCompany($company);
+        return response()->json(['settings' => SettingResource::collection($settings)]);
     }
 
     public function uploadCompanyLogo(UploadLogoRequest $request)

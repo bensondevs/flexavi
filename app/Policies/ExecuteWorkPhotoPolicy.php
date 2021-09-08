@@ -24,8 +24,8 @@ class ExecuteWorkPhotoPolicy
 
     public function delete(User $user, ExecuteWorkPhoto $executeWorkPhoto)
     {
-        $parent = $executeWorkPhoto->parent;
+        $executeWork = $executeWorkPhoto->executeWork;
 
-        return $user->hasCompanyPermission($parent->company_id, 'delete execute work photos');
+        return $user->hasCompanyPermission($executeWork->company_id, 'delete execute work photos');
     }
 }

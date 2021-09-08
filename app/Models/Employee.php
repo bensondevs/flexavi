@@ -67,6 +67,11 @@ class Employee extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function appointments()
+    {
+        return $this->hasManyThrough(Appointment::class, AppointmentEmployee::class);
+    }
+
     public function inspectors()
     {
         return $this->hasMany(Inspector::class);

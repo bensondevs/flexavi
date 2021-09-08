@@ -72,4 +72,21 @@ class ExecuteWorkRepository extends BaseRepository
 
 		return $this->returnResponse();
 	}
+
+	public function restore()
+	{
+		try {
+			$execute = $this->getModel();
+			$execute->restore();
+
+			$this->setModel($execute);
+
+			$this->setSuccess('Successfully restore execute work.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore execute work.', $error);
+		}
+
+		return $this->returnResponse();
+	}
 }

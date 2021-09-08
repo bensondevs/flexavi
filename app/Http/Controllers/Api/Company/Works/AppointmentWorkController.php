@@ -44,6 +44,23 @@ class AppointmentWorkController extends Controller
      */
     public function appointmentWorks(PopulateRequest $request)
     {
+        $appointment = $request->getAppointment();
+        $options = $request->options();
+
+        $works = $this->work->appointmentWorks($appointment, $options, true);
+        $works = WorkResource::apiCollection($works);
+
+        return response()->json(['works' => $works]);
+    }
+
+    /**
+     * Populate works that finished at certain appointment.
+     * 
+     * @param PopulateRequest $request
+     * @return json
+     */
+    public function appointmentFinishedWorks(PopoulateFinishedRequest $request)
+    {
         $options = $request->options();
 
         $works = $this->work->all($options, true);
@@ -58,7 +75,7 @@ class AppointmentWorkController extends Controller
      * @param SaveRequest $request
      * @return json
      */
-    public function store(SaveRequest $request)
+    /*public function store(SaveRequest $request)
     {
         $input = $request->validated();
         $this->work->save($input);
@@ -67,7 +84,7 @@ class AppointmentWorkController extends Controller
         $this->work->attachTo($appointment);
 
         return apiResponse($this->work);
-    }
+    }*/
 
     /**
      * Attach work to appointment
@@ -130,7 +147,7 @@ class AppointmentWorkController extends Controller
         $appointment = $request->getAppointment();
         $workIds = $request->input('work_ids');
 
-        $this->work->detachFromMany($appointment, $workIds);
+        $this->work->detachManyFrom($appointment, $workIds);
 
         return apiResponse($this->work);
     }

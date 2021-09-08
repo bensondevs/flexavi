@@ -45,6 +45,18 @@ class WorklistResource extends JsonResource
             $structure['appointments'] = AppointmentResource::collection($this->appointments);
         }
 
+        if ($this->relationLoaded('worklistCars')) {
+            $structure['worklist_cars'] = WorklistCarResource::collection($this->worklistCars);
+        }
+
+        if ($this->relationLoaded('appointEmployees')) {
+            $structure['appoint_employees'] = ($this->appointEmployees);
+        }
+
+        if ($this->relationLoaded('employees')) {
+            $structure['employees'] = EmployeeResource::collection($this->employees);
+        }
+
         if ($this->relationLoaded('costs')) {
             $structure['costs'] = CostResource::collection($this->costs);
         }

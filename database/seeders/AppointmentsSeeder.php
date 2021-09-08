@@ -84,6 +84,7 @@ class AppointmentsSeeder extends Seeder
 
                 	$rawAppointments[] = $rawAppointment;
                     $rawAppointmentables[] = [
+                        'id' => generateUuid(),
                         'appointment_id' => $id,
                         'appointmentable_type' => get_class($worklist),
                         'appointmentable_id' => $worklist->id,
@@ -91,6 +92,7 @@ class AppointmentsSeeder extends Seeder
                         'updated_at' => now(),
                     ];
                     $rawAppointmentables[] = [
+                        'id' => generateUuid(),
                         'appointment_id' => $id,
                         'appointmentable_type' => Workday::class,
                         'appointmentable_id' => $worklist->workday_id,

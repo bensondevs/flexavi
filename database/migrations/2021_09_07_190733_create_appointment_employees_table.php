@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWarrantyClaimsTable extends Migration
+class CreateAppointmentEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,24 +13,19 @@ class CreateWarrantyClaimsTable extends Migration
      */
     public function up()
     {
-        Schema::create('warranty_claims', function (Blueprint $table) {
+        Schema::create('appointment_employees', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('warranty_id');
-            $table->foreign('warranty_id')
-                ->references('id')
-                ->on('warranties')
-                ->onDelete('CASCADE');
-
-            $table->string('claim_reason');
-            $table->text('description');
-            $table->char('claim_status');
-
-            $table->uuid('appointment_id')
-                ->nullable();
+            $table->uuid('appointment_id');
             $table->foreign('appointment_id')
                 ->references('id')
                 ->on('appointments')
+                ->onDelete('CASCADE');
+
+            $table->uuid('employee_id');
+            $table->foreign('employee_id')
+                ->references('id')
+                ->on('employees')
                 ->onDelete('CASCADE');
 
             $table->timestamps();
@@ -45,6 +40,6 @@ class CreateWarrantyClaimsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warranty_claims');
+        Schema::dropIfExists('appointment_employees');
     }
 }

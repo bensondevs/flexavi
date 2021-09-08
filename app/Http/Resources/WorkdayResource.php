@@ -47,6 +47,10 @@ class WorkdayResource extends JsonResource
             $structure['appointments'] = AppointmentResource::collection($this->appointments);
         }
 
+        if ($this->relationLoaded('employees')) {
+            $structure['employees'] = EmployeeResource::collection($this->employees);
+        }
+
         if ($this->status >= WorkdayStatus::Processed) {
             $structure['processed_at'] = $this->processed_at;
         }

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\AppointmentWorkers\PopulateAppointmentWorkersRequest as PopulateRequest;
-use App\Http\Requests\AppointmentWorkers\SaveAppointmentWorkerRequest as SaveRequest;
-use App\Http\Requests\AppointmentWorkers\FindAppointmentWorkerRequest as FindRequest;
+use App\Http\Requests\AppointmentWorkers\{
+    PopulateAppointmentWorkersRequest as PopulateRequest,
+    SaveAppointmentWorkerRequest as SaveRequest,
+    FindAppointmentWorkerRequest as FindRequest
+};
 
 use App\Http\Resources\AppointmentWorkerResource;
 

@@ -9,6 +9,8 @@ use App\Models\Workable;
 use App\Models\Quotation;
 use App\Models\Appointment;
 
+use App\Enums\Work\WorkStatus;
+
 class WorksSeeder extends Seeder
 {
     /**
@@ -23,7 +25,7 @@ class WorksSeeder extends Seeder
         $rawWorks = [];
         $rawWorkables = [];
         
-        foreach (Appointment::all() as $appointment) {
+        foreach (Appointment::all() as $index => $appointment) {
             for ($index = 0; $index < rand(1, 3); $index++) {
                 $id = generateUuid();
                 $unitPrice = rand(10, 200);
@@ -38,6 +40,25 @@ class WorksSeeder extends Seeder
                 }
                 $totalPrice = $subTotal + $taxAmount;
 
+                $status = rand(WorkStatus::Created, WorkStatus::Unfinished);
+
+                $executedAt = null;
+                if ($status >= WorkStatus::InProcess) {
+                    $executedAt = carbon()->now();
+                } 
+                
+                $finishedAt = null;
+                $finishedAtAppointmentId = null;
+                if ($status >= WorkStatus::Finished) {
+                    $finishedAt = carbon()->now();
+                    $finishedAtAppointmentId = $appointment->id;
+                }
+
+                $unfinishedAt = null;
+                if ($status >= WorkStatus::Unfinished) {
+                    $unfinishedAt = carbon()->now();
+                }
+
                 $rawWorks[] = [
                     'id' => $id,
                     'company_id' => $appointment->company_id,
@@ -45,17 +66,25 @@ class WorksSeeder extends Seeder
                     'quantity_unit' => $units[rand(0, (count($units) - 1))],
                     'description' => 'This is seeder appointment work',
                     'unit_price' => $unitPrice,
+                    'status' => $status,
                     'include_tax' => $includeTax,
                     'tax_percentage' => $taxPercentage,
                     'total_price' => $totalPrice,
+                    'finished_at_appointment_id' => $finishedAtAppointmentId,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
+                    'executed_at' => $executedAt,
+                    'finished_at' => $finishedAt,
+                    'unfinished_at' => $unfinishedAt,
                 ];
 
                 $rawWorkables[] = [
+                    'id' => generateUuid(),
                     'work_id' => $id,
                     'workable_type' => Appointment::class,
                     'workable_id' => $appointment->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             }
         }
@@ -75,6 +104,25 @@ class WorksSeeder extends Seeder
                 }
                 $totalPrice = $subTotal + $taxAmount;
 
+                $status = rand(WorkStatus::Created, WorkStatus::Unfinished);
+
+                $executedAt = null;
+                if ($status >= WorkStatus::InProcess) {
+                    $executedAt = carbon()->now();
+                } 
+                
+                $finishedAt = null;
+                $finishedAtAppointmentId = null;
+                if ($status >= WorkStatus::Finished) {
+                    $finishedAt = carbon()->now();
+                    $finishedAtAppointmentId = $appointment->id;
+                }
+
+                $unfinishedAt = null;
+                if ($status >= WorkStatus::Unfinished) {
+                    $unfinishedAt = carbon()->now();
+                }
+
                 $rawWorks[] = [
                     'id' => $id,
                     'company_id' => $quotation->company_id,
@@ -82,17 +130,25 @@ class WorksSeeder extends Seeder
                     'quantity_unit' => $units[rand(0, (count($units) - 1))],
                     'description' => 'This is seeder quotation work',
                     'unit_price' => $unitPrice,
+                    'status' => $status,
                     'include_tax' => $includeTax,
                     'tax_percentage' => $taxPercentage,
                     'total_price' => $totalPrice,
+                    'finished_at_appointment_id' => $finishedAtAppointmentId,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
+                    'executed_at' => $executedAt,
+                    'finished_at' => $finishedAt,
+                    'unfinished_at' => $unfinishedAt,
                 ];
 
                 $rawWorkables[] = [
+                    'id' => generateUuid(),
                     'work_id' => $id,
                     'workable_type' => Quotation::class,
                     'workable_id' => $quotation->id,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ];
             }
         }

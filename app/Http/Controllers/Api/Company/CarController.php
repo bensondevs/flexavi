@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Cars\SaveCarRequest as SaveRequest;
-use App\Http\Requests\Cars\FindCarRequest as FindRequest;
-use App\Http\Requests\Cars\RestoreCarRequest as RestoreRequest;
-use App\Http\Requests\Cars\SetCarImageRequest as SetImageRequest;
-use App\Http\Requests\Cars\PopulateCompanyCarsRequest as PopulateRequest;
+use App\Http\Requests\Cars\{
+    SaveCarRequest as SaveRequest,
+    FindCarRequest as FindRequest,
+    RestoreCarRequest as RestoreRequest,
+    SetCarImageRequest as SetImageRequest,
+    PopulateCompanyCarsRequest as PopulateRequest
+};
 
 use App\Http\Resources\CarResource;
 

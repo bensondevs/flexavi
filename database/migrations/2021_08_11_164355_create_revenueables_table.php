@@ -14,7 +14,7 @@ class CreateRevenueablesTable extends Migration
     public function up()
     {
         Schema::create('revenueables', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->uuid('id')->primary();
 
             $table->uuid('revenue_id');
             $table->foreign('revenue_id')
