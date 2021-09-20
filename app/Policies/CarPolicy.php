@@ -8,6 +8,8 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\Car;
 use App\Models\Company;
 
+use App\Enums\Car\CarStatus;
+
 class CarPolicy
 {
     use HandlesAuthorization;
@@ -39,6 +41,10 @@ class CarPolicy
 
     public function delete(User $user, Car $car)
     {
+        if ($car->status !== CarStatus::Free) {
+            return abort(403, 'Cannot delete not free car.');
+        }
+
         return $user->hasCompanyPermission($car->company_id, 'delete cars');
     }
 
@@ -49,6 +55,10 @@ class CarPolicy
 
     public function forceDelete(User $user, Car $car)
     {
+        if (! $this->delete($user, $car)) {
+            return true;
+        }
+
         return $user->hasCompanyPermission($car->company_id, 'force delete cars');
     }
 }

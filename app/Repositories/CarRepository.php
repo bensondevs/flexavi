@@ -87,9 +87,6 @@ class CarRepository extends BaseRepository
 		try {
 			$car = $this->getModel();
 
-			if ($car->status != 'free') 
-				return $this->setForbidden('Failed to delete car, car in use.');
-
 			$forceDelete ?
 				$car->forceDelete() :
 				$car->delete();

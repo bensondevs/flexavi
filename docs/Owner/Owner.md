@@ -178,7 +178,86 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. Update Owner
+### 3. View Owner
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/owners/view`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`with_user` | Optional | boolean, boolean string | Set this attribute to `true` to load owner with its relation of user. By default, this attribute will be set into `false`
+`with_company` | Optional | boolean, boolean string | Set this attribute to true to load owner with its relation of user. By default, this attribute will be set into `true`
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`owner` | Object | Object of owner data
+
+**Success Response Example:**
+
+```json
+{
+    "owner": {
+        "id": "35862650-192c-11ec-93a5-ab6b12db8a95",
+        "is_prime_owner": false,
+        "user_id": null,
+        "company_id": "440d8010-189a-11ec-ad8c-298ea8cde157",
+        "bank_name": "Added  Bank",
+        "bic_code": "911",
+        "bank_account": "9988776655",
+        "bank_holder_name": "Added Holder",
+        "address": null,
+        "house_number": null,
+        "house_number_suffix": null,
+        "zipcode": null,
+        "city": null,
+        "province": null,
+        "created_at": "2021-09-19T09:30:20.000000Z",
+        "updated_at": "2021-09-19T09:30:20.000000Z",
+        "deleted_at": null,
+        "company": {
+            "id": "440d8010-189a-11ec-ad8c-298ea8cde157",
+            "company_name": "Company 1",
+            "visiting_address": {
+                "city": "Random City",
+                "street": "Custom Road",
+                "zip_code": "67312",
+                "house_number": 298,
+                "house_number_suffix": "X"
+            },
+            "invoicing_address": {
+                "city": "Random City",
+                "street": "Custom Street",
+                "zip_code": "65123",
+                "house_number": 28,
+                "house_number_suffix": "X"
+            },
+            "email": "company1@flexavi.com",
+            "email_verified_at": null,
+            "phone_number": "6114560",
+            "vat_number": "68377041",
+            "commerce_chamber_number": "68",
+            "company_logo_path": "/uploads/companies/logos/20210730125714.jpeg",
+            "company_website_url": "www.randomwebsite.com"
+        }
+    }
+}
+```
+
+-------------------------------------------------------
+### 4. Update Owner
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/owners/update`
@@ -246,7 +325,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Delete Owner
+### 5. Delete Owner
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/owners/delete`

@@ -7,8 +7,16 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
 
+use App\Traits\RequestHasRelations;
+
 class FindCustomerRequest extends FormRequest
 {
+    use RequestHasRelations;
+
+    private $relationNames = [
+        'with_company' => true,
+    ];
+
     private $customer;
 
     public function getCustomer()
@@ -17,6 +25,11 @@ class FindCustomerRequest extends FormRequest
 
         $id = $this->input('id') ?: $this->input('customer_id');
         return $this->customer = Customer::findOrFail($id);
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
     }
 
     /**

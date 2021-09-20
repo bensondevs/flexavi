@@ -63,6 +63,16 @@ class Owner extends Model
         );
     }
 
+    public function scopePrimeOnly($query)
+    {
+        return $query->where('is_prime_owner', true);
+    }
+
+    public function scopeNonPrime($query)
+    {
+        return $query->where('is_prime_owner', false);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

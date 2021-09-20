@@ -101,14 +101,9 @@ class WorklistController extends Controller
     public function view(FindRequest $request)
     {
         $worklist = $request->getWorklist();
-        $worklist->load([
-            'workday', 
-            'appointments', 
-            'costs', 
-            'worklistCars.employeeInCharge',
-            // 'appointEmployees',
-            'employees'
-        ]);
+
+        $relations = $request->relations();
+        $worklist->load($relations);
         $worklist = new WorklistResource($worklist);
 
         return response()->json(['worklist' => $worklist]);

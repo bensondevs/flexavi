@@ -15,6 +15,7 @@ use App\Rules\Base64Image;
 use App\Models\Owner;
 use App\Models\RegisterInvitation;
 
+use App\Enums\User\UserIdCardType;
 use App\Enums\RegisterInvitation\RegisterInvitationStatus;
 
 class RegisterRequest extends FormRequest
@@ -65,7 +66,12 @@ class RegisterRequest extends FormRequest
         $this->setRules([
             'fullname' => ['required', 'string'],
             'birth_date' => ['required', 'date'],
-            'id_card_type' => ['required', 'string'],
+            'id_card_type' => [
+                'required', 
+                'numeric', 
+                'min:' . UserIdCardType::NationalIdCard,
+                'max:' . UserIdCardType::DrivingLicense,
+            ],
             'id_card_number' => ['required', 'string'],
             'phone' => ['required', 'string'],
 

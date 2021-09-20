@@ -189,57 +189,7 @@ Attribute Name  | Type  | Description
 ### 3. Check Email Used
 -------------------------------------------------------
 
-**Endpoint:** `/api/auth/check_email_used`
-
-**Method:** `GET`
-
-**Headers:**
-
-Header Name | Value 
-------------|-------
-Accept | `application/json`
-Authorization | `Bearer {token}`
-
-**Parameters:**
-
-Payload name | Required | Validation | Description    
--------------|----------|------------|-------------
-`email` | Required | string | Email checked
-
-**Request Body Example:**
-
-```json
-{
-    "email": "owner1@flexavi.com"
-}
-```
-
-**Response Attributes:**
-
-Attribute Name  | Type  | Description   
-----------------|-----------|---------------
-`status` | String | Email availability status
-`message` | String | Message response for the user
-
-**Success Response Example:**
-
-- Available
-
-```json
-{
-    "status": "available",
-    "message": "This email is available"
-}
-```
-
-- Unvailable
-
-```json
-{
-    "status": "unavailable",
-    "message": "This email has been used by other user"
-}
-```
+Moved to [User Meta](../docs/Meta/User.md)
 
 -------------------------------------------------------
 ### 4. Logout

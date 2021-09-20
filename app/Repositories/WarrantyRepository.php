@@ -27,13 +27,25 @@ class WarrantyRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save warranty.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save warranty.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save warranty.', $error);
 		}
 
 		return $this->getModel();
+	}
+
+	public function storeMultiple(array $rawWarranties = [])
+	{
+		try {
+			Warranty::insert($rawWarranties);
+
+			$this->setSuccess('Successfully store multiple works as warranties.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to store multiple works as warranties.', $error);
+		}
+
+		return $this->returnResponse();
 	}
 
 	public function delete(bool $force = false)
@@ -48,10 +60,8 @@ class WarrantyRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete warranty.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete warranty.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete warranty.', $error);
 		}
 
 		return $this->returnResponse();

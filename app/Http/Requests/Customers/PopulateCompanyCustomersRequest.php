@@ -5,11 +5,17 @@ namespace App\Http\Requests\Customers;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\RequestHasRelations;
 use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateCompanyCustomersRequest extends FormRequest
 {
+    use RequestHasRelations;
     use CompanyPopulateRequestOptions;
+
+    protected $relationNames = [
+        'with_company' => false,
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -35,6 +41,10 @@ class PopulateCompanyCustomersRequest extends FormRequest
 
     public function options()
     {
+        if ($relations = $this->relations()) {
+            $this->setWiths($relations);
+        }
+
         return $this->collectCompanyOptions();
     }
 }

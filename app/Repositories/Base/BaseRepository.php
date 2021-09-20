@@ -142,6 +142,12 @@ class BaseRepository
 			}
 		}
 
+		if (isset($options['where_not_nulls'])) {
+			foreach ($options['where_not_nulls'] as $column) {
+				$models = $models->whereNotNull($column);
+			}
+		}
+
 		if (isset($options['where_raws'])) {
 			foreach ($options['where_raws'] as $query) {
 				$models = $models->whereRaw($query);
@@ -221,7 +227,6 @@ class BaseRepository
 		if (! $skipGet) {
 			$models = $models->get();
 		}
-		// dd(DB::getQueryLog());
 		$this->setCollection($models);
 
 		return ($pagination) ? $this->paginate() : $models;

@@ -10,7 +10,6 @@ use App\Traits\Searchable;
 
 class AppointmentEmployee extends Model
 {
-    use SoftDeletes;
     use Searchable;
 
     /**
@@ -72,6 +71,13 @@ class AppointmentEmployee extends Model
     	self::creating(function ($appointmentEmployee) {
             $appointmentEmployee->id = Uuid::generate()->string;
     	});
+    }
+
+    public static function isExists(Appointment $appointment, Employee $employee)
+    {
+        return self::where('appointment_id', $appointment->id)
+            ->where('employee_id', $employee->id)
+            ->exists();
     }
 
     public function appointment()

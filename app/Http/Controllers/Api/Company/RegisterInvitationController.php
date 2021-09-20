@@ -24,7 +24,7 @@ class RegisterInvitationController extends Controller
         $input = $request->invitationData();
         $invitation = $this->invitation->sendInvitation($input);
 
-        return response()->json(['invitation' => $invitation]);
+        return apiResponse($this->invitation, ['invitation' => $invitation]);
     }
 
     public function inviteOwner(InviteOwnerRequest $request)
@@ -32,6 +32,6 @@ class RegisterInvitationController extends Controller
         $input = $request->invitationData();
         $invitation = $this->invitation->sendInvitation($input);
 
-        return response()->json(['invitation' => $invitation]);
+        return apiResponse($this->invitation, ['invitation' => $invitation]);
     }
 }

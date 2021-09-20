@@ -9,6 +9,8 @@ use Illuminate\Database\QueryException;
 use App\Enums\AppointmentableType;
 
 use App\Models\Work;
+use App\Models\Employee;
+use App\Models\AppointmentEmployee;
 use App\Models\Appointment;
 use App\Models\Appointmentable;
 
@@ -82,6 +84,37 @@ class AppointmentRepository extends BaseRepository
 		}
 
 		return $this->getModel();
+	}
+
+	public function assignEmployee(Employee $employee)
+	{
+		try {
+			$appointmentEmployee = AppointmentEmployee::create([
+				'appointment_id' => $this->getModel()->id,
+				'employee_id' => $employee->id,
+			]);
+
+			$this->setSuccess('Successfully assign employee to appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to assign employee to appointment.');
+		}
+
+		return $this->returnResponse();
+	}
+
+	public function unassignEmployee(AppointmentEmployee $appointmentEmployee)
+	{
+		try {
+			$appointmentEmployee->delete();
+
+			$this->setSuccess('Successfully assign employee to appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to assign employee to appointment.');
+		}
+
+		return $this->returnResponse();
 	}
 
 	public function process()

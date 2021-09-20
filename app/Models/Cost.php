@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Fidum\EloquentMorphToOne\HasMorphToOne;
+use Fidum\EloquentMorphToOne\MorphToOne;
 
 use App\Enums\Cost\CostableType;
 
@@ -16,6 +18,7 @@ class Cost extends Model
     use SoftDeletes;
     use Searchable;
     use HasRelationships;
+    use HasMorphToOne;
 
     protected $table = 'costs';
     protected $primaryKey = 'id';
@@ -83,14 +86,9 @@ class Cost extends Model
         return $this->morphedByMany(Appointment::class, 'costable');
     }
 
-    public function appointment()
-    {
-        return $this->appointments()->latest();
-    }
-
     public function getAppointmentAttribute()
     {
-        return $this->appointments()->first();
+        return $this->appointments->first();
     }
 
     public function worklists()

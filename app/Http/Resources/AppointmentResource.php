@@ -100,9 +100,9 @@ class AppointmentResource extends JsonResource
             $structure['execute_works'] = $this->executeWorks;
         }
 
-        /*if ($this->relationLoaded('warranty')) {
+        if ($this->relationLoaded('warranty')) {
             $structure['warranty'] = new WarrantyResource($this->warranty);
-        }*/
+        }
 
         /*if ($this->relationLoaded('paymentReminder')) {
             $structure['payment_reminder'] = new PaymentReminderResource($this->paymentReminder);

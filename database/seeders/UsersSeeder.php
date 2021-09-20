@@ -27,7 +27,7 @@ class UsersSeeder extends Seeder
     	$user = $this->user->save([
     		'fullname' => 'Flexavi Admin ',
     		'birth_date' => carbon()->now()->subYears(rand(20, 25)),
-    		'id_card_type' => 'id_card',
+    		'id_card_type' => 1,
     		'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
     		'phone' => '999999999999',
     		'profile_picture_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
@@ -42,7 +42,7 @@ class UsersSeeder extends Seeder
         	$this->user->save([
         		'fullname' => 'Flexavi Owner ' . ($index + 1),
         		'birth_date' => carbon()->now()->subYears(rand(20, 25)),
-        		'id_card_type' => 'id_card',
+        		'id_card_type' => 1,
         		'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
         		'phone' => '999999999999',
         		'profile_picture_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',
@@ -58,7 +58,7 @@ class UsersSeeder extends Seeder
             $user = $this->user->save([
                 'fullname' => 'Flexavi Employee ' . ($index + 1),
                 'birth_date' => carbon()->now()->subYears(rand(20, 25)),
-                'id_card_type' => 'id_card',
+                'id_card_type' => 1,
                 'id_card_number' => rand(111, 999) . rand(111, 999) . rand(111, 999),
                 'phone' => '999999999999',
                 'profile_picture_path' => 'uploads/profile_pictures/20210503075156pp.jpeg',

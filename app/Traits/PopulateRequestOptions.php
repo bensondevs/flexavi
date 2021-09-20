@@ -9,6 +9,7 @@ trait PopulateRequestOptions
 	private $withCounts = [];
 	private $withTrashed = false;
 	private $wheres = [];
+	private $whereNotNulls = [];
 	private $whereRaws = [];
 	private $whereHases = [];
 	private $whereHasMorphs = [];
@@ -70,6 +71,11 @@ trait PopulateRequestOptions
 				'value' => $condition['value'],
 			]);
 		}
+	}
+
+	public function addWhereNotNull(string $column)
+	{
+		$this->whereNotNulls[] = $column;
 	}
 
 	public function addWhereRaw(string $query)
@@ -165,6 +171,7 @@ trait PopulateRequestOptions
             'with_counts' => $this->withCounts,
             'with_trashed' => $this->withTrashed,
             'wheres' => $this->wheres,
+            'where_not_nulls' => $this->whereNotNulls,
             'where_raws' => $this->where_raws,
             'where_hases' => $this->whereHases,
             'where_has_morphs' => $this->whereHasMorphs,

@@ -87,6 +87,7 @@ class AppointmentController extends Controller
     public function view(FindRequest $request)
     {
         $appointment = $request->getAppointment();
+        
         $relations = $request->relations();
         $appointment->load($relations);
 

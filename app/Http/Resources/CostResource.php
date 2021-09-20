@@ -26,20 +26,8 @@ class CostResource extends JsonResource
             'unpaid_amount' => $this->unpaid_amount,
         ];
 
-        if (issetval($this->receipt_path)) {
-            $structure['receipt'] = $this->receipt_url;
-        }
-
-        if ($this->relationLoaded('appointments')) {
-            $structure['appointment'] = new AppointmentResource($this->appointment);
-        }
-
-        if ($this->relationLoaded('worklists')) {
-            $structure['worklist'] = new WorklistResource($this->worklist);
-        }
-
-        if ($this->relationLoaded('workdays')) {
-            $structure['workday'] = new WorkdayResource($this->workday);
+        if ($this->relationLoaded('costables')) {
+            $structure['costables'] = CostableResource::apiCollection($this->costables);
         }
 
         return $structure;

@@ -19,7 +19,7 @@ class CreateUsersTable extends Migration
             // Personal Identity
             $table->string('fullname');
             $table->date('birth_date');
-            $table->char('id_card_type');
+            $table->tinyInteger('id_card_type')->default(1);
             $table->char('id_card_number');
             $table->char('phone');
             $table->timestamp('phone_verified_at')->nullable();

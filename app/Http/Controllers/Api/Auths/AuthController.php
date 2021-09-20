@@ -43,8 +43,9 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
     	$input = $request->onlyInRules();
-    	$user = $this->auth->login($input);
-        $user = new UserResource($user);
+        if ($user = $this->auth->login($input)) {
+            $user = new UserResource($user);
+        }
 
     	return apiResponse($this->auth, ['user' => $user]); 
     }
@@ -129,6 +130,14 @@ class AuthController extends Controller
     {
         $code = $request->input('code');
         $this->auth->verifyEmail($code);
+
+        return apiResponse($this->auth);
+    }
+
+    public function resendEmailVerification(Request $request)
+    {
+        $email = $request->email;
+        $this->auth->requestVerificationCode($email);
 
         return apiResponse($this->auth);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Warranties;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
 
@@ -13,11 +14,41 @@ class SaveWarrantyRequest extends FormRequest
     use CompanyInputRequest;
 
     private $warranty;
+    private $work;
+    private $appointment;
 
     public function getWarranty()
     {
-        return $this->warranty = $this->model = ($this->warranty) ?
-            Warranty::findOrFail($this->input('id'));
+        if ($this->warranty) {
+            return $this->warranty;
+        }
+
+        if ($this->isMethod('POST')) {
+            return $this->warranty = new Warranty;
+        }
+
+        $id = $this->input('id');
+        $warranty = Warranty::with(['work', 'appointment'])->findOrFail($id);
+        $this->work = $warranty->work;
+        $this->appointment = $warranty->appointment;
+
+        return $this->warranty = $warranty;
+    }
+
+    public function getWork()
+    {
+        if ($this->work) return $this->work;
+    }
+
+    public function getAppointment()
+    {
+        if ($appointmentId = $this->input('appointment_id')) {
+            $appointment = Appointment::findOrFail($appointmentId);
+            return $this->appointment = $appointment;
+        }
+
+        $warranty = $this->getWarranty();
+        return $this->appointment = $warranty->appointment;
     }
 
     /**
@@ -27,10 +58,14 @@ class SaveWarrantyRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->authorizeCompanyAction(
-            'warranties', 
-            'workContract->company_id'
-        );
+        if (! $this->isMethod('POST')) {
+            $warranty = $this->getWarranty();
+            return Gate::allows('edit-warranty', $warranty);
+        }
+
+        $appointment = $this->getAppointment();
+        $work = $this->getWork();
+        return Gate::allows('create-warranty', [$appointment, $work]);
     }
 
     /**
@@ -40,8 +75,10 @@ class SaveWarrantyRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+        $this->setRules([
             //
-        ];
+        ]);
+
+        return $this->returnRules();
     }
 }

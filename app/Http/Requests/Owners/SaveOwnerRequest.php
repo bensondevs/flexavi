@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Owners;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
 
@@ -16,8 +17,18 @@ class SaveOwnerRequest extends FormRequest
 
     public function getOwner()
     {
-        return $this->owner = $this->model = ($this->owner) ?:
-            Owner::findOrFail($this->input('id'));
+        if ($this->owner) return $this->owner;
+
+        $id = $this->input('id') ?: $this->input('owner_id');
+        return $this->owner = Owner::findOrFail($id);
+    }
+
+    protected function prepareForValidation()
+    {
+        if (! $this->has('company_id')) {
+            $company = $this->getCompany();
+            $this->merge(['company_id' => $company->id]);
+        }
     }
 
     /**
@@ -27,22 +38,7 @@ class SaveOwnerRequest extends FormRequest
      */
     public function authorize()
     {
-        // Allow action
-        $actionAuthorized = $this->authorizeCompanyAction('owners');
-        if ($this->isMethod('POST')) return $actionAuthorized;
-
-        // Gather important data
-        $user = $this->user();
-        $owner = $this->getOwner();
-
-        // Allow unused owner account
-        if (! $owner->user_id) return true;
-
-        // Allow self editing
-        if ($owner->user->id == $user->id) return true;
-
-        $isPrimeOwner = $owner->is_prime_owner;
-        return ($actionAuthorized && $isPrimeOwner);
+        return Gate::allows('create-owner');
     }
 
     /**
@@ -53,6 +49,8 @@ class SaveOwnerRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
+            'company_id' => ['required', 'string'],
+
             'bank_name' => ['required', 'string'],
             'bic_code' => ['required', 'string'],
             'bank_account' => ['required', 'string'],

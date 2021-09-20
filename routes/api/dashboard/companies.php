@@ -24,7 +24,7 @@ use App\Http\Controllers\Api\Company\{
 			AppointmentController,
 				SubAppointmentController,
 					SubAppointmentWorkController,
-				AppointmentWorkerController,
+				AppointmentEmployeeController,
 				Costs\AppointmentCostController,
 				AppointmentWorkController,
 	CostController,
@@ -34,6 +34,7 @@ use App\Http\Controllers\Api\Company\{
 	ReceiptController,
 	RegisterInvitationController,
 	WorkController,
+	WarrantyController,
 	WorkContractController,
 	ExecuteWorkController,
 		ExecuteWorkPhotoController
@@ -55,6 +56,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::get('inviteables', [OwnerController::class, 'inviteableOwners']);
 		Route::get('trasheds', [OwnerController::class, 'trashedOwners']);
 		Route::post('store', [OwnerController::class, 'store']);
+		Route::get('view', [OwnerController::class, 'view']);
 		Route::match(['PUT', 'PATCH'], 'update', [OwnerController::class, 'update']);
 		Route::delete('delete', [OwnerController::class, 'delete']);
 		Route::patch('restore', [OwnerController::class, 'restore']);
@@ -81,6 +83,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::get('/', [CustomerController::class, 'companyCustomers']);
 		Route::get('trasheds', [CustomerController::class, 'trashedCustomers']);
 		Route::post('store', [CustomerController::class, 'store']);
+		Route::get('view', [CustomerController::class, 'view']);
 		Route::match(['PUT', 'PATCH'], 'update', [CustomerController::class, 'update']);
 		Route::delete('delete', [CustomerController::class, 'delete']);
 		Route::patch('restore', [CustomerController::class, 'restore']);
@@ -211,11 +214,21 @@ Route::group(['middleware' => ['has_company']], function () {
 		/*
 			Appointment Workers Module
 		*/
-		Route::group(['prefix' => 'workers'], function () {
+		/*Route::group(['prefix' => 'workers'], function () {
 			Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
 			Route::post('store', [AppointmentWorkerController::class, 'store']);
 			Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
 			Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
+		});*/
+
+		/*
+			Appointment Employees Module
+		*/
+		Route::group(['prefix' => 'employees'], function () {
+			Route::get('/', [AppointmentEmployeeController::class, 'appointmentEmployees']);
+			Route::get('trasheds', [AppointmentEmployeeController::class, 'trashedAppointmentEmployees']);
+			Route::post('assign', [AppointmentEmployeeController::class, 'assignEmployee']);
+			Route::post('unassign', [AppointmentEmployeeController::class, 'unassignEmployee']);
 		});
 
 		/*
@@ -298,6 +311,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::get('frees', [CarController::class, 'freeCars']);
 		Route::get('trasheds', [CarController::class, 'trashedCars']);
 		Route::post('store', [CarController::class, 'store']);
+		Route::get('view', [CarController::class, 'view']);
 		Route::post('set_image', [CarController::class, 'setCarImage']);
 		Route::match(['PUT', 'PATCH'], 'update', [CarController::class, 'update']);
 		Route::delete('delete', [CarController::class, 'delete']);
@@ -381,6 +395,13 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('detach_many', [QuotationWorkController::class, 'detachMany']);
 			Route::post('truncate', [QuotationWorkController::class, 'truncate']);
 		});
+	});
+
+	/*
+		Company Warranties
+	*/
+	Route::group(['prefix' => 'warranties'], function () {
+		Route::get('/', [WarrantyController::class, 'companyWarranties']);
 	});
 
 	/*

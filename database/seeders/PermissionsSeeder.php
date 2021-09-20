@@ -43,6 +43,8 @@ class PermissionsSeeder extends Seeder
             'view any appointments',
         	'view appointments',
         	'create appointments',
+            'assign appointments employees',
+            'unassign appointments employees',
             'process appointments',
             'execute appointments',
             'generate invoice appointments',
@@ -63,14 +65,6 @@ class PermissionsSeeder extends Seeder
             'delete sub appointments',
             'restore sub appointments',
             'force delete sub appointments',
-
-            // Appointment Worker
-            'view any appointment workers',
-            'view appointment workers',
-            'create appointment workers',
-            'edit appointment workers',
-            'delete appointment workers',
-            'force delete appointment workers',
 
             // Cost
             'view any costs',

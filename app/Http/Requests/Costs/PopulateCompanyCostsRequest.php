@@ -5,11 +5,19 @@ namespace App\Http\Requests\Costs;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\RequestHasRelations;
 use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateCompanyCostsRequest extends FormRequest
 {
+    use RequestHasRelations;
     use CompanyPopulateRequestOptions;
+
+    private $relationNames = [
+        'with_company' => false,
+        'with_costables' => true,
+        'with_receipt' => false,
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -100,6 +108,14 @@ class PopulateCompanyCostsRequest extends FormRequest
 
         if ($orderByPaidAmount = $this->input('order_by_paid_amount')) {
             $this->addOrderBy('paid_amount', $orderByPaidAmount);
+        }
+
+        if ($relations = $this->relations()) {
+            $this->setWiths($relations);
+
+            if ($this->relationNames['with_costables'] === true) {
+                $this->addWith('costables.costables');
+            }
         }
 
         return $this->collectCompanyOptions();

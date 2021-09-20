@@ -7,8 +7,17 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Employee;
 
+use App\Traits\RequestHasRelations;
+
 class FindEmployeeRequest extends FormRequest
 {
+    use RequestHasRelations;
+
+    protected $relationNames = [
+        'with_company' => true,
+        'with_user' => false,
+    ];
+
     private $employee;
 
     public function getEmployee()
@@ -19,6 +28,11 @@ class FindEmployeeRequest extends FormRequest
         return $this->employee = Employee::findOrFail($id);
     }
 
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -27,7 +41,6 @@ class FindEmployeeRequest extends FormRequest
     public function authorize()
     {
         $employee = $this->getEmployee();
-
         return Gate::allows('view-employee', $employee);
     }
 

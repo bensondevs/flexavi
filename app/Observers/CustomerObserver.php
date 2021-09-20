@@ -19,13 +19,13 @@ class CustomerObserver
      */
     public function created(Customer $customer)
     {
-        if ($email = $customer->email) {
+        /*if ($email = $customer->email) {
             $mail = new CustomerRegistered($customer);
 
             $sendMailJob = new SendMail($mail, $email);
             $sendMailJob->delay(1);
-            dispatch($sendMail);
-        }
+            dispatch($sendMailJob);
+        }*/
     }
 
     /**
@@ -36,7 +36,7 @@ class CustomerObserver
      */
     public function updated(Customer $customer)
     {
-        if ($email = $customer->email) {
+        /*if ($email = $customer->email) {
             if ($customer->isDirty('unique_key')) {
                 $mail = new NewUniqueKeyGenerated($customer);
 
@@ -44,7 +44,7 @@ class CustomerObserver
                 $sendMailJob->delay(1);
                 dispatch($sendMailJob);
             }
-        }
+        }*/
     }
 
     /**

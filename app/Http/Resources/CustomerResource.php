@@ -18,7 +18,7 @@ class CustomerResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $structure = [
             'id' => $this->id,
 
             'fullname' => $this->fullname,
@@ -33,5 +33,11 @@ class CustomerResource extends JsonResource
             'city' => $this->city,
             'province' => $this->province,
         ];
+
+        if ($this->relationLoaded('company')) {
+            $structure['company'] = new CompanyResource($this->company);
+        }
+
+        return $structure;
     }
 }

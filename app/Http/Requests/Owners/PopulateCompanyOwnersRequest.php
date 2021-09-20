@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Owners;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
@@ -17,10 +18,7 @@ class PopulateCompanyOwnersRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $company = $this->model = $this->getCompany();
-
-        return $this->authorizeCompanyAction('companies', 'id');
+        return Gate::allows('view-any-owner');
     }
 
     /**
@@ -38,8 +36,6 @@ class PopulateCompanyOwnersRequest extends FormRequest
 
     public function options()
     {
-        $this->setWiths(['user']);
-
         return $this->collectCompanyOptions();
     }
 }

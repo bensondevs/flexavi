@@ -5,26 +5,30 @@ namespace App\Providers;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
-use App\Policies\CarPolicy;
-use App\Policies\CostPolicy;
-use App\Policies\WorkPolicy;
-use App\Policies\AddressPolicy;
-use App\Policies\InvoicePolicy;
-use App\Policies\ReceiptPolicy;
-use App\Policies\WorkdayPolicy;
-use App\Policies\RevenuePolicy;
-use App\Policies\WorklistPolicy;
-use App\Policies\CustomerPolicy;
-use App\Policies\EmployeePolicy;
-use App\Policies\QuotationPolicy;
-use App\Policies\AppointmentPolicy;
-use App\Policies\ExecuteWorkPolicy;
-use App\Policies\InvoiceItemPolicy;
-use App\Policies\PaymentTermPolicy;
-use App\Policies\SubAppointmentPolicy;
-use App\Policies\ExecuteWorkPhotoPolicy;
-use App\Policies\AppointmentWorkerPolicy;
-use App\Policies\RegisterInvitationPolicy;
+use App\Policies\{
+    CarPolicy,
+    CostPolicy,
+    WorkPolicy,
+    OwnerPolicy,
+    AddressPolicy,
+    InvoicePolicy,
+    ReceiptPolicy,
+    WorkdayPolicy,
+    RevenuePolicy,
+    WorklistPolicy,
+    WarrantyPolicy,
+    CustomerPolicy,
+    EmployeePolicy,
+    QuotationPolicy,
+    AppointmentPolicy,
+    ExecuteWorkPolicy,
+    InvoiceItemPolicy,
+    PaymentTermPolicy,
+    SubAppointmentPolicy,
+    ExecuteWorkPhotoPolicy,
+    AppointmentWorkerPolicy,
+    RegisterInvitationPolicy
+};
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -57,6 +61,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('generate-invoice-appointment', [AppointmentPolicy::class, 'generateInvoice']);
         Gate::define('update-appointment', [AppointmentPolicy::class, 'update']);
         Gate::define('cancel-appointment', [AppointmentPolicy::class, 'cancel']);
+        Gate::define('assign-appointment-employee', [AppointmentPolicy::class, 'assignEmployee']);
+        Gate::define('unassign-appointment-employee', [AppointmentPolicy::class, 'unassignEmployee']);
         Gate::define('execute-appointment', [AppointmentPolicy::class, 'execute']);
         Gate::define('process-appointment', [AppointmentPolicy::class, 'process']);
         Gate::define('calculate-appointment', [AppointmentPolicy::class, 'calculate']);
@@ -64,15 +70,6 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-appointment', [AppointmentPolicy::class, 'delete']);
         Gate::define('restore-appointment', [AppointmentPolicy::class, 'restore']);
         Gate::define('force-delete-appointment', [AppointmentPolicy::class, 'forceDelete']);
-
-        // Appointment Worker
-        Gate::define('view-any-appointment-worker', [AppointmentWorkerPolicy::class, 'viewAny']);
-        Gate::define('view-appointment-worker', [AppointmentWorkerPolicy::class, 'view']);
-        Gate::define('create-appointment-worker', [AppointmentWorkerPolicy::class, 'create']);
-        Gate::define('edit-appointment-worker', [AppointmentWorkerPolicy::class, 'edit']);
-        Gate::define('delete-appointment-worker', [AppointmentWorkerPolicy::class, 'delete']);
-        Gate::define('restore-appointment-worker', [AppointmentWorkerPolicy::class, 'restore']);
-        Gate::define('force-delete-appointment-worker', [AppointmentWorkerPolicy::class, 'forceDelete']);
 
         // Sub Appointment
         Gate::define('view-any-sub-appointment', [SubAppointmentPolicy::class, 'viewAny']);
@@ -182,6 +179,14 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('restore-work', [WorkPolicy::class, 'restore']);
         Gate::define('force-delete-work', [WorkPolicy::class, 'forceDelete']);
 
+        // Warranty
+        Gate::define('view-any-warranty', [WarrantyPolicy::class, 'viewAny']);
+        Gate::define('view-warranty', [WarrantyPolicy::class, 'view']);
+        Gate::define('create-warranty', [WarrantyPolicy::class, 'create']);
+        Gate::define('edit-warranty', [WarrantyPolicy::class, 'update']);
+        Gate::define('delete-warranty', [WarrantyPolicy::class, 'delete']);
+        Gate::define('restore-warranty', [WarrantyPolicy::class, 'restore']);
+
         // Execute Work
         Gate::define('view-any-execute-works', [ExecuteWorkPolicy::class, 'viewAny']);
         Gate::define('execute-work', [ExecuteWorkPolicy::class, 'execute']);
@@ -217,6 +222,7 @@ class AuthServiceProvider extends ServiceProvider
         // Customer
         Gate::define('view-any-customer', [CustomerPolicy::class, 'viewAny']);
         Gate::define('create-customer', [CustomerPolicy::class, 'create']);
+        Gate::define('view-customer', [CustomerPolicy::class, 'view']);
         Gate::define('edit-customer', [CustomerPolicy::class, 'update']);
         Gate::define('delete-customer', [CustomerPolicy::class, 'delete']);
         Gate::define('restore-customer', [CustomerPolicy::class, 'restore']);
@@ -262,5 +268,14 @@ class AuthServiceProvider extends ServiceProvider
         // Register Invitation
         Gate::define('send-employee-register-invitation', [RegisterInvitationPolicy::class, 'sendEmployeeRegisterInvitation']);
         Gate::define('send-owner-register-invitation', [RegisterInvitationPolicy::class, 'sendOwnerRegisterInvitation']);
+
+        // Owner
+        Gate::define('view-any-owner', [OwnerPolicy::class, 'viewAny']);
+        Gate::define('view-owner', [OwnerPolicy::class, 'view']);
+        Gate::define('create-owner', [OwnerPolicy::class, 'create']);
+        Gate::define('edit-owner', [OwnerPolicy::class, 'update']);
+        Gate::define('delete-owner', [OwnerPolicy::class, 'delete']);
+        Gate::define('restore-owner', [OwnerPolicy::class, 'restore']);
+        Gate::define('force-delete-owner', [OwnerPolicy::class, 'forceDelete']);
     }
 }

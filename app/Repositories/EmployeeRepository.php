@@ -8,6 +8,7 @@ use \Illuminate\Database\QueryException;
 use App\Http\Resources\EmployeeResource;
 
 use App\Models\Employee;
+use App\Models\AppointmentEmployee;
 
 use App\Repositories\Base\BaseRepository;
 
@@ -27,6 +28,22 @@ class EmployeeRepository extends BaseRepository
 
 		return $this->all($options);
 	}
+
+	public function appointmentEmployees(array $options = [], bool $pagination = false)
+	{
+		$this->setModel(new AppointmentEmployee);
+		return $this->all($options, $pagination);
+	}
+
+	/*public function trashedAppointmentEmployees(array $options = [], bool $pagination = false)
+	{
+		$appointmentEmployees = new AppointmentEmployee;
+		$appointmentEmployees = $appointmentEmployees->onlyTrashed();
+
+		$this->setModel($appointmentEmployees);
+
+		return $this->all($options, $pagination);
+	}*/
 
 	public function save(array $employeeData)
 	{

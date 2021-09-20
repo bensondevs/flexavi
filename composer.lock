@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "14fe0d667718118d440c65e9528eb7e1",
+    "content-hash": "90915354e2f4ef28cb079ea78edc3979",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -737,6 +737,66 @@
                 "source": "https://github.com/fideloper/TrustedProxy/tree/4.4.1"
             },
             "time": "2020-10-22T13:48:01+00:00"
+        },
+        {
+            "name": "fidum/laravel-eloquent-morph-to-one",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fidum/laravel-eloquent-morph-to-one.git",
+                "reference": "79985130bd2aa5820c890d2809f4ac5ee3430b09"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fidum/laravel-eloquent-morph-to-one/zipball/79985130bd2aa5820c890d2809f4ac5ee3430b09",
+                "reference": "79985130bd2aa5820c890d2809f4ac5ee3430b09",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": "^8.0",
+                "illuminate/support": "^8.0",
+                "php": "^7.3|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.4",
+                "vimeo/psalm": "^4.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Fidum\\EloquentMorphToOne\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Mason",
+                    "email": "fidum.dev@gmail.com",
+                    "homepage": "https://fidum.uk",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Adds MorphToOne relation to Laravel eloquent",
+            "homepage": "https://github.com/fidum/laravel-eloquent-morph-to-one",
+            "keywords": [
+                "fidum",
+                "laravel",
+                "laravel-eloquent-morph-to-one"
+            ],
+            "support": {
+                "issues": "https://github.com/fidum/laravel-eloquent-morph-to-one/issues",
+                "source": "https://github.com/fidum/laravel-eloquent-morph-to-one/tree/2.0.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/dmason30",
+                    "type": "github"
+                }
+            ],
+            "time": "2020-11-01T15:34:01+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",

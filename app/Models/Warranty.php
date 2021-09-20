@@ -49,6 +49,38 @@ class Warranty extends Model
     	});
     }
 
+    public function getStatusDescriptionAttribute()
+    {
+        $status = $this->attributes['status'];
+        return WarrantyStatus::getDescription($status);
+    }
+
+    public function getFormattedAmountAttribute()
+    {
+        $amount = $this->attributes['amount'];
+        return currency_format($amount);
+    }
+
+    public function getFormattedPaidAmountAttribute()
+    {
+        $paidAmount = $this->attributes['paid_amount'];
+        return currency_format($paidAmount);
+    }
+
+    public function getUnpaidAmountAttribute()
+    {
+        $amount = $this->attributes['amount'];
+        $paidAmount = $this->attributes['paid_amount'];
+
+        return $amount - $paidAmount;
+    }
+
+    public function getFormattedUnpaidAmountAttribute()
+    {
+        $unpaidAmount = $this->getUnpaidAmountAttribute();
+        return currency_format($unpaidAmount);
+    }
+
     public function company()
     {
         return $this->belongsTo(Company::class);

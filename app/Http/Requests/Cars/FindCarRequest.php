@@ -7,10 +7,17 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Car;
 
-use App\Policies\CarPolicy;
+use App\Traits\RequestHasRelations;
 
 class FindCarRequest extends FormRequest
 {
+    use RequestHasRelations;
+
+    private $relationNames = [
+        'with_company' => true,
+        'with_worklists' => true,
+    ];
+
     private $car;
 
     public function getCar()
@@ -19,6 +26,11 @@ class FindCarRequest extends FormRequest
 
         $id = $this->input('id') ?: $this->input('car_id');
         return $this->car = Car::findOrFail($id);
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
     }
 
     /**

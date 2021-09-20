@@ -1,10 +1,10 @@
-## Appointment Worker
+## Appointment Employee
 
 -------------------------------------------------------
-### 1. Populate Appointment Worker
+### 1. Populate Appointment Employees
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/appointments/workers`
+**Endpoint:** `/api/dashboard/companies/appointments/employees`
 
 **Method:** `GET`
 
@@ -31,51 +31,22 @@ Attribute Name  | Type  | Description
 
 ```json
 {
-    "workers": {
+    "appointment_employees": {
         "current_page": 1,
         "data": [
             {
-                "id": "fc406970-f113-11eb-8a60-bd34953fd7d3",
-                "employee_type": "administrative",
+                "id": "125dafd0-12db-11ec-9216-997884b0fa94",
+                "appointment_id": "96978010-12d9-11ec-9c62-f75430b14749",
+                "employee_id": "955c0280-12d9-11ec-af46-31bc59100f33",
                 "employee": {
-                    "id": "f7e769e0-f113-11eb-8ef8-cfb3b1d0abf1",
-                    "user_id": "f5345510-f113-11eb-9f17-0f514d65c4c8",
-                    "company_id": "f74ad840-f113-11eb-8f24-7f3c3246a486",
+                    "id": "955c0280-12d9-11ec-af46-31bc59100f33",
+                    "user_id": "926b2340-12d9-11ec-a98c-99b65547a180",
+                    "company_id": "94bc19b0-12d9-11ec-b202-c367580c2e11",
                     "title": "Employee Title",
                     "employee_type": 1,
-                    "employment_status": 3,
-                    "created_at": "2021-07-30T08:56:03.000000Z",
-                    "updated_at": "2021-07-30T08:56:03.000000Z",
-                    "deleted_at": null
-                }
-            },
-            {
-                "id": "fc406f10-f113-11eb-a886-4bad10d05c2c",
-                "employee_type": "administrative",
-                "employee": {
-                    "id": "f7e79fa0-f113-11eb-b08e-b35e759bc859",
-                    "user_id": "f600ffc0-f113-11eb-bf01-4d5efbe27661",
-                    "company_id": "f74ad840-f113-11eb-8f24-7f3c3246a486",
-                    "title": "Employee Title",
-                    "employee_type": 1,
-                    "employment_status": 3,
-                    "created_at": "2021-07-30T08:56:03.000000Z",
-                    "updated_at": "2021-07-30T08:56:03.000000Z",
-                    "deleted_at": null
-                }
-            },
-            {
-                "id": "fc407200-f113-11eb-9f4d-4dcd2661b855",
-                "employee_type": "administrative",
-                "employee": {
-                    "id": "f7e78a40-f113-11eb-ad1d-4b0c7706f3d7",
-                    "user_id": "f5a6b3c0-f113-11eb-94d7-730cdbe1a617",
-                    "company_id": "f74ad840-f113-11eb-8f24-7f3c3246a486",
-                    "title": "Employee Title",
-                    "employee_type": 1,
-                    "employment_status": 3,
-                    "created_at": "2021-07-30T08:56:03.000000Z",
-                    "updated_at": "2021-07-30T08:56:03.000000Z",
+                    "employment_status": 2,
+                    "created_at": "2021-09-11T08:23:46.000000Z",
+                    "updated_at": "2021-09-11T08:23:46.000000Z",
                     "deleted_at": null
                 }
             }
@@ -105,17 +76,17 @@ Attribute Name  | Type  | Description
         "path": "/",
         "per_page": 10,
         "prev_page_url": null,
-        "to": 3,
-        "total": 3
+        "to": 1,
+        "total": 1
     }
 }
 ```
 
 -------------------------------------------------------
-### 2. Store Appointment Worker
+### 2. Assign Appointment Employee
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/appointments/workers/store`
+**Endpoint:** `/api/dashboard/companies/appointments/employees/assign`
 
 **Method:** `POST`
 
@@ -147,15 +118,15 @@ Payload name | Required | Validation | Description
 ```json
 {
     "status": "success",
-    "message": "Successfully store appointment worker"
+    "message": "Successfully assign employee to appointment."
 }
 ```
 
 -------------------------------------------------------
-### 3. Delete Appointment Worker
+### 3. Unassign Appointment Employee
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/appointments/workers/delete`
+**Endpoint:** `/api/dashboard/companies/appointments/employees/unassign`
 
 **Method:** `DELETE`
 
@@ -171,7 +142,7 @@ Content-Type | `application/x-www-form-urlencoded`
 
 Payload name | Required | Validation | Description  
 -------------|----------|------------|-------------
-`id` | Required | uuid, string, existed in `appointment_workers` | Target appointment worker
+`id` or `appointment_employee_id` | Required | uuid, string, existed in `appointment_employees` | Target appointment worker
 
 **Request Body Example:**
 
@@ -186,6 +157,6 @@ Payload name | Required | Validation | Description
 ```json
 {
     "status": "success",
-    "message": "Successfully delete appointment worker"
+    "message": "Successfully unassign employee from appointment."
 }
 ```

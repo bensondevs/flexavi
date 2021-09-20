@@ -29,7 +29,6 @@ class CreateAppointmentEmployeesTable extends Migration
                 ->onDelete('CASCADE');
 
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

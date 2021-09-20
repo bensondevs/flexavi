@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
-use \Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 
 use App\Observers\StorageFileObserver;

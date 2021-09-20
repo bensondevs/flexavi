@@ -10,7 +10,7 @@ use Webpatser\Uuid\Uuid;
 
 use App\Observers\CostableObserver;
 
-class Costable extends Pivot
+class Costable extends Model
 {
     use SoftDeletes;
 
@@ -18,6 +18,13 @@ class Costable extends Pivot
     protected $primaryKey = 'id';
     public $timestamps = true;
     public $incrementing = true;
+
+    protected $fillable = [
+        'cost_id',
+
+        'costable_id',
+        'costable_type',
+    ];
 
     protected static function boot()
     {

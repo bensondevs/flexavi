@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Owners\SaveOwnerRequest as SaveRequest;
-use App\Http\Requests\Owners\DeleteOwnerRequest as DeleteRequest;
-use App\Http\Requests\Owners\PopulateCompanyOwnersRequest as PopulateRequest;
+use App\Http\Requests\Owners\{
+    SaveOwnerRequest as SaveRequest,
+    FindOwnerRequest as FindRequest,
+    DeleteOwnerRequest as DeleteRequest,
+    PopulateCompanyOwnersRequest as PopulateRequest
+};
 
 use App\Http\Resources\OwnerResource;
 
@@ -59,8 +62,17 @@ class OwnerController extends Controller
     {
         $input = $request->ruleWithCompany();
         $owner = $this->owner->save($input);
+        $owner = new OwnerResource($owner->fresh());
 
         return apiResponse($this->owner, ['owner' => $owner]);
+    }
+
+    public function view(FindRequest $request)
+    {
+        $owner = $request->getOwner();
+        $owner = new OwnerResource($owner);
+
+        return response()->json(['owner' => $owner]);
     }
 
     public function update(SaveRequest $request)
@@ -90,6 +102,7 @@ class OwnerController extends Controller
         $owner = $request->getTrashedOwner();
         $owner = $this->owner->setModel($owner);
         $owner = $this->owner->restore();
+        $owner = new OwnerResource($owner);
 
         return apiResponse($this->owner, ['owner' => $owner]);
     }

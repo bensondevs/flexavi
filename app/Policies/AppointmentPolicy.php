@@ -7,7 +7,9 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Appointment;
+use App\Models\AppointmentEmployee;
 
 use App\Enums\Appointment\AppointmentStatus;
 
@@ -32,6 +34,29 @@ class AppointmentPolicy
     public function create(User $user)
     {
         return $user->hasPermissionTo('create appointments');
+    }
+
+    public function assignEmployee(User $user, Appointment $appointment, Employee $employee)
+    {
+        if (AppointmentEmployee::isExists($appointment, $employee)) {
+            return abort(422, 'Employee already assigned.');
+        }
+        
+        if (! $user->hasCompanyPermission($appointment->company_id, 'assign appointments employees')) {
+            return abort(403, 'You don\'t have permission to assign employee to this appointment.');
+        }
+
+        if ($appointment->company_id !== $employee->company_id) {
+            return abort(403, 'Cannot use this employee.');
+        }
+
+        return true;
+    }
+
+    public function unassignEmployee(User $user, AppointmentEmployee $appointmentEmployee)
+    {
+        $appointment = $appointmentEmployee->appointment;
+        return $user->hasCompanyPermission($appointment->company_id, 'unassign appointments employees');
     }
 
     public function generateInvoice(User $user, Invoice $invoice)

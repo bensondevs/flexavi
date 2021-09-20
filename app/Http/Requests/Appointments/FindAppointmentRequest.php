@@ -5,10 +5,14 @@ namespace App\Http\Requests\Appointments;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\RequestHasRelations;
+
 use App\Models\Appointment;
 
 class FindAppointmentRequest extends FormRequest
 {
+    use RequestHasRelations;
+
     protected $relationNames = [
         'with_finished_works' => true,
         'with_customer' => true,
@@ -51,11 +55,7 @@ class FindAppointmentRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        foreach ($this->relationNames as $requestKey => $defaultValue) {
-            if ($this->has($requestKey)) {
-                $this->merge([$requestKey => strtobool($this->input($requestKey))]);
-            }
-        }
+        $this->prepareRelationInputs();
     }
 
     /**
@@ -68,23 +68,5 @@ class FindAppointmentRequest extends FormRequest
         return [
             //
         ];
-    }
-
-    public function relations()
-    {
-        $relations = [];
-        foreach ($this->relationNames as $name => $defaultValue) {
-            $relationName = str_replace('with_', '', $name);
-            $relationName = str_camel_case($relationName);
-
-            /*
-                Get request key name, if not set then get the default value 
-            */
-            if ($this->input($name, $defaultValue)) {
-                $relations[] = $relationName;
-            }
-        }
-
-        return $relations;
     }
 }

@@ -22,7 +22,10 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'fullname' => $this->fullname,
             'birth_date' => $this->birth_date,
+            
             'id_card_type' => $this->id_card_type,
+            'id_card_type_description' => $this->id_card_type_description,
+
             'id_card_number' => $this->id_card_number,
             'phone' => $this->phone,
             'phone_verified_status' => $this->phone_verified_status,
@@ -32,7 +35,7 @@ class UserResource extends JsonResource
             'role' => $this->user_role,
         ];
 
-        if ($this->token) {
+        if (isset($this->token)) {
             $structure['token'] = $this->token;
         }
 

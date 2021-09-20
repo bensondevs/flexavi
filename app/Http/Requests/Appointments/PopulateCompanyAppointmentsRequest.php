@@ -9,11 +9,20 @@ use App\Enums\Appointment\AppointmentType;
 use App\Enums\Appointment\AppointmentStatus;
 use App\Enums\Appointment\AppointmentCancellationVault;
 
+use App\Traits\RequestHasRelations;
 use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateCompanyAppointmentsRequest extends FormRequest
 {
+    use RequestHasRelations;
     use CompanyPopulateRequestOptions;
+
+    protected $relationNames = [
+        'with_worklist' => false,
+        'with_workday' => false,
+        'with_works' => false,
+        'with_costs' => false,
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +37,8 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
     protected function prepareForValidation()
     {
         if (is_string($this->get('has_subs_only'))) {
-            $this->merge(['has_subs_only' => strtobool($this->get('has_subs_only'))]);
+            $hasSubsOnly = $this->get('has_subs_only');
+            $this->merge(['has_subs_only' => strtobool($hasSubsOnly)]);
         }
     }
 
@@ -88,20 +98,8 @@ class PopulateCompanyAppointmentsRequest extends FormRequest
             $this->addWhereHas('subs');
         }
 
-        if ($withWorklist = $this->get('with_worklist')) {
-            $this->addWith('worklist');
-        }
-
-        if ($withWorkday = $this->get('with_workday')) {
-            $this->addWith('workday');
-        }
-
-        if ($withWorks = $this->get('with_works')) {
-            $this->addWith('works');
-        }
-
-        if ($withCosts = $this->get('with_costs')) {
-            $this->addWith('costs');
+        if ($relations = $this->relations()) {
+            $this->setWiths($relations);
         }
 
         return $this->collectCompanyOptions();

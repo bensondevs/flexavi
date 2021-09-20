@@ -42,22 +42,22 @@ class SaveCompanyRequest extends FormRequest
         $this->setRules([
             // Visiting Address
             'visiting_address_street' => ['required', 'string'],
-            'visiting_address_house_number' => ['required', 'string'],
+            'visiting_address_house_number' => ['required', 'numeric'],
             'visiting_address_house_number_suffix' => ['string'],
-            'visiting_address_zipcode' => ['required', 'string'],
+            'visiting_address_zipcode' => ['required', 'numeric'],
             'visiting_address_city' => ['required', 'string'],
 
             // Invoicing Address
             'invoicing_address_street' => ['required', 'string'],
-            'invoicing_address_house_number' => ['required', 'string'],
+            'invoicing_address_house_number' => ['required', 'numeric'],
             'invoicing_address_house_number_suffix' => ['string'],
-            'invoicing_address_zipcode' => ['required', 'string'],
+            'invoicing_address_zipcode' => ['required', 'numeric'],
             'invoicing_address_city' => ['required', 'string'],
             
             'email' => ['required', 'string', 'unique:companies,email'],
             'phone_number' => ['required', 'string', 'unique:companies,phone_number'],
             'vat_number' => ['required', 'string', 'unique:companies,vat_number'],
-            'commerce_chamber_number' => ['required', 'string'],
+            'commerce_chamber_number' => ['required', 'numeric'],
             'company_website_url' => ['required', 'string'],
         ]);
 

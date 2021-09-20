@@ -4,9 +4,9 @@ namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-use App\Rules\AmongStrings;
-
 use App\Models\User;
+
+use App\Enums\User\UserIdCardType;
 
 use App\Traits\InputRequest;
 
@@ -44,13 +44,10 @@ class SaveUserRequest extends FormRequest
             'birth_date' => ['required', 'date'],
             'id_card_type' => [
                 'required', 
-                'string', 
-                new AmongStrings([
-                    'id_card',
-                    'driving_license',
-                    'passport',
-                ]
-            )],
+                'numeric', 
+                'min:' . UserIdCardType::NationalIdCard,
+                'max:' . UserIdCardType::DrivingLicense,
+            ],
             'id_card_number' => ['required', 'string', 'unique:users,id_card_number'],
             'phone' => ['required', 'string', 'unique:users,phone'],
             'address' => ['required', 'string', 'unique:users,address'],

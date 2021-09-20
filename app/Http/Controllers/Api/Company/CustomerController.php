@@ -56,6 +56,16 @@ class CustomerController extends Controller
     	return apiResponse($this->customer);
     }
 
+    public function view(FindRequest $request)
+    {
+        $customer = $request->getCustomer();
+
+        $relations = $request->relations();
+        $customer->load($relations);
+
+        return response()->json(['customer' => $customer]);
+    }
+
     public function update(SaveRequest $request)
     {
         $customer = $request->getCustomer();

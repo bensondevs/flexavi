@@ -3,22 +3,21 @@
 namespace App\Http\Requests\Warranties;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
-use App\Traits\PopulateRequestOptions;
-
-use App\Models\WorkContract;
+use App\Traits\RequestHasRelations;
+use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateWarrantiesRequest extends FormRequest
 {
-    use PopulateRequestOptions;
+    use CompanyPopulateRequestOptions;
+    use RequestHasRelations;
 
-    private $contract;
-
-    public function getWorkContract()
-    {
-        return $this->contract = ($this->contract) ?:
-            WorkContract::findOrFail($this->input('id'));
-    }
+    private $relationNames = [
+        'with_company' => false,
+        'with_appointment' => false,
+        'with_work' => false,
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +26,12 @@ class PopulateWarrantiesRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $contract = $this->getWorkContract();
+        return Gate::allows('view-any-warranty');
+    }
 
-        return $user->hasCompanyPermission(
-            $contract->company_id, 
-            'view warranties'
-        );
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
     }
 
     /**
@@ -48,6 +46,9 @@ class PopulateWarrantiesRequest extends FormRequest
 
     public function options()
     {
-        return $this->collectOptions();
+        $relations = $this->relations();
+        $this->setWiths($relations);
+
+        return $this->collectCompanyOptions();
     }
 }

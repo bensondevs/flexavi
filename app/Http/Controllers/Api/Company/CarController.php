@@ -66,12 +66,13 @@ class CarController extends Controller
         $input = $request->ruleWithCompany();
     	$car = $this->car->save($input);
 
-    	return apiResponse($this->car, ['car' => $car]);
+    	return apiResponse($this->car);
     }
 
     public function view(FindRequest $request)
     {
         $car = $request->getCar();
+        $car = new CarResource($car);
         return response()->json(['car' => $car]);
     }
 
@@ -81,7 +82,7 @@ class CarController extends Controller
         $car = $this->car->setModel($car);
         $car = $this->car->validateInsurance();
 
-        return apiResponse($this->car, ['car' => $car]);
+        return apiResponse($this->car);
     }
 
     public function update(SaveRequest $request)
@@ -92,7 +93,7 @@ class CarController extends Controller
         $input = $request->onlyInRules();
     	$car = $this->car->save($input);
 
-    	return apiResponse($this->car, ['car' => $car]);
+    	return apiResponse($this->car);
     }
 
     public function setCarImage(SetImageRequest $request)
@@ -103,7 +104,7 @@ class CarController extends Controller
         $image = $request->car_image;
         $car = $this->car->setCarImage($image);
 
-        return apiResponse($this->car);
+        return apiResponse($this->car, ['car' => $car]);
     }
 
     public function delete(FindRequest $request)

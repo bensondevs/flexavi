@@ -243,6 +243,11 @@ class Appointment extends Model
         return $this->morphedByMany(Workday::class, 'appointmentable');
     }
 
+    public function warranties()
+    {
+        return $this->hasMany(Warranty::class);
+    }
+
     public static function typeOptions()
     {
         return AppointmentType::asSelectArray();

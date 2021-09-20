@@ -98,6 +98,12 @@ class User extends Authenticatable
         });
     }
 
+    public function getIdCardTypeDescriptionAttribute()
+    {
+        $type = $this->attributes['id_card_type'];
+        return UserIdCardType::getDescription($type);
+    }
+
     public function addresses()
     {
         return $this->hasMany(Address::class);
@@ -116,6 +122,21 @@ class User extends Authenticatable
     public function register_invitation()
     {
         return $this->belongsTo(RegisterInvitation::class, 'registration_code', 'registration_code');
+    }
+
+    public function registerInvitation()
+    {
+        return $this->register_invitation();
+    }
+
+    public static function findByEmail(string $email)
+    {
+        return self::where('email', $email)->first();
+    }
+
+    public static function findByEmailOrFail(string $email)
+    {
+        return self::where('email', $email)->firstOrFail();
     }
 
     public function setUnhashedPasswordAttribute(string $value)
