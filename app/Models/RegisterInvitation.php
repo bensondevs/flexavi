@@ -49,8 +49,7 @@ class RegisterInvitation extends Model
         });
 
     	self::creating(function ($invitation) {
-            $invitation->registration_code = $invitation->registration_code ?
-                $invitation->registration_code :
+            $invitation->registration_code = $invitation->registration_code ?:
                 randomString(6);
             $invitation->expiry_time = $invitation->expiry_time ?:
                 carbon()->now()->addDays(3);

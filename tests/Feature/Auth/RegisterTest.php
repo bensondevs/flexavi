@@ -9,6 +9,10 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
+use App\Models\RegisterInvitation;
+
+use App\Enums\RegisterInvitation\RegisterInvitationStatus;
+
 class RegisterTest extends TestCase
 {
     use DatabaseTransactions;
@@ -20,10 +24,12 @@ class RegisterTest extends TestCase
      */
     public function test_success_register()
     {
+        $invitation = RegisterInvitation::where('status', RegisterInvitationStatus::Active)->first();
+
         $headers = ['Accept' => 'application/json'];
         $url = '/api/auth/register';
         $data = [
-            'invitation_code' => 'ML8bns',
+            'invitation_code' => $invitation->registration_code,
             'fullname' => 'Test User',
             'birth_date' => '1998-05-05',
             'id_card_type' => 1,
@@ -60,10 +66,12 @@ class RegisterTest extends TestCase
      */
     public function test_wrong_input_register()
     {
+        $invitation = RegisterInvitation::where('status', RegisterInvitationStatus::Active)->first();
+        
         $headers = ['Accept' => 'application/json'];
         $url = '/api/auth/register';
         $data = [
-            'invitation_code' => 'ML8bns',
+            'invitation_code' => $invitation->registration_code,
             'fullname' => 'Test User',
             'birth_date' => '1998-05-05',
             'id_card_type' => 1,

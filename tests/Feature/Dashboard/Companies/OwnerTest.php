@@ -200,11 +200,26 @@ class OwnerTest extends TestCase
      */
     public function test_prime_owner_delete_owner()
     {
-        $primeOwner = Owner::whereHas('user')->whereHas('company')->primeOnly()->first();
+        $primeOwner = Owner::whereHas('user')
+            ->whereHas('company')
+            ->primeOnly()
+            ->first();
         $user = $primeOwner->user;
         $token = $user->generateToken();
 
-        $deletedOwner = Owner::where('company_id', $primeOwner->company_id)->first();
+        $deletedOwner = Owner::where('company_id', $primeOwner->company_id)
+            ->where('is_prime_owner', false)
+            ->first();
+        if (! $deletedOwner) {
+            $deletedOwner = Owner::create([
+                'company_id' => $primeOwner->company_id,
+                'is_prime_owner' => false,
+                'bank_name' => 'Example',
+                'bic_code' => 'Example',
+                'bank_account' => 'Example',
+                'bank_holder_name' => 'Example',
+            ]);
+        }
 
         $headers = [
             'Accept' => 'application/json',
@@ -213,6 +228,8 @@ class OwnerTest extends TestCase
         ];
         $url = '/api/dashboard/companies/owners/delete';
         $response = $this->withHeaders($headers)->delete($url, ['id' => $deletedOwner->id]);
+
+        
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
