@@ -21,7 +21,7 @@ class ReviseQuotationRequest extends FormRequest
     {
         if ($this->quotation) return $this->quotation;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('quotation_id');
         return $this->quotation = Quotation::findOrFail($id);
     }
 
@@ -61,8 +61,6 @@ class ReviseQuotationRequest extends FormRequest
 
     public function revisionData()
     {
-        $data = $this->onlyInRules();
-
-        return $data;
+        return $this->validated();
     }
 }

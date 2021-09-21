@@ -65,12 +65,32 @@ class QuotationResource extends JsonResource
             'payment_method_description' => $this->payment_method_description,
         ];
 
+        if ($this->relationLoaded('appointment')) {
+            $structure['appointment'] = new AppointmentResource($this->appointment);
+        }
+
+        if ($this->relationLoaded('works')) {
+            $structure['works'] = WorkResource::collection($this->works);
+        }
+
         if ($this->relationLoaded('customer')) {
             $structure['customer'] = new CustomerResource($this->customer);
         }
 
-        if ($this->relationLoaded('appointment')) {
-            $structure['appointment'] = new AppointmentResource($this->appointment);
+        if ($this->relationLoaded('attachments')) {
+            $structure['attachments'] = QuotationAttachmentResource::collection($this->attachments);
+        }
+
+        if ($this->relationLoaded('company')) {
+            $structure['company'] = new CompanyResource($this->company);
+        }
+
+        if ($this->relationLoaded('revisions')) {
+            $structure['revisions'] = $this->revisions;
+        }
+
+        if ($this->relationLoaded('invoice')) {
+            $structure['invoice'] = new InvoiceResource($this->invoice);
         }
 
         if ($this->status >= QuotationStatus::Draft) {

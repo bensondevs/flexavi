@@ -169,7 +169,7 @@ class QuotationRepository extends BaseRepository
 			$quotation->honored_at = carbon()->now();
 			if (isset($honorData['discount_amount'])) {
 				$quotation->discount_amount = $honorData['discount_amount'];
-				$quotation->countAmount();
+				$quotation->countWorksAmount();
 			}
 			$quotation->save();
 
@@ -178,7 +178,7 @@ class QuotationRepository extends BaseRepository
 			$this->setSuccess('Successfully honor quotation.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
-			$this->setError('Failed to honor quotation.');
+			$this->setError('Failed to honor quotation.', $error);
 		}
 
 		return $this->getModel();

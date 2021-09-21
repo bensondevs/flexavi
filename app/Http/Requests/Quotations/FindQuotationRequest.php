@@ -7,14 +7,35 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Quotation;
 
+use App\Traits\RequestHasRelations;
+
 class FindQuotationRequest extends FormRequest
 {
+    use RequestHasRelations;
+
+    private $relationNames = [
+        'with_appointment' => true,
+        'with_works' => true,
+        'with_customer' => true,
+        'with_attachments' => true,
+        'with_company' => false,
+        'with_revisions' => false,
+        'with_invoice' => false,
+    ];
+
     private $quotation;
 
     public function getQuotation()
     {
-        return $this->quotation = ($this->quotation) ?:
-            Quotation::findOrFail($this->input('id'));
+        if ($this->quotation) return $this->quotation;
+
+        $id = $this->input('id') ?: $this->input('quotation_id');
+        return $this->quotation = Quotation::findOrFail($id);
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
     }
 
     /**

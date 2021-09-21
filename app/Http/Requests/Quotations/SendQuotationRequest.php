@@ -13,8 +13,10 @@ class SendQuotationRequest extends FormRequest
 
     public function getQuotation()
     {
-        return $this->quotation = ($this->quotation) ?:
-            Quotation::findOrFail($this->input('id'));
+        if ($this->quotation) return $this->quotation;
+
+        $id = $this->input('id') ?: $this->input('quotation_id');
+        return Quotation::findOrFail($id);
     }
 
     /**

@@ -32,7 +32,10 @@ class NotifyQuotationRevision extends Mailable
      */
     public function build()
     {
-        return $this->view('mails.quotations.notify-quotation-revision')
-            ->with(['quotation' => $quotation, 'revised' => $qutation->getDirty()]);
+        $quotation = $this->quotation;
+        return $this->view('mails.quotations.notify-quotation-revision')->with([
+            'quotation' => $quotation, 
+            'revised' => $quotation->getDirty()
+        ]);
     }
 }

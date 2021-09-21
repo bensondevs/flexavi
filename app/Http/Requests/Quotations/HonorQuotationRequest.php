@@ -21,7 +21,7 @@ class HonorQuotationRequest extends FormRequest
     {
         if ($this->quotation) return $this->quotation;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('quotation_id');
         return $this->quotation = Quotation::findOrFail($id);
     }
 
@@ -38,7 +38,8 @@ class HonorQuotationRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $this->merge(['discount_amount' => floatval($this->input('discount_amount'))]);
+        $discountAmount = floatval($this->input('discount_amount'));
+        $this->merge(['discount_amount' => $discountAmount]);
     }
 
     /**
@@ -57,6 +58,6 @@ class HonorQuotationRequest extends FormRequest
 
     public function honorData()
     {
-        return $this->onlyInRules();
+        return $this->validated();
     }
 }

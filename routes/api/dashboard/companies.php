@@ -360,8 +360,10 @@ Route::group(['middleware' => ['has_company']], function () {
 	*/
 	Route::group(['prefix' => 'quotations'], function () {
 		Route::get('/', [QuotationController::class, 'companyQuotations']);
+		Route::get('trasheds', [QuotationController::class, 'trashedQuotations']);
 		Route::get('of_customer', [QuotationController::class, 'customerQuotations']);
 		Route::post('store', [QuotationController::class, 'store']);
+		Route::get('view', [QuotationController::class, 'view']);
 		Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
 		Route::delete('delete', [QuotationController::class, 'delete']);
 

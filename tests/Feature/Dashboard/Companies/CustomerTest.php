@@ -187,9 +187,7 @@ class CustomerTest extends TestCase
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $token,
         ];
-        $customerData = [
-            'id' => $customer->id,
-        ];
+        $customerData = ['id' => $customer->id];
         $url = $this->baseUrl . '/delete';
         $response = $this->withHeaders($headers)->delete($url, $customerData);
 
@@ -223,9 +221,7 @@ class CustomerTest extends TestCase
             'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $token,
         ];
-        $customerData = [
-            'id' => $customer->id,
-        ];
+        $customerData = ['id' => $customer->id];
         $url = $this->baseUrl . '/restore';
         $response = $this->withHeaders($headers)->patch($url, $customerData);
 
@@ -233,6 +229,58 @@ class CustomerTest extends TestCase
         $response->assertJson(function (AssertableJson $json) {
             $json->where('status', 'success');
             $json->has('message');
+        });
+    }
+
+    /**
+     * A load customer appointments test.
+     *
+     * @return void
+     */
+    public function test_view_customer_appointments()
+    {
+        $owner = Owner::whereHas('user')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $customer = Customer::where('company_id', $owner->company_id)->first();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = $this->baseUrl . '/appointments?customer_id=' . $customer->id;
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('appointments');
+        });
+    }
+
+    /**
+     * A load customer quotations test.
+     *
+     * @return void
+     */
+    public function test_view_customer_quotations()
+    {
+        $owner = Owner::whereHas('user')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $customer = Customer::where('company_id', $owner->company_id)->first();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = $this->baseUrl . '/quotations?customer_id=' . $customer->id;
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('quotations');
         });
     }
 }

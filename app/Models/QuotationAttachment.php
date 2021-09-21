@@ -63,7 +63,10 @@ class QuotationAttachment extends Model
     public function getAttachmentUrlAttribute()
     {
         $path = $this->attributes['attachment_path'];
-        $file = StorageFile::findByPath($path);
+        if (! $file = StorageFile::findByPath($path)) {
+            return null;
+        }
+
         return $file->getDownloadUrl();
     }
 

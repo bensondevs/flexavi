@@ -13,13 +13,16 @@ class DeleteQuotationRequest extends FormRequest
 
     public function getQuotation()
     {
-        return $this->quotation = ($this->quotation) ?:
-            Quotation::findOrFail($this->input('id'));
+        if ($this->quotation) return $this->quotation;
+
+        $id = $this->input('id') ?: $this->input('quotation_id');
+        return $this->quotation = Quotation::findOrFail($id);
     }
 
     protected function prepareForValidation()
     {
-        $this->merge(['force' => filter_var($this->input('force'), FILTER_VALIDATE_BOOLEAN)]);
+        $force = strtobool($this->input('force'));
+        $this->merge(['force' => $force]);
     }
 
     public function authorize()

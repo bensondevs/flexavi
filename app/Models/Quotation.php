@@ -191,7 +191,7 @@ class Quotation extends Model
 
     public function works()
     {
-        return $this->morphedByMany(Work::class, 'workable');
+        return $this->morphToMany(Work::class, 'workable');
     }
 
     public function customer()
@@ -241,10 +241,9 @@ class Quotation extends Model
 
     public function countWorksAmount()
     {
-        $total = db('works')
-            ->where('quotation_id', $this->attributes['id'])
-            ->sum('works.total_price');
+        $total = $this->works()->sum('total_price');
         $this->setAmountAttribute($total);
+        return $total;
     }
 
     public function calculateTotal()

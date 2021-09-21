@@ -15,7 +15,8 @@ class PrintQuotationRequest extends FormRequest
     {
         if ($this->quotation) return $this->quotation;
 
-        return $this->quotation = Quotation::findOrFail($this->input('id'));
+        $id = $this->input('id') ?: $this->input('quotation_id');
+        return $this->quotation = Quotation::findOrFail($id);
     }
 
     /**
@@ -26,7 +27,6 @@ class PrintQuotationRequest extends FormRequest
     public function authorize()
     {
         $quotation = $this->getQuotation();
-
         return Gate::allows('print-quotation', $quotation);
     }
 

@@ -19,7 +19,7 @@ class CancelQuotationRequest extends FormRequest
     {
         if ($this->quotation) return $this->quotation;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('quotation_id');
         return $this->quotation = Quotation::findOrFail($id);
     }
 

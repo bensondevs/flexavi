@@ -114,13 +114,13 @@ class SaveQuotationRequest extends FormRequest
             'customer_id' => ['string'],
 
             'type' => ['required', 'numeric', 'min:1', 'max:4'],
-            'quotation_number' => ['required', 'string', 'alpha_dash', new UniqueWithConditions(new Quotation, [['company_id' => $this->getCompany()->id]])],
+            'quotation_number' => ['required', 'alpha_dash', new UniqueWithConditions(new Quotation, [['company_id' => $this->getCompany()->id]])],
             'quotation_date' => ['required', 'date'],
 
             'contact_person' => ['required', 'string'],
 
             'address' => ['required', 'string'],
-            'zip_code' => ['required', 'string', 'numeric'],
+            'zip_code' => ['required', 'numeric'],
             'phone_number' => ['required', 'string', 'numeric'],
             
             'damage_causes' => ['required', 'array'],

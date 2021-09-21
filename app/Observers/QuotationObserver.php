@@ -4,6 +4,8 @@ namespace App\Observers;
 
 use App\Models\Quotation;
 
+use App\Enums\Quotation\QuotationStatus;
+
 class QuotationObserver
 {
     /**
@@ -15,6 +17,13 @@ class QuotationObserver
     public function created(Quotation $quotation)
     {
         $quotation->calculateTotal();
+
+        if ($user = auth()->user()) {
+            activity()
+                ->causedBy($user)
+                ->performedOn($quotation)
+                ->log($user->fullname . ' has created quotation with ID: ' . $quotation->id);
+        }
     }
 
     /**
@@ -30,6 +39,47 @@ class QuotationObserver
             $quotation->isDirty('discount_amount')) {
             $quotation->calculateTotal();
         }
+
+        if ($quotation->isDirty('status')) {
+            if ($quotation->status == QuotationStatus::Sent) {
+                if ($user = auth()->user()) {
+                    $message = $user->fullname . ' has sent/print quotation with ID: ' 
+                    $message .= $quotation->id . '. Now the status of quotation is `Sent`';
+                    activity()->causedBy($user)->performedOn($quotation)->log($message);
+                }
+            }
+
+            if ($quotation->status == QuotationStatus::Revised) {
+                if ($user = auth()->user()) {
+                    $message = $user->fullname . ' has revised quotation with ID: ' 
+                    $message .= $quotation->id . '. Now the status of quotation is `Revised`';
+                    activity()->causedBy($user)->performedOn($quotation)->log($message);
+                }
+            }
+
+            if ($quotation->status == QuotationStatus::Honored) {
+                if ($user = auth()->user()) {
+                    $message = $user->fullname . ' has honred quotation with ID: ' 
+                    $message .= $quotation->id . '. Now the status of quotation is `Honored`';
+                    activity()->causedBy($user)->performedOn($quotation)->log($message);
+                }
+            }
+
+            if ($quotation->status == QuotationStatus::Cancelled) {
+                if ($user = auth()->user()) {
+                    $message = $user->fullname . ' has cancelled quotation with ID: ' 
+                    $message .= $quotation->id . '. Now the status of quotation is `Cancelled`';
+                    activity()->causedBy($user)->performedOn($quotation)->log($message);
+                }
+            }
+        }
+
+        if ($user = auth()->user()) {
+            activity()
+                ->causedBy($user)
+                ->performedOn($quotation)
+                ->log($user->fullname . ' has updated quotation with ID: ' . $quotation->id);
+        }
     }
 
     /**
@@ -40,7 +90,10 @@ class QuotationObserver
      */
     public function deleted(Quotation $quotation)
     {
-        //
+        if ($user = auth()->user()) {
+            $message = $user->fullname . ' has deleted quotation with ID: ' . $quotation->id; 
+            activity()->causedBy($user)->performedOn($quotation)->log($message);
+        }
     }
 
     /**
@@ -51,7 +104,10 @@ class QuotationObserver
      */
     public function restored(Quotation $quotation)
     {
-        //
+        if ($user = auth()->user()) {
+            $message = $user->fullname . ' has restored quotation with ID: ' . $quotation->id;
+            activity()->causedBy($user)->performedOn($quotation)->log($message);
+        }
     }
 
     /**
@@ -62,6 +118,9 @@ class QuotationObserver
      */
     public function forceDeleted(Quotation $quotation)
     {
-        //
+        if ($user = auth()->user()) {
+            $message = $user->fullname . ' has force deleted quotation with ID: ' . $quotation->id; 
+            activity()->causedBy($user)->performedOn($quotation)->log($message);
+        }
     }
 }
