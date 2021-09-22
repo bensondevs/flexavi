@@ -208,12 +208,71 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 2. Process Workday
+### 2. View Workday
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/workdays/view`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `workday_id` | Required | string | The workday that will be viewed
+`with_worklists` | Optional | boolean, boolean string | Set this to `true` to load relationship with worklists, if not set, the default value would be `true`
+`with_appointments` | Optional | boolean, boolean string | Set this to `true` to load relationship with appointments, if not set, the default value wilould be `true`
+`with_costs` | Optional | boolean, boolean string | Set this to `true` to load relationship with costs, if not set, the default value would be `false`
+`with_employees` | Optional | boolean, boolean string | Set this to `true` to load relationship with employees, if not set, the default value would be `false`
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`workday` | Object | The owner object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "workday": {
+        "id": "7fc97120-1bb3-11ec-a0e0-f90153828d2d",
+        "date": "2021-09-22",
+        "status": 1,
+        "status_description": "Prepared",
+        "worklists": [
+            {
+                "id": "804edd50-1bb3-11ec-9580-0129085f6728",
+                "company_id": "7edbb080-1bb3-11ec-aff7-fbc4fc5b3228",
+                "workday_id": "7fc97120-1bb3-11ec-a0e0-f90153828d2d",
+                "worklist_name": "Worklist Name 1",
+                "status": 2,
+                "status_description": "Processed",
+                "created_at": "2021-09-22T14:43:50.000000Z",
+                "updated_at": "2021-09-22T14:43:50.000000Z",
+                "processed_at": "2021-09-22 16:43:50"
+            }
+        ],
+        "appointments": [],
+        "employees": []
+    }
+}
+```
+
+-------------------------------------------------------
+### 3. Process Workday
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/workdays/process`
 
-**Method:** `GET`
+**Method:** `POST`
 
 **Headers:**
 
@@ -244,12 +303,12 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. Calculate Workday
+### 4. Calculate Workday
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/workdays/calculate`
 
-**Method:** `GET`
+**Method:** `POST`
 
 **Headers:**
 

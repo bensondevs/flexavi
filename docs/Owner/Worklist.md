@@ -593,8 +593,8 @@ Payload name | Required | Validation | Description
 
 ```json
 {
-    "status": "success",
-    "message": "Successfully save worklist."
+    "workday_id": "c12e7160-f606-11eb-ad20-eb66e242cb72",
+    "worklist_name": "Worklist from Home"
 }
 ```
 

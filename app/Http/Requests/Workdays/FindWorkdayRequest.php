@@ -7,8 +7,19 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Workday;
 
+use App\Traits\RequestHasRelations;
+
 class FindWorkdayRequest extends FormRequest
 {
+    use RequestHasRelations;
+
+    private $relationNames = [
+        'with_worklists' => true,
+        'with_appointments' => true,
+        'with_costs' => false,
+        'with_employees' => false,
+    ];
+
     private $workday;
 
     public function getWorkday()

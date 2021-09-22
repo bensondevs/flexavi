@@ -135,6 +135,30 @@ class WorklistPolicy
     }
 
     /**
+     * Determine whether the user can process the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Worklist  $worklist
+     * @return mixed
+     */
+    public function process(User $user, Worklist $worklist)
+    {
+        return $user->hasCompanyPermission($worklist->company_id, 'process worklists');
+    }
+
+    /**
+     * Determine whether the user can calculate the model.
+     *
+     * @param  \App\Models\User  $user
+     * @param  \App\Models\Worklist  $worklist
+     * @return mixed
+     */
+    public function calculate(User $user, Worklist $worklist)
+    {
+        return $user->hasCompanyPermission($worklist->company_id, 'calculate worklists');
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user

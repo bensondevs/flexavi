@@ -97,4 +97,18 @@ class Worklist extends Model
     {
         return $this->morphMany(Receipt::class, 'receiptable');
     }
+
+    public function process()
+    {
+        $this->attributes['status'] = WorklistStatus::Processed;
+        return $this->save();
+    }
+
+    public function calculate()
+    {
+        // Do calculations...
+
+        $this->attributes['status'] = WorklistStatus::Calculated;
+        return $this->save();
+    }
 }

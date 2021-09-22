@@ -263,6 +263,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('process-worklist', [WorklistPolicy::class, 'process']);
         Gate::define('calculate-worklist', [WorklistPolicy::class, 'calculate']);
         Gate::define('delete-worklist', [WorklistPolicy::class, 'delete']);
+        Gate::define('restore-worklist', [WorklistPolicy::class, 'restore']);
         Gate::define('force-delete-worklist', [WorklistPolicy::class, 'forceDelete']);
 
         // Register Invitation

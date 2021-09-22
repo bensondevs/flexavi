@@ -10,6 +10,9 @@ use App\Http\Requests\Worklists\PopulateWorkdayWorklistsRequest as WorkdayPopula
 use App\Http\Requests\Worklists\SaveWorklistRequest as SaveRequest;
 use App\Http\Requests\Worklists\FindWorklistRequest as FindRequest;
 use App\Http\Requests\Worklists\DeleteWorklistRequest as DeleteRequest;
+use App\Http\Requests\Worklists\ProcessWorklistRequest as ProcessRequest;
+use App\Http\Requests\Worklists\CalculateWorklistRequest as CalculateRequest;
+use App\Http\Requests\Worklists\RestoreWorklistRequest as RestoreRequest;
 
 use App\Http\Resources\WorklistResource;
 
@@ -59,7 +62,7 @@ class WorklistController extends Controller
         $input = $request->worklistData();
         $worklist = $this->worklist->save($input);
 
-        return apiResponse($this->worklist, ['worklist' => $worklist]);
+        return apiResponse($this->worklist);
     }
 
     public function assignCar(AssignCarRequest $request)
@@ -131,7 +134,7 @@ class WorklistController extends Controller
         return apiResponse($this->worklist);
     }
 
-    public function restore()
+    public function restore(RestoreRequest $request)
     {
         $trashedWorklist = $request->getTrashedWorklist();
 

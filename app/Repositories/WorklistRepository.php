@@ -177,4 +177,21 @@ class WorklistRepository extends BaseRepository
 
 		return $this->returnResponse();
 	}
+
+	public function restore()
+	{
+		try {
+			$worklist = $this->getModel();
+			$worklist->restore();
+
+			$this->setModel($worklist);
+
+			$this->setSuccess('Successfully restore worklist.');
+		} catch (QueryException $e) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore worklist.', $error);
+		}
+
+		return $this->getModel();
+	}
 }

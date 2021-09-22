@@ -7,16 +7,16 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Worklist;
 
-class CalculateWorklistRequest extends FormRequest
+class RestoreWorklistRequest extends FormRequest
 {
     private $worklist;
 
-    public function getWorklist()
+    public function getTrashedWorklist()
     {
         if ($this->worklist) return $this->worklist;
 
         $id = $this->input('id') ?: $this->input('worklist_id');
-        return $this->worklist = Worklist::findOrFail($id);
+        return $this->worklist = Worklist::onlyTrashed()->findOrFail($id);
     }
 
     /**
@@ -26,8 +26,8 @@ class CalculateWorklistRequest extends FormRequest
      */
     public function authorize()
     {
-        $worklist = $this->getWorklist();
-        return Gate::allows('calculate-worklist', $worklist);
+        $worklist = $this->getTrashedWorklist();
+        return Gate::allows('restore-worklist', $worklist);
     }
 
     /**
