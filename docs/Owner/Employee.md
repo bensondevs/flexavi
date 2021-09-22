@@ -461,6 +461,106 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
+### 2. Populate Company Inviteable Employees
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/employees/inviteables`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+--------------|----------|------------|-------------
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through all attribute of employee
+`per_page` | Optional | number | Amount of data per page, default amount is 10
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`employees` | Object | The employee object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "employees": {
+        "current_page": 1,
+        "data": [
+            {
+                "id": "171d92a0-f114-11eb-9850-050e7526874a",
+                "title": "Invited Employee",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 3,
+                "employment_status_description": "Fired",
+                "user": null,
+                "addresses": [],
+                "inspections_count": 0
+            },
+            {
+                "id": "176f3cd0-f114-11eb-a729-83330fbc07b9",
+                "title": "Invited Employee",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 2,
+                "employment_status_description": "Inactive",
+                "user": null,
+                "addresses": [],
+                "inspections_count": 0
+            },
+        ],
+        "first_page_url": "/?page=1",
+        "from": 1,
+        "last_page": 3,
+        "last_page_url": "/?page=3",
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": "/?page=2",
+                "label": "2",
+                "active": false
+            },
+            {
+                "url": "/?page=3",
+                "label": "3",
+                "active": false
+            },
+            {
+                "url": "/?page=2",
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": "/?page=2",
+        "path": "/",
+        "per_page": 10,
+        "prev_page_url": null,
+        "to": 10,
+        "total": 29
+    }
+}
+```
+
+-------------------------------------------------------
 ### 3. Store Employee
 -------------------------------------------------------
 
@@ -480,7 +580,7 @@ Authorization | `Bearer {token}`
  Payload name | Required | Validation | Description    
 --------------|----------|------------|-------------
 `title` | Required | string | The title of the employee, usually title given by the company
-`employee_type` | Required | string or integer | Employee types available `Administrative` or `1`, `Roofer` or `2` 
+`employee_type` | Required | string or integer | Employee types available `Administrative` is `1`, `Roofer` is `2` 
 `employee_status` | Optional | string or integer | Employee statuses available `Active` or `1`, `Inactive` or `2`, `Fired` or `3`. When this value is not specified, the default value will be `1`.
 
 
@@ -489,7 +589,7 @@ Authorization | `Bearer {token}`
 ```json
 {
     "title": "Roof Engineer",
-	"employee_type": "Roofer",
+	"employee_type": 1,
 	"employee_status": 1,
 }
 ```
@@ -620,7 +720,7 @@ Attribute Name  | Type  | Description
 
 
 -------------------------------------------------------
-### 4. Update Employee
+### 5. Update Employee
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/employees/update`
@@ -685,7 +785,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Delete Employee
+### 6. Delete Employee
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/employees/delete`
@@ -731,7 +831,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 6. Populate Trashed Employees
+### 7. Populate Trashed Employees
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/employees/trasheds`
@@ -820,7 +920,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 7. Restore Employee
+### 8. Restore Employee
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/employees/restore`

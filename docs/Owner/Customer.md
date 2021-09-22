@@ -212,7 +212,51 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. Update Customer
+### 3. View Customer
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/customers/view`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` | Required | string | ID of updated customer
+`with_company` | Optional | string, boolean string | set this to `true` to load customer with its relation to company. If not set, the default value will be `false`
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`customer` | Object | Object of customer data
+
+```json
+{
+    "customer": {
+        "id": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6",
+        "company_id": "59322d20-c819-11eb-ac4a-5545e4062ed5",
+        "fullname": "John Doe",
+        "email": "john@doe.com",
+        "phone": "1234567890",
+        "second_phone": null,
+        "created_at": "2021-06-08T07:24:23.000000Z",
+        "updated_at": "2021-06-08T07:30:20.000000Z",
+        "deleted_at": null
+    }
+}
+```
+
+-------------------------------------------------------
+### 4. Update Customer
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/customers/update`
@@ -278,7 +322,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Delete Customer
+### 5. Delete Customer
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/customers/update`
@@ -324,7 +368,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Populate Trashed Customers
+### 6. Populate Trashed Customers
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/customers/trasheds`
@@ -399,7 +443,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 6. Restore Customer
+### 7. Restore Customer
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/customers/restore`

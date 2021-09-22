@@ -43,6 +43,32 @@ class EmployeeTest extends TestCase
     }
 
     /**
+     * A populate inviteable employees test.
+     *
+     * @return void
+     */
+    public function test_view_inviteable_employees()
+    {
+        $owner = Owner::whereHas('user')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = '/api/dashboard/companies/employees/inviteables';
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('employees')
+                ->has('employees.data')
+                ->has('employees.current_page');
+        });
+    }
+
+    /**
      * A populate trashed employees test.
      *
      * @return void

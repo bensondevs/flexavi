@@ -313,7 +313,49 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Set Car Image
+### 4. View Car
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/cars/view`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|---9-----------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `car_id` | Required | string | ID of selected car
+`with_company` | Optional | Boolean, string boolean | Set this to `true` will load the car relationship with company data, default value `false`
+`with_worklists` | Optional | Boolean, string boolean | Set this to `true` will load the car relationship with worklists data, default value `false`
+
+**Success Response Example:**
+
+```json
+{
+    "car": {
+        "id": "7fb666a0-1bb3-11ec-8030-07fd57328e0e",
+        "brand": "Fleet Brand",
+        "model": "Fleet Model",
+        "year": 2021,
+        "car_name": "Seeder Car Name",
+        "car_license": "SEEDER_LICENSE_DATA",
+        "insured": 1,
+        "status": 1,
+        "status_description": "Free",
+        "car_image_url": "http://localhost:8000/storage/uploads/cars/9812378123.jpeg"
+    }
+}
+```
+
+-------------------------------------------------------
+### 5. Set Car Image
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/cars/set_image`
@@ -373,7 +415,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Update Car
+### 6. Update Car
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/cars/store`
@@ -440,7 +482,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Delete Car
+### 7. Delete Car
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/cars/update`
@@ -487,7 +529,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 6. Company Trashed Cars
+### 8. Company Trashed Cars
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/cars/trasheds`
@@ -611,7 +653,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 7. Restore Cars
+### 9. Restore Cars
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/cars/restore`

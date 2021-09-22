@@ -116,7 +116,100 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 2. Store Owner
+### 2. Populate Company Inviteable Owners
+-------------------------------------------------------
+
+
+**Endpoint:** `/api/dashboard/companies/owners/inviteables`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through all attribute of owner
+`per_page` | Optional | number | Amount of data per page, default amount is 10
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`owners` | Object | The owner object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "owners": {
+        "current_page": 1,
+        "data": [
+            {
+                "id": "cfdbe8d0-c922-11eb-b50d-6b48abca3839",
+                "user": null,
+                "is_prime_owner": false,
+                "bank_name": "Invited Bank",
+                "bic_code": "001",
+                "bank_account": "1010101010",
+                "bank_holder_name": "Invited User",
+            },
+            {
+                "id": "d5d62150-c925-11eb-8487-d73d292448de",
+                "user": null,
+                "is_prime_owner": false,
+                "bank_name": "Added Banks",
+                "bic_code": "911",
+                "bank_account": "9988776655",
+                "bank_holder_name": "Added Holder",
+                "address": "Another street",
+                "house_number": "11",
+                "house_number_suffix": "A",
+                "zipcode": "11178",
+                "city": "Another City",
+                "province": "Another Province"
+            }
+        ],
+        "first_page_url": "/?page=1",
+        "from": 1,
+        "last_page": 1,
+        "last_page_url": "/?page=1",
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": null,
+        "path": "/",
+        "per_page": 10,
+        "prev_page_url": null,
+        "to": 3,
+        "total": 3
+    }
+}
+```
+
+-------------------------------------------------------
+### 3. Store Owner
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/owners/store`
@@ -178,7 +271,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. View Owner
+### 4. View Owner
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/owners/view`
@@ -257,7 +350,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Update Owner
+### 5. Update Owner
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/owners/update`
@@ -325,7 +418,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Delete Owner
+### 6. Delete Owner
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/owners/delete`
