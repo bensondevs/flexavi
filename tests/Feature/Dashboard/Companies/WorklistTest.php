@@ -130,6 +130,32 @@ class WorklistTest extends TestCase
     }
 
     /**
+     * A view worklist test.
+     *
+     * @return void
+     */
+    public function test_view_worklist()
+    {
+        $owner = Owner::whereHas('user')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $worklist = Worklist::where('company_id', $owner->company_id)->first();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = '/api/dashboard/companies/worklists/view?id=' . $worklist->id;
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('worklist');
+        });
+    }
+
+    /**
      * A update worklist test.
      *
      * @return void

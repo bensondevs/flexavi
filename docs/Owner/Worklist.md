@@ -616,6 +616,33 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
+### 2. View Worklist
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/worklists/view`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `worklist_id` | Required | uuid, string | The target worklist ID
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`worklist` | Object | Worklist Data.
+
+-------------------------------------------------------
 ### 3. Update Worklist
 -------------------------------------------------------
 
