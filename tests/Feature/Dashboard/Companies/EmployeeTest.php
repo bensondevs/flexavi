@@ -116,7 +116,7 @@ class EmployeeTest extends TestCase
         $url = '/api/dashboard/companies/employees/store';
         $response = $this->withHeaders($headers)->post($url, $employeeData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');

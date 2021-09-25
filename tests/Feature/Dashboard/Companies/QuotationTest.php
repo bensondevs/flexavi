@@ -105,7 +105,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/store';
         $response = $this->withHeaders($headers)->post($url, $quotationData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->where('status', 'success');
             $json->has('message');
@@ -189,7 +189,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/attachments/add';
         $response = $this->withHeaders($headers)->post($url, $attachmentData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -250,7 +250,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/send';
         $response = $this->withHeaders($headers)->post($url, $sendData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -277,7 +277,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/print';
         $response = $this->withHeaders($headers)->post($url, ['id' => $quotation->id]);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -309,7 +309,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/revise';
         $response = $this->withHeaders($headers)->post($url, $revisionData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -340,7 +340,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/cancel';
         $response = $this->withHeaders($headers)->post($url, $cancelData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -371,7 +371,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/honor';
         $response = $this->withHeaders($headers)->post($url, $honorData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');

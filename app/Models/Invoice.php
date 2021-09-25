@@ -33,8 +33,8 @@ class Invoice extends Model
         'company_id',
         'customer_id',
 
-        'referenceable_id',
-        'referenceable_type',
+        'invoiceable_id',
+        'invoiceable_type',
 
         'total',
         'total_in_terms',

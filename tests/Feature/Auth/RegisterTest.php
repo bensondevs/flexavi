@@ -52,7 +52,7 @@ class RegisterTest extends TestCase
         ];
         $response = $this->withHeaders($headers)->post($url, $data);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');
@@ -131,7 +131,7 @@ class RegisterTest extends TestCase
         ];
         $response = $this->withHeaders($headers)->post($url, $data);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');

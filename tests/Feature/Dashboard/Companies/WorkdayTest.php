@@ -118,7 +118,7 @@ class WorkdayTest extends TestCase
         $url = '/api/dashboard/companies/workdays/process';
         $response = $this->withHeaders($headers)->post($url, $processData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -150,7 +150,7 @@ class WorkdayTest extends TestCase
         $url = '/api/dashboard/companies/workdays/calculate';
         $response = $this->withHeaders($headers)->post($url, $calculateData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');

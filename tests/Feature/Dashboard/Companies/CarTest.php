@@ -112,7 +112,7 @@ class CarTest extends TestCase
         $url = '/api/dashboard/companies/cars/store';
         $response = $this->withHeaders($headers)->post($url, $carData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->where('status', 'success');
             $json->has('message');
@@ -143,7 +143,7 @@ class CarTest extends TestCase
         $url = '/api/dashboard/companies/cars/set_image';
         $response = $this->withHeaders($headers)->post($url, $carImageData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');

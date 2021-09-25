@@ -150,7 +150,24 @@ class AppointmentRepository extends BaseRepository
 			$this->setSuccess('Successfully cancel appointment.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
-			$this->setError('Failed to cancel appointment', $error);
+			$this->setError('Failed to cancel appointment.', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function reschedule(array $rescheduleData)
+	{
+		try {
+			$appointment = $this->getModel();
+			$appointment->reschedule($rescheduleData);
+
+			$this->setModel($appointment);
+
+			$this->setSuccess('Successfully reschedule appointment.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to reschedule appointment.', $error);
 		}
 
 		return $this->getModel();

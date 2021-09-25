@@ -13,25 +13,14 @@ class ExecuteAppointmentRequest extends FormRequest
 
     public function getAppointment()
     {
-        if ($this->appointment) return $this->appointment;
+        if ($this->appointment) {
+            return $this->appointment;
+        }
 
         $id = $this->input('id') ?: $this->input('appointment_id');
         $this->appointment = Appointment::findOrFail($id);
 
         return $this->appointment;
-    }
-
-    protected function prepareForValidation()
-    {
-        $appointment = $this->getAppointment();
-
-        if ($appointment->status != 'created') {
-            return abort(422, 'This appointment can no longer be executed, because the status is already "' . $appointment->status_description . '"');
-        }
-
-        if ($appointment->start < carbon()->now()) {
-            return abort(422, 'The appointment is already late, please do cancel and reschedule if needed');
-        }
     }
 
     /**

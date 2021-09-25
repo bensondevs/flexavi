@@ -59,14 +59,14 @@ class AppointmentPolicy
         return $user->hasCompanyPermission($appointment->company_id, 'unassign appointments employees');
     }
 
-    public function generateInvoice(User $user, Invoice $invoice)
+    public function generateInvoice(User $user, Appointment $appointment)
     {
-        return $user->hasCompanyPermission('generate invoice appointments');
+        return $user->hasCompanyPermission($appointment->company_id, 'generate invoice appointments');
     }
 
     public function reschedule(User $user, Appointment $appointment)
     {
-        if ($appointment->status !== AppointmentStatus::Calculated) {
+        if ($appointment->status == AppointmentStatus::Calculated) {
             return abort(422, 'This appointment cannot be rescheduled');
         }
 

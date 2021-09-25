@@ -39,7 +39,7 @@ class RegisterInvitationTest extends TestCase
         $url = '/api/dashboard/companies/register_invitations/invite_employee';
         $response = $this->withHeaders($headers)->post($url, $invitationData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');
@@ -72,7 +72,7 @@ class RegisterInvitationTest extends TestCase
         $url = '/api/dashboard/companies/register_invitations/invite_owner';
         $response = $this->withHeaders($headers)->post($url, $invitationData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');

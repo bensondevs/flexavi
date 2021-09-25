@@ -138,7 +138,7 @@ class CompanyTest extends TestCase
         ];
         $response = $this->withHeaders($headers)->post($url, $registerData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');
@@ -211,7 +211,7 @@ class CompanyTest extends TestCase
         ];
         $response = $this->withHeaders($headers)->post($url, $photoData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');

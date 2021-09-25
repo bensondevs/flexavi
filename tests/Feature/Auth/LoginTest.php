@@ -24,7 +24,7 @@ class LoginTest extends TestCase
         ];
         $response = $this->postJson('/api/auth/login', $loginData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('user')
                 ->has('status')

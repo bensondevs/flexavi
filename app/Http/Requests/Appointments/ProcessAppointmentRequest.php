@@ -27,7 +27,6 @@ class ProcessAppointmentRequest extends FormRequest
     public function authorize()
     {
         $appointment = $this->getAppointment();
-
         return Gate::allows('process-appointment', $appointment);
     }
 

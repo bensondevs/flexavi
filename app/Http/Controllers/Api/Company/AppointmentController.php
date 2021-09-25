@@ -9,6 +9,7 @@ use App\Http\Requests\Appointments\{
     SaveAppointmentRequest as SaveRequest,
     FindAppointmentRequest as FindRequest,
     ExecuteAppointmentRequest as ExecuteRequest,
+    ProcessAppointmentRequest as ProcessRequest,
     CalculateAppointmentRequest as CalculateRequest,
     CancelAppointmentRequest as CancelRequest,
     RescheduleAppointmentRequest as RescheduleRequest,
@@ -24,6 +25,7 @@ use App\Http\Resources\AppointmentResource;
 use App\Repositories\{
     AppointmentRepository,
     WorkRepository,
+    InvoiceRepository,
     CalculationRepository
 };
 
@@ -31,15 +33,18 @@ class AppointmentController extends Controller
 {
     private $appointment;
     private $work;
+    private $invoice;
     private $calculation;
 
     public function __construct(
         AppointmentRepository $appointment, 
         WorkRepository $work,
+        InvoiceRepository $invoice,
         CalculationRepository $calculation
     ) {
     	$this->appointment = $appointment;
         $this->work = $work;
+        $this->invoice = $invoice;
         $this->calculation = $calculation;
     }
 
@@ -127,7 +132,7 @@ class AppointmentController extends Controller
 
     public function reschedule(RescheduleRequest $request)
     {
-        $appointment = $request->getAppointment();
+        $appointment = $request->getPreviousAppointment();
         $appointment = $this->appointment->setModel($appointment);
 
         $input = $request->rescheduleData();
@@ -142,18 +147,20 @@ class AppointmentController extends Controller
         $appointment = $this->appointment->setModel($appointment);
         $appointment = $this->appointment->syncRevenues();
 
-        if ($this->appointment->status == 'error') {
+        if ($this->appointment->status != 'error') {
             return apiResponse($this->appointment);
         }
 
-        $calculation = $this->calculation->calculateAppointment($appointment);
-        return apiResponse($this->calculation, ['calculation' => $calculation]);
+        return apiResponse($this->calculation, [
+            'calculation' => $this->calculation->calculateAppointment($appointment)
+        ]);
     }
 
     public function generateInvoice(GenerateInvoiceRequest $request)
     {
         $appointment = $request->getAppointment();
-        $invoice = $this->invoice->generateFromAppointment($appointment);
+        $invoiceData = $request->validated();
+        $invoice = $this->invoice->generateFromAppointment($appointment, $invoiceData);
 
         return apiResponse($this->invoice, ['invoice' => $invoice]);
     }
@@ -167,7 +174,7 @@ class AppointmentController extends Controller
         $appointment = $this->appointment->save($input);
         $appointment = new AppointmentResource($appointment);
 
-        return apiResponse($this->appointment, ['appointment' => $appointment]);
+        return apiResponse($this->appointment);
     }
 
     public function delete(DeleteRequest $request)

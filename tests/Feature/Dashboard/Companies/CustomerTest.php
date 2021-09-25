@@ -97,7 +97,7 @@ class CustomerTest extends TestCase
         $url = $this->baseUrl . '/store';
         $response = $this->withHeaders($headers)->post($url, $customerData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->where('status', 'success');
             $json->has('message');

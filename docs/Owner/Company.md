@@ -23,12 +23,12 @@ Content-Type | `multipart/form-data`
 `visiting_addresss_street` | Required | string | Visiting address street 
 `visiting_addresss_house_number` | Required | string | Visiting address house number
 `visiting_addresss_house_number_suffix` | Optional | string | Visiting address house number suffix
-`visiting_addresss_zip_code` | Required | string | Visiting address zip code
+`visiting_addresss_zipcode` | Required | string | Visiting address zip code
 `visiting_addresss_city` | Required | string | Visiting address city
 `invoicing_addresss_street` | Required | string | Invoicing address street
 `invoicing_addresss_house_number` | Required | string | Invoicing address house number
 `invoicing_addresss_house_number_suffix` | Optional | string | Invoicing address house number suffix
-`invoicing_addresss_zip_code` | Required | string | Invoicing address zip code
+`invoicing_addresss_zipcode` | Required | string | Invoicing address zip code
 `invoicing_addresss_city` | Required | string | Invoicing address city
 `company_name` | Required | string, unique | Unique company name
 `email` | Required | string, unique | Email of the company

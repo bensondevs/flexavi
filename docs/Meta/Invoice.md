@@ -89,7 +89,7 @@ Accept | `application/json`
 ```
 
 -------------------------------------------------------
-### 3. All Invoice Damage Causes
+### 4. All Invoice Damage Causes
 -------------------------------------------------------
 
 **Endpoint:** `/api/meta/invoice/all_damage_causes`

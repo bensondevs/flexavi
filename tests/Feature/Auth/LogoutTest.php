@@ -31,7 +31,7 @@ class LogoutTest extends TestCase
         ];
         $url = '/api/auth/logout';
         $response = $this->withHeaders($headers)->post($url, []);
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->has('message');

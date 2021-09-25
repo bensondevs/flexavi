@@ -53,10 +53,11 @@ class InvoiceRepository extends BaseRepository
 		}
 
 		try {
-			$invoice = $this->getModel();
+			$invoice = $this->getModel($invoiceData);
 			$invoice->fill($invoiceData);
-			$invoice->referenceable_type = Appointment::class;
-			$invoice->referenceable_id = $appointment->id;
+			$invoice->customer_id = $appointment->customer_id;
+			$invoice->invoiceable_type = Appointment::class;
+			$invoice->invoiceable_id = $appointment->id;
 			$invoice->company_id = $appointment->company_id;
 			$invoice->total = $works->sum('total');
 			$invoice->save();
@@ -85,10 +86,10 @@ class InvoiceRepository extends BaseRepository
 		}
 
 		try {
-			$invoice = $this->getModel();
+			$invoice = $this->getModel($invoiceData);
 			$invoice->fill($invoiceData);
-			$invoice->referenceable_type = Quotation::class;
-			$invoice->referenceable_id = $quotation->id;
+			$invoice->invoiceable_type = Quotation::class;
+			$invoice->invoiceable_id = $quotation->id;
 			$invoice->company_id = $quotation->company_id;
 			$invoice->total = $works->sum('total');
 			$invoice->save();

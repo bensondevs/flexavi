@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Appointment;
 
+use App\Enums\Invoice\InvoicePaymentMethod;
+
 class GenerateAppointmentInvoiceRequest extends FormRequest
 {
     private $appointment;
@@ -27,7 +29,7 @@ class GenerateAppointmentInvoiceRequest extends FormRequest
     public function authorize()
     {
         $appointment = $this->getAppointment();
-        return Gate::define('generate-invoice-appointment', $appointment);
+        return Gate::allows('generate-invoice-appointment', $appointment);
     }
 
     /**
@@ -38,7 +40,12 @@ class GenerateAppointmentInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'payment_method' => [
+                'required', 
+                'numeric', 
+                'min:' . InvoicePaymentMethod::Cash, 
+                'max:' . InvoicePaymentMethod::BankTransfer
+            ],
         ];
     }
 }

@@ -75,6 +75,14 @@ trait RepositoryResponse
 		$this->setMessage($message);
 		$this->httpStatus = 200;
 
+		if (request()->isMethod('POST')) {
+			$this->httpStatus = 201;
+		}
+
+		if (request()->isMethod('PUT')) {
+			$this->httpStatus = 204;
+		}
+
 		return null;
 	}
 

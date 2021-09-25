@@ -332,6 +332,19 @@ class Appointment extends Model
         return $cancel;
     }
 
+    public function reschedule(array $rescheduleData)
+    {
+        $rescheduleAppointment = new self($rescheduleData);
+        $rescheduleAppointment->fill([
+            'previous_appointment_id' => $this->attributes['id'],
+            'company_id' => $this->attributes['company_id'],
+            'customer_id' => $this->attributes['customer_id'],
+        ]);
+        $rescheduleAppointment->save();
+
+        return $rescheduleAppointment;
+    }
+
     public function markCalculated()
     {
         $this->attributes['status'] = AppointmentStatus::Calculated;

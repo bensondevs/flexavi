@@ -122,7 +122,7 @@ class WorklistTest extends TestCase
         $url = '/api/dashboard/companies/worklists/store';
         $response = $this->withHeaders($headers)->post($url, $worklistData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -209,7 +209,7 @@ class WorklistTest extends TestCase
         $url = '/api/dashboard/companies/worklists/process';
         $response = $this->withHeaders($headers)->post($url, $worklistData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');
@@ -239,7 +239,7 @@ class WorklistTest extends TestCase
         $url = '/api/dashboard/companies/worklists/calculate';
         $response = $this->withHeaders($headers)->post($url, $worklistData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('message');
             $json->where('status', 'success');

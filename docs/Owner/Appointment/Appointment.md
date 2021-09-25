@@ -203,7 +203,7 @@ Attribute Name  | Type  | Description
 ### 2. Populate Customer Appointments
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/appointments`
+**Endpoint:** `/api/dashboard/companies/appointments/of_customer`
 
 **Method:** `GET`
 
@@ -686,6 +686,7 @@ Authorization | `Bearer {token}`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `id` or `appointment_id` | Required | string, uuid | The ID of executing appointment
+`payment_method` | Required | numeric, numeric string | Payment method the customer prefer to use, to see what are the options of payment methods please see [Invoice Meta Documentation](/docs/Meta/Invoice.md) 
 
 **Request Body Example:**
 
@@ -742,7 +743,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 8. Deleted/Trashed Appointment
+### 8. Populate Deleted/Trashed Appointments
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/trasheds`

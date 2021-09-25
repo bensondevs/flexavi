@@ -113,7 +113,7 @@ class OwnerTest extends TestCase
         $url = '/api/dashboard/companies/owners/store';
         $response = $this->withHeaders($headers)->post($url, $ownerData);
 
-        $response->assertStatus(200);
+        $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('status');
             $json->where('status', 'success');
@@ -180,8 +180,8 @@ class OwnerTest extends TestCase
             'city' => 'Another City',
             'province' => 'Another Province',
         ];
-        $url = '/api/dashboard/companies/owners/store';
-        $response = $this->withHeaders($headers)->post($url, $ownerData);
+        $url = '/api/dashboard/companies/owners/update';
+        $response = $this->withHeaders($headers)->patch($url, $ownerData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

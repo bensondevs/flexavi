@@ -28,7 +28,7 @@ Accept | `application/json`
 ### 2. Check Email Used
 -------------------------------------------------------
 
-**Endpoint:** `/api/meta/user/all_id_card_types`
+**Endpoint:** `/api/meta/user/check_email_used`
 
 **Method:** `GET`
 
