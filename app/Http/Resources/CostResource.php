@@ -27,7 +27,7 @@ class CostResource extends JsonResource
         ];
 
         if ($this->relationLoaded('costables')) {
-            $structure['costables'] = CostableResource::apiCollection($this->costables);
+            $structure['costables'] = CostableResource::collection($this->costables);
         }
 
         return $structure;

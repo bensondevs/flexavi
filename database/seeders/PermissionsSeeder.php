@@ -194,6 +194,7 @@ class PermissionsSeeder extends Seeder
             'revise quotations',
             'honor quotations',
             'cancel quotations',
+            'generate invoice quotations',
         	'delete quotations',
             'restore quotations',
             'force delete quotations',

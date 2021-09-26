@@ -282,7 +282,7 @@ class AppointmentTest extends TestCase
         ];
         $url = '/api/dashboard/companies/appointments/generate_invoice';
         $appointment = Appointment::where('company_id', $owner->company_id)
-            ->where('status', AppointmentStatus::Cancelled)
+            ->whereDoesntHave('invoice')
             ->first();
         $response = $this->withHeaders($headers)->post($url, [
             'appointment_id' => $appointment->id,
@@ -294,6 +294,40 @@ class AppointmentTest extends TestCase
             $json->where('status', 'success');
             $json->has('message');
             $json->has('invoice');
+            $json->has('invoice.appointment');
+        });
+    }
+
+    /**
+     * A generate invoice from appointment with invoice already test.
+     *
+     * @return void
+     */
+    public function test_generate_invoice_from_invoiced_appointment()
+    {
+        $owner = Owner::whereHas('user')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = '/api/dashboard/companies/appointments/generate_invoice';
+        $appointment = Appointment::where('company_id', $owner->company_id)
+            ->whereHas('invoice')
+            ->first();
+        $response = $this->withHeaders($headers)->post($url, [
+            'appointment_id' => $appointment->id,
+            'payment_method' => 2,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->where('status', 'success');
+            $json->has('message');
+            $json->has('invoice');
+            $json->has('invoice.appointment');
         });
     }
 

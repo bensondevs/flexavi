@@ -736,6 +736,11 @@ Attribute Name  | Type  | Description
 }
 ```
 
+**Notes**
+
+1. Executing this endpoint will send the quotation to Email destination.
+2. If the customer DOESN'T HAVE EMAIL specified by default, then the `destination` payload will become required.
+
 -------------------------------------------------------
 ### 10. Print Quotation
 -------------------------------------------------------
@@ -1031,3 +1036,149 @@ Attribute Name  | Type  | Description
 -------------------------------------------------------
 ### 10. Generate Invoice from Quotation
 -------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/quotations/generate_invoice`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `quotation_id` | Required | exists in `quotations` table
+`payment_method` | Required | numeric, numeric string | Payment method the customer prefer to use, to see what are the options of payment methods please see [Invoice Meta Documentation](/docs/Meta/Invoice.md)
+
+**Request Body Example:**
+
+```json
+{
+    "id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
+    "payment_method": 1,
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "invoice": {
+        "id": "46356df0-1e11-11ec-a83b-b97f891bdd20",
+        "company_id": "2e1a5a00-1e11-11ec-bf73-c9c348587724",
+        "total": 2982,
+        "formatted_total": "€ 2.982,00",
+        "total_in_terms": 0,
+        "formatted_total_in_terms": "€ 0,00",
+        "total_out_terms": 0,
+        "formatted_total_out_terms": "€ 0,00",
+        "total_paid": 0,
+        "formatted_total_paid": "€ 0,00",
+        "total_unpaid": 2982,
+        "formatted_total_unpaid": "€ 2.982,00",
+        "status": 1,
+        "status_description": "Created / Draft",
+        "payment_method": "2",
+        "payment_method_description": "Bank Transfer",
+        "items": [
+            {
+                "id": "478a0a30-1e11-11ec-bb7e-89fcf692e372",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 40,
+                "quantity_unit": "l",
+                "amount": 110
+            },
+            {
+                "id": "478a0ef0-1e11-11ec-9317-9d63dae58fb7",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 10,
+                "quantity_unit": "m",
+                "amount": 90
+            },
+            {
+                "id": "478a1180-1e11-11ec-ba3d-b3f992d907d6",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 70,
+                "quantity_unit": "m",
+                "amount": 170
+            },
+            {
+                "id": "478a13e0-1e11-11ec-9fbe-bd062a32a73c",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 70,
+                "quantity_unit": "l",
+                "amount": 170
+            },
+            {
+                "id": "478a1640-1e11-11ec-9e32-379fb04fe066",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 70,
+                "quantity_unit": "dm3",
+                "amount": 110
+            },
+            {
+                "id": "478a18b0-1e11-11ec-ba0d-6b80514dea26",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 20,
+                "quantity_unit": "dm3",
+                "amount": 140
+            },
+            {
+                "id": "478a1be0-1e11-11ec-9c41-05bd1f629cbd",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 30,
+                "quantity_unit": "dm3",
+                "amount": 30
+            }
+        ],
+        "quotation": {
+            "id": "34460da0-1e11-11ec-993c-91162ad6431b",
+            "customer_id": "2e21e340-1e11-11ec-8755-9d42d6311da4",
+            "appointment_id": "2fe0c560-1e11-11ec-a5e3-396083d334a3",
+            "type": 4,
+            "type_description": "Renewal",
+            "quotation_date": "2021-09-22",
+            "quotation_number": "OUNWE1TR",
+            "contact_person": "Customer 1 of Company 1",
+            "address": "Random Address",
+            "zip_code": "111000",
+            "phone_number": "02861282634",
+            "quotation_description": "Hello this is seeder quotation damage descripton",
+            "amount": "2,669.00",
+            "formatted_amount": "€ 2.669,00",
+            "vat_percentage": 21,
+            "formatted_vat_percentage": "21%",
+            "vat_amount": 560.49,
+            "formatted_vat_amount": "€ 560,49",
+            "discount_amount": 247,
+            "total_amount": 2982,
+            "expiry_date": "2021-09-29",
+            "formatted_expiry_date": "Sep 25, 2021",
+            "status": 1,
+            "status_description": "Draft / Created",
+            "payment_method": 1,
+            "payment_method_description": "Cash",
+            "created_at": "2021-09-25T14:59:38.000000Z"
+        }
+    },
+    "status": "success",
+    "message": "This quotation has invoice already, not generating, just returning record."
+}
+```
+
+**Success Response Note:**
+
+1. If the quotation already has an invoice, then this endpoint won't generate new invoice instead, returning existing invoice.
+2. In `invoice` object, we will have `invoice.quotation` data. In other endpoint which implements invoicing like `appointment` for an example, we'll have `invoice.appointment`. The attribute of it depends on what is within the record of `invoiceable_type` (To define the model class) and `invoiceable_id` (To define ID of associated class).

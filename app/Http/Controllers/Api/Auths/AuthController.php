@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Api\Auths;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Auths\LoginRequest;
-use App\Http\Requests\Auths\RegisterRequest;
-use App\Http\Requests\Auths\VerifyEmailRequest;
-use App\Http\Requests\Auths\CustomerLoginRequest;
+use App\Http\Requests\Auths\{
+    LoginRequest,
+    RegisterRequest,
+    VerifyEmailRequest,
+    CustomerLoginRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest,
+};
 
 use Socialite;
 
@@ -16,10 +20,12 @@ use App\Models\User;
 
 use App\Http\Resources\UserResource;
 
-use App\Repositories\AuthRepository;
-use App\Repositories\CompanyOwnerRepository as OwnerRepository;
-use App\Repositories\RegisterInvitationRepository;
-use App\Repositories\AddressRepository;
+use App\Repositories\{
+    AuthRepository,
+    CompanyOwnerRepository as OwnerRepository,
+    RegisterInvitationRepository,
+    AddressRepository
+};
 
 class AuthController extends Controller
 {
@@ -162,6 +168,28 @@ class AuthController extends Controller
     {
         $user = $request->user();
         $this->auth->customerLogout($user);
+
+        return apiResponse($this->auth);
+    }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        $user = $request->getUser();
+
+        $this->auth->setModel($user);
+        $this->auth->sendResetPasswordToken();
+        
+        return apiResponse($this->auth);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        $user = $request->getUser();
+        $this->auth->setModel($user);
+
+        $password = $request->input('password');
+        $this->auth->changePassword($password);
+        $this->auth->claimResetPasswordToken();
 
         return apiResponse($this->auth);
     }

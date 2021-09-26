@@ -18,17 +18,9 @@ class InvoiceResource extends JsonResource
      */
     public function toArray($request)
     {
-        // Set reference
-        $referenceable = $this->referenceable;
-        if ($this->referenceable_type == 'App\Models\Quotation') {
-            $reference = new QuotationResource($referenceable);
-        } else if ($this->referenceable_type == 'App\Models\Appointment') {
-            $reference = new AppointmentResource($referenceable);
-        }
-
         $structure = [
             'id' => $this->id,
-            // 'company_id' => $this->company_id,
+            'company_id' => $this->company_id,
             'total' => $this->total,
             'formatted_total' => $this->formatted_total,
             'total_in_terms' => $this->total_in_terms,
@@ -43,14 +35,32 @@ class InvoiceResource extends JsonResource
             'status_description' => $this->status_description,
             'payment_method' => $this->payment_method,
             'payment_method_description' => $this->payment_method_description,
-            // 'items' => $this->items,
-            // 'payment_terms' => PaymentTermResource::collection($this->paymentTerms),
-            // 'reference_type' => $this->referenceable_type,
-            // 'reference' => $reference,
         ];
 
         if ($this->invoice_number) {
             $structure['invoice_number'] = $this->invoice_number;
+        }
+
+        if ($this->relationLoaded('items')) {
+            $structure['items'] = InvoiceItemResource::collection($this->items);
+        }
+
+        if ($this->relationLoaded('paymentTerms')) {
+            $terms = $this->paymentTerms;
+            $structure['payment_terms'] = PaymentTermResource::collection($terms);
+        }
+
+        if ($this->relationLoaded('company')) {
+            $structure['company'] = new CompanyResource($this->company);
+        }
+
+        if ($this->relationLoaded('invoiceable')) {
+            $invoiceable = $this->invoiceable;
+            $pureClass = get_pure_class($invoiceable);
+            $className = get_lower_class($invoiceable);
+            $resourceClass = '\\App\Http\\Resources\\' . $pureClass . 'Resource';
+
+            $structure[$className] = new $resourceClass($invoiceable);
         }
 
         return $structure;

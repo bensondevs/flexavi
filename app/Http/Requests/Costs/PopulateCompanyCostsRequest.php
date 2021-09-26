@@ -114,7 +114,7 @@ class PopulateCompanyCostsRequest extends FormRequest
             $this->setWiths($relations);
 
             if ($this->relationNames['with_costables'] === true) {
-                $this->addWith('costables.costables');
+                $this->addWith('costables.costable');
             }
         }
 

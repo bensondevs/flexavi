@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Jobs\Auth;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -8,27 +8,27 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailable;
-use Illuminate\Support\Facades\Mail;
 
-class SendMail implements ShouldQueue
+use App\Models\User;
+
+use App\Mail\Auth\ForgotPassword;
+
+use App\Jobs\SendMail;
+
+class SendResetPasswordToken implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $timeout = 1200;
-
-    private $mailable;
-    private $destination;
+    private $user;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Mailable $mailable, string $destination = '')
+    public function __construct(User $user)
     {
-        $this->mailable = $mailable;
-        $this->destination = $destination;
+        $this->user = $user;
     }
 
     /**
@@ -38,9 +38,11 @@ class SendMail implements ShouldQueue
      */
     public function handle()
     {
-        $destination = $this->destination;
-        $mailable = $this->mailable;
-        
-        Mail::to($destination)->send($mailable);
+        $user = $this->user;
+        $token = $user->generateResetPasswordToken();
+
+        $mailable = new ForgotPassword($user, $token);
+        $job = new SendMail($mailable, $user->email);
+        dispatch($job);
     }
 }

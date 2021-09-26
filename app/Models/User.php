@@ -129,6 +129,11 @@ class User extends Authenticatable
         return $this->register_invitation();
     }
 
+    public function resetPasswordToken()
+    {
+        return $this->hasOne(PasswordReset::class, 'email', 'email');
+    }
+
     public static function findByEmail(string $email)
     {
         return self::where('email', $email)->first();
@@ -202,6 +207,15 @@ class User extends Authenticatable
         return $this->token = $plainTextToken;
     }
 
+    public function generateResetPasswordToken()
+    {
+        return $this->resetPasswordToken = PasswordReset::create([
+            'email' => $this->attributes['email'],
+            'token' => random_string(rand(10, 15)),
+            'created_at' => now(),
+        ]);
+    }
+
     public function createEmailVerification()
     {
         $verification = new EmailVerification();
@@ -247,7 +261,7 @@ class User extends Authenticatable
         return UserIdCardType::asSelectArray();
     }
 
-    public function findBySocialId($driver, $id)
+    public static function findBySocialId(string $driver, string $id)
     {
         return self::where($driver . '_id', $id)->first();
     }

@@ -10,6 +10,7 @@ use Socialite;
 use App\Mail\Auth\VerifyEmail;
 
 use App\Jobs\SendMail;
+use App\Jobs\Auth\SendResetPasswordToken;
 
 use App\Models\User;
 use App\Models\Customer;
@@ -223,5 +224,60 @@ class AuthRepository extends BaseRepository
 		}
 
 		return $this->returnResponse();
+	}
+
+	public function sendResetPasswordToken()
+	{
+		try {
+			$user = $this->getModel();
+			if ($token = $user->resetPasswordToken) {
+				$token->delete();
+			}
+
+			$job = new SendResetPasswordToken($user);
+			dispatch($job);
+
+			$this->setSuccess('Successfully send reset password token.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to send reset password token.', $error);
+		}
+
+		return $this->returnResponse();
+	}
+
+	public function changePassword(string $password)
+	{
+		try {
+			$user = $this->getModel();
+			$user->unhashed_password = $password;
+			$user->save();
+
+			$this->setModel($user);
+
+			$this->setSuccess('Successfully change password.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to change password', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	public function claimResetPasswordToken()
+	{
+		try {
+			$user = $this->getModel();
+			$user->resetPasswordToken()->delete();
+
+			$this->setModel($user);
+
+			$this->setSuccess('Successfully claim reset password token.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to claim reset password.');
+		}
+
+		return $this->getModel();
 	}
 }

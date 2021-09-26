@@ -216,7 +216,7 @@ class Quotation extends Model
 
     public function invoice()
     {
-        return $this->hasOne(Invoice::class);
+        return $this->morphOne(Invoice::class, 'invoiceable');
     }
 
     public static function getTypeValues()

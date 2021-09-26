@@ -498,6 +498,10 @@ Payload name | Required | Validation | Description
 }
 ```
 
+**Notes:**
+
+1. Only appointment with status of `Created` can be updated.
+
 -------------------------------------------------------
 ### 5. Execute Appointment
 -------------------------------------------------------
@@ -535,6 +539,11 @@ Payload name | Required | Validation | Description
     "message": "Successfully execute appointment."
 }
 ```
+
+**Notes:**
+
+1. Only appointment with status of `Created` can be updated.
+2. Executing appointment will change the appointment status to `InProcess`
 
 -------------------------------------------------------
 ### 6. Process Appointment
@@ -693,6 +702,7 @@ Payload name | Required | Validation | Description
 ```json
 {
     "id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
+    "payment_method": 1,
 }
 ```
 
@@ -700,10 +710,47 @@ Payload name | Required | Validation | Description
 
 ```json
 {
+    "invoice": {
+        "payment_method": "1",
+        "customer_id": "eb6b2bd0-1bc4-11ec-8552-b5f89f23db3e",
+        "invoiceable_type": "App\\Models\\Appointment",
+        "invoiceable_id": "09993f80-1dc8-11ec-b56e-6f2e72081215",
+        "company_id": "eb63c1a0-1bc4-11ec-abd0-f12a42f84c12",
+        "total": 0,
+        "id": "06e95140-1ddc-11ec-88d7-35d2b6b4125e",
+        "updated_at": "2021-09-25T08:38:58.000000Z",
+        "created_at": "2021-09-25T08:38:58.000000Z",
+        "appointment": {
+            "id": "09993f80-1dc8-11ec-b56e-6f2e72081215",
+            "customer_id": "eb6b2bd0-1bc4-11ec-8552-b5f89f23db3e",
+            "status": 5,
+            "status_description": "Cancelled",
+            "type": 1,
+            "type_description": "Inspection",
+            "start": "2021-05-14T22:00:00.000000Z",
+            "end": "2021-05-17T22:00:00.000000Z",
+            "include_weekend": true,
+            "note": "Fixing leaking rooftop",
+            "created_at": "2021-09-25T06:15:53.000000Z",
+            "in_process_at": null,
+            "processed_at": null,
+            "calculated_at": null,
+            "cancelled_at": "2021-09-25 08:15:53",
+            "cancellation_vault": 1,
+            "cancellation_vault_description": "Roofer",
+            "cancellation_cause": "The rooder is terribly late",
+            "cancellation_note": "oofer agreed to be arrived at 9, but he did't show up until 10. We try to make many calls but get no answer, what a dissapointment. He showed up at 11 and say the excuse about traffic jam and so on and so forth"
+        }
+    },
     "status": "success",
-    "message": "Successfully generate invoice from appointment."
+    "message": "Successfully generate invoice from appointment"
 }
 ```
+
+**Success Response Note:**
+
+1. If the appointment already has an invoice, then this endpoint won't generate new invoice instead, returning existing invoice.
+2. In `invoice` object, we will have `invoice.appointment` data. In other endpoint which implements invoicing like `quotation` for an example, we'll have `invoice.quotation`. The attribute of it depends on what is within the record of `invoiceable_type` (To define the model class) and `invoiceable_id` (To define ID of associated class).
 
 -------------------------------------------------------
 ### 8. Delete Appointment

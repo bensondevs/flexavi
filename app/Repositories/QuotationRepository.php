@@ -204,22 +204,6 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function generateInvoice()
-	{
-		try {
-			$quotation = $this->getModel();
-			$invoice = $quotation->generateInvoice();
-			$quotation->invoices;
-
-			$this->setSuccess('Successfully generate invoice from quotation');
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to generate invoice from quotation');
-		}
-
-		return $this->getModel();
-	}
-
 	public function delete(bool $force = false)
 	{
 		try {

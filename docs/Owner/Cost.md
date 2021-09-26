@@ -4,7 +4,7 @@
 ### 1. Populate Costs
 -------------------------------------------------------
 
-**Endpoint:** `/`
+**Endpoint:** `/api/dashboard/companies/costs`
 
 **Method:** `GET`
 
@@ -202,7 +202,7 @@ Attribute Name  | Type  | Description
 ### 2. Store Cost
 -------------------------------------------------------
 
-**Endpoint:** `/store`
+**Endpoint:** `/api/dashboard/companies/costs/store`
 
 **Method:** `POST`
 
@@ -217,13 +217,16 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
+`cost_name` | Required | 
 
 
 **Request Body Example:**
 
 ```json
 {
-    
+    "cost_name": "Store cost",
+    "amount": 10000,
+    "paid_amount": 8000
 }
 ```
 

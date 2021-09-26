@@ -177,4 +177,21 @@ class CostRepository extends BaseRepository
 
 		return $this->returnResponse();
 	}
+
+	public function restore()
+	{
+		try {
+			$cost = $this->getModel();
+			$cost->restore();
+
+			$this->setModel($cost);
+
+			$this->setSuccess('Successfully restore cost.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore cost.', $error);
+		}
+
+		return $this->getModel();
+	}
 }

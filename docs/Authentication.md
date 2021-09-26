@@ -216,9 +216,103 @@ Attribute Name  | Type  | Description
 `message` | String | Message response for the user
 
 **Success Response Example:**
+
 ```json
 {
     "status": "success",
     "message": "Successfully logged out"
+}
+```
+
+-------------------------------------------------------
+### 5. Forgot Password
+-------------------------------------------------------
+
+**Description** 
+
+This endpoint will make a request to create token needed for executing `6. Reset Password`. The token will be sent through email of the user.
+
+**Endpoint:** `/api/auth/forgot_password`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|-------
+Accept | `application/json`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`email` | Required | string | Email of user to forgot the password
+
+**Request Body Example:** 
+
+```json
+{
+    "email": "forgot@password.com"
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-----------|---------------
+`status` | Array | Request status
+`message` | Array | Message response for the user
+
+**Success Response Example:**
+
+```json
+{
+    "status": "success",
+    "message": "Successfully send reset password token."
+}
+```
+
+-------------------------------------------------------
+### 6. Reset Password
+-------------------------------------------------------
+
+**Endpoint:** `/api/auth/forgot_password`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|-------
+Accept | `application/json`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`email` | Required | string | Email of user to forgot the password
+
+**Request Body Example:**
+
+```json
+{
+    "reset_password_token": "VhsidnIj9831lsaLLKSHDA",
+    "password": "Example123!",
+    "confirm_password": "Example123!",
+}
+```
+
+**Success Response Example:**
+
+```json
+{
+    "status": [
+        "success",
+        "success",
+    ],
+    "message": [
+        "Successfully change password.",
+        "Successfully claim reset password token."
+    ]
 }
 ```

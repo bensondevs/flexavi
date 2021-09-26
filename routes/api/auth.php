@@ -47,4 +47,10 @@ Route::post('register_company', [CompanyController::class, 'registerCompany']);
 */
 Route::get('verify_email', [AuthController::class, 'verifyEmail']);
 
+/*
+	Forgot and Reset Password
+*/
+Route::post('forgot_password', [AuthController::class, 'forgotPassword']);
+Route::post('reset_password', [AuthController::class, 'resetPassword']);
+
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

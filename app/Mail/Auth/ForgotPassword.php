@@ -9,20 +9,22 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Models\User;
 
-class VerifyEmail extends Mailable
+class ForgotPassword extends Mailable
 {
     use Queueable, SerializesModels;
 
     private $user;
+    private $token;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(User $user, string $token)
     {
         $this->user = $user;
+        $this->token = $token;
     }
 
     /**
@@ -32,10 +34,11 @@ class VerifyEmail extends Mailable
      */
     public function build()
     {
-        $verification = $this->user->createEmailVerification();
-        $verificationCode = $verification->encrypted_code;
-
-        $data = ['code' => $verificationCode];
-        return $this->view('mails.auths.verify')->with($data);
+        return $this
+            ->view('mails.auths.forgot')
+            ->with([
+                'user' => $this->user,
+                'token' => $this->token,
+            ]);
     }
 }

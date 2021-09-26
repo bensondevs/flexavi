@@ -69,14 +69,17 @@ function str_camel_case(string $string)
     return Str::camel($string);
 }
 
+function get_pure_class($class)
+{
+    $class = get_class($class);
+    $explode = explode('\\', $class);
+    return $explode[count($explode) - 1];
+}
+
 function get_lower_class($class)
 {
-    $lowerClassname = strtolower(get_class($class));
-
-    if ($explode = explode('\\', $lowerClassname)) {
-        return $explode[count($explode) - 1];
-    }
-
+    $lowerClassname = get_pure_class($class);
+    $lowerClassname = strtolower($lowerClassname);
     return $lowerClassname;
 }
 

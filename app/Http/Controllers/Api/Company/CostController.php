@@ -63,7 +63,7 @@ class CostController extends Controller
         $input = $request->validated();
         $cost = $this->cost->save($input);
 
-        return apiResponse($this->cost, ['cost' => new CostResource($cost)]);
+        return apiResponse($this->cost);
     }
 
     /**
@@ -124,10 +124,9 @@ class CostController extends Controller
     public function restore(RestoreRequest $request)
     {
         $cost = $request->getCost();
+        $cost = $this->cost->setModel($cost);
+        $cost = $this->cost->restore();
 
-        $this->cost->setModel($cost);
-        $this->cost->restore();
-
-        return apiResponse($this->cost);
+        return apiResponse($this->cost, ['cost' => $cost]);
     }
 }

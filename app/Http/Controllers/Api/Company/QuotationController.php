@@ -5,33 +5,44 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Quotations\SaveQuotationRequest as SaveRequest;
-use App\Http\Requests\Quotations\FindQuotationRequest as FindRequest;
-use App\Http\Requests\Quotations\SendQuotationRequest as SendRequest;
-use App\Http\Requests\Quotations\PrintQuotationRequest as PrintRequest;
-use App\Http\Requests\Quotations\ReviseQuotationRequest as ReviseRequest;
-use App\Http\Requests\Quotations\HonorQuotationRequest as HonorRequest;
-use App\Http\Requests\Quotations\DeleteQuotationRequest as DeleteRequest;
-use App\Http\Requests\Quotations\CancelQuotationRequest as CancelRequest;
-use App\Http\Requests\Quotations\PopulateCompanyQuotationsRequest as CompanyPopulateRequest;
-use App\Http\Requests\Quotations\PopulateCustomerQuotationsRequest as CustomerPopulateRequest;
-use App\Http\Requests\Quotations\AddQuotationAttachmentRequest as AddAttachmentRequest;
-use App\Http\Requests\Quotations\RemoveQuotationAttachmentRequest as RemoveAttachmentRequest;
+use App\Http\Requests\Quotations\{
+    SaveQuotationRequest as SaveRequest,
+    FindQuotationRequest as FindRequest,
+    SendQuotationRequest as SendRequest,
+    PrintQuotationRequest as PrintRequest,
+    ReviseQuotationRequest as ReviseRequest,
+    HonorQuotationRequest as HonorRequest,
+    DeleteQuotationRequest as DeleteRequest,
+    CancelQuotationRequest as CancelRequest,
+    GenerateQuotationInvoiceRequest as GenerateInvoiceRequest,
+    PopulateCompanyQuotationsRequest as CompanyPopulateRequest,
+    PopulateCustomerQuotationsRequest as CustomerPopulateRequest,
+    AddQuotationAttachmentRequest as AddAttachmentRequest,
+    RemoveQuotationAttachmentRequest as RemoveAttachmentRequest
+};
 
 use App\Enums\Quotation\QuotationCanceller;
 
-use App\Http\Resources\QuotationResource;
-use App\Http\Resources\QuotationAttachmentResource;
+use App\Http\Resources\{
+    InvoiceResource,
+    QuotationResource,
+    QuotationAttachmentResource  
+};
 
-use App\Repositories\QuotationRepository;
+use App\Repositories\{
+    QuotationRepository,
+    InvoiceRepository
+};
 
 class QuotationController extends Controller
 {
     private $quotation;
+    private $invoice;
 
-    public function __construct(QuotationRepository $quotation)
+    public function __construct(QuotationRepository $quotation, InvoiceRepository $invoice)
     {
     	$this->quotation = $quotation;
+        $this->invoice = $invoice;
     }
 
     public function companyQuotations(CompanyPopulateRequest $request)
@@ -177,10 +188,14 @@ class QuotationController extends Controller
 
     public function generateInvoice(GenerateInvoiceRequest $request)
     {
-        $quotation = $this->getQuotation();
-        $invoice = $this->invoice->generateFromQuotation($quotation);
+        $quotation = $request->getQuotation();
+        $invoiceData = $request->validated();
 
-        return apiResponse($this->invoice);
+        $invoice = $this->invoice->generateFromQuotation($quotation, $invoiceData);
+        $invoice->load(['items', 'invoiceable']);
+        $invoice = new InvoiceResource($invoice);
+
+        return apiResponse($this->invoice, ['invoice' => $invoice]);
     }
 
     public function update(SaveRequest $request)

@@ -36,9 +36,8 @@ class DeleteCostRequest extends FormRequest
      */
     protected function prepareForValidation()
     {
-        if ($force = $this->input('force')) {
-            $this->merge(['force' => strtobool($force)]);
-        }
+        $force = $this->input('force');
+        $this->merge(['force' => strtobool($force)]);
     }
 
     /**

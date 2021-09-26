@@ -383,9 +383,30 @@ class QuotationTest extends TestCase
      *
      * @return void
      */
-    public function test_generate_quotation_invoice()
+    public function test_generate_invoice_quotation()
     {
-        //
+        $owner = Owner::whereHas('user')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $quotation = Quotation::where('company_id', $owner->company_id)->first();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = $this->baseUrl . '/generate_invoice';
+        $response = $this->withHeaders($headers)->post($url, [
+            'quotation_id' => $quotation->id,
+            'payment_method' => 2,
+        ]);
+
+        $response->assertStatus(201);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('message');
+            $json->where('status', 'success');
+            $json->has('invoice.quotation');
+        });
     }
 
     /**

@@ -106,6 +106,11 @@ class QuotationPolicy
         return $user->hasCompanyPermission($quotation->company_id, 'cancel quotations');
     }
 
+    public function generateInvoice(User $user, Quotation $quotation)
+    {
+        return $user->hasCompanyPermission($quotation->company_id, 'generate invoice quotations');
+    }
+
     public function delete(User $user, Quotation $quotation)
     {
         return $user->hasCompanyPermission($quotation->company_id, 'delete quotations');

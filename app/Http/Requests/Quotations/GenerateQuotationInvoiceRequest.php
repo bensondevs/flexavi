@@ -5,8 +5,22 @@ namespace App\Http\Requests\Quotations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Models\Quotation;
+
+use App\Enums\Invoice\InvoicePaymentMethod;
+
 class GenerateQuotationInvoiceRequest extends FormRequest
 {
+    private $quotation;
+
+    public function getQuotation()
+    {
+        if ($this->quotation) return $this->quotation;
+
+        $id = $this->input('id') ?: $this->input('quotation_id');
+        return $this->quotation = Quotation::findOrFail($id);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -14,7 +28,8 @@ class GenerateQuotationInvoiceRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $quotation = $this->getQuotation();
+        return Gate::allows('generate-invoice-quotation', $quotation);
     }
 
     /**
@@ -25,7 +40,12 @@ class GenerateQuotationInvoiceRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'payment_method' => [
+                'required', 
+                'numeric', 
+                'min:' . InvoicePaymentMethod::Cash, 
+                'max:' . InvoicePaymentMethod::BankTransfer
+            ],
         ];
     }
 }

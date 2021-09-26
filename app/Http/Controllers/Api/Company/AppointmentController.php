@@ -20,7 +20,10 @@ use App\Http\Requests\Appointments\{
     PopulateCustomerAppointmentsRequest as CustomerPopulateRequest
 };
 
-use App\Http\Resources\AppointmentResource;
+use App\Http\Resources\{
+    InvoiceResource,
+    AppointmentResource
+};
 
 use App\Repositories\{
     AppointmentRepository,
@@ -160,7 +163,10 @@ class AppointmentController extends Controller
     {
         $appointment = $request->getAppointment();
         $invoiceData = $request->validated();
+
         $invoice = $this->invoice->generateFromAppointment($appointment, $invoiceData);
+        $invoice->load(['items', 'invoiceable']);
+        $invoice = new InvoiceResource($invoice);
 
         return apiResponse($this->invoice, ['invoice' => $invoice]);
     }

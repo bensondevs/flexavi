@@ -384,6 +384,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::post('revise', [QuotationController::class, 'revise']);
 		Route::post('cancel', [QuotationController::class, 'cancel']);
 		Route::post('honor', [QuotationController::class, 'honor']);
+		Route::post('generate_invoice', [QuotationController::class, 'generateInvoice']);
 
 		/*
 			Quotation Works

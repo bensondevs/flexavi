@@ -7,8 +7,12 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Quotation;
 
+use App\Traits\InputRequest;
+
 class SendQuotationRequest extends FormRequest
 {
+    use InputRequest;
+
     private $quotation;
 
     public function getQuotation()
@@ -16,7 +20,7 @@ class SendQuotationRequest extends FormRequest
         if ($this->quotation) return $this->quotation;
 
         $id = $this->input('id') ?: $this->input('quotation_id');
-        return Quotation::findOrFail($id);
+        return $this->quotation = Quotation::find($id);
     }
 
     /**
@@ -30,6 +34,14 @@ class SendQuotationRequest extends FormRequest
         return Gate::allows('send-quotation', $quotation);
     }
 
+    protected function prepareForValidation()
+    {
+        if (! $this->has('destination')) {
+            $quotation = $this->getQuotation();
+            $this->merge(['destination' => $quotation->customer->email]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -38,21 +50,13 @@ class SendQuotationRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'destination' => ['string'],
+            'text' => ['string'],
         ];
     }
 
     public function sendData()
     {
-        $sendData = [];
-        if ($destination = $this->input('destination')) {
-            $sendData['destination'] = $destination;
-        }
-
-        if ($text = $this->input('text')) {
-            $sendData['text'] = $text;
-        }
-
-        return $sendData;
+        return $this->validated();
     }
 }

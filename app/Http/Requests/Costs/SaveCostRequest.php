@@ -54,7 +54,7 @@ class SaveCostRequest extends FormRequest
     public function authorize()
     {
         if (! $this->isMethod('POST')) {
-            $cost = $request->getCost();
+            $cost = $this->getCost();
             return Gate::allows('edit-cost', $cost);
         }
 

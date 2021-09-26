@@ -30,6 +30,11 @@ trait RepositoryResponse
 		$this->statuses[] = $status;
 	}
 
+	public function setHttpStatusCode(int $code)
+	{
+		return $this->httpStatus = $code;
+	}
+
 	public function setMessage($message = 'Unknown')
 	{
 		$this->message = $message;

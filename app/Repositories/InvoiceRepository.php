@@ -33,7 +33,7 @@ class InvoiceRepository extends BaseRepository
 			$invoice->fill($invoiceData);
 			$invoice->save();
 
-			$this->setModel($invoice);
+			$this->setModel($invoice->fresh());
 
 			$this->setSuccess('Successfully save invoice.');
 		} catch (QueryException $e) {
@@ -46,6 +46,13 @@ class InvoiceRepository extends BaseRepository
 
 	public function generateFromAppointment(Appointment $appointment, array $invoiceData = [])
 	{
+		if ($invoice = $appointment->invoice) {
+			$this->setModel($invoice);
+			$this->setSuccess('This appointment has invoice already, not generating, just returning record.');
+			$this->setHttpStatusCode(200);
+			return $this->getModel();
+		}
+
 		$works = $appointment->works;
 		if (empty($works)) {
 			$this->setUnprocessedInput('Failed to generate invoice from appointment. Appointment has no work attached.');
@@ -65,7 +72,7 @@ class InvoiceRepository extends BaseRepository
 			// Generate items from works
 			$invoice->generateItemsFromWorks($works);
 
-			$this->setModel($invoice);
+			$this->setModel($invoice->fresh());
 
 			$this->setSuccess('Successfully generate invoice from appointment');
 		} catch (QueryException $qe) {
@@ -74,11 +81,17 @@ class InvoiceRepository extends BaseRepository
 			return false;
 		}
 
-		return $invoice;
+		return $this->getModel();
 	}
 
 	public function generateFromQuotation(Quotation $quotation, array $invoiceData = [])
 	{
+		if ($invoice = $quotation->invoice) {
+			$this->setModel($invoice);
+			$this->setSuccess('This quotation has invoice already, not generating, just returning record.');
+			return $this->getModel();
+		}
+
 		$works = $quotation->works;
 		if (empty($works)) {
 			$this->setUnprocessedInput('Failed to generate invoice from quotation. Quotation has no work attached.');
@@ -97,7 +110,7 @@ class InvoiceRepository extends BaseRepository
 			// Generate items from works
 			$invoice->generateItemsFromWorks($works);
 
-			$this->setModel($invoice);
+			$this->setModel($invoice->fresh());
 
 			$this->setSuccess('Successfully generate invoice from quotation.');
 		} catch (QueryException $qe) {
@@ -106,7 +119,7 @@ class InvoiceRepository extends BaseRepository
 			return false;
 		}
 
-		return $invoice;
+		return $this->getModel();
 	}
 
 	public function generateFromWorkContract(WorkContract $contract, array $invoiceData = [])
@@ -120,8 +133,8 @@ class InvoiceRepository extends BaseRepository
 		try {
 			$invoice = $this->getModel();
 			$invoice->fill($invoiceData);
-			$invoice->referenceable_type = WorkContract::class;
-			$invoice->referenceable_id = $contract->id;
+			$invoice->invoiceable_type = WorkContract::class;
+			$invoice->invoiceable_id = $contract->id;
 			$invoice->company_id = $contract->company_id;
 			$invoice->total = $works->sum('total');
 			$invoice->save();
@@ -138,7 +151,7 @@ class InvoiceRepository extends BaseRepository
 			return false;
 		}
 
-		return $invoice;
+		return $this->getModel();
 	}
 
 	public function send()

@@ -26,7 +26,8 @@ class RestoreCostRequest extends FormRequest
         if ($this->cost) return $this->cost;
 
         $id = $this->input('id') ?: $this->input('cost_id');
-        return $this->cost = Cost::findOrFail($id);
+        return $this->cost = Cost::withTrashed()
+            ->findOrFail($id);
     }
 
     /**

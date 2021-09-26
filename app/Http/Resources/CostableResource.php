@@ -8,8 +8,12 @@ use App\Models\Workday;
 use App\Models\Worklist;
 use App\Models\Appointment;
 
+use App\Traits\ApiCollectionResource;
+
 class CostableResource extends JsonResource
 {
+    use ApiCollectionResource;
+
     /**
      * Transform the resource into an array.
      *
@@ -30,16 +34,11 @@ class CostableResource extends JsonResource
 
         if ($this->relationLoaded('costable')) {
             $costable = $this->costable;
+            $pureClass = get_pure_class($costable);
+            $className = get_lower_class($costable);
+            $resourceClass = '\\App\Http\\Resources\\' . $pureClass . 'Resource';
 
-            if ($this->costable_type == Workday::class) {
-                $costable = new WorkdayResource($costable);
-            } else if ($this->costable_type == Worklist::class) {
-                $costable = new WorklistResource($costable);
-            } else if ($this->costable_type == Appointment::class) {
-                $costable = new AppointmentResource($costable)
-            }
-
-            $structure['costable'] = $costable;
+            $structure[$className] = new $resourceClass($costable);
         }
 
         return $structure;
