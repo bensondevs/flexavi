@@ -39,11 +39,28 @@ class RefreshApp extends Command
     public function handle()
     {
         shell_exec('composer dump-autoload');
+
+        sleep(3);
+
         Artisan::call('optimize');
+
+        sleep(1);
+
         Artisan::call('cache:clear');
+
+        sleep(1);
+
         Artisan::call('route:cache');
+
+        sleep(1);
+
         Artisan::call('view:clear');
+
+        sleep(1);
+
         Artisan::call('config:cache');
+
+        sleep(1);
 
         return $this->info('Application refreshed!');
     }
