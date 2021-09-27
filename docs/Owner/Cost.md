@@ -1,6 +1,14 @@
 ## Cost
 
 -------------------------------------------------------
+### 0. About
+-------------------------------------------------------
+
+According to main document, the company can do recording about the cost happen in each event such as `appointment`, `worklist` or event `workday`.
+
+Say that we have a cost that recorded to an `appointment` which attached into a `worklist`, then the cost under `appointment` must be attached into `worklist` as well. This goes up to `workday` because a `worklist` is recorded under `workday`.
+
+-------------------------------------------------------
 ### 1. Populate Costs
 -------------------------------------------------------
 

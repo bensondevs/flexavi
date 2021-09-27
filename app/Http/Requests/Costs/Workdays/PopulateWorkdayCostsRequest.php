@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Costs;
+namespace App\Http\Requests\Costs\Workdays;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
@@ -19,7 +19,7 @@ class PopulateWorkdayCostsRequest extends FormRequest
     {
         if ($this->workday) return $this->workday;
 
-        $id = $this->input('workday_id');
+        $id = $this->input('id') ?: $this->input('workday_id');
         return $this->workday = Workday::findOrFail($id);
     }
 
@@ -31,7 +31,7 @@ class PopulateWorkdayCostsRequest extends FormRequest
     public function authorize()
     {
         $workday = $this->getWorkday();
-        return Gate::allows('view-any-workday-cost', $workday);
+        return Gate::allows('view-any-cost', $workday);
     }
 
     /**

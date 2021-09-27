@@ -5,13 +5,15 @@ namespace App\Http\Requests\Costs\Workdays;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\InputRequest;
+use App\Http\Requests\Costs\SaveCostRequest;
+
+use App\Traits\CompanyInputRequest;
 
 use App\Models\Workday;
 
 class SaveWorkdayCostRequest extends FormRequest
 {
-    use InputRequest;
+    use CompanyInputRequest;
 
     /**
      * Found workday model container
@@ -29,8 +31,19 @@ class SaveWorkdayCostRequest extends FormRequest
     {
         if ($this->workday) return $this->workday;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('workday_id');
         return $this->workday = Workday::findOrFail($id);
+    }
+
+    /**
+     * Prepare input for validation
+     * 
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $company = $this->getCompany();
+        $this->merge(['company_id' => $company->id]);
     }
 
     /**
@@ -50,8 +63,7 @@ class SaveWorkdayCostRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $request = new SaveCostRequest();
+        return $request->rules();
     }
 }

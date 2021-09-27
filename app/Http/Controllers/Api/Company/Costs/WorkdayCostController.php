@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Api\Company\Costs;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Costs\RecordCostRequest as RecordRequest;
-use App\Http\Requests\Costs\RecordManyCostsRequest as RecordManyRequest;
-use App\Http\Requests\Costs\UnrecordCostRequest as UnrecordRequest;
-use App\Http\Requests\Costs\UnrecordManyCostsRequest as UnrecordManyRequest;
-use App\Http\Requests\Costs\TruncateCostsRequest as TruncateRequest;
-use App\Http\Requests\Costs\Workday\SaveWorkdayCostRequest as SaveRequest;
-use App\Http\Requests\Costs\Workday\PopulateWorkdayCostsRequest as PopulateRequest;
+use App\Http\Requests\Costs\{
+    RecordCostRequest as RecordRequest,
+    RecordManyCostsRequest as RecordManyRequest,
+    UnrecordCostRequest as UnrecordRequest,
+    UnrecordManyCostsRequest as UnrecordManyRequest,
+    TruncateCostsRequest as TruncateRequest,
+    Workdays\SaveWorkdayCostRequest as SaveRequest,
+    Workdays\PopulateWorkdayCostsRequest as PopulateRequest
+};
 
 use App\Http\Resources\CostResource;
 
