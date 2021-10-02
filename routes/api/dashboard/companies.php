@@ -8,7 +8,12 @@ use App\Http\Controllers\Api\Company\{
 	InvoiceController,
 		InvoiceItemController,
 	CompanyController,
-	AddressController,
+	
+	Addresses\AddressController,
+	Addresses\CustomerAddressController,
+	Addresses\EmployeeAddressController,
+	Addresses\OwnerAddressController,
+
 	EmployeeController,
 	CustomerController,
 	QuotationController,
@@ -466,11 +471,51 @@ Route::group(['middleware' => ['has_company']], function () {
 	});
 
 	/*
-		Address List
+		Address Module
 	*/
-	Route::group(['prefix' => 'addresses', 'as' => 'addresses.'], function () {
-		Route::get('/', [AddressController::class, 'userAddresses']);
-		Route::get('employee', [AddressController::class, 'employeeAddresses']);
+	Route::group(['prefix' => 'addresses'], function () {
+		Route::get('/', [AddressController::class, 'companyAddresses']);
+		Route::post('store', [AddressController::class, 'store']);
+		Route::get('view', [AddressController::class, 'view']);
+		Route::match(['PUT', 'PATCH'], 'update', [AddressController::class, 'update']);
+		Route::delete('delete', [AddressController::class, 'delete']);
+		Route::patch('restore', [AddressController::class, 'restore']);
+
+		/*
+			Customer Address Module
+		*/
+		Route::group(['prefix' => 'customer'], function () {
+			Route::get('/', [CustomerAddressController::class, 'customerAddresses']);
+			Route::post('store', [CustomerAddressController::class, 'store']);
+			Route::get('view', [CustomerAddressController::class, 'view']);
+			Route::match(['PUT', 'PATCH'], 'update', [CustomerAddressController::class, 'update']);
+			Route::delete('delete', [CustomerAddressController::class, 'delete']);
+			Route::patch('restore', [CustomerAddressController::class, 'restore']);
+		});
+		
+		/*
+			Owner Address Module
+		*/
+		Route::group(['prefix' => 'owner'], function () {
+			Route::get('/', [OwnerAddressController::class, 'ownerAddresses']);
+			Route::post('store', [OwnerAddressController::class, 'store']);
+			Route::get('view', [OwnerAddressController::class, 'view']);
+			Route::match(['PUT', 'PATCH'], 'update', [OwnerAddressController::class, 'update']);
+			Route::delete('delete', [OwnerAddressController::class, 'delete']);
+			Route::patch('restore', [OwnerAddressController::class, 'restore']);
+		});
+
+		/*
+			Employee Address Module
+		*/
+		Route::group(['prefix' => 'employee'], function () {
+			Route::get('/', [EmployeeAddressController::class, 'employeeAddresses']);
+			Route::post('store', [EmployeeAddressController::class, 'store']);
+			Route::get('view', [EmployeeAddressController::class, 'view']);
+			Route::match(['PUT', 'PATCH'], 'update', [EmployeeAddressController::class, 'update']);
+			Route::delete('delete', [EmployeeAddressController::class, 'delete']);
+			Route::patch('restore', [EmployeeAddressController::class, 'restore']);
+		});
 	});
 
 	/*

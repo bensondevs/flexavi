@@ -180,9 +180,16 @@ class User extends Authenticatable
 
     public function getUserRoleAttribute()
     {
-        $roleName = $this->roles->first()->name;
+        $role = $this->roles->first();
+        $roleName = $role->name;
         unset($this->roles);
         return $roleName;
+    }
+
+    public function getRoleModelAttribute()
+    {
+        $roleName = $this->getUserRoleAttribute() ?: 'owner';
+        return $this->{$roleName};
     }
 
     public function getPhoneVerifiedStatusAttribute()

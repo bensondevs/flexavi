@@ -303,51 +303,55 @@ Attribute Name  | Type  | Description
 ```json
 {
     "owner": {
-        "id": "35862650-192c-11ec-93a5-ab6b12db8a95",
-        "is_prime_owner": false,
-        "user_id": null,
-        "company_id": "440d8010-189a-11ec-ad8c-298ea8cde157",
-        "bank_name": "Added  Bank",
-        "bic_code": "911",
-        "bank_account": "9988776655",
-        "bank_holder_name": "Added Holder",
-        "address": null,
-        "house_number": null,
-        "house_number_suffix": null,
-        "zipcode": null,
-        "city": null,
-        "province": null,
-        "created_at": "2021-09-19T09:30:20.000000Z",
-        "updated_at": "2021-09-19T09:30:20.000000Z",
-        "deleted_at": null,
+        "id": "14cf92f0-1e90-11ec-acde-0f8ec6f25009",
+        "user_id": "0ff1f6e0-1e90-11ec-99b5-e1aad2849cc2",
+        "is_prime_owner": true,
+        "bank_name": "FLEXAVIBANK",
+        "bic_code": "9213",
+        "bank_account": "83271221",
+        "bank_holder_name": "Flexavi Owner 1",
+        "addresses": [
+            {
+                "address": "Flexavi Owner 1 Address 1",
+                "house_number": "724",
+                "house_number_suffix": "X",
+                "zipcode": "639513",
+                "city": "Randon City",
+                "province": "Random Province"
+            }
+        ],
         "company": {
-            "id": "440d8010-189a-11ec-ad8c-298ea8cde157",
+            "id": "14cf8a90-1e90-11ec-9306-1b0a7e4fbbf3",
             "company_name": "Company 1",
+            "email": "company1@flexavi.com",
+            "phone_number": "9894778",
+            "vat_number": "46698864",
+            "commerce_chamber_number": "37",
+            "company_logo_url": "http://localhost:8000/storage/uploads/companies/logos/20210730125714.jpeg",
+            "company_website_url": "www.randomwebsite.com",
             "visiting_address": {
                 "city": "Random City",
                 "street": "Custom Road",
                 "zip_code": "67312",
-                "house_number": 298,
+                "house_number": 207,
                 "house_number_suffix": "X"
             },
             "invoicing_address": {
                 "city": "Random City",
                 "street": "Custom Street",
                 "zip_code": "65123",
-                "house_number": 28,
+                "house_number": 37,
                 "house_number_suffix": "X"
-            },
-            "email": "company1@flexavi.com",
-            "email_verified_at": null,
-            "phone_number": "6114560",
-            "vat_number": "68377041",
-            "commerce_chamber_number": "68",
-            "company_logo_path": "/uploads/companies/logos/20210730125714.jpeg",
-            "company_website_url": "www.randomwebsite.com"
+            }
         }
     }
 }
 ```
+
+**Success Response Notes:**
+
+1. Owners can possibly have more than one address.
+2. To add the address of owner, we can 
 
 -------------------------------------------------------
 ### 5. Update Owner

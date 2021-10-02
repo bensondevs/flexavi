@@ -27,7 +27,11 @@ class Address extends Model
     ];
 
     protected $fillable = [
-        'user_id',
+        'addressable_type',
+        'addressable_id',
+
+        'address_type',
+        'other_address_type_description',
 
         'address',
         'house_number',
@@ -46,8 +50,8 @@ class Address extends Model
     	});
     }
 
-    public function user()
+    public function addressable()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo();
     }
 }

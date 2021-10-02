@@ -48,8 +48,19 @@ class CompanyOwnerRepository extends BaseRepository
 
 	public function assignUser(User $user)
 	{
-		$user->assignRole('owner');
-		return $this->save(['user_id' => $user->id]);
+		try {
+			$user->assignRole('owner');
+			$owner = $this->save(['user_id' => $user->id]);
+
+			$this->setModel($owner);
+
+			$this->setSuccess('Successfully asssign user as owner.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to assign user owner.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	public function assignCompany(Company $company)

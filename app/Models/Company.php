@@ -74,6 +74,11 @@ class Company extends Model
         return $this->hasMany(Owner::class);
     }
 
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
     public function employees()
     {
         return $this->hasMany(Employee::class);
@@ -214,5 +219,15 @@ class Company extends Model
     {
         $path = $this->attributes['company_logo_path'];
         return Storage::url($path);
+    }
+
+    public function getCompanyIdAttribute()
+    {
+        return $this->attributes['id'];
+    }
+
+    public function setCompanyIdAttribute(string $id)
+    {
+        $this->attributes['id'] = $id;
     }
 }

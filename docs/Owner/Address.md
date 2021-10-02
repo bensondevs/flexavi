@@ -1,14 +1,14 @@
-## Workday Cost
+## Address
 
 -------------------------------------------------------
-### 1. Populate Workday Costs
+### 1. Populate User Addresses
 -------------------------------------------------------
 
-**Description**
+**Description:** 
 
-This endpoint will populate data of workday's costs. 
+This endpoint will give a list of current authenticated user's addresses.
 
-**Endpoint:** `/api/dashboard/companies/workdays/costs`
+**Endpoint:** `/api/dashboard/companies/addresses`
 
 **Method:** `GET`
 
@@ -23,7 +23,6 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-`id` or `workday_id` | Required | uuid, string uuid, exists in table `workdays` | The workday id
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through all attribute of owner
 `per_page` | Optional | number | Amount of data per page, default amount is 10
@@ -32,59 +31,21 @@ Payload name | Required | Validation | Description
 
 Attribute Name  | Type  | Description   
 ----------------|-------|---------------
-`costs` | Object | The owner object, contains pagination information and array of `data`
+`address` | Object | The owner object, contains pagination information and array of `data`
 
 **Success Response Example:**
 
 ```json
 {
-    "costs": {
-        "current_page": 1,
-        "data": [
-            {
-                "id": "e3437a50-1edf-11ec-925a-d3d96e0e55ef",
-                "cost_name": "Example Cost",
-                "amount": 10000,
-                "paid_amoun": 0,
-                "unpaid_amount": 0
-            }
-        ],
-        "first_page_url": "/?page=1",
-        "from": 1,
-        "last_page": 1,
-        "last_page_url": "/?page=1",
-        "links": [
-            {
-                "url": null,
-                "label": "&laquo; Previous",
-                "active": false
-            },
-            {
-                "url": "/?page=1",
-                "label": "1",
-                "active": true
-            },
-            {
-                "url": null,
-                "label": "Next &raquo;",
-                "active": false
-            }
-        ],
-        "next_page_url": null,
-        "path": "/",
-        "per_page": 10,
-        "prev_page_url": null,
-        "to": 1,
-        "total": 1
-    }
+    
 }
 ```
 
 -------------------------------------------------------
-### 2. Store Cost and Record to Workday
+### 2. Store Address
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/workdays/costs/store_record`
+**Endpoint:** `/store`
 
 **Method:** `POST`
 
@@ -99,16 +60,13 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-`workday_id` or `id` | Required | string, uuid, exists in `workdays` table | The workday target to be attached with created costs
+
 
 **Request Body Example:**
 
 ```json
 {
-    "workday_id": "15b9a890-1e90-11ec-a2a5-0705de5c2e1c",
-    "cost_name": "Example cost name",
-    "amount": 10000,
-    "paid_amount": 0
+    
 }
 ```
 
@@ -116,32 +74,26 @@ Payload name | Required | Validation | Description
 
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
-`status` | Array | Store workday cost and record workday cost statuses
-`message` | Array | Message response for the user
+`status` | String | Update address status
+`message` | String | Message response for the user
 
 
 **Success Response Example:**
 
 ```json
 {
-    "status": [
-        "success",
-        "success"
-    ],
-    "message": [
-        "Successfully save cost.",
-        "Successfully record cost in workday."
-    ]
+    "status": "success",
+    "message": "Successfully save address."
 }
 ```
 
 -------------------------------------------------------
-### 3. Record Workday Cost
+### 3. Update Address
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/workdays/costs/record`
+**Endpoint:** `/update`
 
-**Method:** `POST`
+**Method:** `PUT` or `PATCH`
 
 **Headers:**
 
@@ -149,12 +101,13 @@ Header Name | Value
 ------------|--------------
 Accept | `application/json`
 Authorization | `Bearer {token}`
+Content-Type | `application/x-www-form-urlencoded`
 
 **Parameters:**
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-`id` | Required | string | ID of updated workdaycost
+`id` | Required | string | ID of updated address
 
 **Request Body Example:**
 
@@ -168,7 +121,7 @@ Payload name | Required | Validation | Description
 
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
-`status` | String | Execution of update WorkdayCost status
+`status` | String | Execution of update Address status
 `message` | String | Message response for the user
 
 **Success Response Example:**
@@ -176,12 +129,12 @@ Attribute Name  | Type  | Description
 ```json
 {
     "status": "success",
-    "message": "Successfully save workdaycost."
+    "message": "Successfully save address."
 }
 ```
 
 -------------------------------------------------------
-### 4. Delete WorkdayCost
+### 4. Delete Address
 -------------------------------------------------------
 
 **Endpoint:** `/delete`
@@ -200,7 +153,7 @@ Content-Type | `application/x-www-form-urlencoded`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-`id` | Required | string | ID of deleted workdaycost
+`id` | Required | string | ID of deleted address
 
 **Request Body Example:**
 
@@ -214,7 +167,7 @@ Payload name | Required | Validation | Description
 
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
-`status` | String | Execution of delete workdaycost status
+`status` | String | Execution of delete address status
 `message` | String | Message response for the user
 
 **Success Response Example:**
@@ -222,12 +175,12 @@ Attribute Name  | Type  | Description
 ```json
 {
     "status": "success",
-    "message": "Successfully delete workdaycost"
+    "message": "Successfully delete address"
 }
 ```
 
 -------------------------------------------------------
-### 5. Restore WorkdayCost
+### 5. Restore Address
 -------------------------------------------------------
 
 **Endpoint:** `/restore`
@@ -246,7 +199,7 @@ Content-Type | `application/x-www-form-urlencoded`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-`id` | Required | string | ID of updated workdaycost
+`id` | Required | string | ID of updated address
 
 **Request Body Example:**
 
@@ -260,7 +213,7 @@ Payload name | Required | Validation | Description
 
 Attribute Name  | Type  | Description   
 ----------------|-----------|---------------
-`status` | String | Execution of restore workdaycost status
+`status` | String | Execution of restore address status
 `message` | String | Message response for the user
 
 **Success Response Example:**
@@ -268,6 +221,6 @@ Attribute Name  | Type  | Description
 ```json
 {
     "status": "success",
-    "message": "Successfully restore workdaycost."
+    "message": "Successfully restore address."
 }
 ```

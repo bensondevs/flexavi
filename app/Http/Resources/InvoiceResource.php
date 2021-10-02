@@ -55,12 +55,13 @@ class InvoiceResource extends JsonResource
         }
 
         if ($this->relationLoaded('invoiceable')) {
-            $invoiceable = $this->invoiceable;
-            $pureClass = get_pure_class($invoiceable);
-            $className = get_lower_class($invoiceable);
-            $resourceClass = '\\App\Http\\Resources\\' . $pureClass . 'Resource';
+            if ($invoiceable = $this->invoiceable) {
+                $pureClass = get_pure_class($invoiceable);
+                $className = get_lower_class($invoiceable);
+                $resourceClass = '\\App\Http\\Resources\\' . $pureClass . 'Resource';
 
-            $structure[$className] = new $resourceClass($invoiceable);
+                $structure[$className] = new $resourceClass($invoiceable);
+            }
         }
 
         return $structure;

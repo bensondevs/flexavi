@@ -16,11 +16,10 @@ class CreateAddressesTable extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('user_id')->nullable();
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('SET NULL');
+            $table->uuidMorphs('addressable');
+
+            $table->tinyInteger('address_type')->default(1);
+            $table->string('other_address_type_description')->nullable();
 
             $table->text('address');
             $table->char('house_number');

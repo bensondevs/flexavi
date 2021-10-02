@@ -88,6 +88,7 @@ class AuthController extends Controller
         $input = $request->userData();
     	$input['profile_picture'] = $request->profile_picture;
     	$user = $this->auth->register($input);
+        $user = $user->fresh();
 
         if ($this->auth->status == 'error') {
             return abort(500, $this->auth->message . '[' . $this->auth->queryError . ']');
@@ -105,9 +106,9 @@ class AuthController extends Controller
                 return abort(500, $this->invitation->message . '[' . $this->invitation->queryError . ']');
             }
         } else {
-            $this->owner->assignUser($user);
+            $owner = $this->owner->assignUser($user);
 
-            if ($this->owner->status == 'error') {
+            if ($this->owner->status == 'error' || (! $owner)) {
                 // Revert Change
                 $user->forceDelete();
 
@@ -117,7 +118,7 @@ class AuthController extends Controller
 
         // Save address
         $addressData = $request->getAddressData();
-        $addressData['user_id'] = $user->id;
+        $this->address->setAddressable($user->role_model);
         $this->address->save($addressData);
 
         if ($this->address->status == 'error') {

@@ -30,9 +30,17 @@ class OwnerResource extends JsonResource
             'bank_holder_name' => $this->bank_holder_name,
         ];
 
+        if ($this->relationLoaded('addresses')) {
+            $addresses = $this->addresses;
+            $structure['addresses'] = AddressResource::collection($addresses);
+        }
+
+        if ($this->relationLoaded('company')) {
+            $structure['company'] = new CompanyResource($this->company);
+        }
+
         if ($this->relationLoaded('user')) {
             $structure['user'] = new UserResource($this->user);
-            unset($structure['user_id']);
         }
 
         return $structure;

@@ -15,6 +15,7 @@ class FindOwnerRequest extends FormRequest
 
     protected $relationNames = [
         'with_company' => true,
+        'with_addresses' => true,
         'with_user' => false,
     ];
 

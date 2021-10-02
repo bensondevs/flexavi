@@ -38,11 +38,11 @@ class DatabaseSeeder extends Seeder
             InvoiceItemsSeeder::class,
             PaymentTermsSeeder::class,
             RegisterInvitationsSeeder::class,
-            AddressesSeeder::class,
             RevenuesSeeder::class,
             WorklistCarsSeeder::class,
             AppointmentEmployeesSeeder::class,
             WarrantiesSeeder::class,
+            AddressesSeeder::class,
         ]);
     }
 }

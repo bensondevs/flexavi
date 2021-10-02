@@ -54,13 +54,7 @@ class Owner extends Model
 
     public function addresses()
     {
-        return $this->hasManyThrough(
-            Address::class, 
-            User::class,
-            'id',
-            'user_id',
-            'user_id',
-        );
+        return $this->morphMany(Address::class, 'addressable');
     }
 
     public function scopePrimeOnly($query)

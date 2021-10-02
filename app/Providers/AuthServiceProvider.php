@@ -206,6 +206,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-address', [AddressPolicy::class, 'viewAny']);
         Gate::define('view-any-employee-address', [AddressPolicy::class, 'viewAnyEmployee']);
         Gate::define('create-address', [AddressPolicy::class, 'create']);
+        Gate::define('view-address', [AddressPolicy::class, 'view']);
         Gate::define('edit-address', [AddressPolicy::class, 'update']);
         Gate::define('delete-address', [AddressPolicy::class, 'delete']);
         Gate::define('restore-address', [AddressPolicy::class, 'restore']);

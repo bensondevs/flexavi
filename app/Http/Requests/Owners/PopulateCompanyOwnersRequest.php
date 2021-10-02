@@ -5,11 +5,17 @@ namespace App\Http\Requests\Owners;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\RequestHasRelations;
 use App\Traits\CompanyPopulateRequestOptions;
 
 class PopulateCompanyOwnersRequest extends FormRequest
 {
+    use RequestHasRelations;
     use CompanyPopulateRequestOptions;
+
+    private $relationNames = [
+        'with_addresses' => true,
+    ];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -19,6 +25,11 @@ class PopulateCompanyOwnersRequest extends FormRequest
     public function authorize()
     {
         return Gate::allows('view-any-owner');
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
     }
 
     /**

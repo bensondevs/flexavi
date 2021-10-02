@@ -70,6 +70,11 @@ class Customer extends Authenticatable
         return $this->belongsTo(Company::class);
     }
 
+    public function addresses()
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
     public function generateUniqueKey()
     {
         return $this->attributes['unique_key'] = random_string(5);

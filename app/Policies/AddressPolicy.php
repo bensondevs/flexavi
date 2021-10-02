@@ -12,46 +12,58 @@ class AddressPolicy
 {
     use HandlesAuthorization;
 
-    public function viewAny(User $user)
+    public function viewAny(User $user, $addressable = null)
     {
-        return true;
+        if (! $addressable) {
+            return true;
+        }
+
+        return $user->hasCompanyPermission($addressable->company_id, 'view any addresses');
     }
 
-    public function viewAnyEmployee(User $user, Employee $employee)
+    public function view(User $user, Address $address)
     {
-        return $user->hasCompanyPermission($employee->company_id, 'view any addresses');
+        return $user->hasCompanyPermission($address->addressable->company_id, 'view addresses');
     }
 
-    public function create(User $user)
+    public function create(User $user, $addressable)
     {
-        return true;
+        return $user->hasCompanyPermission($addressable->company_id, 'create addresses');
     }
 
-    public function update(User $user, Address $address)
+    public function update(User $user, Address $address, $addressable)
     {
-        if ($user->id == $address->user_id) return true;
-
-        return $user->hasCompanyPermission($address->company_id, 'edit addresses');
+        return $user->hasCompanyPermission($addressable->company_id, 'edit addresses');
     }
 
-    public function delete(User $user, Address $address)
+    public function delete(User $user, Address $address, $addressable)
     {
-        if ($user->id == $address->user_id) return true;
+        if ($user->id == $addressable->user_id) {
+            return true;
+        }
 
-        return $user->hasCompanyPermission($address->company_id, 'delete addresses');
+        return $user->hasCompanyPermission($addressable->company_id, 'delete addresses');
     }
 
-    public function restore(User $user, Address $address)
+    public function restore(User $user, Address $address, $addressable)
     {
-        if ($user->id == $address->user_id) return true;
+        if ($user->id == $addressable->user_id) {
+            return true;
+        }
 
-        return $user->hasCompanyPermission($address->company_id, 'restore addresses');
+        return $user->hasCompanyPermission($addressable->company_id, 'restore addresses');
     }
 
-    public function forceDelete(User $user, Address $address)
+    public function forceDelete(User $user, Address $address, $addressable)
     {
-        if ($user->id == $address->user_id) return true;
+        if ($address->addressable_id !== $addressable->id) {
+            return abort(422, 'Invalid addressable ID.');
+        }
 
-        return $user->hasCompanyPermission($address->company_id, 'force delete addresses');
+        if ($user->id == $addressable->user_id) {
+            return true;
+        }
+
+        return $user->hasCompanyPermission($addressable->company_id, 'force delete addresses');
     }
 }
