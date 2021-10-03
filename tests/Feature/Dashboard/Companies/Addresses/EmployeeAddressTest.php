@@ -42,6 +42,31 @@ class EmployeeAddressTest extends TestCase
     }
 
     /**
+     * A populate customer trashed addresses feature.
+     *
+     * @return void
+     */
+    public function test_populate_employee_trashed_addresses()
+    {
+        $owner = Owner::inRandomOrder()->with('company')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $employee = $owner->company->employees()->first();
+        $url = '/api/dashboard/companies/addresses/employee/trasheds?employee_id=' . $employee->id;
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('addresses');
+        });
+    }
+
+    /**
      * A store customer address feature.
      *
      * @return void

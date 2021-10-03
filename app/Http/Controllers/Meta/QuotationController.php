@@ -33,7 +33,7 @@ class QuotationController extends Controller
         return response()->json($causes);
     }
 
-    public function allCanceller()
+    public function allCancellers()
     {
         $cancellers = Quotation::collectAllCanceller();
         return response()->json($cancellers);

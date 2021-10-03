@@ -1,12 +1,17 @@
 ## Address
 
 -------------------------------------------------------
-### 1. Populate Company Addresses
+### 0. About
 -------------------------------------------------------
 
-**Description:** 
+Flexavi allows some instances to have more than one address.
+The instances that could possibly posses the addresses are `Customer`, `Owner`, `Employee` and `Company`.
 
-This endpoint will give a list of current authenticated user"s addresses.
+The address has a type, which described in [Meta](/docs/Meta/Address.md). But there is a special treatment for a type which named `Other`, if this type selected, the insertion of data should also posses `other_address_type_description`. This parameter allows the possesor of the address to name the address according to their needs.
+
+-------------------------------------------------------
+### 1. Populate Company Addresses
+-------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/addresses`
 
@@ -95,10 +100,10 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 2. Store Address
+### 2. Store Company Address
 -------------------------------------------------------
 
-**Endpoint:** `/store`
+**Endpoint:** `/api/dashboard/companies/addresses/store`
 
 **Method:** `POST`
 
@@ -113,6 +118,13 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
+`address_type` | Required | numeric, numeric string | This is the enum type value for the type of address existed. To see the details please see [Address Meta](/docs/Meta/Address.md)
+`address` | Required | string, text | The address
+`house_number` | Required | numeric, numeric string | The house number of the address
+`house_number_suffix` | Optional | string | Some houses or addresses have suffix in the back of their number for an example `A`, `B` or etc, this will allow insertion of the suffix if there is any.
+`zipcode` | Required | numeric, numeric string | The zipcode of address
+`city` | Required | string | The city of address
+`province` | Required | string | The string of address
 
 
 **Request Body Example:**
@@ -120,7 +132,6 @@ Payload name | Required | Validation | Description
 ```json
 {
     "address_type": 1,
-    "addressable_type": 3,
     "other_address_type_description": "Home Address",
 
     "address": "Example address 123",
@@ -150,7 +161,11 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. Update Address
+### 3. View Company Address
+-------------------------------------------------------
+
+-------------------------------------------------------
+### 4. Update Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/update`
@@ -170,6 +185,13 @@ Content-Type | `application/x-www-form-urlencoded`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `id` | Required | string | ID of updated address
+`address_type` | Required | numeric, numeric string | This is the enum type value for the type of address existed. To see the details please see [Address Meta](/docs/Meta/Address.md)
+`address` | Required | string, text | The address
+`house_number` | Required | numeric, numeric string | The house number of the address
+`house_number_suffix` | Optional | string | Some houses or addresses have suffix in the back of their number for an example `A`, `B` or etc, this will allow insertion of the suffix if there is any.
+`zipcode` | Required | numeric, numeric string | The zipcode of address
+`city` | Required | string | The city of address
+`province` | Required | string | The string of address
 
 **Request Body Example:**
 
@@ -207,7 +229,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Delete Address
+### 5. Delete Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/delete`
@@ -253,7 +275,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Restore Address
+### 6. Restore Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/restore`

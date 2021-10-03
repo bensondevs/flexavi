@@ -42,6 +42,31 @@ class CustomerAddressTest extends TestCase
     }
 
     /**
+     * A populate customer trashed addresses feature.
+     *
+     * @return void
+     */
+    public function test_populate_customer_trashed_addresses()
+    {
+        $owner = Owner::inRandomOrder()->whereHas('company')->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $customer = $owner->company->customers()->first();
+        $url = '/api/dashboard/companies/addresses/customer/trasheds?customer_id=' . $customer->id;
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('addresses');
+        });
+    }
+
+    /**
      * A store customer address feature.
      *
      * @return void

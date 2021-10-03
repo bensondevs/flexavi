@@ -3,18 +3,27 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\Meta\CarController;
-use App\Http\Controllers\Meta\UserController;
-use App\Http\Controllers\Meta\CostController;
-use App\Http\Controllers\Meta\WorkController;
-use App\Http\Controllers\Meta\InvoiceController;
-use App\Http\Controllers\Meta\EmployeeController;
-use App\Http\Controllers\Meta\QuotationController;
-use App\Http\Controllers\Meta\AppointmentController;
-use App\Http\Controllers\Meta\PaymentTermController;
-use App\Http\Controllers\Meta\ExecuteWorkPhotoController;
-use App\Http\Controllers\Meta\RegisterInvitationController;
+use App\Http\Controllers\Meta\{
+	CarController,
+	UserController,
+	CostController,
+	WorkController,
+	AddressController,
+	InvoiceController,
+	EmployeeController,
+	QuotationController,
+	AppointmentController,
+	PaymentTermController,
+	ExecuteWorkPhotoController,
+	RegisterInvitationController,
+};
 
+/*
+	Address Meta
+*/
+Route::group(['prefix' => 'address'], function () {
+	Route::get('all_address_types', [AddressController::class, 'allAddressTypes']);
+});
 
 /*
 	Appointment Meta
@@ -86,7 +95,7 @@ Route::group(['prefix' => 'quotation'], function () {
 	Route::get('all_statuses', [QuotationController::class, 'allStatuses']);
 	Route::get('all_payment_methods', [QuotationController::class, 'allPaymentMethods']);
 	Route::get('all_damage_causes', [QuotationController::class, 'allDamageCauses']);
-	Route::get('all_canceller', [QuotationController::class, 'allCanceller']);
+	Route::get('all_cancellers', [QuotationController::class, 'allCancellers']);
 });
 
 /*
@@ -105,7 +114,7 @@ Route::group(['prefix' => 'user'], function () {
 });
 
 /*
-	Register Invitation Meta
+	Work Meta
 */
 Route::group(['prefix' => 'work'], function () {
 	Route::get('all_statuses', [WorkController::class, 'allStatuses']);

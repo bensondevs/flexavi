@@ -41,6 +41,30 @@ class AddressTest extends TestCase
     }
 
     /**
+     * A populate company trashed addresses feature.
+     *
+     * @return void
+     */
+    public function test_populate_company_trasheds_addresses()
+    {
+        $owner = Owner::inRandomOrder()->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = '/api/dashboard/companies/addresses/trasheds';
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('addresses');
+        });
+    }
+
+    /**
      * A store company address feature.
      *
      * @return void
@@ -59,9 +83,6 @@ class AddressTest extends TestCase
         $response = $this->withHeaders($headers)->post($url, [
             'address_type' => 1,
 
-            'company_id' => $owner->company_id,
-
-            'addressable_type' => 3,
             'other_address_type_description' => 'Home Address',
 
             'address' => 'Example address 123',
@@ -129,8 +150,6 @@ class AddressTest extends TestCase
             'id' => $address->id,
 
             'address_type' => 1,
-
-            'company_id' => $address->addressable->id,
 
             'address' => 'Example address 123',
             'house_number' => 12,

@@ -56,16 +56,25 @@ trait AddressableRequest
             return $this->addressable = $this->getCustomer();
         }
 
-        $this->owner = auth()->user()->owner;
-        return $this->addressable = $this->owner;
+        $user = auth()->user();
+        $this->company = $user->{$user->user_role}->company;
+        return $this->addressable = $this->company;
     }
 
     public function getOwner()
     {
         if ($this->owner) return $this->owner;
 
-        $id = $this->input('owner_id');
-        return $this->owner = Owner::findOrFail($id);
+        if ($id = $this->input('owner_id')) {
+            $this->owner = Owner::findOrFail($id);
+            return $this->owner;
+        }
+
+        if ($owner = auth()->user()->owner) {
+            return $this->owner = $owner;
+        }
+
+        return abort(404, 'No owner instance loaded.');
     }
 
     public function getOwnerCompany()

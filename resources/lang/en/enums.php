@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\User\UserIdCardType;
+use App\Enums\Address\AddressType;
 
 use App\Enums\Appointment\AppointmentStatus;
 use App\Enums\Appointment\AppointmentType;
@@ -13,6 +13,8 @@ use App\Enums\Quotation\QuotationPaymentMethod;
 
 use App\Enums\Work\WorkStatus;
 
+use App\Enums\User\UserIdCardType;
+
 use App\Enums\Invoice\InvoiceStatus;
 use App\Enums\Invoice\InvoicePaymentMethod;
 
@@ -24,6 +26,12 @@ return [
         UserIdCardType::NationalIdCard => 'National ID Card',
         UserIdCardType::Passport => 'Passport',
         UserIdCardType::DrivingLicense => 'Driving License',
+    ],
+
+    // Address
+    AddressType::class => [
+        AddressType::VisitingAddress => 'Visiting Address',
+        AddressType::InvoicingAddress => 'Invoicing Address',
     ],
 
     // Appointment

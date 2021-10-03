@@ -475,6 +475,7 @@ Route::group(['middleware' => ['has_company']], function () {
 	*/
 	Route::group(['prefix' => 'addresses'], function () {
 		Route::get('/', [AddressController::class, 'companyAddresses']);
+		Route::get('trasheds', [AddressController::class, 'companyTrashedAddresses']);
 		Route::post('store', [AddressController::class, 'store']);
 		Route::get('view', [AddressController::class, 'view']);
 		Route::match(['PUT', 'PATCH'], 'update', [AddressController::class, 'update']);
@@ -486,6 +487,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		*/
 		Route::group(['prefix' => 'customer'], function () {
 			Route::get('/', [CustomerAddressController::class, 'customerAddresses']);
+			Route::get('trasheds', [CustomerAddressController::class, 'customerTrashedAddresses']);
 			Route::post('store', [CustomerAddressController::class, 'store']);
 			Route::get('view', [CustomerAddressController::class, 'view']);
 			Route::match(['PUT', 'PATCH'], 'update', [CustomerAddressController::class, 'update']);
@@ -498,6 +500,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		*/
 		Route::group(['prefix' => 'owner'], function () {
 			Route::get('/', [OwnerAddressController::class, 'ownerAddresses']);
+			Route::get('trasheds', [OwnerAddressController::class, 'ownerTrashedAddresses']);
 			Route::post('store', [OwnerAddressController::class, 'store']);
 			Route::get('view', [OwnerAddressController::class, 'view']);
 			Route::match(['PUT', 'PATCH'], 'update', [OwnerAddressController::class, 'update']);
@@ -510,6 +513,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		*/
 		Route::group(['prefix' => 'employee'], function () {
 			Route::get('/', [EmployeeAddressController::class, 'employeeAddresses']);
+			Route::get('trasheds', [EmployeeAddressController::class, 'employeeTrashedAddresses']);
 			Route::post('store', [EmployeeAddressController::class, 'store']);
 			Route::get('view', [EmployeeAddressController::class, 'view']);
 			Route::match(['PUT', 'PATCH'], 'update', [EmployeeAddressController::class, 'update']);

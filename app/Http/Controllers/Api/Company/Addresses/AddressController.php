@@ -36,6 +36,16 @@ class AddressController extends Controller
         return response()->json(['addresses' => $addresses]);
     }
 
+    public function companyTrashedAddresses(PopulateRequest $request)
+    {
+        $options = $request->companyOptions();
+
+        $addresses = $this->address->trasheds($options, true);
+        $addresses = AddressResource::apiCollection($addresses);
+
+        return response()->json(['addresses' => $addresses]);
+    }
+
     public function store(SaveRequest $request)
     {
         $company = $request->getCompany();

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
+use App\Enums\Address\AddressType;
+
 class Address extends Model
 {
     use Searchable;
@@ -53,5 +55,20 @@ class Address extends Model
     public function addressable()
     {
         return $this->morphTo();
+    }
+
+    public static function collectAllTypes()
+    {
+        return AddressType::asSelectArray();
+    }
+
+    public function getAddressTypeDescriptionAttribute()
+    {
+        $type = $this->attributes['address_type'];
+        if ($type === AddressType::Other) {
+            return $this->attributes['other_address_type_description'];
+        }
+
+        return AddressType::getDescription($type);
     }
 }

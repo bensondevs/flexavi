@@ -17,7 +17,7 @@ use App\Models\Address;
 class OwnerAddressTest extends TestCase
 {
     /**
-     * A populate user addresses feature.
+     * A populate owner addresses feature.
      *
      * @return void
      */
@@ -32,6 +32,30 @@ class OwnerAddressTest extends TestCase
             'Authorization' => 'Bearer ' . $token,
         ];
         $url = '/api/dashboard/companies/addresses/owner';
+        $response = $this->withHeaders($headers)->get($url);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('addresses');
+        });
+    }
+
+    /**
+     * A populate owner addresses feature.
+     *
+     * @return void
+     */
+    public function test_populate_owner_trashed_addresses()
+    {
+        $owner = Owner::inRandomOrder()->first();
+        $user = $owner->user;
+        $token = $user->generateToken();
+
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $url = '/api/dashboard/companies/addresses/owner/trasheds';
         $response = $this->withHeaders($headers)->get($url);
 
         $response->assertStatus(200);

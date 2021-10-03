@@ -1,14 +1,19 @@
 ## Address
 
 -------------------------------------------------------
-### 1. Populate Company Addresses
+### 0. About
 -------------------------------------------------------
 
-**Description:** 
+Flexavi allows some instances to have more than one address.
+The instances that could possibly posses the addresses are `Customer`, `Owner`, `Employee` and `Company`.
 
-This endpoint will give a list of current authenticated user"s addresses.
+The address has a type, which described in [Meta](/docs/Meta/Address.md). But there is a special treatment for a type which named `Other`, if this type selected, the insertion of data should also posses `other_address_type_description`. This parameter allows the possesor of the address to name the address according to their needs.
 
-**Endpoint:** `/api/dashboard/companies/addresses`
+-------------------------------------------------------
+### 1. Populate Employee Addresses
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/addresses/employee`
 
 **Method:** `GET`
 
@@ -23,6 +28,7 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
+`employee_id` | Required | string | The Employee ID who posses the address
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through all attribute of owner
 `per_page` | Optional | number | Amount of data per page, default amount is 10
@@ -95,10 +101,10 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 2. Store Address
+### 2. Store Employee Address
 -------------------------------------------------------
 
-**Endpoint:** `/store`
+**Endpoint:** `/api/dashboard/companies/addresses/store`
 
 **Method:** `POST`
 
@@ -113,14 +119,20 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
-
+`employee_id` | Required | string | The Employee ID who will posses the address
+`address_type` | Required | numeric, numeric string | This is the enum type value for the type of address existed. To see the details please see [Address Meta](/docs/Meta/Address.md)
+`address` | Required | string, text | The address
+`house_number` | Required | numeric, numeric string | The house number of the address
+`house_number_suffix` | Optional | string | Some houses or addresses have suffix in the back of their number for an example `A`, `B` or etc, this will allow insertion of the suffix if there is any.
+`zipcode` | Required | numeric, numeric string | The zipcode of address
+`city` | Required | string | The city of address
+`province` | Required | string | The string of address
 
 **Request Body Example:**
 
 ```json
 {
     "address_type": 1,
-    "addressable_type": 3,
     "other_address_type_description": "Home Address",
 
     "address": "Example address 123",
@@ -139,7 +151,6 @@ Attribute Name  | Type  | Description
 `status` | String | Update address status
 `message` | String | Message response for the user
 
-
 **Success Response Example:**
 
 ```json
@@ -150,7 +161,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. Update Address
+### 3. Update Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/update`
@@ -207,7 +218,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Delete Address
+### 4. Delete Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/delete`
@@ -253,7 +264,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Restore Address
+### 5. Restore Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/restore`
