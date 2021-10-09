@@ -1,11 +1,11 @@
-## Address
+## Company Address
 
 -------------------------------------------------------
 ### 0. About
 -------------------------------------------------------
 
 Flexavi allows some instances to have more than one address.
-The instances that could possibly posses the addresses are `Customer`, `Owner`, `Employee` and `Company`.
+The instances that could possibly posses the addresses are `Customer`, `Owner`, `Company` and `Company`.
 
 The address has a type, which described in [Meta](/docs/Meta/Address.md). But there is a special treatment for a type which named `Other`, if this type selected, the insertion of data should also posses `other_address_type_description`. This parameter allows the possesor of the address to name the address according to their needs.
 
@@ -118,6 +118,7 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
+`company_id` | Required | string | The Company ID who will posses the address
 `address_type` | Required | numeric, numeric string | This is the enum type value for the type of address existed. To see the details please see [Address Meta](/docs/Meta/Address.md)
 `address` | Required | string, text | The address
 `house_number` | Required | numeric, numeric string | The house number of the address
@@ -126,11 +127,12 @@ Payload name | Required | Validation | Description
 `city` | Required | string | The city of address
 `province` | Required | string | The string of address
 
-
 **Request Body Example:**
 
 ```json
 {
+    "company_id": "ecaf9900-c5d5-11eb-8078-b52a94774856",
+
     "address_type": 1,
     "other_address_type_description": "Home Address",
 
@@ -150,7 +152,6 @@ Attribute Name  | Type  | Description
 `status` | String | Update address status
 `message` | String | Message response for the user
 
-
 **Success Response Example:**
 
 ```json
@@ -161,11 +162,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. View Company Address
--------------------------------------------------------
-
--------------------------------------------------------
-### 4. Update Company Address
+### 3. Update Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/update`
@@ -185,13 +182,6 @@ Content-Type | `application/x-www-form-urlencoded`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `id` | Required | string | ID of updated address
-`address_type` | Required | numeric, numeric string | This is the enum type value for the type of address existed. To see the details please see [Address Meta](/docs/Meta/Address.md)
-`address` | Required | string, text | The address
-`house_number` | Required | numeric, numeric string | The house number of the address
-`house_number_suffix` | Optional | string | Some houses or addresses have suffix in the back of their number for an example `A`, `B` or etc, this will allow insertion of the suffix if there is any.
-`zipcode` | Required | numeric, numeric string | The zipcode of address
-`city` | Required | string | The city of address
-`province` | Required | string | The string of address
 
 **Request Body Example:**
 
@@ -229,7 +219,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Delete Company Address
+### 4. Delete Company Address
 -------------------------------------------------------
 
 **Endpoint:** `/delete`
@@ -275,10 +265,10 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 6. Restore Company Address
+### 5. Restore Company Address
 -------------------------------------------------------
 
-**Endpoint:** `/restore`
+**Endpoint:** `/api/dashboard/companies/addresses/restore`
 
 **Method:** `PATCH`
 

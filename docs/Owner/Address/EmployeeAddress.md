@@ -1,4 +1,4 @@
-## Address
+## Employee Address
 
 -------------------------------------------------------
 ### 0. About
@@ -104,7 +104,7 @@ Attribute Name  | Type  | Description
 ### 2. Store Employee Address
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/addresses/store`
+**Endpoint:** `/api/dashboard/companies/addresses/employee/store`
 
 **Method:** `POST`
 
@@ -164,7 +164,7 @@ Attribute Name  | Type  | Description
 ### 3. Update Company Address
 -------------------------------------------------------
 
-**Endpoint:** `/update`
+**Endpoint:** `/api/dashboard/companies/addresses/employee/update`
 
 **Method:** `PUT` or `PATCH`
 
@@ -218,10 +218,10 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Delete Company Address
+### 4. Delete Employee Address
 -------------------------------------------------------
 
-**Endpoint:** `/delete`
+**Endpoint:** `/api/dashboard/companies/addresses/employee/delete`
 
 **Method:** `DELETE`
 
@@ -264,10 +264,10 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Restore Company Address
+### 5. Restore Employee Address
 -------------------------------------------------------
 
-**Endpoint:** `/restore`
+**Endpoint:** `/api/dashboard/companies/addresses/employee/restore`
 
 **Method:** `PATCH`
 
