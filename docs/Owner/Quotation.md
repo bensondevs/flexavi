@@ -1,6 +1,31 @@
 ## Quotation
 
 -------------------------------------------------------
+### 0. About
+-------------------------------------------------------
+
+This section is going to describe you about the flow and endpoints of quotation.
+
+- The quotation itself can be created and sent to customer.
+
+- Quotation can have invoice by generating from an endpoint.
+
+- Quotation can have more than one attachments.
+
+- Quotation has one of five types.
+    1. `Leakage`
+    2. `Renovation`
+    3. `Reparation`
+    4. `Renewal`
+
+- Quotation can have 5 statuses.
+    1. `Draft` is when a quotation is created but not yet sent
+    2. `Send` is when a quotaion is either printed or sent to customer email.
+    3. `Revised` is when the quotation price or any price total is changed either by company employees or customer.
+    4. `Honored` is when the quotation is confirmed by the customer.
+    5. `Cancelled` is when the quotation is cancelled or rejected.
+
+-------------------------------------------------------
 ### 1. Populate Company Quotations
 -------------------------------------------------------
 
