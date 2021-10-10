@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Costs;
+namespace App\Http\Requests\Costs\Worklists;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
@@ -30,8 +30,7 @@ class PopulateWorklistCostsRequest extends FormRequest
      */
     public function authorize()
     {
-        $worklist = $this->getWorklist();
-        return Gate::allows('view-any-worklist-cost', $worklist);
+        return Gate::allows('view-any-cost');
     }
 
     /**
@@ -48,10 +47,14 @@ class PopulateWorklistCostsRequest extends FormRequest
 
     public function options()
     {
-        $this->addWhereHas('worklists', [
+        $this->addWhereHas('costables', [
             [
-                'column' => 'worklists.id',
+                'column' => 'costables.costable_id',
                 'value' => $this->getWorklist()->id,
+            ],
+            [
+                'column' => 'costables.costable_type',
+                'value' => Worklist::class,
             ]
         ]);
 

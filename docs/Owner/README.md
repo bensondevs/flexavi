@@ -13,4 +13,5 @@
 * [Register Invitation](RegisterInvitation.md)
 * [Workday](Workday/Workday.md)
   * [Workday Cost](Workday/WorkdayCost.md)
-* [Worklist](Worklist.md)
+* [Worklist](Worklist/Worklist.md)
+  * [Worklist Cost](Worklist/Worklist.md)

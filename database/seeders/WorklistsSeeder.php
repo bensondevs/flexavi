@@ -41,7 +41,7 @@ class WorklistsSeeder extends Seeder
                     $worklist['calculated_at'] = now();
                 }
 
-                $rawWorklists[] = $worklist;
+                array_push($rawWorklists, $worklist);
             }
         }
 

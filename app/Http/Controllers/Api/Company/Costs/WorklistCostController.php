@@ -5,15 +5,19 @@ namespace App\Http\Controllers\Api\Company\Costs;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Costs\RecordCostRequest as RecordRequest;
-use App\Http\Requests\Costs\RecordManyCostsRequest as RecordManyRequest;
-use App\Http\Requests\Costs\UnrecordCostRequest as UnrecordRequest;
-use App\Http\Requests\Costs\UnrecordManyCostsRequest as UnrecordManyRequest;
-use App\Http\Requests\Costs\TruncateCostsRequest as TruncateRequest;
-use App\Http\Requests\Costs\Worklist\SaveWorklistCostRequest as SaveRequest;
-use App\Http\Requests\Costs\Worklist\PopulateWorklistCostsRequest as PopulateRequest;
+use App\Http\Requests\Costs\{
+    RecordCostRequest as RecordRequest,
+    RecordManyCostsRequest as RecordManyRequest,
+    UnrecordCostRequest as UnrecordRequest,
+    UnrecordManyCostsRequest as UnrecordManyRequest,
+    TruncateCostsRequest as TruncateRequest,
+    Worklists\SaveWorklistCostRequest as SaveRequest,
+    Worklists\PopulateWorklistCostsRequest as PopulateRequest
+};
 
 use App\Http\Resources\CostResource;
+
+use App\Models\Worklist;
 
 use App\Repositories\CostRepository;
 
@@ -36,7 +40,7 @@ class WorklistCostController extends Controller
         return response()->json(['costs' => $costs]);
     }
 
-    public function store(SaveRequest $request)
+    public function storeRecord(SaveRequest $request)
     {
         $input = $request->validated();
         $this->cost->save($input);
@@ -55,6 +59,11 @@ class WorklistCostController extends Controller
         $worklist = $request->getWorklist();
         $this->cost->record($worklist);
 
+        if ($request->record_in_workday && $worklist->workday) {
+            $workday = $worklist->workday;
+            $this->cost->record($workday);
+        }
+
         return apiResponse($this->cost);
     }
 
@@ -64,6 +73,11 @@ class WorklistCostController extends Controller
         $costIds = $request->costIdsArray();
 
         $this->cost->recordMany($worklist, $costIds);
+
+        if ($request->record_in_workday && $worklist->workday) {
+            $workday = $worklist->workday;
+            $this->cost->recordMany($workday, $costIds);
+        }
 
         return apiResponse($this->cost);
     }

@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\Company\{
 		WorkdayWorklistController,
 		Costs\WorkdayCostController,
 		WorklistController,
+			Costs\WorklistCostController,
 			WorklistAppointmentController,
 			AppointmentController,
 				SubAppointmentController,

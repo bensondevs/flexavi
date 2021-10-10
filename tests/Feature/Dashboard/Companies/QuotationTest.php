@@ -9,6 +9,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 use App\Models\Owner;
+use App\Models\Company;
 use App\Models\Customer;
 use App\Models\Quotation;
 
@@ -383,13 +384,18 @@ class QuotationTest extends TestCase
      *
      * @return void
      */
-    public function test_generate_invoice_quotation()
+    public function test_generate_invoice_from_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
+        $company = Company::inRandomOrder()
+            ->whereHas('quotations')
+            ->first();
+        $owner = $company->owners()->first();
         $user = $owner->user;
         $token = $user->generateToken();
 
-        $quotation = Quotation::where('company_id', $owner->company_id)->first();
+        $quotation = Quotation::inRandomOrder()
+            ->where('company_id', $owner->company_id)
+            ->first();
 
         $headers = [
             'Accept' => 'application/json',

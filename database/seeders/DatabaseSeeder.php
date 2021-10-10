@@ -25,11 +25,9 @@ class DatabaseSeeder extends Seeder
             WorkdaysSeeder::class,
             WorklistsSeeder::class,
             AppointmentsSeeder::class,
-            // AppointmentWorksSeeder::class,
             AppointmentCostsSeeder::class,
             SubAppointmentsSeeder::class,
             QuotationsSeeder::class,
-            // QuotationWorksSeeder::class,
             QuotationAttachmentsSeeder::class,
             WorksSeeder::class,
             ExecuteWorksSeeder::class,
@@ -43,6 +41,7 @@ class DatabaseSeeder extends Seeder
             AppointmentEmployeesSeeder::class,
             WarrantiesSeeder::class,
             AddressesSeeder::class,
+            CostsSeeder::class,
         ]);
     }
 }

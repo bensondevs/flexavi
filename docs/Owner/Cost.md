@@ -4,9 +4,13 @@
 ### 0. About
 -------------------------------------------------------
 
-According to main document, the company can do recording about the cost happen in each event such as `appointment`, `worklist` or event `workday`.
+According to main document, the company can do recording about the cost happen in each event such as `appointment`, `worklist` or event `workday`. Because of that `cost` instance can have relationships with more than one `costables` (eg: `Appointment`, `Worklist`, `Workday`).
 
-Say that we have a cost that recorded to an `appointment` which attached into a `worklist`, then the cost under `appointment` must be attached into `worklist` as well. This goes up to `workday` because a `worklist` is recorded under `workday`.
+Say that we have a cost that recorded to an `appointment` which attached into a `worklist`, when we record a cost to `appointment`, defaultly, it will also be attached to the parent in which in this case is `worklist`. This goes up to `workday` because a `worklist` is recorded under `workday`. But there is a configuration in API where the attachment to parent can be cancelled.
+
+Each relationship with `costable` will be used to calculate the `costable` costs and revenues. Only the attached costs will be included in calculation. The unattached cost will be excluded from calculation even though the `cost` instance is still exists in database.
+
+Defaultly, the costs that no longer have relationship with `costable` will be deleted forever.
 
 -------------------------------------------------------
 ### 1. Populate Costs

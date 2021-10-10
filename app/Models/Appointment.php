@@ -233,6 +233,11 @@ class Appointment extends Model
         return $this->morphOne(Calculation::class, 'calculationable');
     }
 
+    public function appointmentables()
+    {
+        return $this->hasMany(Appointmentable::class);
+    }
+
     public function worklists()
     {
         return $this->morphedByMany(Worklist::class, 'appointmentable');

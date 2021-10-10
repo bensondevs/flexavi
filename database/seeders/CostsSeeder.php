@@ -13,6 +13,9 @@ class CostsSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $this->call([
+            AppointmentCostsSeeder::class,
+            WorklistCostsSeeder::class,
+        ]);
     }
 }

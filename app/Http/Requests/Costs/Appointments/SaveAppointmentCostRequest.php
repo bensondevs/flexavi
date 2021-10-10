@@ -28,13 +28,17 @@ class SaveAppointmentCostRequest extends FormRequest
     {
         $this->merge(['company_id' => $this->getCompany()->id]);
 
-        if ($recordInWorklist = $this->input('record_in_worklist')) {
-            $this->merge(['record_in_worklist' => strtobool($recordInWorklist)]);
+        $recordInWorklist = true;
+        if ($this->has('record_in_worklist')) {
+            $recordInWorklist = strtobool($this->input('record_in_worklist'));
         }
+        $this->merge(['record_in_worklist' => $recordInWorklist]);
 
-        if ($recordInWorkday = $this->input('record_in_workday')) {
-            $this->merge(['record_in_workday' => strtobool($recordInWorkday)]);
+        $recordInWorkday = true;
+        if ($this->has('record_in_workday')) {
+            $recordInWorkday = strtobool($this->input('record_in_workday'));
         }
+        $this->merge(['record_in_workday' => $recordInWorkday]);
     }
 
     /**

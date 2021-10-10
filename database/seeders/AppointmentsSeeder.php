@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 
 use App\Models\Company;
+use App\Models\Workday;
 use App\Models\Appointment;
 use App\Models\Appointmentable;
 

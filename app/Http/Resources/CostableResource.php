@@ -33,12 +33,13 @@ class CostableResource extends JsonResource
         }
 
         if ($this->relationLoaded('costable')) {
-            $costable = $this->costable;
-            $pureClass = get_pure_class($costable);
-            $className = get_lower_class($costable);
-            $resourceClass = '\\App\Http\\Resources\\' . $pureClass . 'Resource';
+            if ($costable = $this->costable) {
+                $pureClass = get_pure_class($costable);
+                $className = get_lower_class($costable);
+                $resourceClass = '\\App\Http\\Resources\\' . $pureClass . 'Resource';
 
-            $structure[$className] = new $resourceClass($costable);
+                $structure[$className] = new $resourceClass($costable);
+            }
         }
 
         return $structure;

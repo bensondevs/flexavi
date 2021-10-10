@@ -112,17 +112,13 @@ class CostRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
-	public function unrecordMany($costable, $costs)
+	public function unrecordMany($costable, $costIds)
 	{
 		try {
 			$costableType = get_lower_class($costable);
 			$costableTypePlural = str_to_plural($costableType);
 
-			$cost->{$costableTypePlural}()->detach($costable);
-
-			if ($cost->costables()->count() < 1) {
-				$cost->delete();
-			}
+			$costable->costs()->detach($costIds);
 
 			$this->setSuccess('Successfully unrecord many costs in ' . $costableType . '.');
 		} catch (QueryException $qe) {
