@@ -32,6 +32,10 @@ class WorklistAppointmentController extends Controller
     {
         $options = $request->options();
 
+        $worklist = $request->getWorklist();
+
+        $appointments = $worklist->appointments();
+        $appointments = $this->appointment->setModel($appointments);
         $appointments = $this->appointment->all($options, true);
         $appointments = AppointmentResource::apiCollection($appointments);
 

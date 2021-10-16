@@ -53,7 +53,7 @@ class UsersSeeder extends Seeder
         	$this->user->getModel()->assignRole('owner');
         }
 
-        for ($index = 0; $index < 50; $index++) {
+        for ($index = 0; $index < 20; $index++) {
             $this->user->setModel(new User);
             $user = $this->user->save([
                 'fullname' => 'Flexavi Employee ' . ($index + 1),

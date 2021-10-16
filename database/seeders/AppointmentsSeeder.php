@@ -23,12 +23,10 @@ class AppointmentsSeeder extends Seeder
     {
         $rawAppointments = [];
         $rawAppointmentables = [];
-        foreach (Company::with('customers')->get() as $company) {
+        foreach (Company::with(['customers', 'worklists'])->get() as $company) {
             $worklists = $company->worklists;
             foreach ($company->customers as $customer) {
-                for ($index = 0; $index <= rand(1, 3); $index++) {
-                    $worklist = $worklists->random();
-
+                foreach ($worklists as $index => $worklist) {
                     $id = generateUuid();
                 	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
                 	$end = ($start->copy())->addDays(rand(0, 7));
@@ -108,9 +106,11 @@ class AppointmentsSeeder extends Seeder
         foreach (array_chunk($rawAppointments, 500) as $rawAppointmentsChunk) {
             Appointment::insert($rawAppointmentsChunk);
         }
+        echo 'Number of Appointments Created: ' . count($rawAppointments);
 
         foreach (array_chunk($rawAppointmentables, 500) as $rawAppointmentablesChunk) {
             Appointmentable::insert($rawAppointmentablesChunk);
         }
+        echo 'Number of Appointmentables Created: ' . count($rawAppointmentables);
     }
 }

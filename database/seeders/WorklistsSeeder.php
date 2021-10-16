@@ -20,7 +20,7 @@ class WorklistsSeeder extends Seeder
     {
         $rawWorklists = [];
         foreach (Workday::all() as $workday) {
-            for ($index = 0; $index < rand(0, 5); $index++) {
+            for ($index = 0; $index < rand(0, 3); $index++) {
                 $worklist = [
                     'id' => generateUuid(),
                     'company_id' => $workday->company_id,

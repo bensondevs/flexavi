@@ -70,6 +70,10 @@ class QuotationsSeeder extends Seeder
                 'updated_at' => carbon()->now(),
             ]);
         }
-        Quotation::insert($rawQuotations);
+
+        foreach (array_chunk($rawQuotations, 1000) as $rawQuotationsChunk) {
+            Quotation::insert($rawQuotationsChunk);
+        }
+
     }
 }

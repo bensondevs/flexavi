@@ -48,13 +48,9 @@ class PopulateWorklistAppointmentsRequest extends FormRequest
 
     public function options()
     {
-        $parentRequest = new PopulateWorklistAppointmentsRequest();
-        $parentRequest->addWhereHas('worklists', [
-            [
-                'column' => 'worklists.id',
-                'value' => $this->getWorklist()->id,
-            ]
-        ]);
-        return $parentRequest->options();
+        $parentRequest = new PopulateCompanyAppointmentsRequest();
+        $options = $parentRequest->options();
+        
+        return $options;
     }
 }

@@ -21,7 +21,7 @@ class AppointmentCostsSeeder extends Seeder
         $rawCosts = [];
         $rawCostables = [];
         foreach (Appointment::with(['appointmentables'])->get() as $appointment) {
-            for ($index = 0; $index < rand(1, 5); $index++) {
+            for ($index = 0; $index < 1; $index++) {
                 $id = generateUuid();
                 array_push($rawCosts, [
                     'id' => $id,
