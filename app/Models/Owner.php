@@ -18,6 +18,8 @@ class Owner extends Model
     public $timestamps = true;
     public $incrementing = false;
 
+    protected $with = ['user', 'addresses'];
+
     protected $searchable = [
         'bank_name',
         'bic_code',

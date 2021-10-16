@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Dashboard\Companies;
+namespace Tests\Feature\Dashboard\Companies\Worklists;
 
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;

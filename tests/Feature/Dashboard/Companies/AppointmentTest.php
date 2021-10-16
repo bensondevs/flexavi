@@ -17,6 +17,8 @@ use App\Enums\Appointment\AppointmentStatus;
 
 class AppointmentTest extends TestCase
 {
+    use DatabaseTransactions;
+    
     /**
      * A populate appointments test.
      *

@@ -227,7 +227,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Restore WorkdayCost
+### 5. Restore Workday Cost
 -------------------------------------------------------
 
 **Endpoint:** `/restore`

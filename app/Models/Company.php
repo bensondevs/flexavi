@@ -134,6 +134,11 @@ class Company extends Model
         return $this->hasOne(TaxSetting::class);
     }
 
+    public function costs()
+    {
+        return $this->hasMany(Cost::class);
+    }
+
     public function workdays()
     {
         return $this->hasMany(CompanyWorkday::class);

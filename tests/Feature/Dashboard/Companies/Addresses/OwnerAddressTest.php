@@ -212,7 +212,10 @@ class OwnerAddressTest extends TestCase
             'Authorization' => 'Bearer ' . $token,
         ];
         $url = '/api/dashboard/companies/addresses/owner/restore';
-        $address = $owner->addresses()->whereNotNull('deleted_at')->first();
+        $address = $owner->addresses()
+            ->withTrashed()
+            ->whereNotNull('deleted_at')
+            ->first();
         if (! $address) {
             $address = $owner->addresses()->first();
             $id = $address->id;
