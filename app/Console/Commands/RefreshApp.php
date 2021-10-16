@@ -40,10 +40,6 @@ class RefreshApp extends Command
     {
         shell_exec('composer dump-autoload');
 
-        sleep(3);
-
-        Artisan::call('optimize');
-
         sleep(1);
 
         Artisan::call('cache:clear');
@@ -60,7 +56,9 @@ class RefreshApp extends Command
 
         Artisan::call('config:cache');
 
-        sleep(1);
+        sleep(3);
+
+        Artisan::call('optimize');
 
         return $this->info('Application refreshed!');
     }

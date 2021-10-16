@@ -103,12 +103,12 @@ class AppointmentsSeeder extends Seeder
 
         }
 
-        foreach (array_chunk($rawAppointments, 500) as $rawAppointmentsChunk) {
+        foreach (array_chunk($rawAppointments, 5000) as $rawAppointmentsChunk) {
             Appointment::insert($rawAppointmentsChunk);
         }
         echo 'Number of Appointments Created: ' . count($rawAppointments);
 
-        foreach (array_chunk($rawAppointmentables, 500) as $rawAppointmentablesChunk) {
+        foreach (array_chunk($rawAppointmentables, 5000) as $rawAppointmentablesChunk) {
             Appointmentable::insert($rawAppointmentablesChunk);
         }
         echo 'Number of Appointmentables Created: ' . count($rawAppointmentables);
