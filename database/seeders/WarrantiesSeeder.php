@@ -41,6 +41,9 @@ class WarrantiesSeeder extends Seeder
             ];
         }
 
-        Warranty::insert($rawWarranties);
+        foreach (array_chunk($rawWarranties, 500) as $rawWarrantiesChunk) {
+            Warranty::insert($rawWarrantiesChunk);
+        }
+
     }
 }
