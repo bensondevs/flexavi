@@ -19,6 +19,15 @@ class DetachManyAppointmentsRequest extends FormRequest
         return $this->worklist = Worklist::findOrFail($id);
     }
 
+    protected function prepareForValidation()
+    {
+        $appointmentIds = $this->input('appointment_ids');
+        if (is_string($appointmentIds)) {
+            $appointmentIds = json_decode($appointmentIds, true);
+            $this->merge(['appointment_ids' => $appointmentIds]);
+        }
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -26,6 +35,7 @@ class DetachManyAppointmentsRequest extends FormRequest
      */
     public function authorize()
     {
+        $worklist = $this->getWorklist();
         $appointmentIds = $this->input('appointment_ids');
         return Gate::allows('detach-many-appointments-worklist', [$worklist, $appointmentIds]);
     }

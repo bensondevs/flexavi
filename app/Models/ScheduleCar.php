@@ -23,10 +23,6 @@ class ScheduleCar extends Model
         'car_id',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected static function boot()
     {
     	parent::boot();

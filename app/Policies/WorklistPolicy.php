@@ -84,7 +84,7 @@ class WorklistPolicy
     public function attachManyAppointments(User $user, Worklist $worklist, $appointmentIds)
     {
         $unownedAppointments = Appointment::whereIn('id', $appointmentIds)
-            ->where('company_id', $worklist->company_id)
+            ->where('company_id', '!=', $worklist->company_id)
             ->count();
 
         if ($unownedAppointments > 0) {

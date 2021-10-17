@@ -22,16 +22,12 @@ class PaymentTermsSeeder extends Seeder
         foreach (Invoice::all() as $invoice) {
             // Get total invoice
             $total = $invoice->total;
+
+            $termQuantity = rand(1, 3);
             
             // Break down the price to each term
-            while ($total > 0) {
-                // Set Term Amount
-                if ($total < 100) {
-                    $termAmount = $total;
-                } else {
-                    $termAmount = rand(50, $total);
-                }
-
+            for ($quantity = 0; $quantity < $termQuantity; $quantity++) {
+                $termAmount = $total / $termQuantity;
                 $rawPaymentTerms[] = [
                     'id' => generateUuid(),
                     'company_id' => $invoice->company_id,
@@ -43,13 +39,6 @@ class PaymentTermsSeeder extends Seeder
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
                 ];
-
-                // Substract the rest of total
-                $total = $total - $termAmount;
-
-                if ($total <= 0) {
-                    break;
-                }
             }
         }
 

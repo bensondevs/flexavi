@@ -162,9 +162,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::group(['prefix' => 'appointments'], function () {
 			Route::get('/', [WorklistAppointmentController::class, 'worklistAppointments']);
 			Route::post('attach', [WorklistAppointmentController::class, 'attach']);
-			Route::post('attachMany', [WorklistAppointmentController::class, 'attachMany']);
+			Route::post('attach_many', [WorklistAppointmentController::class, 'attachMany']);
 			Route::post('detach', [WorklistAppointmentController::class, 'detach']);
-			Route::post('detachMany', [WorklistAppointmentController::class, 'detachMany']);
+			Route::post('detach_many', [WorklistAppointmentController::class, 'detachMany']);
 			Route::post('truncate', [WorklistAppointmentController::class, 'truncate']);
 		});
 	});

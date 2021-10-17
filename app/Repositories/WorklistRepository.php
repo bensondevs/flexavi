@@ -7,8 +7,7 @@ use Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\Worklist;
-use App\Models\Appointment;
+use App\Models\{Worklist, Appointment, Appointmentable};
 
 class WorklistRepository extends BaseRepository
 {
@@ -39,8 +38,11 @@ class WorklistRepository extends BaseRepository
 	{
 		try {
 			$worklist = $this->getModel();
-			$worklist->appointments()->attach($appointment);
-			$worklist->save();
+			$appointmentable = Appointmentable::create([
+				'appointmentable_id' => $worklist->id,
+				'appointmentable_type' => Worklist::class,
+				'appointment_id' => $appointment->id,
+			]);
 
 			$this->setModel($worklist);
 
@@ -57,8 +59,7 @@ class WorklistRepository extends BaseRepository
 	{
 		try {
 			$worklist = $this->getModel();
-			$worklist->appointments()->attach($appointmentIds);
-			$worklist->save();
+			Appointmentable::attachMany($worklist, $appointmentIds);
 
 			$this->setModel($worklist);
 

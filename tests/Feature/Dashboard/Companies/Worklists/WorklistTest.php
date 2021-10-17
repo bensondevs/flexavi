@@ -8,9 +8,9 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-use App\Models\Owner;
-use App\Models\Workday;
-use App\Models\Worklist;
+use App\Models\{
+    Owner, Workday, Worklist
+};
 
 use App\Enums\Worklist\WorklistStatus;
 

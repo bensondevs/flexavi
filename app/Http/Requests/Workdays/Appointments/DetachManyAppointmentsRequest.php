@@ -35,6 +35,7 @@ class DetachManyAppointmentsRequest extends FormRequest
      */
     public function authorize()
     {
+        $worklist = $this->getWorklist();
         $appointmentIds = $this->input('appointment_ids');
         return Gate::allows('detach-many-appointments-worklist', [$worklist, $appointmentIds]);
     }

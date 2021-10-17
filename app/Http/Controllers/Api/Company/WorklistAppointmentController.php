@@ -6,16 +6,19 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\Appointments\PopulateWorklistAppointmentsRequest as PopulateRequest;
-use App\Http\Requests\Worklists\Appointments\AttachAppointmentRequest as AttachRequest;
-use App\Http\Requests\Worklists\Appointments\AttachManyAppointmentsRequest as AttachManyRequest;
-use App\Http\Requests\Worklists\Appointments\DetachAppointmentRequest as DetachRequest;
-use App\Http\Requests\Worklists\Appointments\DetachManyAppointmentsRequest as DetachManyRequest;
-use App\Http\Requests\Worklists\Appointments\TruncateAppointmentsRequest as TruncateRequest;
+use App\Http\Requests\Worklists\Appointments\{
+    AttachAppointmentRequest as AttachRequest,
+    AttachManyAppointmentsRequest as AttachManyRequest,
+    DetachAppointmentRequest as DetachRequest,
+    DetachManyAppointmentsRequest as DetachManyRequest,
+    TruncateAppointmentsRequest as TruncateRequest
+};
 
 use App\Http\Resources\AppointmentResource;
 
-use App\Repositories\WorklistRepository;
-use App\Repositories\AppointmentRepository;
+use App\Repositories\{
+    WorklistRepository, AppointmentRepository
+};
 
 class WorklistAppointmentController extends Controller
 {
