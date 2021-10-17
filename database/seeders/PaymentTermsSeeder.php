@@ -29,7 +29,7 @@ class PaymentTermsSeeder extends Seeder
                 if ($total < 100) {
                     $termAmount = $total;
                 } else {
-                    $termAmount = rand(1, $total);
+                    $termAmount = rand(50, $total);
                 }
 
                 $rawPaymentTerms[] = [
@@ -53,7 +53,7 @@ class PaymentTermsSeeder extends Seeder
             }
         }
 
-        foreach (array_chunk($rawPaymentTerms, 1000) as $chunk) {
+        foreach (array_chunk($rawPaymentTerms, 5000) as $chunk) {
             PaymentTerm::insert($chunk);
         }
 
