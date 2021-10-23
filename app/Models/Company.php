@@ -94,6 +94,11 @@ class Company extends Model
         return $this->hasMany(Appointment::class);
     }
 
+    public function subAppointments()
+    {
+        return $this->hasMany(SubAppointment::class);
+    }
+
     public function quotations()
     {
         return $this->hasMany(Quotation::class);
@@ -112,6 +117,11 @@ class Company extends Model
     public function invoices()
     {
         return $this->hasMany(Invoice::class);
+    }
+
+    public function invoiceItems()
+    {
+        return $this->hasMany(InvoiceItem::class);
     }
 
     public function paymentTerms()

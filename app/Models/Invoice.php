@@ -33,6 +33,8 @@ class Invoice extends Model
         'company_id',
         'customer_id',
 
+        'invoice_number',
+
         'invoiceable_id',
         'invoiceable_type',
 
@@ -51,6 +53,10 @@ class Invoice extends Model
 
     	self::creating(function ($invoice) {
             $invoice->id = Uuid::generate()->string;
+
+            if (! $invoice->invoice_number) {
+                $invoice->invoice_number = $invoice->generateNumber();
+            }
     	});
     }
 
@@ -136,6 +142,11 @@ class Invoice extends Model
     public function invoiceable()
     {
         return $this->morphTo();
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
     }
 
     public static function collectAllPaymentMethods()

@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 use App\Models\{
-    Owner, Workday, Worklist
+    Owner, Workday, Worklist, Company
 };
 
 use App\Enums\Worklist\WorklistStatus;
@@ -25,8 +25,11 @@ class WorklistTest extends TestCase
      */
     public function test_view_all_worklists()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [

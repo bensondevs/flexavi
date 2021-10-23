@@ -18,13 +18,26 @@ class InvoiceItemResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
+        $structure = [
             'id' => $this->id,
             'item_name' => $this->item_name,
             'description' => $this->description,
             'quantity' => $this->quantity,
             'quantity_unit' => $this->quantity_unit,
             'amount' => $this->amount,
+            'total' => $this->total,
         ];
+
+        if ($this->relationLoaded('company')) {
+            $company = new CompanyResource($this->company);
+            $structure['company'] = $company;
+        }
+
+        if ($this->relationLoaded('invoice')) {
+            $invoice = new InvoiceResource($this->invoice);
+            $structure['invoice'] = $invoice;
+        }
+
+        return $structure;
     }
 }

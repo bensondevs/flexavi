@@ -30,14 +30,14 @@ class CreateInvoicesTable extends Migration
                 ->on('customers')
                 ->onDelete('CASCADE');
 
-            $table->uuidMorphs('invoiceable');
+            $table->nullableUuidMorphs('invoiceable');
 
-            $table->double('total', 10, 2);
+            $table->double('total', 10, 2)->default(0);
             $table->double('total_in_terms')->default(0);
             $table->double('total_paid')->default(0);
 
             $table->tinyInteger('status')->default(1);
-            $table->char('payment_method');
+            $table->char('payment_method')->default(1);
 
             $table->timestamps();
             $table->softDeletes();

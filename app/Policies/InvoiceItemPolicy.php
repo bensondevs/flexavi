@@ -26,12 +26,11 @@ class InvoiceItemPolicy
 
     public function create(User $user, Invoice $invoice)
     {
-        $invoice = $invoiceItem->invoice;
         if ($invoice->status >= InvoiceStatus::Sent) {
             return abort(422, 'This invoice is no longer can be edited.');
         }
 
-        return $user->hasPermissionTo('create invoice items');
+        return $user->hasCompanyPermission($invoice->company_id, 'create invoice items');
     }
 
     public function update(User $user, InvoiceItem $invoiceItem)

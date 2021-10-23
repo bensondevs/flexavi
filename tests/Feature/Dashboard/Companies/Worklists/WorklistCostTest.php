@@ -8,9 +8,7 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-use App\Models\Company;
-use App\Models\Workday;
-use App\Models\Worklist;
+use App\Models\{ Company, Workday, Worklist };
 
 class WorklistCostTest extends TestCase
 {
@@ -25,9 +23,11 @@ class WorklistCostTest extends TestCase
      */
     public function test_view_all_worklist_costs()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -53,9 +53,11 @@ class WorklistCostTest extends TestCase
      */
     public function test_store_cost_and_record_to_worklist()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -90,9 +92,11 @@ class WorklistCostTest extends TestCase
      */
     public function test_record_cost_to_worklist()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -125,9 +129,11 @@ class WorklistCostTest extends TestCase
      */
     public function test_unrecord_cost_from_worklist()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -163,9 +169,11 @@ class WorklistCostTest extends TestCase
      */
     public function test_record_many_costs_to_worklist()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -198,9 +206,11 @@ class WorklistCostTest extends TestCase
      */
     public function test_unrecord_many_costs_from_worklist()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->with('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -243,12 +253,11 @@ class WorklistCostTest extends TestCase
      */
     public function test_truncate_worklist_costs()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()
-            ->with('user')
-            ->inRandomOrder()
-            ->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [

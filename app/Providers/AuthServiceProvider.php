@@ -140,7 +140,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-appointment-invoice', [InvoicePolicy::class, 'viewAnyAppointment']);
         Gate::define('view-invoice', [InvoicePolicy::class, 'view']);
         Gate::define('create-invoice', [InvoicePolicy::class, 'create']);
+        Gate::define('send-invoice', [InvoicePolicy::class, 'send']);
         Gate::define('update-invoice', [InvoicePolicy::class, 'update']);
+        Gate::define('change-status-invoice', [InvoicePolicy::class, 'changeStatus']);
+        Gate::define('send-reminder-invoice', [InvoicePolicy::class, 'sendReminder']);
         Gate::define('delete-invoice', [InvoicePolicy::class, 'delete']);
         Gate::define('restore-invoice', [InvoicePolicy::class, 'restore']);
         Gate::define('force-delete-invoice', [InvoicePolicy::class, 'forceDelete']);
@@ -150,6 +153,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('view-any-appointment-invoice-item', [InvoiceItemPolicy::class, 'viewAnyAppointment']);
         Gate::define('view-invoice-item', [InvoiceItemPolicy::class, 'view']);
         Gate::define('create-invoice-item', [InvoiceItemPolicy::class, 'create']);
+
         Gate::define('update-invoice-item', [InvoiceItemPolicy::class, 'update']);
         Gate::define('delete-invoice-item', [InvoiceItemPolicy::class, 'delete']);
         Gate::define('restore-invoice-item', [InvoiceItemPolicy::class, 'restore']);

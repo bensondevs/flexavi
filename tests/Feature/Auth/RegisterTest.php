@@ -116,7 +116,7 @@ class RegisterTest extends TestCase
 
             'phone' => '99999999999',
             'address' => 'St. Road Way 123',
-            'email' => 'test@useronline.com',
+            'email' => 'test' . generateUuid() . '@useronline.com',
             'password' => 'AnotherPassword123!',
             'confirm_password' => 'AnotherPassword123!',
             'bank_name' => 'Bank Name Information',

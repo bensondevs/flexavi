@@ -29,7 +29,7 @@ class AppointmentsSeeder extends Seeder
                 for ($index = 0; $index < rand(3, 5); $index++) {
                     $id = generateUuid();
                 	$start = (carbon()->now()->copy())->addDays(rand(-10, 10));
-                	$end = ($start->copy())->addDays(rand(0, 7));
+                	$end = ($start->copy())->addDays(rand(3, 7));
 
                 	$type = rand(1, 6);
                 	$status = rand(1, 5);

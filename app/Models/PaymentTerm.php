@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
@@ -43,6 +44,11 @@ class PaymentTerm extends Model
     	self::creating(function ($paymentTerm) {
             $paymentTerm->id = Uuid::generate()->string;
     	});
+    }
+
+    public function scopeOverdue(Builder $query)
+    {
+        return $query->where('due_date', '<=', today());
     }
 
     public function getStatusDescriptionAttribute()

@@ -18,7 +18,7 @@ class WorkdayPolicy
      * Determine whether the user can view any models.
      *
      * @param  \App\Models\User  $user
-     * @return mixed
+     * @return bool
      */
     public function viewAny(User $user)
     {
@@ -30,7 +30,7 @@ class WorkdayPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday  $workday
-     * @return mixed
+     * @return bool
      */
     public function view(User $user, Workday $workday)
     {
@@ -41,7 +41,7 @@ class WorkdayPolicy
      * Determine whether the user can create models.
      *
      * @param  \App\Models\User  $user
-     * @return mixed
+     * @return bool
      */
     public function create(User $user)
     {
@@ -54,7 +54,7 @@ class WorkdayPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday $workday 
      * @param  \App\Models\Appointment  $appointment
-     * @return mixed
+     * @return bool
      */
     public function attachAppointment(User $user, Workday $workday, Appointment $appointment)
     {
@@ -75,7 +75,7 @@ class WorkdayPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday $workday 
      * @param  array  $appointmentIds
-     * @return mixed
+     * @return bool
      */
     public function attachManyAppointments(User $user, Workday $workday)
     {
@@ -88,7 +88,7 @@ class WorkdayPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday $workday 
      * @param  \App\Models\Appointment  $appointment
-     * @return mixed
+     * @return bool
      */
     public function detachAppointment(User $user, Workday $workday, Appointment $appointment)
     {
@@ -109,7 +109,7 @@ class WorkdayPolicy
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday $workday 
      * @param  array  $appointmentIds
-     * @return mixed
+     * @return bool
      */
     public function detachManyAppointments(User $user, Workday $workday, array $appointmentIds)
     {
@@ -121,7 +121,7 @@ class WorkdayPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday $workday 
-     * @return mixed
+     * @return bool
      */
     public function truncateAppointments(User $user, Workday $workday)
     {
@@ -132,7 +132,7 @@ class WorkdayPolicy
      * Determine whether the user can process models.
      *
      * @param  \App\Models\User  $user
-     * @return mixed
+     * @return bool
      */
     public function process(User $user, Workday $workday)
     {
@@ -147,7 +147,7 @@ class WorkdayPolicy
      * Determine whether the user can calculate models.
      *
      * @param  \App\Models\User  $user
-     * @return mixed
+     * @return bool
      */
     public function calculate(User $user, Workday $workday)
     {
@@ -159,7 +159,7 @@ class WorkdayPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday  $workday
-     * @return mixed
+     * @return bool
      */
     public function update(User $user, Workday $workday)
     {
@@ -171,7 +171,7 @@ class WorkdayPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday  $workday
-     * @return mixed
+     * @return bool
      */
     public function delete(User $user, Workday $workday)
     {
@@ -183,7 +183,7 @@ class WorkdayPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday  $workday
-     * @return mixed
+     * @return bool
      */
     public function restore(User $user, Workday $workday)
     {
@@ -195,7 +195,7 @@ class WorkdayPolicy
      *
      * @param  \App\Models\User  $user
      * @param  \App\Models\Workday  $workday
-     * @return mixed
+     * @return bool
      */
     public function forceDelete(User $user, Workday $workday)
     {

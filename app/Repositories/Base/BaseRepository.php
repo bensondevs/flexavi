@@ -97,6 +97,8 @@ class BaseRepository
 
 	public function all(array $options = [], bool $pagination = false, bool $skipGet = false)
 	{
+		// DB::enableQueryLog();
+
 		$models = $this->getModel();
 
 		if (isset($options['withs'])) {
@@ -228,6 +230,8 @@ class BaseRepository
 			$models = $models->get();
 		}
 		$this->setCollection($models);
+
+		// dd(DB::getQueryLog());
 
 		return ($pagination) ? $this->paginate() : $models;
 	}

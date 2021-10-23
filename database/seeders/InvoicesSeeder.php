@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Company;
 use App\Models\Invoice;
 use App\Models\Quotation;
 use App\Models\Appointment;
@@ -56,6 +57,30 @@ class InvoicesSeeder extends Seeder
                 'created_at' => carbon()->now(),
                 'updated_at' => carbon()->now(),
             ];
+        }
+
+        $chunks = array_chunk($rawInvoices, 5000);
+        foreach ($chunks as $key => $chunk) {
+            Invoice::insert($chunk);
+        }
+
+        $rawInvoices = [];
+        foreach (Company::with('customers')->get() as $company) {
+            for ($index = 0; $index < rand(1, 3); $index++) {
+                array_push($rawInvoices, [
+                    'id' => generateUuid(),
+                    'company_id' => $company->id,
+                    'customer_id' => $company->customers()
+                        ->inRandomOrder()
+                        ->first()
+                        ->id,
+                    'total' => rand(500, 2000),
+                    'status' => rand(1, 3),
+                    'payment_method' => rand(1, 2),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
         }
 
         $chunks = array_chunk($rawInvoices, 5000);

@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 use App\Models\Invoice;
 
-class SendInvoice extends Mailable
+class InvoiceFirstReminder extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,9 +33,7 @@ class SendInvoice extends Mailable
     public function build()
     {
         $invoice = $this->invoice;
-        $invoice->load(['items', 'customer']);
-        
-        return $this->view('mails.invoices.send')
+        return $this->view('mails.invoices.first_reminder')
             ->with(['invoice' => $invoice]);
     }
 }

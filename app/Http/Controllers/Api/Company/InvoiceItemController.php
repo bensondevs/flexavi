@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\InvoiceItems\SaveInvoiceItemRequest as SaveRequest;
-use App\Http\Requests\InvoiceItems\DeleteInvoiceItemRequest as DeleteRequest;
-use App\Http\Requests\InvoiceItems\UpdateInvoiceItemRequest as UpdateRequest;
-use App\Http\Requests\InvoiceItems\PopulateInvoiceItemsRequest as PopulateRequest;
+use App\Http\Requests\InvoiceItems\{
+    SaveInvoiceItemRequest as SaveRequest,
+    DeleteInvoiceItemRequest as DeleteRequest,
+    UpdateInvoiceItemRequest as UpdateRequest,
+    PopulateInvoiceItemsRequest as PopulateRequest
+};
 
 use App\Http\Resources\InvoiceItemResource;
 
@@ -37,7 +39,6 @@ class InvoiceItemController extends Controller
     {
         $input = $request->validated();
         $item = $this->item->save($input);
-
         return apiResponse($this->item);
     }
 

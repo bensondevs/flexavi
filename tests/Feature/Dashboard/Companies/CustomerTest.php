@@ -8,8 +8,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-use App\Models\Owner;
-use App\Models\Customer;
+use App\Models\{Owner, Customer, Company};
 
 class CustomerTest extends TestCase
 {
@@ -24,8 +23,10 @@ class CustomerTest extends TestCase
      */
     public function test_view_all_customers()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
         
         $headers = [
@@ -49,8 +50,10 @@ class CustomerTest extends TestCase
      */
     public function test_view_trashed_customers()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -74,8 +77,10 @@ class CustomerTest extends TestCase
      */
     public function test_store_customer()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -111,8 +116,10 @@ class CustomerTest extends TestCase
      */
     public function test_view_customer()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $customer = Customer::where('company_id', $owner->company_id)->first();
@@ -137,8 +144,10 @@ class CustomerTest extends TestCase
      */
     public function test_update_customer()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $customer = Customer::where('company_id', $owner->company_id)->first();
@@ -177,8 +186,10 @@ class CustomerTest extends TestCase
      */
     public function test_delete_customer()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $customer = Customer::where('company_id', $owner->company_id)->first();
@@ -205,8 +216,10 @@ class CustomerTest extends TestCase
      */
     public function test_restore_customer()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         if (! $customer = Customer::onlyTrashed()->where('company_id', $owner->company_id)->first()) {
@@ -239,8 +252,10 @@ class CustomerTest extends TestCase
      */
     public function test_view_customer_appointments()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $customer = Customer::where('company_id', $owner->company_id)->first();
@@ -265,8 +280,10 @@ class CustomerTest extends TestCase
      */
     public function test_view_customer_quotations()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $customer = Customer::where('company_id', $owner->company_id)->first();

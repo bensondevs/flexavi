@@ -24,12 +24,13 @@ class SaveSubAppointmentRequest extends FormRequest
     {
         if ($this->appointment) return $this->appointment;
 
-        if ($subAppointment = $this->subAppointment) {
-            return $this->appointment = $subAppointment->appointment;
+        if ($this->isMethod('POST')) {
+            $id = $this->input('appointment_id');
+            return $this->appointment = Appointment::findOrFail($id);
         }
 
-        $id = $this->input('appointment_id');
-        return $this->appointment = Appointment::findOrFail($id);
+        $subAppointment = $this->getSubAppointment();
+        return $this->appointment = $subAppointment->appointment;
     }
 
     public function getSubAppointment()

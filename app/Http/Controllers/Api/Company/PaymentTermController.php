@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\PaymentTerms\CreatePaymentTermRequest as CreateRequest;
-use App\Http\Requests\PaymentTerms\UpdatePaymentTermRequest as UpdateRequest;
-use App\Http\Requests\PaymentTerms\FindPaymentTermRequest as FindRequest;
-use App\Http\Requests\PaymentTerms\PopulatePaymentTermsRequest as PopulateRequest;
+use App\Http\Requests\PaymentTerms\{
+    CreatePaymentTermRequest as CreateRequest,
+    UpdatePaymentTermRequest as UpdateRequest,
+    FindPaymentTermRequest as FindRequest,
+    PopulatePaymentTermsRequest as PopulateRequest,
+    CancelPaymentTermPaidStatusRequest as CancelPaidStatusRequest
+};
 
 use App\Http\Resources\PaymentTermResource;
 
@@ -62,7 +65,12 @@ class PaymentTermController extends Controller
         return apiResponse($this->term);
     }
 
-    public function cancelPaidStatus(FindRequest $request)
+    public function registerPayment()
+    {
+        //
+    }
+
+    public function cancelPaidStatus(CancelPaidStatusRequest $request)
     {
         $term = $request->getPaymentTerm();
         $term = $this->term->setModel($term);

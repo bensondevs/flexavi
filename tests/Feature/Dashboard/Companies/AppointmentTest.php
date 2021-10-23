@@ -11,6 +11,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Owner;
 use App\Models\Customer;
+use App\Models\Company;
 use App\Models\Appointment;
 
 use App\Enums\Appointment\AppointmentStatus;
@@ -26,8 +27,10 @@ class AppointmentTest extends TestCase
      */
     public function test_view_all_appointments()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -51,8 +54,10 @@ class AppointmentTest extends TestCase
      */
     public function test_view_customer_appointments()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $customer = Customer::where('company_id', $owner->company_id)->first();
@@ -78,8 +83,10 @@ class AppointmentTest extends TestCase
      */
     public function test_store_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $customer = Customer::where('company_id', $owner->company_id)->first();
@@ -112,8 +119,10 @@ class AppointmentTest extends TestCase
      */
     public function test_update_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -148,8 +157,10 @@ class AppointmentTest extends TestCase
      */
     public function test_execute_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -178,8 +189,10 @@ class AppointmentTest extends TestCase
      */
     public function test_process_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -208,8 +221,10 @@ class AppointmentTest extends TestCase
      */
     public function test_cancel_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -241,8 +256,10 @@ class AppointmentTest extends TestCase
      */
     public function test_reschedule_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -274,8 +291,10 @@ class AppointmentTest extends TestCase
      */
     public function test_generate_invoice_from_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -307,8 +326,10 @@ class AppointmentTest extends TestCase
      */
     public function test_generate_invoice_from_invoiced_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -340,8 +361,10 @@ class AppointmentTest extends TestCase
      */
     public function test_delete_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -368,8 +391,10 @@ class AppointmentTest extends TestCase
      */
     public function test_view_all_trashed_appointments()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [
@@ -392,8 +417,10 @@ class AppointmentTest extends TestCase
      */
     public function test_restore_appointment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $headers = [

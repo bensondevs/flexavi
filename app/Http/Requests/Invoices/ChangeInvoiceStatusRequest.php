@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Requests\PaymentTerms;
+namespace App\Http\Requests\Invoices;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\PopulateRequestOptions;
+use App\Traits\InputRequest;
 
 use App\Models\Invoice;
 
-class PopulatePaymentTermsRequest extends FormRequest
+use App\Enums\Invoice\InvoiceStatus;
+
+class ChangeInvoiceStatusRequest extends FormRequest
 {
-    use PopulateRequestOptions;
+    use InputRequest;
 
     private $invoice;
 
@@ -31,7 +33,7 @@ class PopulatePaymentTermsRequest extends FormRequest
     public function authorize()
     {
         $invoice = $this->getInvoice();
-        return Gate::allows('view-any-payment-term', $invoice);
+        return Gate::allows('change-status-invoice', $invoice);
     }
 
     /**
@@ -41,25 +43,15 @@ class PopulatePaymentTermsRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
-    }
-
-    public function options()
-    {
-        $this->addWhere([
-            'column' => 'invoice_id',
-            'value' => $this->getInvoice()->id,
+        $this->setRules([
+            'status' => [
+                'required', 
+                'numeric', 
+                'min:' . InvoiceStatus::Created,
+                'max:' . InvoiceStatus::PaidViaDebtCollector,
+            ],
         ]);
 
-        if ($this->has('status')) {
-            $this->addWhere([
-                'column' => 'status',
-                'value' => $this->input('status'),
-            ]);
-        }
-
-        return $this->collectOptions();
+        return $this->returnRules();
     }
 }

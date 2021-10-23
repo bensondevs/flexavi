@@ -8,11 +8,14 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-use App\Models\User;
-use App\Models\Owner;
-use App\Models\Customer;
-use App\Models\Employee;
-use App\Models\Address;
+use App\Models\{
+    User,
+    Owner,
+    Customer,
+    Employee,
+    Address,
+    Company
+};
 
 class AddressTest extends TestCase
 {
@@ -23,8 +26,11 @@ class AddressTest extends TestCase
      */
     public function test_populate_company_addresses()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -47,8 +53,11 @@ class AddressTest extends TestCase
      */
     public function test_populate_company_trasheds_addresses()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -71,8 +80,11 @@ class AddressTest extends TestCase
      */
     public function test_store_company_address()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -107,10 +119,11 @@ class AddressTest extends TestCase
      */
     public function test_view_company_address()
     {
-        $owner = Owner::inRandomOrder()
-            ->whereHas('company.addresses')
-            ->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -134,10 +147,11 @@ class AddressTest extends TestCase
      */
     public function test_update_company_address()
     {
-        $owner = Owner::inRandomOrder()
-            ->whereHas('company.addresses')
-            ->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -173,10 +187,11 @@ class AddressTest extends TestCase
      */
     public function test_delete_company_address()
     {
-        $owner = Owner::inRandomOrder()
-            ->whereHas('company.addresses')
-            ->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -184,7 +199,13 @@ class AddressTest extends TestCase
             'Authorization' => 'Bearer ' . $token,
         ];
         $url = '/api/dashboard/companies/addresses/delete';
-        $address = $owner->company->addresses()->first();
+
+        do {
+            $address = $company->addresses()
+                ->inRandomOrder()
+                ->first();
+        } while (! $address);
+
         $response = $this->withHeaders($headers)->delete($url, [
             'id' => $address->id,
         ]);
@@ -203,10 +224,11 @@ class AddressTest extends TestCase
      */
     public function test_restore_company_address()
     {
-        $owner = Owner::inRandomOrder()
-            ->whereHas('company.addresses')
-            ->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user && ! $company->addresses()->count());
         $token = $user->generateToken();
 
         $headers = [
@@ -214,20 +236,11 @@ class AddressTest extends TestCase
             'Authorization' => 'Bearer ' . $token,
         ];
         $url = '/api/dashboard/companies/addresses/restore';
-        $address = $owner
-            ->company
-            ->addresses()
-            ->whereNotNull('deleted_at')
-            ->first();
-        if (! $address) {
-            $address = $owner
-                ->company
-                ->addresses()
+        do {
+            $address = $company->addresses()
+                ->inRandomOrder()
                 ->first();
-            $id = $address->id;
-            $address->delete();
-            $address = Address::onlyTrashed()->findOrFail($id);
-        }
+        } while (! $address);
         $response = $this->withHeaders($headers)->patch($url, [
             'id' => $address->id,
         ]);

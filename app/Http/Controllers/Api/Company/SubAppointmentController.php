@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\SubAppointments\SaveSubAppointmentRequest as SaveRequest;
-use App\Http\Requests\SubAppointments\PopulateSubAppointmentsRequest as PopulateRequest;
-use App\Http\Requests\SubAppointments\CancelSubAppointmentRequest as CancelRequest;
-use App\Http\Requests\SubAppointments\RescheduleSubAppointmentRequest as RescheduleRequest;
-use App\Http\Requests\SubAppointments\ExecuteSubAppointmentRequest as ExecuteRequest;
-use App\Http\Requests\SubAppointments\ProcessSubAppointmentRequest as ProcessRequest;
-use App\Http\Requests\SubAppointments\DeleteSubAppointmentRequest as DeleteRequest;
+use App\Http\Requests\SubAppointments\{
+    SaveSubAppointmentRequest as SaveRequest,
+    PopulateSubAppointmentsRequest as PopulateRequest,
+    CancelSubAppointmentRequest as CancelRequest,
+    RescheduleSubAppointmentRequest as RescheduleRequest,
+    ExecuteSubAppointmentRequest as ExecuteRequest,
+    ProcessSubAppointmentRequest as ProcessRequest,
+    DeleteSubAppointmentRequest as DeleteRequest
+};
 
 use App\Http\Resources\SubAppointmentResource;
 
@@ -38,7 +40,7 @@ class SubAppointmentController extends Controller
 
     public function store(SaveRequest $request)
     {
-        $input = $request->onlyInRules();
+        $input = $request->validated();
         $subAppointment = $this->subAppointment->save($input);
 
         return apiResponse($this->subAppointment);
@@ -49,7 +51,7 @@ class SubAppointmentController extends Controller
         $subAppointment = $request->getSubAppointment();
         $subAppointment = $this->subAppointment->setModel($subAppointment);
 
-        $input = $request->onlyInRules();
+        $input = $request->validated();
         $subAppointment = $this->subAppointment->save($input);
 
         return apiResponse($this->subAppointment);
@@ -60,7 +62,7 @@ class SubAppointmentController extends Controller
         $subAppointment = $request->getSubAppointment();
         $subAppointment = $this->subAppointment->setModel($subAppointment);
 
-        $input = $request->onlyInRules();
+        $input = $request->validated();
         $subAppointment = $this->subAppointment->cancel($input);
 
         return apiResponse($this->subAppointment);

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
 
+use App\Enums\PaymentTerm\PaymentTermStatus;
+
 use App\Rules\FloatValue;
 
 use App\Models\Invoice;
@@ -55,7 +57,17 @@ class CreatePaymentTermRequest extends FormRequest
         $this->setRules([
             'invoice_id' => ['required', 'string'],
             'term_name' => ['required', 'string'],
-            'amount' => ['required', 'numeric', new FloatValue(true), 'min:1', 'max:' . $invoice->total_out_terms],
+            'amount' => [
+                'required', 
+                'numeric', 
+                new FloatValue(true), 
+                'min:1', 
+                'max:' . $invoice->total_out_terms],
+            'status' => [
+                'integer', 
+                'min:' . PaymentTermStatus::Unpaid, 
+                'max:' . PaymentTermStatus::ForwardedToDebtCollector
+            ],
             'due_date' => ['required', 'date'],
         ]);
 

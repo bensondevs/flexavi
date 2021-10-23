@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\PaymentTerms;
+namespace App\Http\Requests\Invoices;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\PopulateRequestOptions;
-
 use App\Models\Invoice;
 
-class PopulatePaymentTermsRequest extends FormRequest
+use App\Traits\InputRequest;
+
+class SendInvoiceReminderRequest extends FormRequest
 {
-    use PopulateRequestOptions;
+    use InputRequest;
 
     private $invoice;
 
@@ -31,7 +31,7 @@ class PopulatePaymentTermsRequest extends FormRequest
     public function authorize()
     {
         $invoice = $this->getInvoice();
-        return Gate::allows('view-any-payment-term', $invoice);
+        return Gate::allows('send-reminder-invoice', $invoice);
     }
 
     /**
@@ -44,22 +44,5 @@ class PopulatePaymentTermsRequest extends FormRequest
         return [
             //
         ];
-    }
-
-    public function options()
-    {
-        $this->addWhere([
-            'column' => 'invoice_id',
-            'value' => $this->getInvoice()->id,
-        ]);
-
-        if ($this->has('status')) {
-            $this->addWhere([
-                'column' => 'status',
-                'value' => $this->input('status'),
-            ]);
-        }
-
-        return $this->collectOptions();
     }
 }

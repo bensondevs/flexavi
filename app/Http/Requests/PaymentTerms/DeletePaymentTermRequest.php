@@ -7,17 +7,8 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\PaymentTerm;
 
-use App\Traits\RequestHasRelations;
-
-class FindPaymentTermRequest extends FormRequest
+class DeletePaymentTermRequest extends FormRequest
 {
-    use RequestHasRelations;
-
-    protected $relationNames = [
-        'with_company' => false,
-        'with_invoice' => false,
-    ];
-
     private $paymentTerm;
 
     public function getPaymentTerm()
@@ -25,12 +16,7 @@ class FindPaymentTermRequest extends FormRequest
         if ($this->paymentTerm) return $this->paymentTerm;
 
         $id = $this->input('id') ?: $this->input('payment_term_id');
-        return $this->paymentTerm = PaymentTerm::findOrFail($id);
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->prepareRelationInputs();
+        return $this->paymentTerm = PaymentTerm::withTrashed()->findOrFail($id);
     }
 
     /**
@@ -41,7 +27,7 @@ class FindPaymentTermRequest extends FormRequest
     public function authorize()
     {
         $term = $this->getPaymentTerm();
-        return Gate::allows('view-payment-term', $term);
+        return Gate::allows('delete-payment-term', $term);
     }
 
     /**
@@ -51,6 +37,8 @@ class FindPaymentTermRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            //
+        ];
     }
 }

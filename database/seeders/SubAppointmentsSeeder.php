@@ -4,11 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Appointment;
-use App\Models\SubAppointment;
+use App\Models\{Appointment, SubAppointment};
 
-use App\Enums\SubAppointment\SubAppointmentStatus;
-use App\Enums\SubAppointment\SubAppointmentCancellationVault;
+use App\Enums\SubAppointment\{
+    SubAppointmentStatus as Status,
+    SubAppointmentCancellationVault as Vault
+};
 
 class SubAppointmentsSeeder extends Seeder
 {
@@ -28,7 +29,7 @@ class SubAppointmentsSeeder extends Seeder
                     'id' => generateUuid(),
                     'company_id' => $appointment->company_id,
                     'appointment_id' => $appointment->id,
-                    'status' => rand(SubAppointmentStatus::Created, SubAppointmentStatus::Cancelled),
+                    'status' => rand(Status::Created, Status::Cancelled),
                     'start' => carbon()->now()->subDays(rand(1, 10)),
                     'end' => carbon()->now()->addDays(rand(1, 10)),
                     'cancellation_cause' => null,
@@ -41,21 +42,21 @@ class SubAppointmentsSeeder extends Seeder
                     'cancelled_at' => null,
                 ];
 
-                if ($rawSubAppointment['status'] == SubAppointmentStatus::Cancelled) {
+                if ($rawSubAppointment['status'] == Status::Cancelled) {
                     $rawSubAppointment['cancellation_cause'] = 'Seeder Cause';
-                    $rawSubAppointment['cancellation_vault'] = rand(SubAppointmentCancellationVault::Roofer, SubAppointmentCancellationVault::Customer);
+                    $rawSubAppointment['cancellation_vault'] = rand(Vault::Roofer, Vault::Customer);
                     $rawSubAppointment['cancellation_note'] = 'Seeder Note';
                 }
 
-                if ($rawSubAppointment['status'] >= SubAppointmentStatus::InProcess) {
+                if ($rawSubAppointment['status'] >= Status::InProcess) {
                     $rawSubAppointment['in_process_at'] = now();
                 }
 
-                if ($rawSubAppointment['status'] >= SubAppointmentStatus::Processed) {
+                if ($rawSubAppointment['status'] >= Status::Processed) {
                     $rawSubAppointment['processed_at'] = now();
                 }
 
-                if ($rawSubAppointment['status'] >= SubAppointmentStatus::Cancelled) {
+                if ($rawSubAppointment['status'] >= Status::Cancelled) {
                     $rawSubAppointment['cancelled_at'] = now();
                 }
 

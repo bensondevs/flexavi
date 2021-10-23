@@ -5,16 +5,20 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Workdays\Worklists\AttachWorklistRequest as AttachRequest;
-use App\Http\Requests\Workdays\Worklists\AttachManyWorklistsRequest as AttachManyRequest;
-use App\Http\Requests\Workdays\Worklists\DetachWorklistRequest as DetachRequest;
-use App\Http\Requests\Workdays\Worklists\DetachManyWorklistsRequest as DetachManyRequest;
+use App\Http\Requests\Workdays\Worklists\{
+    SaveWorkdayWorklistRequest as SaveRequest,
+    AttachWorklistRequest as AttachRequest,
+    AttachManyWorklistsRequest as AttachManyRequest,
+    DetachWorklistRequest as DetachRequest,
+    DetachManyWorklistsRequest as DetachManyRequest
+};
 use App\Http\Requests\Worklists\PopulateWorkdayWorklistsRequest as PopulateRequest;
 
 use App\Http\Resources\WorklistResource;
 
-use App\Repositories\WorkdayRepository;
-use App\Repositories\WorklistRepository;
+use App\Repositories\{
+    WorkdayRepository, WorklistRepository
+};
 
 class WorkdayWorklistController extends Controller
 {
@@ -35,6 +39,12 @@ class WorkdayWorklistController extends Controller
         $worklists = WorklistResource::apiCollection($worklists);
 
         return response()->json(['worklists' => $worklists]);
+    }
+
+    public function storeAttach(SaveRequest $request)
+    {
+        $input = $request->validated();
+        $worklist = $this->worklist->
     }
 
     public function attach(AttachRequest $request)

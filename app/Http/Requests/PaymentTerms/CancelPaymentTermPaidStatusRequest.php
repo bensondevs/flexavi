@@ -5,18 +5,13 @@ namespace App\Http\Requests\PaymentTerms;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\InputRequest;
+
 use App\Models\PaymentTerm;
 
-use App\Traits\RequestHasRelations;
-
-class FindPaymentTermRequest extends FormRequest
+class CancelPaymentTermPaidStatusRequest extends FormRequest
 {
-    use RequestHasRelations;
-
-    protected $relationNames = [
-        'with_company' => false,
-        'with_invoice' => false,
-    ];
+    use InputRequest;
 
     private $paymentTerm;
 
@@ -28,11 +23,6 @@ class FindPaymentTermRequest extends FormRequest
         return $this->paymentTerm = PaymentTerm::findOrFail($id);
     }
 
-    protected function prepareForValidation()
-    {
-        $this->prepareRelationInputs();
-    }
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -41,7 +31,7 @@ class FindPaymentTermRequest extends FormRequest
     public function authorize()
     {
         $term = $this->getPaymentTerm();
-        return Gate::allows('view-payment-term', $term);
+        return Gate::allows('update-payment-term', $term);
     }
 
     /**
@@ -51,6 +41,10 @@ class FindPaymentTermRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        $this->setRules([
+            'reason' => ['required', 'string'],
+        ]);
+
+        return $this->returnRules();
     }
 }

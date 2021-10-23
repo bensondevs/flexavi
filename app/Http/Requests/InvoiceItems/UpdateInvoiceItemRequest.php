@@ -21,7 +21,7 @@ class UpdateInvoiceItemRequest extends FormRequest
     {
         if ($this->invoiceItem) return $this->invoiceItem;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('invoice_item_id');
         return $this->invoiceItem = InvoiceItem::findOrFail($id);
     }
 

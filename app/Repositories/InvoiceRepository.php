@@ -7,15 +7,22 @@ use \Illuminate\Database\QueryException;
 
 use App\Jobs\SendMail;
 
-use App\Mail\Invoice\SendInvoice;
+use App\Mail\Invoice\{
+	SendInvoice,
+	InvoiceFirstReminder,
+	InvoiceSecondReminder,
+	InvoiceThirdReminder
+};
 
 use App\Enums\Invoice\InvoiceStatus;
 
-use App\Models\Invoice;
-use App\Models\InvoiceItem;
-use App\Models\Quotation;
-use App\Models\Appointment;
-use App\Models\WorkContract;
+use App\Models\{
+	Invoice,
+	InvoiceItem,
+	Quotation,
+	Appointment,
+	WorkContract
+};
 
 use App\Repositories\Base\BaseRepository;
 
@@ -36,7 +43,7 @@ class InvoiceRepository extends BaseRepository
 			$this->setModel($invoice->fresh());
 
 			$this->setSuccess('Successfully save invoice.');
-		} catch (QueryException $e) {
+		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to save invoice.', $error);
 		}
@@ -154,21 +161,20 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function send()
+	public function send(string $destinationEmail = '')
 	{
 		try {
+			// Generate invoice number
 			$invoice = $this->getModel();
 			$invoice->status = InvoiceStatus::Sent;
-			// $invoice->generateNumber();
+			$invoice->generateNumber();
 			$invoice->save();
 
-			// Generate Invoice Number in background
-			dispatch(new GenerateInvoiceNumber($invoice));
-
 			// Send them afterwards
+			$destination = $destinationEmail ?: $invoice->customer->email;
 			$mail = new SendInvoice($invoice);
-			$job = new SendEmail($mail, $invoice->customer->email);
-			$jon->delay(1);
+			$job = new SendMail($mail, $destination);
+			$job->delay(1);
 			dispatch($job);
 
 			$this->setModel($invoice);
@@ -229,7 +235,7 @@ class InvoiceRepository extends BaseRepository
         return $this->all($options, $pagination);
 	}
 
-	public function changeStatus($status)
+	public function changeStatus(int $status)
 	{
 		try {
 			$invoice = $this->getModel();
@@ -247,7 +253,30 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function sendFirstReminder($nextDueDate)
+	public function sendReminder()
+	{
+		$invoice = $this->getModel();
+
+		switch (true) {
+			case $invoice->status < InvoiceStatus::FirstReminderSent:
+				return $this->sendFirstReminder();
+				break;
+
+			case $invoice->status < InvoiceStatus::SecondReminderSent:
+				return $this->sendSecondReminder();
+				break;
+
+			case $invoice->status < InvoiceStatus::ThirdReminderSent:
+				return $this->sendThirdReminder();
+				break;
+			
+			default:
+				return $this->sendFirstReminder();
+				break;
+		}
+	}
+
+	public function sendFirstReminder(string $destinationEmail = '')
 	{
 		try {
 			$invoice = $this->getModel();
@@ -255,7 +284,7 @@ class InvoiceRepository extends BaseRepository
 
 			// Send to mail
 			$mail = new InvoiceFirstReminder($invoice);
-			$job = new SendEmail($mail, $invoice->customer->email);
+			$job = new SendMail($mail, $destinationEmail ?: $invoice->customer->email);
 			dispatch($job);
 
 			$invoice->status = InvoiceStatus::FirstReminderSent;
@@ -280,7 +309,7 @@ class InvoiceRepository extends BaseRepository
 
 			// Send to mail
 			$mail = new InvoiceSecondReminder($invoice);
-			$job = new SendEmail($mail, $invoice->customer->email);
+			$job = new SendMail($mail, $destinationEmail ?: $invoice->customer->email);
 			dispatch($job);
 
 			$invoice->status = InvoiceStatus::SecondReminderSent;
@@ -305,7 +334,7 @@ class InvoiceRepository extends BaseRepository
 
 			// Send to mail
 			$mail = new InvoiceThirdReminder($invoice);
-			$job = new SendEmail($mail, $invoice->customer->email);
+			$job = new SendMail($mail, $destinationEmail ?: $invoice->customer->email);
 			dispatch($job);
 
 			$invoice->status = InvoiceStatus::ThirdReminderSent;

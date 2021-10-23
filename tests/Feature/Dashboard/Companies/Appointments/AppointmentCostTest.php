@@ -23,9 +23,11 @@ class AppointmentCostTest extends TestCase
      */
     public function test_view_all_appointment_costs()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -53,9 +55,11 @@ class AppointmentCostTest extends TestCase
      */
     public function test_store_cost_and_record_to_appointment()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -88,9 +92,11 @@ class AppointmentCostTest extends TestCase
      */
     public function test_record_cost_to_appointment()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -119,9 +125,11 @@ class AppointmentCostTest extends TestCase
      */
     public function test_unrecord_cost_from_appointment()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -150,9 +158,11 @@ class AppointmentCostTest extends TestCase
      */
     public function test_record_many_costs_to_appointment()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -185,9 +195,11 @@ class AppointmentCostTest extends TestCase
      */
     public function test_unrecord_many_costs_from_appointment()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         do {
@@ -230,9 +242,11 @@ class AppointmentCostTest extends TestCase
      */
     public function test_truncate_cost_from_appointment()
     {
-        $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->with('user')->inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [

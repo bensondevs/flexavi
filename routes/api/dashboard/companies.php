@@ -330,10 +330,13 @@ Route::group(['middleware' => ['has_company']], function () {
 	Route::group(['prefix' => 'invoices'], function () {
 		Route::get('/', [InvoiceController::class, 'companyInvoices']);
 		Route::get('overdue', [InvoiceController::class, 'companyOverdueInvoices']);
+		Route::post('store', [InvoiceController::class, 'store']);
 		Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
 		Route::post('send', [InvoiceController::class, 'send']);
+		Route::post('print', [InvoiceController::class, 'print']);
+		Route::post('print_draft', [InvoiceController::class, 'printDraft']);
 		Route::post('send_reminder', [InvoiceController::class, 'sendReminder']);
-		Route::match(['PUT', 'PATCH'], 'changeStatus', [InvoiceController::class, 'changeStatus']);
+		Route::match(['PUT', 'PATCH'], 'change_status', [InvoiceController::class, 'changeStatus']);
 		Route::post('mark_as_paid', [InvoiceController::class, 'markAsPaid']);
 		Route::delete('delete', [InvoiceController::class, 'delete']);
 

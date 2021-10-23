@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
 
+use App\Enums\PaymentTerm\PaymentTermStatus;
+
 use App\Rules\FloatValue;
 
 use App\Models\PaymentTerm;
@@ -30,7 +32,7 @@ class UpdatePaymentTermRequest extends FormRequest
     {
         if ($this->paymentTerm) return $this->paymentTerm;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('payment_term_id');
         return $this->paymentTerm = PaymentTerm::with('invoice')->findOrFail($id);
     }
 
@@ -65,24 +67,21 @@ class UpdatePaymentTermRequest extends FormRequest
 
         $this->setRules([
             'term_name' => ['required', 'string'],
-            'amount' => ['required', 'numeric', new FloatValue(true), 'min:1', 'max:' . $maximum],
+            'amount' => [
+                'required', 
+                'numeric', 
+                new FloatValue(true), 
+                'min:1', 
+                'max:' . $maximum
+            ],
+            'status' => [
+                'integer', 
+                'min:' . PaymentTermStatus::Unpaid, 
+                'max:' . PaymentTermStatus::ForwardedToDebtCollector
+            ],
             'due_date' => ['required', 'date'],
         ]);
 
         return $this->returnRules();
-    }
-
-    public function messages()
-    {
-        $invoice = $this->getInvoice();
-        $paymentTerm = $this->getPaymentTerm();
-        $totalOutTerms = $invoice->total_out_terms;
-        $maximum = $invoice->total_out_terms + $paymentTerm->amount;
-
-        setlocale(LC_MONETARY, 'nl_NL.UTF-8');
-        $formattedMaximum = money_format('%(#1n', $maximum);
-        return [
-            'amount.max' => 'You cannot add payment term amount more than total amount of invoice. Maximum you can add: ' . $formattedMaximum,
-        ];
     }
 }

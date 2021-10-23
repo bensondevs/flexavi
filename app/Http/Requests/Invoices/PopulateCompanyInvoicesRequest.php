@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyPopulateRequestOptions;
 
+use App\Traits\RequestHasRelations;
 use App\Rules\HasCompanyPermission;
 
 class PopulateCompanyInvoicesRequest extends FormRequest
 {
+    use RequestHasRelations;
     use CompanyPopulateRequestOptions;
 
     /**
@@ -21,6 +23,11 @@ class PopulateCompanyInvoicesRequest extends FormRequest
     public function authorize()
     {
         return Gate::allows('view-any-invoice');
+    }
+
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
     }
 
     /**
@@ -38,7 +45,8 @@ class PopulateCompanyInvoicesRequest extends FormRequest
 
     public function options()
     {
-        if ($start = $this->get('start')) {
+        if ($this->has('start')) {
+            $start = $this->input('start');
             $this->addWhere([
                 'column' => 'created_at',
                 'operator' => '>=',
@@ -46,7 +54,8 @@ class PopulateCompanyInvoicesRequest extends FormRequest
             ]);
         }
 
-        if ($end = $this->get('end')) {
+        if ($this->has('end')) {
+            $end = $this->input('end');
             $this->addWhere([
                 'column' => 'created_at',
                 'operator' => '<=',
@@ -54,7 +63,8 @@ class PopulateCompanyInvoicesRequest extends FormRequest
             ]);
         }
 
-        if ($status = $this->get('status')) {
+        if ($this->has('status')) {
+            $status = $this->input('status');
             $this->addWhere([
                 'column' => 'status',
                 'operator' => '=',
@@ -62,7 +72,7 @@ class PopulateCompanyInvoicesRequest extends FormRequest
             ]);
         }
 
-        $this->setWiths(['referenceable']);
+        $this->addOrderBy('created_at', 'DESC');
 
         return $this->collectCompanyOptions();
     }

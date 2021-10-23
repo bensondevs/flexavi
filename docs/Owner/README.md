@@ -15,3 +15,6 @@
   * [Workday Cost](Workday/WorkdayCost.md)
 * [Worklist](Worklist/Worklist.md)
   * [Worklist Cost](Worklist/Worklist.md)
+* [Invoice](Invoice/Invoice.md)
+  * [Invoice Item](Invoice/InvoiceItem.md)
+  * [Invoice Item](Invoice/PaymentTerm.md)

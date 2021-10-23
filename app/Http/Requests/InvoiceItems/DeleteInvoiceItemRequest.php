@@ -15,8 +15,8 @@ class DeleteInvoiceItemRequest extends FormRequest
     {
         if ($this->item) return $this->item;
 
-        $id = $this->input('id');
-        return $this->item = InvoiceItem::findOrFail($id);
+        $id = $this->input('id') ?: $this->input('invoice_item_id');
+        return $this->item = InvoiceItem::withTrashed()->findOrFail($id);
     }
 
     /**

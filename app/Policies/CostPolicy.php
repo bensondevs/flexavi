@@ -2,9 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\User;
-use App\Models\Cost;
-use App\Models\Costable;
+use App\Models\{
+    User,
+    Cost,
+    Costable
+};
 
 use Illuminate\Auth\Access\HandlesAuthorization;
 

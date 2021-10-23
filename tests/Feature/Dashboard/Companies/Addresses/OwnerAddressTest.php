@@ -8,11 +8,14 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
-use App\Models\User;
-use App\Models\Owner;
-use App\Models\Customer;
-use App\Models\Employee;
-use App\Models\Address;
+use App\Models\{
+    User,
+    Owner,
+    Customer,
+    Company,
+    Employee,
+    Address
+};
 
 class OwnerAddressTest extends TestCase
 {
@@ -23,8 +26,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_populate_owner_addresses()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -47,8 +53,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_populate_owner_trashed_addresses()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -71,8 +80,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_store_owner_address()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -110,8 +122,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_view_owner_address()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -135,8 +150,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_update_owner_address()
     {
-        $owner = Owner::inRandomOrder()->whereHas('addresses')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -175,8 +193,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_delete_owner_address()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
@@ -203,8 +224,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_restore_owner_address()
     {
-        $owner = Owner::inRandomOrder()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+            $user = $owner->user;
+        } while (! $user);
         $token = $user->generateToken();
 
         $headers = [
