@@ -94,15 +94,19 @@ return [
         InvoiceStatus::Created => 'Created / Draft',
         InvoiceStatus::Sent => 'Sent / Definitive',
         InvoiceStatus::Paid => 'Paid',
+
         InvoiceStatus::PaymentOverdue => 'Payment Overdue',
+        
         InvoiceStatus::FirstReminder => 'Overdue, send first reminder?',
         InvoiceStatus::FirstReminderSent => 'First Reminder Sent',
-        InvoiceStatus::SecondReminder => 'First reminder sent, send the second reminder?',
+        
+        InvoiceStatus::SecondReminder => 'Second reminder reminder sent, send the second reminder?',
         InvoiceStatus::SecondReminderSent => 'Second Reminder Sent',
+        
         InvoiceStatus::ThirdReminder => 'Second Reminder Sent, send the third reminder?',
         InvoiceStatus::ThirdReminderSent => 'Third Reminder Sent',
-        InvoiceStatus::OverdueDebtCollector => 'Overdue, debt collector?',
-        InvoiceStatus::SentDebtCollector => 'Sent to debt collector',
+
+        InvoiceStatus::DebtCollectorSent => 'Sent to debt collector',
         InvoiceStatus::PaidViaDebtCollector => 'Paid via Debt collector',
     ],
 

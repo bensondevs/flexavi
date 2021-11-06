@@ -6,13 +6,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Illuminate\Database\Eloquent\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use App\Observers\WorkdayObserver;
 
 use App\Enums\Workday\WorkdayStatus;
 
 class Workday extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
     use HasRelationships;
@@ -35,6 +40,7 @@ class Workday extends Model
     protected static function boot()
     {
     	parent::boot();
+        self::observe(WorkdayObserver::class);
 
     	self::creating(function ($workday) {
             $workday->id = Uuid::generate()->string;

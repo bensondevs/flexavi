@@ -6,9 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Calculation extends Model
 {
+    use HasFactory;
     use SoftDeletes;
 
     protected $table = 'calculations';

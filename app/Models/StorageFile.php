@@ -21,10 +21,6 @@ class StorageFile extends Model
         'disk',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected static function boot()
     {
     	parent::boot();

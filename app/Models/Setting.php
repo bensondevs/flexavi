@@ -5,14 +5,18 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+
+use App\Traits\SettingAttributes;
 
 use App\Enums\Setting\SettingType;
 
 class Setting extends Model
 {
     use Searchable;
+    use SettingAttributes;
 
     /**
      * The table name
@@ -48,7 +52,8 @@ class Setting extends Model
      * @var array
      */
     protected $searchable = [
-        //
+        'key',
+        'value',
     ];
 
     /**

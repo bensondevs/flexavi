@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use \Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Enums\Car\CarStatus;
 
 class Car extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
 
@@ -96,5 +98,32 @@ class Car extends Model
                 'should_return_at',
                 'returned_at'
             );
+    }
+
+    public function registeredTimes()
+    {
+        return $this->hasMany(CarRegisterTime::class);
+    }
+
+    public function currentRegisteredTime()
+    {
+        return $this->hasOne(CarRegisterTime::class)->whereNull('marked_return_at');
+    }
+
+    public function registeredEmployees()
+    {
+        return $this->hasMany(CarRegisterEmployee::class);
+    }
+
+    public function setOut()
+    {
+        $this->attributes['status'] = CarStatus::Out;
+        return $this->save();
+    }
+
+    public function setFree()
+    {
+        $this->attributes['status'] = CarStatus::Free;
+        return $this->save();
     }
 }

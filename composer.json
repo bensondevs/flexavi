@@ -19,6 +19,7 @@
         "laravel/socialite": "^5.2",
         "laravel/tinker": "^2.5",
         "mattkingshott/axiom": "^3.2",
+        "pelmered/fake-car": "^1.7",
         "spatie/laravel-activitylog": "^3.17",
         "spatie/laravel-permission": "^4.0",
         "staudenmeir/belongs-to-through": "^2.5",

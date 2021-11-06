@@ -7,10 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
-use App\Models\{
-    Company, Worklist, Appointment
-};
+use App\Models\{ Company, Worklist, Appointment, User };
 
 class WorklistAppointmentTest extends TestCase
 {
@@ -25,23 +24,15 @@ class WorklistAppointmentTest extends TestCase
      */
     public function test_view_all_worklist_appointments()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $worklist = $company->worklists()
-            ->inRandomOrder()
-            ->first();
+        $worklist = $company->worklists()->inRandomOrder()->first() ?: 
+            Worklist::factory()->create(['company_id' => $company->id]);
         $url = $this->baseUrl . '?worklist_id=' . $worklist->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -57,22 +48,17 @@ class WorklistAppointmentTest extends TestCase
      */
     public function test_attach_appointment_to_worklist()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $worklist = $company->worklists()->inRandomOrder()->first();
-        $appointment = $company->appointments()->inRandomOrder()->first();
+        $worklist = $company->worklists()->inRandomOrder()->first() ?:
+            Worklist::factory()->create(['company_id' => $company->id]);
+        $appointment = $company->appointments()->inRandomOrder()->first() ?:
+            Appointment::factory()->create(['company_id' => $company->id]);
         $url = $this->baseUrl . '/attach';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'worklist_id' => $worklist->id,
             'appointment_id' => $appointment->id,
         ]);
@@ -91,28 +77,20 @@ class WorklistAppointmentTest extends TestCase
      */
     public function test_attach_many_appointments_to_worklist()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $worklist = $company->worklists()->inRandomOrder()->first();
-        $appointments = $company->appointments()
-            ->inRandomOrder()
-            ->take(rand(3, 10))
-            ->get();
+        $appointments = $company->appointments()->inRandomOrder()->get() ?:
+            Appointment::factory()->count(50)->create(['company_id' => $company->id]);
+
         $appointmentIds = [];
         foreach ($appointments as $appointment) {
             array_push($appointmentIds, $appointment->id);
         }
         $url = $this->baseUrl . '/attach_many';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'worklist_id' => $worklist->id,
             'appointment_ids' => $appointmentIds,
         ]);
@@ -131,24 +109,18 @@ class WorklistAppointmentTest extends TestCase
      */
     public function test_detach_appointment_from_worklist()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $worklist = $company->worklists()
-            ->whereHas('appointments')
-            ->inRandomOrder()
-            ->first();
-        $appointment = $worklist->appointments()->inRandomOrder()->first();
+        $worklist = $company->worklists()->inRandomOrder()->first() ?:
+            Worklist::factory()->create(['company_id' => $company->id]);
+        $appointment = $worklist->appointments()->inRandomOrder()->first() ?:
+            Appointment::factory()->fromWorklist($worklist)->create();
+
         $url = $this->baseUrl . '/detach';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'worklist_id' => $worklist->id,
             'appointment_id' => $appointment->id,
         ]);
@@ -167,18 +139,13 @@ class WorklistAppointmentTest extends TestCase
      */
     public function test_detach_many_appointments_from_worklist()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $worklist = $company->worklists()->inRandomOrder()->first();
+        $worklist = $company->worklists()->inRandomOrder()->first() ?:
+            Worklist::factory()->create(['company_id' => $company->id]);
         $appointments = $worklist->appointments()
             ->inRandomOrder()
             ->take(rand(1, $worklist->appointments()->count() - 1))
@@ -188,7 +155,7 @@ class WorklistAppointmentTest extends TestCase
             array_push($appointmentIds, $appointment->id);
         }
         $url = $this->baseUrl . '/detach_many';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'worklist_id' => $worklist->id,
             'appointment_ids' => $appointmentIds,
         ]);
@@ -207,20 +174,15 @@ class WorklistAppointmentTest extends TestCase
      */
     public function test_truncate_worklist_appointments()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $worklist = $company->worklists()->inRandomOrder()->first();
+        $worklist = $company->worklists()->inRandomOrder()->first() ?:
+            Worklist::factory()->create(['company_id' => $company->id]);
         $url = $this->baseUrl . '/truncate';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'worklist_id' => $worklist->id,
         ]);
 

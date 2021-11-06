@@ -1,0 +1,46 @@
+<?php
+
+namespace App\Jobs\CarRegisterTime;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+use App\Models\Car;
+use App\Enums\Car\CarStatus;
+
+class RefreshCarStatuses implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        $now = now()->copy();
+
+        Car::whereHas('registerTimes', function ($registerTime) use ($now) {
+            $registerTime->where('out_time', '>=', $now);
+        })->update(['status' => CarStatus::Out]);
+
+        Car::whereHas('registerTimes', function ($registerTime) use ($now) {
+            $registerTime->where('return_time', '>=', $now);
+        })->update(['status' => CarStatus::Free]);
+    }
+}

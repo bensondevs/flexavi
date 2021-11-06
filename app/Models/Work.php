@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Enums\Work\WorkStatus;
 use App\Enums\ExecuteWork\ExecuteWorkStatus;
@@ -16,6 +17,7 @@ use App\Observers\WorkObserver;
 
 class Work extends Model
 {
+    use HasFactory;
     use Searchable;
     use SoftDeletes;
     use HasRelationships;

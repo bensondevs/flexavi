@@ -7,21 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use BenSampo\Enum\Traits\CastsEnums;
 
 use App\Casts\QuotationDamageCausesCast;
 
-use App\Enums\Quotation\QuotationType;
-use App\Enums\Quotation\QuotationStatus;
-use App\Enums\Quotation\QuotationCanceller;
-use App\Enums\Quotation\QuotationDamageCause;
-use App\Enums\Quotation\QuotationPaymentMethod;
-
-use App\Models\Inspection;
+use App\Enums\Quotation\{
+    QuotationType,
+    QuotationStatus,
+    QuotationCanceller,
+    QuotationDamageCause,
+    QuotationPaymentMethod
+};
 
 class Quotation extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
     use CastsEnums;
@@ -57,7 +59,6 @@ class Quotation extends Model
 
         'address',
         'zip_code',
-        'address',
         'phone_number',
         
         'quotation_description',
@@ -72,7 +73,7 @@ class Quotation extends Model
 
         'payment_method',
 
-        'honor_note',       
+        'honor_note',
 
         'canceller',
         'cancellation_reason',
@@ -99,10 +100,6 @@ class Quotation extends Model
                 $quotation->expiry_date = $expiryDate;
             }
     	});
-
-        /*self::saved(function ($quotation) {
-            $quotation->countWorkAmount();
-        });*/
     }
 
     public function getTypeDescriptionAttribute()

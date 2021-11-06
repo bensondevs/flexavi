@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Query\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Observers\PaymentTermObserver;
 
@@ -15,6 +16,7 @@ use App\Enums\PaymentTerm\PaymentTermStatus;
 
 class PaymentTerm extends Model
 {
+    use HasFactory;
     use Searchable;
     use SoftDeletes;
 

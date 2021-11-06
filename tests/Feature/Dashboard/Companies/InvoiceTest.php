@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
 use App\Models\{ User, Company, Owner };
 
@@ -23,18 +24,13 @@ class InvoiceTest extends TestCase
      */
     public function test_view_all_invoices()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -49,18 +45,13 @@ class InvoiceTest extends TestCase
      */
     public function test_view_all_overdue_invoices()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/overdue';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -75,19 +66,14 @@ class InvoiceTest extends TestCase
      */
     public function test_store_invoice()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/store';
         $customer = $company->customers()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'customer_id' => $customer->id,
             'payment_method' => 2,
         ]);
@@ -106,19 +92,14 @@ class InvoiceTest extends TestCase
      */
     public function test_update_invoice()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/update';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->patch($url, [
+        $response = $this->patch($url, [
             'invoice_id' => $invoice->id,
             'payment_method' => 1,
         ]);
@@ -149,7 +130,7 @@ class InvoiceTest extends TestCase
         ];
         $url = '/api/dashboard/companies/invoices/send';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'invoice_id' => $invoice->id,
             'destination_email' => 'test123@gmail.com',
         ]);
@@ -168,19 +149,14 @@ class InvoiceTest extends TestCase
      */
     public function test_print_invoice()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/print';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'invoice_id' => $invoice->id,
         ]);
 
@@ -199,19 +175,14 @@ class InvoiceTest extends TestCase
      */
     public function test_print_invoice_draft()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/print_draft';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'invoice_id' => $invoice->id,
         ]);
 
@@ -242,7 +213,7 @@ class InvoiceTest extends TestCase
         ];
         $url = '/api/dashboard/companies/invoices/send_reminder';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'invoice_id' => $invoice->id,
             'destination_email' => 'destination@email.com',
         ]);
@@ -261,19 +232,14 @@ class InvoiceTest extends TestCase
      */
     public function test_change_invoice_status()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/change_status';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->patch($url, [
+        $response = $this->patch($url, [
             'invoice_id' => $invoice->id,
             'status' => 2,
         ]);
@@ -292,19 +258,14 @@ class InvoiceTest extends TestCase
      */
     public function test_mark_invoice_as_paid()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/mark_as_paid';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'invoice_id' => $invoice->id,
             'is_via_debt_collector' => false,
         ]);
@@ -323,20 +284,14 @@ class InvoiceTest extends TestCase
      */
     public function test_delete_invoice()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/delete';
         $invoice = $company->invoices()->inRandomOrder()->first();
-        $response = $this->withHeaders($headers)->delete($url, [
+        $response = $this->delete($url, [
             'invoice_id' => $invoice->id,
         ]);
 
@@ -354,20 +309,14 @@ class InvoiceTest extends TestCase
      */
     public function test_view_all_invoice_items()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invoice = $company->invoices()->inRandomOrder()->first();
         $url = '/api/dashboard/companies/invoices/items?invoice_id=' . $invoice->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -382,23 +331,17 @@ class InvoiceTest extends TestCase
      */
     public function test_store_invoice_item()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invoice = $company->invoices()
             ->where('status', 1)
             ->inRandomOrder()
-            ->first();
+            ->first() ?: Invoice::factory()->create(['company_id' => $company->id, 'status' => 1]);
         $url = '/api/dashboard/companies/invoices/items/store';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'invoice_id' => $invoice->id,
             'item_name' => 'Example name',
             'description' => 'Description example',
@@ -421,24 +364,18 @@ class InvoiceTest extends TestCase
      */
     public function test_update_invoice_item()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invoiceItem = $company
             ->invoiceItems()
             ->whereHas('invoice', function ($invoice) {
                 $invoice->where('status', 1);
             })->inRandomOrder()->first();
         $url = '/api/dashboard/companies/invoices/items/update';
-        $response = $this->withHeaders($headers)->patch($url, [
+        $response = $this->patch($url, [
             'invoice_item_id' => $invoiceItem->id,
             'item_name' => 'Item name example',
             'description' => 'Example item name',
@@ -461,23 +398,17 @@ class InvoiceTest extends TestCase
      */
     public function test_delete_invoice_item()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invoiceItem = $company->invoiceItems()
             ->whereHas('invoice', function ($invoice) {
                 $invoice->where('status', 1);
             })->inRandomOrder()->first();
         $url = '/api/dashboard/companies/invoices/items/delete';
-        $response = $this->withHeaders($headers)->delete($url, [
+        $response = $this->delete($url, [
             'invoice_item_id' => $invoiceItem->id,
         ]);
 
@@ -495,20 +426,14 @@ class InvoiceTest extends TestCase
      */
     public function test_view_all_invoice_payment_terms()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invoice = $company->invoices()->inRandomOrder()->first();
         $url = '/api/dashboard/companies/invoices/payment_terms?invoice_id=' . $invoice->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -523,22 +448,16 @@ class InvoiceTest extends TestCase
      */
     public function test_store_invoice_payment_term()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invoice = $company->invoices()
             ->inRandomOrder()
             ->first();
         $url = '/api/dashboard/companies/invoices/payment_terms/store';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'invoice_id' => $invoice->id,
             'term_name' => 'Example term name',
             'amount' => 1,
@@ -559,17 +478,11 @@ class InvoiceTest extends TestCase
      */
     public function test_update_invoice_payment_term()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/payment_terms/update';
         $term = $company->paymentTerms()
             ->whereHas('invoice', function ($invoice) {
@@ -577,7 +490,7 @@ class InvoiceTest extends TestCase
             })->where('status', PaymentTermStatus::Unpaid)
             ->inRandomOrder()
             ->first();
-        $response = $this->withHeaders($headers)->patch($url, [
+        $response = $this->patch($url, [
             'payment_term_id' => $term->id,
             'term_name' => 'Term name example',
             'amount' => $term->invoice->total_out_terms,
@@ -598,23 +511,17 @@ class InvoiceTest extends TestCase
      */
     public function test_mark_invoice_payment_term_as_paid()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/payment_terms/mark_as_paid';
         $term = $company->paymentTerms()
             ->where('status', PaymentTermStatus::Unpaid)
             ->inRandomOrder()
             ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'payment_term_id' => $term->id,
         ]);
 
@@ -632,23 +539,17 @@ class InvoiceTest extends TestCase
      */
     public function test_cancel_invoice_payment_term_paid_status()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/payment_terms/cancel_paid_status';
         $term = $company->paymentTerms()
             ->where('status', PaymentTermStatus::Paid)
             ->inRandomOrder()
             ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'payment_term_id' => $term->id,
             'reason' => 'Reason example',
         ]);
@@ -677,23 +578,17 @@ class InvoiceTest extends TestCase
      */
     public function test_delete_invoice_payment_term()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while ((! $user) && (! $company->paymentTerms()->count()));
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/invoices/payment_terms/delete';
         $term = $company->paymentTerms()
             ->where('status', PaymentTermStatus::Unpaid)
             ->inRandomOrder()
             ->first();
-        $response = $this->withHeaders($headers)->delete($url, [
+        $response = $this->delete($url, [
             'payment_term_id' => $term->id,
         ]);
 

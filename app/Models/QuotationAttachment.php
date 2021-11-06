@@ -8,11 +8,13 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Models\StorageFile;
 
 class QuotationAttachment extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
 

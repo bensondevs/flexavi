@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TaxSetting extends Model
 {
+    use HasFactory;
     use Searchable;
     use SoftDeletes;
 
@@ -22,10 +24,6 @@ class TaxSetting extends Model
         'company_id',
         'include_tax',
         'tax_percentage',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()

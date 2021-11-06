@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pricing extends Model
 {
+    use HasFactory;
+
     protected $table = 'pricings';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -18,10 +21,6 @@ class Pricing extends Model
         'service_name',
         'price',
         'description',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()

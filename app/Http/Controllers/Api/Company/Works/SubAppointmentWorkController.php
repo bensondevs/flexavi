@@ -54,7 +54,7 @@ class SubAppointmentWorkController extends Controller
         $subAppointment = $request->getSubAppointment();
         $this->work->attachTo($subAppointment);
 
-        return apiResponse($this->work)
+        return apiResponse($this->work);
     }
 
     public function attachMany(AttachManyRequest $request)

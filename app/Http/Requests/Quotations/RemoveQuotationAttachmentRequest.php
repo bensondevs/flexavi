@@ -15,7 +15,7 @@ class RemoveQuotationAttachmentRequest extends FormRequest
     {
         if ($this->attachment) return $this->attachment;
 
-        $id = $this->input('id');
+        $id = $this->input('id') ?: $this->input('quotation_attachment_id');
         return $this->attachment = QuotationAttachment::findOrFail($id);
     }
 

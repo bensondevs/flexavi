@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Observers\InvoiceObserver;
 
@@ -17,6 +18,7 @@ use App\Enums\PaymentTerm\PaymentTermStatus;
 
 class Invoice extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
 
@@ -44,6 +46,17 @@ class Invoice extends Model
     
         'status',
         'payment_method',
+
+        'sent_at',
+        'paid_at',
+        'payment_overdue_at',
+        'first_remider_sent_at',
+        'first_reminder_overdue_at',
+        'second_reminder_overdue_at',
+        'third_reminder_overdue_at',
+        'overdue_debt_collector_at',
+        'debt_collector_sent_at',
+        'paid_via_debt_collector_at',
     ];
 
     protected static function boot()
@@ -63,7 +76,7 @@ class Invoice extends Model
     public function scopeOverdue($query)
     {
         return $query->where('status', '>=', InvoiceStatus::PaymentOverdue)
-            ->where('status', '<=', InvoiceStatus::SentDebtCollector);
+            ->where('status', '<=', InvoiceStatus::DebtCollectorSent);
     }
 
     public function getStatusDescriptionAttribute()
@@ -241,5 +254,23 @@ class Invoice extends Model
 
         $paidTerms = $terms->where('status', PaymentTermStatus::Paid);
         $this->attributes['total_paid'] = $paidTerms->sum('amount');
+    }
+
+    public function syncStatus()
+    {
+        $isOverdue = false;
+
+        $status = $this->attributes['status'];
+        if ($status == InvoiceStatus::Sent) {
+            //
+        }
+
+
+        if ($isOverdue) {
+            $this->attributes['status']++;
+            $this->save();
+        }
+
+        return $this->attributes['status'];
     }
 }

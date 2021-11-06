@@ -5,7 +5,7 @@ namespace App\Http\Requests\PaymentTerms;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\InputRequest;
+use App\Traits\CompanyInputRequest;
 
 use App\Enums\PaymentTerm\PaymentTermStatus;
 
@@ -15,7 +15,7 @@ use App\Models\PaymentTerm;
 
 class UpdatePaymentTermRequest extends FormRequest
 {
-    use InputRequest;
+    use CompanyInputRequest;
 
     private $invoice;
     private $paymentTerm;
@@ -38,8 +38,8 @@ class UpdatePaymentTermRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        $invoice = $this->getInvoice();
-        $this->merge(['company_id' => $invoice->company_id]);
+        $company = $this->getCompany();
+        $this->merge(['company_id' => $company->id]);
     }
 
     /**

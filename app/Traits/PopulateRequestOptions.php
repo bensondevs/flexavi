@@ -13,6 +13,7 @@ trait PopulateRequestOptions
 	private $whereRaws = [];
 	private $whereHases = [];
 	private $whereHasMorphs = [];
+	private $scopes = [];
 	private $joins = [];
 	private $orderBys = [];
 
@@ -149,6 +150,20 @@ trait PopulateRequestOptions
 	public function setOrderBys(array $orderBys)
 	{
 		$this->orderBys = $orderBys;
+	}
+
+	public function addScope(string $name, $parameters)
+	{
+		if (! is_array($parameters)) {
+			$parameters = [$parameters];
+		}
+
+		if (isset($this->scopes[$name])) {
+			$scope = is_array($this->scopes[$name]) ? $this->scopes[$name] : [];
+			$parameters = array_merge($scope, $parameters);
+		}
+
+		$this->scopes[$name] = $parameters;
 	}
 
     public function collectOptions()

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasEvents;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Observers\RegisterInvitationObserver;
 
@@ -15,6 +16,7 @@ use App\Enums\RegisterInvitation\RegisterInvitationStatus;
 
 class RegisterInvitation extends Model
 {
+    use HasFactory;
     use Searchable;
     use SoftDeletes;
     use HasEvents;

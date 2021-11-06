@@ -9,9 +9,11 @@ use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use \Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Company extends Model
 {
+    use HasFactory;
     use SoftDeletes, CascadeSoftDeletes;
     use Searchable;
 
@@ -134,6 +136,11 @@ class Company extends Model
         return $this->hasMany(Car::class);
     }
 
+    public function carRegisterTimes()
+    {
+        return $this->hasMany(CarRegisterTime::class);
+    }
+
     public function schedules()
     {
         return $this->hasMany(Schedule::class);
@@ -151,7 +158,7 @@ class Company extends Model
 
     public function workdays()
     {
-        return $this->hasMany(CompanyWorkday::class);
+        return $this->hasMany(Workday::class);
     }
 
     public function worklists()

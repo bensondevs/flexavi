@@ -43,9 +43,16 @@ trait InputRequest
 				let it just pass anyway
 			*/
 			foreach ($rules as $key => $rule) {
-				if ($this->model)
-					if ($this->input($key) === $this->model->{$key})
+				if ($this->model) {
+					if ($this->input($key) === $this->model->{$key}) {
 						unset($rules[$key]);
+						continue;
+					}
+				}
+
+				if (! $this->has($key)) {
+					unset($rules[$key]);
+				}
 			}
 		}
 

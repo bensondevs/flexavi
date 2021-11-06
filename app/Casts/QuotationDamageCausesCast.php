@@ -19,7 +19,8 @@ class QuotationDamageCausesCast implements CastsAttributes
      */
     public function get($model, $key, $value, $attributes)
     {
-        if (is_string($damageCauses = json_decode($value, true))) {
+        $damageCauses = json_decode($value, true)
+        if (is_string($damageCauses)) {
             $damageCauses = json_decode($value, true);
         }
 

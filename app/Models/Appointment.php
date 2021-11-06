@@ -5,20 +5,25 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Fico7489\Laravel\Pivot\Traits\PivotEventTrait;
 use Znck\Eloquent\Traits\BelongsToThrough;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Enums\Appointment\AppointmentType;
-use App\Enums\Appointment\AppointmentStatus;
-use App\Enums\Appointment\AppointmentCancellationVault;
+use App\Enums\Appointment\{
+    AppointmentType,
+    AppointmentStatus,
+    AppointmentCancellationVault
+};
 
 use App\Enums\Work\WorkStatus;
 
 class Appointment extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
     use PivotEventTrait;
@@ -57,6 +62,8 @@ class Appointment extends Model
     ];
 
     protected $casts = [
+        'worklists.appointmentables.id' => 'string',
+
         'include_weekend' => 'boolean',
         'start' => 'datetime',
         'end' => 'datetime',
@@ -69,6 +76,16 @@ class Appointment extends Model
     	self::creating(function ($appointment) {
             $appointment->id = Uuid::generate()->string;
     	});
+    }
+
+    public function scopeCreated(Builder $query)
+    {
+        return $query->where('status', AppointmentStatus::Created);
+    }
+
+    public function scopeCalculated(Builder $query)
+    {
+        return $query->where('status', AppointmentStatus::Calculated);
     }
 
     public function setAppointmentStatusAttribute($status)

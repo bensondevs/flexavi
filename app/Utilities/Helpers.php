@@ -200,6 +200,20 @@ function randomDate($format = 'd/m/Y')
     return $date;
 }
 
+if (! function_exists('format_date')) {
+    function format_datetime($date, $format = 'Y-m-d H:i:s')
+    {
+        return carbon($date)->format($format);
+    }
+}
+
+if (! function_exists('random_alphabeth')) {
+    function random_alphabeth(bool $uppercase = false)
+    {
+        //
+    }
+}
+
 function random_phone($length = 12)
 {
     $result = '';
@@ -254,6 +268,18 @@ function current_date()
 function month_start_date()
 {
     return now()->copy()->startOfMonth()->toDateString();
+}
+
+function lastWeek()
+{
+    $now = now()->copy();
+    return $now->addDays(-7);
+}
+
+function nextWeek()
+{
+    $now = now()->copy();
+    return $now->addDays(7);
 }
 
 function gate()

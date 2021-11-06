@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Enums\ExecuteWork\ExecuteWorkStatus;
 use App\Enums\ExecuteWorkPhoto\PhotoConditionType;
@@ -15,6 +16,7 @@ use App\Observers\ExecuteWorkObserver;
 
 class ExecuteWork extends Model
 {
+    use HasFactory;
     use Searchable;
     use SoftDeletes;
 

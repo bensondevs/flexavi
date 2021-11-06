@@ -29,6 +29,11 @@ class PopulateCompanyCostsRequest extends FormRequest
         return Gate::allows('view-any-cost');
     }
 
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

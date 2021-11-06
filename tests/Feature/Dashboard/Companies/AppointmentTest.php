@@ -7,12 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
-use App\Models\User;
-use App\Models\Owner;
-use App\Models\Customer;
-use App\Models\Company;
-use App\Models\Appointment;
+use App\Models\{ User, Owner, Customer, Company, Appointment };
 
 use App\Enums\Appointment\AppointmentStatus;
 
@@ -27,18 +24,13 @@ class AppointmentTest extends TestCase
      */
     public function test_view_all_appointments()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -54,20 +46,16 @@ class AppointmentTest extends TestCase
      */
     public function test_view_customer_appointments()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = Customer::where('company_id', $owner->company_id)->first();
+        $customer = $company->customers()->inRandomOrder()->first() ?:
+            Customer::factory()->create(['company_id' => $company->id]);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/of_customer?customer_id=' . $customer->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -83,20 +71,16 @@ class AppointmentTest extends TestCase
      */
     public function test_store_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = Customer::where('company_id', $owner->company_id)->first();
+        $customer = $company->customers()->inRandomOrder()->first() ?:
+            Customer::factory()->create(['company_id' => $company->id]);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/store';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'customer_id' => $customer->id,
             'start' => '2021-05-15',
             'end' => '2021-05-18',
@@ -119,21 +103,15 @@ class AppointmentTest extends TestCase
      */
     public function test_update_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/update';
-        $appointment = Appointment::where('company_id', $owner->company_id)
-            ->where('status', AppointmentStatus::Created)
-            ->first();
-        $response = $this->withHeaders($headers)->patch($url, [
+        $appointment = $company->appointments()->created()->inRandomOrder()->first() ?:
+            Appointment::factory()->created()->create(['company_id' => $company->id]);
+        $response = $this->patch($url, [
             'id' => $appointment->id,
             'customer_id' => $appointment->customer_id,
             'start' => '2021-05-15',
@@ -157,21 +135,15 @@ class AppointmentTest extends TestCase
      */
     public function test_execute_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/execute';
-        $appointment = Appointment::where('company_id', $owner->company_id)
-            ->where('status', AppointmentStatus::Created)
-            ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $appointment = $company->appointments()->created()->inRandomOrder()->first() ?:
+            Appointment::factory()->created()->create(['company_id' => $company->id]);
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
         ]);
 
@@ -189,21 +161,15 @@ class AppointmentTest extends TestCase
      */
     public function test_process_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/process';
-        $appointment = Appointment::where('company_id', $owner->company_id)
-            ->where('status', AppointmentStatus::InProcess)
-            ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $appointment = $company->appointments()->created()->inRandomOrder()->first() ?:
+            Appointment::factory()->created()->create(['company_id' => $company->id]);
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
         ]);
 
@@ -221,21 +187,15 @@ class AppointmentTest extends TestCase
      */
     public function test_cancel_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/cancel';
-        $appointment = Appointment::where('company_id', $owner->company_id)
-            ->where('status', AppointmentStatus::Created)
-            ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $appointment = $company->appointments()->created()->inRandomOrder()->first() ?:
+            Appointment::factory()->created()->create(['company_id' => $company->id]);
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
             'cancellation_cause' => 'The rooder is terribly late',
             'cancellation_vault' => 1,
@@ -256,21 +216,15 @@ class AppointmentTest extends TestCase
      */
     public function test_reschedule_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/reschedule';
-        $appointment = Appointment::where('company_id', $owner->company_id)
-            ->where('status', '!=', AppointmentStatus::Calculated)
-            ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $appointment = $company->appointments()->calculated()->inRandomOrder()->first() ?:
+            Appointment::factory()->calculated()->create(['company_id' => $company->id]);
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
             'type' => $appointment->status,
             'start' => '2021-10-22',
@@ -291,21 +245,15 @@ class AppointmentTest extends TestCase
      */
     public function test_generate_invoice_from_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/generate_invoice';
-        $appointment = Appointment::where('company_id', $owner->company_id)
-            ->whereDoesntHave('invoice')
-            ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $appointment = $company->appointments()->whereDoesntHave('invoice')->inRandomOrder()->first() ?:
+            Appointment::factory()->calculated()->create(['company_id' => $company->id]);
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
             'payment_method' => 2,
         ]);
@@ -326,21 +274,15 @@ class AppointmentTest extends TestCase
      */
     public function test_generate_invoice_from_invoiced_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/appointments/generate_invoice';
-        $appointment = Appointment::where('company_id', $owner->company_id)
-            ->whereHas('invoice')
-            ->first();
-        $response = $this->withHeaders($headers)->post($url, [
+        $appointment = $company->appointments()->whereHas('invoice')->inRandomOrder()->first() ?:
+            Appointment::factory()->has(Invoice::factory()->create(), 'invoice')->create(['company_id' => $company->id]);
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
             'payment_method' => 2,
         ]);
@@ -361,19 +303,15 @@ class AppointmentTest extends TestCase
      */
     public function test_delete_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-        } while (! $user = $owner->user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $appointment = Appointment::where('company_id', $owner->company_id)->first();
+        $appointment = $company->appointments()->inRandomOrder()->first() ?:
+            Appointment::factory()->create(['company_id' => $company->id]);
         $url = '/api/dashboard/companies/appointments/delete';
-        $response = $this->withHeaders($headers)->delete($url, [
+        $response = $this->delete($url, [
             'appointment_id' => $appointment->id,
         ]);
 

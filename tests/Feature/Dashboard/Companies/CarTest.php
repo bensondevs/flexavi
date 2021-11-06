@@ -7,9 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
-use App\Models\Car;
-use App\Models\Owner;
+use App\Models\{ Car, Owner, Company };
 
 class CarTest extends TestCase
 {
@@ -22,16 +22,13 @@ class CarTest extends TestCase
      */
     public function test_view_all_cars()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/cars';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -46,16 +43,13 @@ class CarTest extends TestCase
      */
     public function test_view_trashed_cars()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/cars/trasheds';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -70,16 +64,13 @@ class CarTest extends TestCase
      */
     public function test_view_free_cars()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/cars/frees';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -94,14 +85,11 @@ class CarTest extends TestCase
      */
     public function test_store_car()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $carData = [
             'brand' => 'A brand',
             'model' => 'A model',
@@ -110,7 +98,7 @@ class CarTest extends TestCase
             'car_license' => 'SAMPLE_LICENSE',
         ];
         $url = '/api/dashboard/companies/cars/store';
-        $response = $this->withHeaders($headers)->post($url, $carData);
+        $response = $this->post($url, $carData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -126,9 +114,10 @@ class CarTest extends TestCase
      */
     public function test_set_car_image()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $car = Car::where('company_id', $owner->company_id)->first();
 
@@ -141,7 +130,7 @@ class CarTest extends TestCase
             'car_image' => file_get_contents(base_path() . '/tests/Resources/image_base64_example.txt'),
         ];
         $url = '/api/dashboard/companies/cars/set_image';
-        $response = $this->withHeaders($headers)->post($url, $carImageData);
+        $response = $this->post($url, $carImageData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -158,18 +147,15 @@ class CarTest extends TestCase
      */
     public function test_view_car()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $car = Car::where('company_id', $owner->company_id)->first();
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/cars/view?id=' . $car->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -184,16 +170,13 @@ class CarTest extends TestCase
      */
     public function test_update_car()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $car = Car::where('company_id', $owner->company_id)->first();
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $carData = [
             'id' => $car->id,
             'brand' => 'A brand',
@@ -203,7 +186,7 @@ class CarTest extends TestCase
             'car_license' => 'SAMPLE_LICENSE',
         ];
         $url = '/api/dashboard/companies/cars/update';
-        $response = $this->withHeaders($headers)->patch($url, $carData);
+        $response = $this->patch($url, $carData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -219,21 +202,18 @@ class CarTest extends TestCase
      */
     public function test_delete_car()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $car = Car::where('company_id', $owner->company_id)->free()->first();
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $carData = [
             'id' => $car->id,
         ];
         $url = '/api/dashboard/companies/cars/delete';
-        $response = $this->withHeaders($headers)->delete($url, $carData);
+        $response = $this->delete($url, $carData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -249,9 +229,10 @@ class CarTest extends TestCase
      */
     public function test_restore_car()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
         if (! $car = Car::onlyTrashed()->where('company_id', $owner->company_id)->first()) {
             $car = Car::where('company_id', $owner->company_id)->first();
@@ -261,15 +242,11 @@ class CarTest extends TestCase
             $car = Car::onlyTrashed()->where('id', $carId)->first();
         }
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $carData = [
             'id' => $car->id,
         ];
         $url = '/api/dashboard/companies/cars/restore';
-        $response = $this->withHeaders($headers)->patch($url, $carData);
+        $response = $this->patch($url, $carData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

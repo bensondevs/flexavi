@@ -25,9 +25,10 @@ use App\Policies\{
     InvoiceItemPolicy,
     PaymentTermPolicy,
     SubAppointmentPolicy,
+    CarRegisterTimePolicy,
     ExecuteWorkPhotoPolicy,
     AppointmentWorkerPolicy,
-    RegisterInvitationPolicy
+    RegisterInvitationPolicy,
 };
 
 class AuthServiceProvider extends ServiceProvider
@@ -243,6 +244,18 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-car', [CarPolicy::class, 'delete']);
         Gate::define('restore-car', [CarPolicy::class, 'restore']);
         Gate::define('force-delete-car', [CarPolicy::class, 'forceDelete']);
+
+        // Car Register Time
+        Gate::define('view-any-car-register-time', [CarRegisterTimePolicy::class, 'viewAny']);
+        Gate::define('view-car-register-time', [CarRegisterTimePolicy::class, 'view']);
+        Gate::define('register-car-time', [CarRegisterTimePolicy::class, 'register']);
+        Gate::define('register-worklist-car-time', [CarRegisterTimePolicy::class, 'registerToWorklist']);
+        Gate::define('create-car-register-time', [CarRegisterTimePolicy::class, 'create']);
+        Gate::define('mark-out-car-register-time', [CarRegisterTimePolicy::class, 'markOut']);
+        Gate::define('mark-return-car-register-time', [CarRegisterTimePolicy::class, 'markReturn']);
+        Gate::define('edit-car-register-time', [CarRegisterTimePolicy::class, 'update']);
+        Gate::define('restore-car-register-time', [CarRegisterTimePolicy::class, 'restore']);
+        Gate::define('force-delete-car-register-time', [CarRegisterTimePolicy::class, 'forceDelete']);
 
         // Workday
         Gate::define('view-any-workday', [WorkdayPolicy::class, 'viewAny']);

@@ -7,14 +7,11 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
-use App\Models\Owner;
-use App\Models\Company;
-use App\Models\Customer;
-use App\Models\Quotation;
+use App\Models\{ Owner, Company, Customer, Quotation };
 
-use App\Enums\Quotation\QuotationType;
-use App\Enums\Quotation\QuotationPaymentMethod;
+use App\Enums\Quotation\{ QuotationType, QuotationPaymentMethod };
 
 class QuotationTest extends TestCase
 {
@@ -29,16 +26,13 @@ class QuotationTest extends TestCase
      */
     public function test_view_all_quotations()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = $this->baseUrl;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -53,16 +47,13 @@ class QuotationTest extends TestCase
      */
     public function test_trashed_quotations()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = $this->baseUrl . '/trasheds';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -77,16 +68,14 @@ class QuotationTest extends TestCase
      */
     public function test_store_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = Customer::where('company_id', $owner->company_id)->first();
+        $customer = $company->customers()->inRandomOrder()->first() ?:
+            Customer::factory()->create(['company_id' => $company->id]);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $quotationData = [
             'customer_id' => $customer->id,
             'type' => rand(QuotationType::Leakage, QuotationType::Renewal),
@@ -104,7 +93,7 @@ class QuotationTest extends TestCase
             'payment_method' => rand(QuotationPaymentMethod::Cash, QuotationPaymentMethod::BankTransfer),
         ];
         $url = $this->baseUrl . '/store';
-        $response = $this->withHeaders($headers)->post($url, $quotationData);
+        $response = $this->post($url, $quotationData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -120,18 +109,16 @@ class QuotationTest extends TestCase
      */
     public function test_view_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $quotation = Quotation::where('company_id', $owner->company_id)->first();
+        $quotation = $company->quotations()->inRandomOrder()->first() ?:
+            Quotation::factory()->create(['company_id' => $company->id]);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = $this->baseUrl . '/view?id=' . $quotation->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -146,18 +133,16 @@ class QuotationTest extends TestCase
      */
     public function test_view_quotation_attachments()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $quotation = Quotation::where('company_id', $owner->company_id)->first();
+        $quotation = $company->quotations()->inRandomOrder()->first() ?:
+            Quotation::factory()->create(['company_id' => $company->id]);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = $this->baseUrl . '/attachments?quotation_id=' . $quotation->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -172,15 +157,14 @@ class QuotationTest extends TestCase
      */
     public function test_add_quotation_attachment()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $quotation = Quotation::where('company_id', $owner->company_id)->first();
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
+        $quotation = $company->quotations()->inRandomOrder()->first() ?:
+            Quotation::factory()->create(['company_id' => $company->id]);
+
         $attachmentData = [
             'quotation_id' => $quotation->id,
             'name' => 'Example attachment',
@@ -188,7 +172,7 @@ class QuotationTest extends TestCase
             'attachment' => file_get_contents(base_path() . '/tests/Resources/image_base64_example.txt'),
         ];
         $url = $this->baseUrl . '/attachments/add';
-        $response = $this->withHeaders($headers)->post($url, $attachmentData);
+        $response = $this->post($url, $attachmentData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -204,20 +188,18 @@ class QuotationTest extends TestCase
      */
     public function test_remove_quotation_attachment()
     {
-        $quotation = Quotation::whereHas('attachments')->first();
-        $attachment = $quotation->attachments()->first();
-        $owner = Owner::whereHas('user')
-            ->where('company_id', $quotation->company_id)
-            ->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
+        $quotation = $company->quotations()->inRandomOrder()->first() ?:
+            Quotation::factory()->create(['company_id' => $company->id]);
+        $attachment = $quotation->attachments()->first() ?:
+            QuotationAttachment::factory();
+
         $url = $this->baseUrl . '/attachments/remove';
-        $response = $this->withHeaders($headers)->delete($url, ['id' => $attachment->id]);
+        $response = $this->delete($url, ['id' => $attachment->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -233,8 +215,10 @@ class QuotationTest extends TestCase
      */
     public function test_send_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::where('company_id', $owner->company_id)->first();
@@ -249,7 +233,7 @@ class QuotationTest extends TestCase
             'text' => 'This is text example',
         ];
         $url = $this->baseUrl . '/send';
-        $response = $this->withHeaders($headers)->post($url, $sendData);
+        $response = $this->post($url, $sendData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -265,8 +249,10 @@ class QuotationTest extends TestCase
      */
     public function test_print_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::where('company_id', $owner->company_id)->first();
@@ -276,7 +262,7 @@ class QuotationTest extends TestCase
             'Authorization' => 'Bearer ' . $token,
         ];
         $url = $this->baseUrl . '/print';
-        $response = $this->withHeaders($headers)->post($url, ['id' => $quotation->id]);
+        $response = $this->post($url, ['id' => $quotation->id]);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -292,8 +278,10 @@ class QuotationTest extends TestCase
      */
     public function test_revise_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::where('company_id', $owner->company_id)->first();
@@ -308,7 +296,7 @@ class QuotationTest extends TestCase
             'payment_method' => 1,
         ];
         $url = $this->baseUrl . '/revise';
-        $response = $this->withHeaders($headers)->post($url, $revisionData);
+        $response = $this->post($url, $revisionData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -324,8 +312,10 @@ class QuotationTest extends TestCase
      */
     public function test_cancel_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::where('company_id', $owner->company_id)->first();
@@ -339,7 +329,7 @@ class QuotationTest extends TestCase
             'cancellation_reason' => 'Cancel reason data example',
         ];
         $url = $this->baseUrl . '/cancel';
-        $response = $this->withHeaders($headers)->post($url, $cancelData);
+        $response = $this->post($url, $cancelData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -355,8 +345,10 @@ class QuotationTest extends TestCase
      */
     public function test_honor_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::where('company_id', $owner->company_id)->first();
@@ -370,7 +362,7 @@ class QuotationTest extends TestCase
             'discount_amount' => 100,
         ];
         $url = $this->baseUrl . '/honor';
-        $response = $this->withHeaders($headers)->post($url, $honorData);
+        $response = $this->post($url, $honorData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -389,8 +381,10 @@ class QuotationTest extends TestCase
         $company = Company::inRandomOrder()
             ->whereHas('quotations')
             ->first();
-        $owner = $company->owners()->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::inRandomOrder()
@@ -402,7 +396,7 @@ class QuotationTest extends TestCase
             'Authorization' => 'Bearer ' . $token,
         ];
         $url = $this->baseUrl . '/generate_invoice';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'quotation_id' => $quotation->id,
             'payment_method' => 2,
         ]);
@@ -422,8 +416,10 @@ class QuotationTest extends TestCase
      */
     public function test_update_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::where('company_id', $owner->company_id)->first();
@@ -450,7 +446,7 @@ class QuotationTest extends TestCase
             'payment_method' => rand(QuotationPaymentMethod::Cash, QuotationPaymentMethod::BankTransfer),
         ];
         $url = $this->baseUrl . '/update';
-        $response = $this->withHeaders($headers)->patch($url, $quotationData);
+        $response = $this->patch($url, $quotationData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -466,8 +462,10 @@ class QuotationTest extends TestCase
      */
     public function test_delete_quotation()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
+        do {
+            $company = Company::inRandomOrder()->first();
+            $owner = $company->owners()->first();
+        } while (! $user = $owner->user);
         $token = $user->generateToken();
 
         $quotation = Quotation::where('company_id', $owner->company_id)->first();
@@ -480,7 +478,7 @@ class QuotationTest extends TestCase
             'quotation_id' => $quotation->id,
         ];
         $url = $this->baseUrl . '/delete';
-        $response = $this->withHeaders($headers)->delete($url, $quotationData);
+        $response = $this->delete($url, $quotationData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

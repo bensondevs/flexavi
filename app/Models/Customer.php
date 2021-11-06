@@ -10,11 +10,13 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Observers\CustomerObserver;
 
 class Customer extends Authenticatable
 {
+    use HasFactory;
     use Notifiable;
     use HasApiTokens;
     use SoftDeletes;
@@ -45,13 +47,6 @@ class Customer extends Authenticatable
         'email',
         'phone',
         'second_phone',
-
-        'address',
-        'house_number',
-        'house_number_suffix',
-        'zipcode',
-        'city',
-        'province',
     ];
 
     protected static function boot()

@@ -8,14 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
-use App\Enums\Employee\EmployeeType;
-use App\Enums\Employee\EmploymentStatus;
+use App\Enums\Employee\{
+    EmployeeType, EmploymentStatus
+};
 
 class Employee extends Model
 {
+    use HasFactory;
     use Searchable;
     use SoftDeletes;
     use HasRelationships;

@@ -17,13 +17,21 @@ use App\Http\Resources\CarResource;
 
 use App\Models\Company;
 
-use App\Repositories\CarRepository;
+use App\Repositories\{
+    CarRepository,
+    CarRegisterTime
+};
 
 class CarController extends Controller
 {
-    protected $car;
+    /**
+     * Repository container variable
+     * 
+     * @var \App\Models\Car  $car 
+     */
+    private $car;
 
-    public function __construct(CarRepository $car)
+    public function __construct(CarRepository $car) 
     {
     	$this->car = $car;
     }

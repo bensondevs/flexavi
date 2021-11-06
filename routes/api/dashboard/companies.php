@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Company\{
 	CarController,
+		CarRegisterTimeController,
 	InvoiceController,
 		InvoiceItemController,
 	CompanyController,
@@ -17,7 +18,7 @@ use App\Http\Controllers\Api\Company\{
 	EmployeeController,
 	CustomerController,
 	QuotationController,
-		QuotationWorkController,
+		Works\QuotationWorkController,
 	OwnerController,
 	InspectorController,
 	PaymentTermController,
@@ -29,10 +30,10 @@ use App\Http\Controllers\Api\Company\{
 			WorklistAppointmentController,
 			AppointmentController,
 				SubAppointmentController,
-					SubAppointmentWorkController,
+					Works\SubAppointmentWorkController,
 				AppointmentEmployeeController,
 				Costs\AppointmentCostController,
-				AppointmentWorkController,
+				Works\AppointmentWorkController,
 	CostController,
 		Receipts\CostReceiptController,
 	RevenueController,
@@ -322,6 +323,19 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::match(['PUT', 'PATCH'], 'update', [CarController::class, 'update']);
 		Route::delete('delete', [CarController::class, 'delete']);
 		Route::patch('restore', [CarController::class, 'restore']);
+
+		/*
+			Company Car Register Time Module
+		*/
+		Route::group(['prefix' => 'register_times'], function () {
+			Route::get('/', [CarRegisterTimeController::class, 'carRegisterTimes']);
+			Route::post('register', [CarRegisterTimeController::class, 'registerTime']);
+			Route::post('register_to_worklist', [CarRegisterTimeController::class, 'registerToWorklist']);
+			Route::post('mark_out', [CarRegisterTimeController::class, 'markOut']);
+			Route::post('mark_return', [CarRegisterTimeController::class, 'markReturn']);
+			Route::match(['PUT', 'PATCH'], 'update', [CarRegisterTimeController::class, 'update']);
+			Route::delete('delete', [CarRegisterTimeController::class, 'delete']);
+		});
 	});
 
 	/*

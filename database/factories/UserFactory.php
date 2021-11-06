@@ -2,12 +2,19 @@
 
 namespace Database\Factories;
 
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Traits\FactoryDeletedState;
 use Illuminate\Support\Str;
+
+use App\Models\User;
+use App\Models\RegisterInvitation;
+
+use App\Enums\User\UserIdCardType as CardType;
 
 class UserFactory extends Factory
 {
+    use FactoryDeletedState;
+
     /**
      * The name of the factory's corresponding model.
      *
@@ -23,10 +30,22 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->unique()->safeEmail,
+            'fullname' => $this->faker->name(),
+            'birth_date' => $this->faker->date(),
+            'id_card_type' => rand(CardType::NationalIdCard, CardType::DrivingLicense),
+            'id_card_number' => $this->faker->numerify('##########'),
+            'profile_picture_path' => $this->faker->image(
+                storage_path('app/public/uploads/users/profile_pictures'), 
+                400, 
+                300, 
+                null, 
+                false
+            ),
+            'phone' => $this->faker->phoneNumber(),
+            'email' => $this->faker->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'registration_code' => null,
             'remember_token' => Str::random(10),
         ];
     }
@@ -41,6 +60,25 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'email_verified_at' => null,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the model's registered with registration code.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function useCode()
+    {
+        $userEmail = $this->definition()['email'];
+        $registerInvitation = RegisterInvitation::inRandomOrder()->first() ?: 
+            RegisterInvitation::factory()->create([
+                'invited_email' => $userEmail,
+            ])->create();
+        return $this->state(function (array $attributes) use ($registerInvitation) {
+            return [
+                'registration_code' => $registerInvitation->registration_code,
             ];
         });
     }

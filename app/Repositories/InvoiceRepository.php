@@ -230,7 +230,7 @@ class InvoiceRepository extends BaseRepository
 			$options['scopes'] = [];
 		}
 
-		array_push($options['scopes'], 'overdue');
+		$options['scopes']['overdue'] = [];
 
         return $this->all($options, $pagination);
 	}
@@ -253,25 +253,25 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function sendReminder()
+	public function sendReminder(string $destinationEmail = '')
 	{
 		$invoice = $this->getModel();
 
 		switch (true) {
-			case $invoice->status < InvoiceStatus::FirstReminderSent:
-				return $this->sendFirstReminder();
+			case ($invoice->status <= InvoiceStatus::PaymentOverdue):
+				$this->sendFirstReminder($destinationEmail);
 				break;
 
-			case $invoice->status < InvoiceStatus::SecondReminderSent:
-				return $this->sendSecondReminder();
+			case ($invoice->status <= InvoiceStatus::FirstReminderSent):
+				$this->sendSecondReminder($destinationEmail);
 				break;
 
-			case $invoice->status < InvoiceStatus::ThirdReminderSent:
-				return $this->sendThirdReminder();
+			case ($invoice->status <= InvoiceStatus::SecondReminderSent):
+				$this->sendThirdReminder($destinationEmail);
 				break;
-			
+
 			default:
-				return $this->sendFirstReminder();
+				$this->sendThirdReminder($destinationEmail);
 				break;
 		}
 	}

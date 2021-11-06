@@ -96,6 +96,18 @@ class PermissionsSeeder extends Seeder
             'restore cars',
             'force delete cars',
 
+            // Car Register Times
+            'view any car register times',
+            'view car register times',
+            'create car register times',
+            'register car times',
+            'register worklist car times',
+            'mark out car register times',
+            'mark return car register times',
+            'edit car register times',
+            'delete car register times',
+            'force delete car register times',
+
         	// Company 
         	'register companies',
             'manage companies',

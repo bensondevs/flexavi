@@ -7,15 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
-use App\Models\{
-    User,
-    Owner,
-    Customer,
-    Company,
-    Employee,
-    Address
-};
+use App\Models\{ User, Owner, Customer, Company, Employee, Address };
 
 class OwnerAddressTest extends TestCase
 {
@@ -26,19 +20,13 @@ class OwnerAddressTest extends TestCase
      */
     public function test_populate_owner_addresses()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->whereHas('addresses')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/addresses/owner';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -53,19 +41,13 @@ class OwnerAddressTest extends TestCase
      */
     public function test_populate_owner_trashed_addresses()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->whereHas('addresses')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/addresses/owner/trasheds';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -80,19 +62,13 @@ class OwnerAddressTest extends TestCase
      */
     public function test_store_owner_address()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->whereHas('addresses')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/addresses/owner/store';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'address_type' => 1,
 
             'owner_id' => $owner->id,
@@ -122,20 +98,14 @@ class OwnerAddressTest extends TestCase
      */
     public function test_view_owner_address()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->whereHas('addresses')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $address = $owner->addresses()->first();
         $url = '/api/dashboard/companies/addresses/owner/view?address_id=' . $address->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -150,20 +120,14 @@ class OwnerAddressTest extends TestCase
      */
     public function test_update_owner_address()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->whereHas('addresses')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $address = $owner->addresses()->first();
         $url = '/api/dashboard/companies/addresses/owner/update';
-        $response = $this->withHeaders($headers)->patch($url, [
+        $response = $this->patch($url, [
             'id' => $address->id,
 
             'address_type' => 1,
@@ -193,20 +157,14 @@ class OwnerAddressTest extends TestCase
      */
     public function test_delete_owner_address()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->whereHas('addresses')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/addresses/owner/delete';
         $address = $owner->addresses()->first();
-        $response = $this->withHeaders($headers)->delete($url, [
+        $response = $this->delete($url, [
             'id' => $address->id,
         ]);
 
@@ -224,17 +182,11 @@ class OwnerAddressTest extends TestCase
      */
     public function test_restore_owner_address()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->whereHas('addresses')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/addresses/owner/restore';
         $address = $owner->addresses()
             ->withTrashed()
@@ -246,7 +198,7 @@ class OwnerAddressTest extends TestCase
             $address->delete();
             $address = Address::onlyTrashed()->findOrFail($id);
         }
-        $response = $this->withHeaders($headers)->patch($url, [
+        $response = $this->patch($url, [
             'id' => $address->id,
         ]);
 

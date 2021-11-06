@@ -44,9 +44,9 @@ class ChangeOverdueInvoiceStatus implements ShouldQueue
             $invoice->status = InvoiceStatus::PaymentOverdue;
         } else if ($invoice->status == InvoiceStatus::PaymentOverdue) {
             $invoice->status = InvoiceStatus::FirstReminder;
-        } else if ($invoice->status == InvoiceStatus::FirstReminderSent) {
+        } else if ($invoice->status == InvoiceStatus::FirstReminderOverdue) {
             $invoice->status = InvoiceStatus::SecondReminder;
-        } else if ($invoice->status == InvoiceStatus::SecondReminderSent) {
+        } else if ($invoice->status == InvoiceStatus::SecondReminderOverdue) {
             $invoice->status = InvoiceStatus::ThirdReminder;
         } else {
             $invoice->status = InvoiceStatus::OverdueDebtCollector;

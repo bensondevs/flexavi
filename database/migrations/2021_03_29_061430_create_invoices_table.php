@@ -36,11 +36,25 @@ class CreateInvoicesTable extends Migration
             $table->double('total_in_terms')->default(0);
             $table->double('total_paid')->default(0);
 
+            $table->datetime('overdue_at')->nullable();
+            $table->datetime('first_reminder_overdue_at')->nullable();
+            $table->datetime('second_reminder_overdue_at')->nullable();
+            $table->datetime('third_reminder_overdue_at')->nullable();
+            $table->datetime('overdue_debt_collector_at')->nullable();
+
             $table->tinyInteger('status')->default(1);
             $table->char('payment_method')->default(1);
 
             $table->timestamps();
             $table->softDeletes();
+            $table->timestamp('sent_at')->nullable();
+            $table->timestamp('paid_at')->nullable();
+            $table->timestamp('payment_overdue_at')->nullable();
+            $table->timestamp('first_remider_sent_at')->nullable();
+            $table->timestamp('second_reminder_sent_at')->nullable();
+            $table->timestamp('third_reminder_sent_at')->nullable();
+            $table->timestamp('debt_collector_sent_at')->nullable();
+            $table->timestamp('paid_via_debt_collector_at')->nullable();
         });
     }
 

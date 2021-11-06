@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             WarrantiesSeeder::class,
             AddressesSeeder::class,
             CostsSeeder::class,
+            CarRegisterTimesSeeder::class,
         ]);
     }
 }

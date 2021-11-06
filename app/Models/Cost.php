@@ -10,11 +10,13 @@ use App\Traits\Searchable;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 use Fidum\EloquentMorphToOne\HasMorphToOne;
 use Fidum\EloquentMorphToOne\MorphToOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Enums\Cost\CostableType;
 
 class Cost extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
     use HasRelationships;

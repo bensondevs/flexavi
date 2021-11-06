@@ -35,16 +35,6 @@ class EmployeeRepository extends BaseRepository
 		return $this->all($options, $pagination);
 	}
 
-	/*public function trashedAppointmentEmployees(array $options = [], bool $pagination = false)
-	{
-		$appointmentEmployees = new AppointmentEmployee;
-		$appointmentEmployees = $appointmentEmployees->onlyTrashed();
-
-		$this->setModel($appointmentEmployees);
-
-		return $this->all($options, $pagination);
-	}*/
-
 	public function save(array $employeeData)
 	{
 		try {

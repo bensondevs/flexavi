@@ -16,6 +16,8 @@ class CreateAppointmentablesTable extends Migration
         Schema::create('appointmentables', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->integer('order_index')->default(1);
+
             $table->uuid('appointment_id');
             $table->foreign('appointment_id')
                 ->references('id')

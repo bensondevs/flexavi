@@ -31,8 +31,29 @@ class SettingsSeeder extends Seeder
         $rawSettings[] = [
             'id' => generateUuid(),
             'type' => SettingType::Default,
-            'key' => 'notification_enabled',
+            'key' => 'notification_enability',
             'value' => 'true',
+        ];
+
+        $rawSettings[] = [
+            'id' => generateUuid(),
+            'type' => SettingType::Default,
+            'key' => 'start_working_time',
+            'value' => '08:00:00',
+        ];
+
+        $rawSettings[] = [
+            'id' => generateUuid(),
+            'type' => SettingType::Default,
+            'key' => 'end_working_time',
+            'value' => '17:00:00',
+        ];
+
+        $rawSettings[] = [
+            'id' => generateUuid(),
+            'type' => SettingType::Default,
+            'key' => 'default_worklist_per_workday',
+            'value' => 3,
         ];
 
         Setting::insert($rawSettings);

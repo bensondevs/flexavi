@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Inspector extends Model
 {
+    use HasFactory;
+
     protected $table = 'inspectors';
     protected $primaryKey = 'id';
     public $timestamps = true;
@@ -17,10 +20,6 @@ class Inspector extends Model
     protected $fillable = [
         'inspection_id',
         'employee_id',
-    ];
-
-    protected $hidden = [
-        
     ];
 
     protected static function boot()

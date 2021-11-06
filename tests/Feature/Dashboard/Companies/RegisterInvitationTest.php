@@ -7,9 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
-use App\Models\Owner;
-use App\Models\Employee;
+use App\Models\{ Owner, Employee, Company, User };
 
 class RegisterInvitationTest extends TestCase
 {
@@ -22,14 +22,11 @@ class RegisterInvitationTest extends TestCase
      */
     public function test_invite_employee()
     {
-        $owner = Owner::whereHas('user')->whereHas('company')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invitationData = [
             'invited_email' => 'test@invited.com',
             'expiry_time' => '2021-09-21',
@@ -37,7 +34,7 @@ class RegisterInvitationTest extends TestCase
             'employee_type' => 2,
         ];
         $url = '/api/dashboard/companies/register_invitations/invite_employee';
-        $response = $this->withHeaders($headers)->post($url, $invitationData);
+        $response = $this->post($url, $invitationData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -56,21 +53,18 @@ class RegisterInvitationTest extends TestCase
      */
     public function test_invite_owner()
     {
-        $owner = Owner::whereHas('user')->whereHas('company')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $invitationData = [
             'invited_email' => 'testowner@invited.com',
             'expiry_time' => '2021-09-21',
         ];
 
         $url = '/api/dashboard/companies/register_invitations/invite_owner';
-        $response = $this->withHeaders($headers)->post($url, $invitationData);
+        $response = $this->post($url, $invitationData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {

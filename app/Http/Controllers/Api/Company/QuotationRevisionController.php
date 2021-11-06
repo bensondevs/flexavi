@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\QuotationRevisions\PopulateQuotationRevisionsRequest as PopulateRequest;
-use App\Http\Requests\QuotationRevisions\SaveQuotationRevisionRequest as SaveRequest;
-use App\Http\Requests\QuotationRevisions\ApplyQuotationRevisionRequest as ApplyRequest;
-use App\Http\Requests\QuotationRevisions\DeleteQuotationRevisionRequest as DeleteRequest;
+use App\Http\Requests\QuotationRevisions\{
+    PopulateQuotationRevisionsRequest as PopulateRequest,
+    SaveQuotationRevisionRequest as SaveRequest,
+    ApplyQuotationRevisionRequest as ApplyRequest,
+    DeleteQuotationRevisionRequest as DeleteRequest
+};
 
 use App\Repositories\QuotationRevisionRepository as RevisionRepository;
 

@@ -27,6 +27,8 @@ class BaseRepository
 	private $paginations = null;
 	private $defaultPaginationPerPage = 10;
 
+	private $resourceClass;
+
 	public function setInitModel(Model $model)
 	{
 		$this->model = $model;
@@ -95,6 +97,16 @@ class BaseRepository
 		return $this->paginations = null;
 	}
 
+	public function setResource($resourceClass)
+	{
+		return $this->resourceClass = $resourceClass;
+	}
+
+	public function getResource()
+	{
+		return $this->resourceClass;
+	}
+
 	public function all(array $options = [], bool $pagination = false, bool $skipGet = false)
 	{
 		// DB::enableQueryLog();
@@ -115,8 +127,8 @@ class BaseRepository
 
 		if (isset($options['scopes'])) {
 			if ($options['scopes']) {
-				foreach ($options['scopes'] as $scope) {
-					$models = $models->{$scope}();
+				foreach ($options['scopes'] as $scope => $parameters) {
+					$models = $models->{$scope}(...$parameters);
 				}
 			}
 		}

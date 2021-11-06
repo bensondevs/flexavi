@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class QuotationRevision extends Model
 {
+    use HasFactory;
+
     protected $table = 'quotation_revisions';
     protected $primaryKey = 'id';
     public $timestamps = true;

@@ -5,14 +5,17 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Enums\Worklist\WorklistStatus;
 
 class Worklist extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
     use HasRelationships;
@@ -42,10 +45,40 @@ class Worklist extends Model
     	});
     }
 
+    public function scopePrepared(Builder $query)
+    {
+        return $query->where('status', WorklistStatus::Prepared);
+    }
+
+    public function scopeProcessed(Builder $query)
+    {
+        return $query->where('status', WorklistStatus::Processed);
+    }
+
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
         return WorklistStatus::getDescription($status);
+    }
+
+    public function getStartTimeAttribute()
+    {
+        if (! $this->appointments->count()) {
+            return null;
+        }
+
+        $appointment = $this->appointments->sortBy('start')->first();
+        return $appointment->start;
+    }
+
+    public function getEndTimeAttribute()
+    {
+        if (! $this->appointments->count()) {
+            return null;
+        }
+
+        $appointment = $this->appointments->sortBy('end')->last();
+        return $appointment->end;
     }
 
     public function company()

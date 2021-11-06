@@ -4,12 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\User;
-use App\Models\Customer;
-use App\Models\Owner;
-use App\Models\Company;
-use App\Models\Address;
-use App\Models\Employee;
+use App\Models\{
+    User,
+    Customer,
+    Owner,
+    Company,
+    Address,
+    Employee
+};
 
 use App\Enums\Address\AddressType;
 
@@ -22,19 +24,22 @@ class AddressesSeeder extends Seeder
      */
     public function run()
     {
+        $faker = \Faker\Factory::create();
+
         $rawAddresses = [];
-        foreach (Owner::whereHas('user')->with('user')->get() as $owner) {
-            for ($index = 0; $index < rand(1, 3); $index++) {
+        foreach (Owner::all() as $owner) {
+            for ($index = 0; $index < rand(1, 2); $index++) {
                 $address = [
                     'id' => generateUuid(),
                     'addressable_type' => Owner::class,
                     'addressable_id' => $owner->id,
-                    'address' => 'Owner Address ',
-                    'house_number' => rand(1, 1000),
-                    'house_number_suffix' => 'X',
-                    'zipcode' => rand(100000, 999999),
-                    'city' => 'Randon City',
-                    'province' => 'Random Province',
+                    'address' => $faker->address,
+                    'house_number' => $faker->buildingNumber,
+                    'house_number_suffix' => rand(0, 1) ?
+                        strtoupper($faker->lexify('?')) : null,
+                    'zipcode' => $faker->postcode,
+                    'city' => $faker->city,
+                    'province' => $faker->state,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
                 ];
@@ -51,17 +56,18 @@ class AddressesSeeder extends Seeder
         $rawAddresses = array();
 
         foreach (Company::all() as $company) {
-            for ($index = 0; $index < rand(1, 3); $index++) {
+            for ($index = 0; $index < rand(1, 2); $index++) {
                 $address = [
                     'id' => generateUuid(),
                     'addressable_type' => Company::class,
                     'addressable_id' => $company->id,
-                    'address' => $company->company_name . ' Address ',
-                    'house_number' => rand(1, 1000),
-                    'house_number_suffix' => 'X',
-                    'zipcode' => rand(100000, 999999),
-                    'city' => 'Randon City',
-                    'province' => 'Random Province',
+                    'address' => $faker->address,
+                    'house_number' => $faker->buildingNumber,
+                    'house_number_suffix' => rand(0, 1) ?
+                        strtoupper($faker->lexify('?')) : null,
+                    'zipcode' => $faker->postcode,
+                    'city' => $faker->city,
+                    'province' => $faker->state,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
                 ];
@@ -78,17 +84,18 @@ class AddressesSeeder extends Seeder
         $rawAddresses = array();
 
         foreach (Customer::all() as $customer) {
-            for ($index = 0; $index < rand(1, 3); $index++) {
+            for ($index = 0; $index < rand(1, 2); $index++) {
                 $address = [
                     'id' => generateUuid(),
                     'addressable_type' => Customer::class,
                     'addressable_id' => $customer->id,
-                    'address' => $customer->fullname . ' Address ',
-                    'house_number' => rand(1, 1000),
-                    'house_number_suffix' => 'X',
-                    'zipcode' => rand(100000, 999999),
-                    'city' => 'Randon City',
-                    'province' => 'Random Province',
+                    'address' => $faker->address,
+                    'house_number' => $faker->buildingNumber,
+                    'house_number_suffix' => rand(0, 1) ?
+                        strtoupper($faker->lexify('?')) : null,
+                    'zipcode' => $faker->postcode,
+                    'city' => $faker->city,
+                    'province' => $faker->state,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
                 ];
@@ -105,17 +112,18 @@ class AddressesSeeder extends Seeder
         $rawAddresses = array();
     
         foreach (Employee::with('user')->get() as $employee) {
-            for ($index = 0; $index < rand(1, 3); $index++) {
+            for ($index = 0; $index < rand(1, 2); $index++) {
                 $address = [
                     'id' => generateUuid(),
                     'addressable_type' => Employee::class,
                     'addressable_id' => $employee->id,
-                    'address' => 'Employee Address',
-                    'house_number' => rand(1, 1000),
-                    'house_number_suffix' => 'X',
-                    'zipcode' => rand(100000, 999999),
-                    'city' => 'Randon City',
-                    'province' => 'Random Province',
+                    'address' => $faker->address,
+                    'house_number' => $faker->buildingNumber,
+                    'house_number_suffix' => rand(0, 1) ?
+                        strtoupper($faker->lexify('?')) : null,
+                    'zipcode' => $faker->postcode,
+                    'city' => $faker->city,
+                    'province' => $faker->state,
                     'created_at' => carbon()->now(),
                     'updated_at' => carbon()->now(),
                 ];

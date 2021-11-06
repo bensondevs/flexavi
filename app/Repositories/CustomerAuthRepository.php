@@ -16,11 +16,6 @@ class CustomerAuthRepository extends BaseRepository
 		$this->setInitModel(new Customer);
 	}
 
-	public function all(array $options = [], bool $pagination = false)
-	{
-		return abort(403, 'Prohibited function call.');
-	}
-
 	public function login(array $credentials)
 	{
 		try {

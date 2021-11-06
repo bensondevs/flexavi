@@ -32,21 +32,7 @@ class CompaniesSeeder extends Seeder
                 'commerce_chamber_number' => rand(1, 100),
                 'company_logo_path' => '/uploads/companies/logos/20210730125714.jpeg',
                 'company_website_url' => 'www.randomwebsite.com',
-
-                'visiting_address' => json_encode([
-                    'street' => 'Custom Road',
-                    'house_number' => rand(1, 300),
-                    'house_number_suffix' => 'X',
-                    'zip_code' => '67312',
-                    'city' => 'Random City',
-                ]),
-                'invoicing_address' => json_encode([
-                    'street' => 'Custom Street',
-                    'house_number' => rand(1, 250),
-                    'house_number_suffix' => 'X',
-                    'zip_code' => '65123',
-                    'city' => 'Random City',
-                ]),
+                
                 'created_at' => carbon()->now(),
                 'updated_at' => carbon()->now(),
             ]);

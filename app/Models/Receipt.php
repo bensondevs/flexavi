@@ -8,11 +8,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use App\Models\StorageFile;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Observers\ReceiptObserver;
 
 class Receipt extends Model
 {
+    use HasFactory;
     use SoftDeletes;
     use Searchable;
 

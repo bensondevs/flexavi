@@ -7,9 +7,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Laravel\Sanctum\Sanctum;
 
-use App\Models\Owner;
-use App\Models\Workday;
+use App\Models\{ Owner, Workday, Company };
 
 use App\Enums\Workday\WorkdayStatus;
 
@@ -24,16 +24,13 @@ class WorkdayTest extends TestCase
      */
     public function test_view_all_workdays()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/workdays';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -50,16 +47,13 @@ class WorkdayTest extends TestCase
      */
     public function test_view_current_workday()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/workdays/current';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -74,18 +68,16 @@ class WorkdayTest extends TestCase
      */
     public function test_view_workday()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $workday = Workday::where('company_id', $owner->company_id)->first();
+        $workday = $company->workdays()->inRandomOrder()->first() ?:
+            Workday::factory()->create(['company_id' => $company->id]);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/workdays/view?id=' . $workday->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -100,23 +92,27 @@ class WorkdayTest extends TestCase
      */
     public function test_process_workday()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = $company->owners()->whereHas('user')->inRandomOrder()->first() ?:
+            Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $workday = Workday::where('company_id', $owner->company_id)
+        $workday = $company->workdays()
             ->where('status', '<', WorkdayStatus::Processed)
+            ->inRandomOrder()
             ->first();
+        if (! $workday) {
+            $workday = Workday::factory()->create([
+                'company_id' => $company->id,
+                'status' => WorkdayStatus::Prepared,
+            ]);
+        }
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $processData = [
             'workday_id' => $workday->id,
         ];
         $url = '/api/dashboard/companies/workdays/process';
-        $response = $this->withHeaders($headers)->post($url, $processData);
+        $response = $this->post($url, $processData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -132,23 +128,26 @@ class WorkdayTest extends TestCase
      */
     public function test_calculate_workday()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $workday = Workday::where('company_id', $owner->company_id)
+        $workday = $company->workdays()
             ->where('status', '<', WorkdayStatus::Calculated)
+            ->inRandomOrder()
             ->first();
+        if (! $workday) {
+            $workday = Workday::factory()->create([
+                'company_id' => $company->id,
+                'status' => WorkdayStatus::Processed,
+            ]);
+        }
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $calculateData = [
             'workday_id' => $workday->id,
         ];
         $url = '/api/dashboard/companies/workdays/calculate';
-        $response = $this->withHeaders($headers)->post($url, $calculateData);
+        $response = $this->post($url, $calculateData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
