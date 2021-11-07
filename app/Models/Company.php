@@ -73,7 +73,7 @@ class Company extends Model
 
     public function owners()
     {
-        return $this->hasMany(Owner::class);
+        return $this->hasMany(Owner::class)->whereNotNull('user_id');
     }
 
     public function addresses()
@@ -83,7 +83,7 @@ class Company extends Model
 
     public function employees()
     {
-        return $this->hasMany(Employee::class);
+        return $this->hasMany(Employee::class)->whereNotNull('user_id');
     }
 
     public function customers()

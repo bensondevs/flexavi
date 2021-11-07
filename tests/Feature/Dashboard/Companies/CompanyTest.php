@@ -23,10 +23,7 @@ class CompanyTest extends TestCase
     public function test_user_owner_register_company()
     {
         $user = User::factory()->create();
-        $owner = Owner::factory()
-            ->withoutCompany()
-            ->prime()
-            ->create(['user_id' => $user->id]);
+        $owner = Owner::factory()->withoutCompany()->prime()->for($user)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/register';
@@ -50,7 +47,7 @@ class CompanyTest extends TestCase
             'commerce_chamber_number' => 121,
             'company_website_url' => 'https://company.test.com/',
         ];
-        $response = $this->post($url, $registerData);
+        $response = $this->json('POST', $url, $registerData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -67,8 +64,7 @@ class CompanyTest extends TestCase
     public function test_owner_can_update_company()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/update';
@@ -92,7 +88,7 @@ class CompanyTest extends TestCase
             'commerce_chamber_number' => 121,
             'company_website_url' => 'https://company.test.com/',
         ];
-        $response = $this->patch($url, $companyData);
+        $response = $this->json('PATCH', $url, $companyData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -109,15 +105,14 @@ class CompanyTest extends TestCase
     public function test_owner_can_upload_company_logo()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/upload_logo';
         $photoData = [
             'company_logo' => file_get_contents(base_path() . '/tests/Resources/image_base64_example.txt'),
         ];
-        $response = $this->post($url, $photoData);
+        $response = $this->json('POST', $url, $photoData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {

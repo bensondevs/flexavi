@@ -25,12 +25,11 @@ class CustomerTest extends TestCase
     public function test_view_all_customers()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
         
         $url = $this->baseUrl;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -47,12 +46,11 @@ class CustomerTest extends TestCase
     public function test_view_trashed_customers()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = $this->baseUrl . '/trasheds';
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -69,8 +67,7 @@ class CustomerTest extends TestCase
     public function test_store_customer()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $customerData = [
@@ -86,7 +83,7 @@ class CustomerTest extends TestCase
             'province' => 'Example Province',
         ];
         $url = $this->baseUrl . '/store';
-        $response = $this->post($url, $customerData);
+        $response = $this->json('POST', $url, $customerData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -103,15 +100,13 @@ class CustomerTest extends TestCase
     public function test_view_customer()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = $company->customers()->inRandomOrder()->first() ?:
-            Customer::factory()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->create();
 
         $url = $this->baseUrl . '/view?id=' . $customer->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -127,12 +122,10 @@ class CustomerTest extends TestCase
     public function test_update_customer()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = $company->customers()->inRandomOrder()->first() ?:
-            Customer::factory()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->create();
 
         $customerData = [
             'id' => $customer->id,
@@ -148,7 +141,7 @@ class CustomerTest extends TestCase
             'province' => 'Example Province',
         ];
         $url = $this->baseUrl . '/update';
-        $response = $this->patch($url, $customerData);
+        $response = $this->json('PATCH', $url, $customerData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -165,16 +158,13 @@ class CustomerTest extends TestCase
     public function test_delete_customer()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = $company->customers()->inRandomOrder()->first() ?:
-            Customer::factory()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->create();
 
-        $customerData = ['id' => $customer->id];
         $url = $this->baseUrl . '/delete';
-        $response = $this->delete($url, $customerData);
+        $response = $this->json('DELETE', $url, ['id' => $customer->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -191,16 +181,14 @@ class CustomerTest extends TestCase
     public function test_restore_customer()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = $company->customers()->onlyTrashed()->inRandomOrder()->first() ?:
-            Customer::factory()->softDeleted()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->softDeleted()->create();
 
         $customerData = ['id' => $customer->id];
         $url = $this->baseUrl . '/restore';
-        $response = $this->patch($url, $customerData);
+        $response = $this->json('PATCH', $url, $customerData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -217,15 +205,13 @@ class CustomerTest extends TestCase
     public function test_view_customer_appointments()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = $company->customers()->inRandomOrder()->first() ?:
-            Customer::factory()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->create();
 
         $url = $this->baseUrl . '/appointments?customer_id=' . $customer->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -241,15 +227,13 @@ class CustomerTest extends TestCase
     public function test_view_customer_quotations()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = $company->customers()->inRandomOrder()->first() ?:
-            Customer::factory()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->create();
 
         $url = $this->baseUrl . '/quotations?customer_id=' . $customer->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

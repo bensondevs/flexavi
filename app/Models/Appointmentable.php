@@ -22,6 +22,8 @@ class Appointmentable extends Model
     protected $fillable = [
         'order_index',
 
+        'company_id',
+
         'appointmentable_id',
         'appointmentable_type',
         'appointment_id',
@@ -52,6 +54,11 @@ class Appointmentable extends Model
     {
         return $query->where('appointmentable_id', $this->attributes['appointmentable_id'])
             ->where('appointmentable_type', $this->attributes['appointmentable_type']);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function appointment()

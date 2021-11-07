@@ -19,6 +19,26 @@ class CarRegisterTimeFactory extends Factory
     protected $model = CarRegisterTime::class;
 
     /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (CarRegisterTime $time) {
+            if (! $time->company_id) {
+                $company = Company::factory()->create();
+                $time->company()->associate($company);
+            }
+
+            if (! $time->car_id) {
+                $car = Car::factory()->create(['company_id' => $time->company_id]);
+                $time->car()->associate($car);
+            }
+        });
+    }
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -27,14 +47,7 @@ class CarRegisterTimeFactory extends Factory
     {
         $faker = $this->faker;
 
-        $company = Company::inRandomOrder()->first() ?:
-            Company::factory()->create();
-        $car = $company->cars()->inRandomOrder()->first() ?:
-            Car::factory()->create(['company_id' => $company->id]);
-
         return [
-            'company_id' => $company->id,
-            'car_id' => $car->id,
             'should_out_at' => $faker->datetime,
             'should_return_at' => $faker->datetime,
         ];

@@ -21,6 +21,29 @@ class WorklistFactory extends Factory
     protected $model = Worklist::class;
 
     /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (Worklist $worklist) {
+            if (! $worklist->company_id) {
+                $company = Company::inRandomOrder()->first() ?:
+                    Company::factory()->create();
+                $worklist->company()->associate($company);
+            }
+
+            if (! $worklist->workday_id) {
+                $workday = Workday::where('company_id', $worklist->company_id)
+                    ->inRandomOrder()
+                    ->first() ?: Workday::factory()->for($worklist->company)->create();
+                $worklist->workday()->associate($workday);
+            }
+        });
+    }
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -29,19 +52,9 @@ class WorklistFactory extends Factory
     {
         $faker = $this->faker;
 
-        if (! $company = Company::inRandomOrder()->first()) {
-            $company = Company::factory()->create();
-        }
-
-        if (! $workday = $company->workdays()->inRandomOrder()->first()) {
-            $workday = Workday::factory()->create(['company_id' => $company->id]);
-        }
-
         $status = WorklistStatus::Prepared;
 
         return [
-            'company_id' => $company->id,
-            'workday_id' => $workday->id,
             'start' => $faker->datetime(),
             'end' => $faker->datetime(),
 

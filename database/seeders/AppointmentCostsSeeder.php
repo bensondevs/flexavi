@@ -35,6 +35,7 @@ class AppointmentCostsSeeder extends Seeder
 
                 array_push($rawCostables, [
                     'cost_id' => $id,
+                    'company_id' => $appointment->company_id,
                     'costable_id' => $appointment->id,
                     'costable_type' => get_class($appointment),
                     'created_at' => now(),
@@ -44,6 +45,7 @@ class AppointmentCostsSeeder extends Seeder
                 foreach ($appointment->appointmentables as $appointmentable) {
                     array_push($rawCostables, [
                         'cost_id' => $id,
+                        'company_id' => $appointment->company_id,
                         'costable_id' => $appointmentable->appointmentable_id,
                         'costable_type' => $appointmentable->appointmentable_type,
                         'created_at' => now(),

@@ -23,12 +23,11 @@ class OwnerTest extends TestCase
     public function test_view_all_company_owners()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/owners';
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -43,15 +42,11 @@ class OwnerTest extends TestCase
      */
     public function test_non_owner_view_all_company_owners()
     {
-        $nonOwnerUser = User::whereDoesntHave('owner')->first();
-        $token = $nonOwnerUser->generateToken();
+        $user = User::factory()->create();
+        Sanctum::actingAs($user, ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
         $url = '/api/dashboard/companies/owners';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(403);
     }
@@ -64,12 +59,11 @@ class OwnerTest extends TestCase
     public function test_view_all_invitable_owners()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->primeOnly()->inRandomOrder()->first() ?:
-            Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/owners/inviteables';
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -85,8 +79,7 @@ class OwnerTest extends TestCase
     public function test_store_owner()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $ownerData = [
@@ -102,7 +95,7 @@ class OwnerTest extends TestCase
             'province' => 'Another Province',
         ];
         $url = '/api/dashboard/companies/owners/store';
-        $response = $this->post($url, $ownerData);
+        $response = $this->json('POST', $url, $ownerData);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -122,15 +115,13 @@ class OwnerTest extends TestCase
     public function test_view_owner()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $viewedOwner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $viewedOwner = Owner::factory()->for($company)->create();
 
         $url = '/api/dashboard/companies/owners/view?id=' . $viewedOwner->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -146,12 +137,10 @@ class OwnerTest extends TestCase
     public function test_update_owner()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $viewedOwner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $editedOwner = Owner::factory()->for($company)->create();
 
         $ownerData = [
             'id' => $editedOwner->id,
@@ -167,7 +156,7 @@ class OwnerTest extends TestCase
             'province' => 'Another Province',
         ];
         $url = '/api/dashboard/companies/owners/update';
-        $response = $this->patch($url, $ownerData);
+        $response = $this->json('PATCH', $url, $ownerData);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -187,15 +176,13 @@ class OwnerTest extends TestCase
     public function test_prime_owner_delete_owner()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->primeOnly()->inRandomOrder()->first() ?:
-            Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->prime()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $deletedOwner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $deletedOwner = Owner::factory()->for($company)->notPrime()->create();
 
         $url = '/api/dashboard/companies/owners/delete';
-        $response = $this->delete($url, ['id' => $deletedOwner->id]);
+        $response = $this->json('DELETE', $url, ['id' => $deletedOwner->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -214,15 +201,13 @@ class OwnerTest extends TestCase
     public function test_delete_prime_owner()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $viewedOwner = $company->owners()->primeOnly()->inRandomOrder()->first() ?:
-            Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $primeOwner = Owner::factory()->for($company)->prime()->create();
 
         $url = '/api/dashboard/companies/owners/delete';
-        $response = $this->delete($url, ['id' => $primeOwner->id]);
+        $response = $this->json('DELETE', $url, ['id' => $primeOwner->id]);
 
         $response->assertStatus(403);
     }

@@ -16,6 +16,12 @@ class CreateCostablesTable extends Migration
         Schema::create('costables', function (Blueprint $table) {
             $table->bigIncrements('id');
 
+            $table->uuid('company_id');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('CASCADE');
+
             $table->uuid('cost_id');
             $table->foreign('cost_id')
                 ->references('id')

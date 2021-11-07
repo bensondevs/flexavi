@@ -23,12 +23,11 @@ class CostTest extends TestCase
     public function test_view_all_costs()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/costs';
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -44,12 +43,11 @@ class CostTest extends TestCase
     public function test_store_cost()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/costs/store';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'cost_name' => 'Store cost example',
             'amount' => 10000,
             'paid_amount' => 8000,
@@ -70,15 +68,13 @@ class CostTest extends TestCase
     public function test_update_cost()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $cost = $company->costs()->inRandomOrder()->first() ?:
-            Cost::factory()->create(['company_id' => $company->id]);
+        $cost = Cost::factory()->for($company)->create();
 
         $url = '/api/dashboard/companies/costs/update';
-        $response = $this->patch($url, [
+        $response = $this->json('PATCH', $url, [
             'id' => $cost->id,
             'cost_name' => 'Store cost example',
             'amount' => 10000,
@@ -100,16 +96,13 @@ class CostTest extends TestCase
     public function test_delete_cost()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
+        $cost = Cost::factory()->for($company)->create();
+
         $url = '/api/dashboard/companies/costs/delete';
-        $response = $this->delete($url, [
-            'cost_id' => Cost::where('company_id', $owner->company_id)
-                ->first()
-                ->id,
-        ]);
+        $response = $this->json('DELETE', $url, ['cost_id' => $cost->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -125,30 +118,14 @@ class CostTest extends TestCase
      */
     public function test_restore_cost()
     {
-        $owner = Owner::whereHas('user')->first();
-        $user = $owner->user;
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
+        $cost = Cost::factory()->for($company)->softDeleted()->create();
+
         $url = '/api/dashboard/companies/costs/restore';
-
-        $cost = Cost::onlyTrashed()
-            ->where('company_id', $owner->company_id)
-            ->first();
-        if (! $cost) {
-            $cost = Cost::where('company_id', $owner->company_id)->first();
-            $costId = $cost->id;
-            $cost->delete();
-
-            $cost = Cost::withTrashed()->findOrFail($costId);
-        }
-
-        $response = $this->withHeaders($headers)->patch($url, [
-            'cost_id' => $cost->id,
-        ]);
+        $response = $this->json('PATCH', $url, ['cost_id' => $cost->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

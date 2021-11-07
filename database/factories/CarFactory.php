@@ -9,7 +9,7 @@ use App\Models\{ Car, Company };
 
 use App\Enums\Car\CarStatus;
 
-use \Faker\Provider\Fakecar;
+use Faker\Provider\Fakecar;
 
 class CarFactory extends Factory
 {
@@ -23,6 +23,22 @@ class CarFactory extends Factory
     protected $model = Car::class;
 
     /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (Car $car) {
+            if (! $car->company_id) {
+                $company = Company::inRandomOrder()->first() ?:
+                    Company::factory()->create();
+                $car->company()->associate($company);
+            }
+        });
+    }
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -32,11 +48,7 @@ class CarFactory extends Factory
         $faker = $this->faker;
         $faker->addProvider(new Fakecar($faker));
 
-        $company = Company::inRandomOrder()->first() ?:
-            Company::factory()->create();
-
         return [
-            'company_id' => $company->id,
             'brand' => $faker->company,
             'model' => $faker->vehicleBrand,
             'year' => $faker->year,

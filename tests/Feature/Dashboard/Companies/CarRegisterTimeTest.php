@@ -9,7 +9,14 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ User, Car, CarRegisterTime, Company, Owner };
+use App\Models\{ 
+    User, 
+    Car, 
+    CarRegisterTime, 
+    Company,
+    Worklist,
+    Owner 
+};
 
 class CarRegisterTimeTest extends TestCase
 {
@@ -25,13 +32,14 @@ class CarRegisterTimeTest extends TestCase
     public function test_view_register_times()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $car = $company->cars()->inRandomOrder()->first();
+        $car = Car::factory()
+            ->has(CarRegisterTime::factory()->count(5), 'registeredTimes')
+            ->create();
         $url = $this->baseUrl . '?car_id=' . $car->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -48,20 +56,17 @@ class CarRegisterTimeTest extends TestCase
     public function test_register_car_time()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $url = $this->baseUrl . '/register';
+        $car = Car::factory()->for($company)->create();
 
-        $car = $company->cars()->inRandomOrder()->first();
-        $out = now()->addMinutes(-3);
-        $return = now()->addMinutes(3);
-        $response = $this->post($url, [
+        $url = $this->baseUrl . '/register';
+        $response = $this->json('POST', $url, [
             'car_id' => $car->id,
 
-            'should_out_at' => $out,
-            'should_return_at' => $return,
+            'should_out_at' => now()->addMinutes(-3),
+            'should_return_at' => now()->addMinutes(3),
         ]);
 
         $response->assertStatus(201);
@@ -80,17 +85,14 @@ class CarRegisterTimeTest extends TestCase
     public function test_register_car_to_worklist()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = $this->baseUrl . '/register_to_worklist';
 
-        $car = $company->cars()->inRandomOrder()->first() ?:
-            Car::factory()->create(['company_id' => $company->id]);
-        $worklist = $company->worklists()->inRandomOrder()->first() ?:
-            Worklist::factory()->create(['company_id' => $company->id]);
-        $response = $this->post($url, [
+        $car = Car::factory()->for($company)->create();
+        $worklist = Worklist::factory()->for($company)->create();
+        $response = $this->json('POST', $url, [
             'car_id' => $car->id,
             'worklist_id' => $worklist->id,
         ]);
@@ -110,16 +112,13 @@ class CarRegisterTimeTest extends TestCase
     public function test_mark_car_out()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = $this->baseUrl . '/mark_out';
 
-        $time = $company->carRegisterTimes()
-            ->inRandomOrder()
-            ->first() ?: CarRegisterTime::factory()->create(['company_id' => $company->id]);
-        $response = $this->post($url, [
+        $time = CarRegisterTime::factory()->for($company)->create();
+        $response = $this->json('POST', $url, [
             'car_register_time_id' => $time->id,
         ]);
 
@@ -144,14 +143,13 @@ class CarRegisterTimeTest extends TestCase
 
         $url = $this->baseUrl . '/mark_return';
 
-        $car = $company->cars()->inRandomOrder()->first() ?:
-            Car::factory()->create(['company_id' => $company->id]);
-        $registerTime = $car->currentRegisteredTime ?: 
-            CarRegisterTime::factory()->create([
-                'car_id' => $car->id,
-                'company_id' => $car->company_id,
-            ]);
-        $response = $this->post($url, [
+        $car = Car::factory()->for($company)->out()->create();
+
+        $registerTime = CarRegisterTime::factory()->create([
+            'car_id' => $car->id,
+            'company_id' => $car->company_id,
+        ]);
+        $response = $this->json('POST', $url, [
             'car_register_time_id' => $registerTime->id,
         ]);
 
@@ -170,14 +168,13 @@ class CarRegisterTimeTest extends TestCase
     public function test_update_car_register_time()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
+        $carRegisterTime = CarRegisterTime::factory()->for($company)->create();
+        
         $url = $this->baseUrl . '/update';
-        $carRegisterTime = $company->carRegisterTimes()->inRandomOrder()->first() ?:
-            CarRegisterTime::factory()->create(['company_id' => $company->id]);
-        $response = $this->patch($url, [
+        $response = $this->json('PATCH', $url, [
             'id' => $carRegisterTime->id,
             'should_out_at' => now(),
             'should_return_at' => now()->addHours(2),
@@ -198,14 +195,13 @@ class CarRegisterTimeTest extends TestCase
     public function test_delete_car_register_time()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
+        $time = CarRegisterTime::factory()->for($company)->create();
+
         $url = $this->baseUrl . '/delete';
-        $time = $company->carRegisterTimes()->first() ?:
-            CarRegisterTime::factory()->create(['company_id' => $company->id]);
-        $response = $this->delete($url, [
+        $response = $this->json('DELETE', $url, [
             'car_register_time_id' => $time->id,
             'force' => true,
         ]);

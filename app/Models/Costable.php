@@ -22,6 +22,8 @@ class Costable extends Model
     public $incrementing = true;
 
     protected $fillable = [
+        'company_id',
+
         'cost_id',
 
         'costable_id',
@@ -39,6 +41,11 @@ class Costable extends Model
         return $query->where('costable_type', $type);
     }
 
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
     public function cost()
     {
         return $this->belongsTo(Cost::class);
@@ -47,6 +54,24 @@ class Costable extends Model
     public function costable()
     {
         return $this->morphTo();
+    }
+
+    public function appointment()
+    {
+        return $this->costable()
+            ->where('costable_type', Appointment::class);
+    }
+
+    public function worklist()
+    {
+        return $this->costable()
+            ->where('costable_type', Worklist::class);
+    }
+
+    public function workday()
+    {
+        return $this->costable()
+            ->where('costable_type', Workday::class);
     }
 
     public static function isAlreadyAttached(Cost $cost, $costable)

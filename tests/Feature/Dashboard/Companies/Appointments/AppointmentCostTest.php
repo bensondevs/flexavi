@@ -24,24 +24,17 @@ class AppointmentCostTest extends TestCase
      */
     public function test_view_all_appointment_costs()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $appointment = $company->appointments()
-            ->inRandomOrder()
-            ->first();
+        $appointment = Appointment::factory()
+            ->hasCosts()
+            ->for($company)
+            ->create();
 
         $url = $this->baseUrl . '?appointment_id=' . $appointment->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -56,20 +49,13 @@ class AppointmentCostTest extends TestCase
      */
     public function test_store_cost_and_record_to_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $appointment = $company->appointments()->inRandomOrder()->first();
+        $appointment = Appointment::factory()->for($company)->create();
         $url = $this->baseUrl . '/store_record';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->json('POST', $url, [
             'cost_name' => 'Appointment Cost Name Example',
             'amount' => 9000,
             'paid_amount' => 1000,
@@ -93,21 +79,14 @@ class AppointmentCostTest extends TestCase
      */
     public function test_record_cost_to_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $appointment = $company->appointments()->inRandomOrder()->first();
+        $appointment = Appointment::factory()->for($company)->create();
         $cost = $company->costs()->inRandomOrder()->first();
         $url = $this->baseUrl . '/record';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
             'cost_id' => $cost->id,
         ]);
@@ -126,21 +105,15 @@ class AppointmentCostTest extends TestCase
      */
     public function test_unrecord_cost_from_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $appointment = $company->appointments()->inRandomOrder()->first();
-        $cost = $appointment->costs()->inRandomOrder()->first();
+        $appointment = Appointment::factory()->for($company)->create();
+        $cost = Cost::factory()->for($appointment)->create();
+        
         $url = $this->baseUrl . '/unrecord';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
             'cost_id' => $cost->id,
         ]);
@@ -159,25 +132,18 @@ class AppointmentCostTest extends TestCase
      */
     public function test_record_many_costs_to_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-        $appointment = $company->appointments()->inRandomOrder()->first();
+        $appointment = Appointment::factory()->create(['company_id' => $company->id]);
         $costs = $company->costs()->inRandomOrder()->take(rand(4, 20))->get();
         $costIds = [];
         foreach ($costs as $cost) {
             array_push($costIds, $cost->id);
         }
         $url = $this->baseUrl . '/record_many';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
             'cost_ids' => $costIds,
         ]);
@@ -196,12 +162,9 @@ class AppointmentCostTest extends TestCase
      */
     public function test_unrecord_many_costs_from_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
         do {
             $appointment = $company->appointments()
@@ -218,13 +181,8 @@ class AppointmentCostTest extends TestCase
             array_push($unrecordedCostIds, $cost->id);
         }
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
         $url = $this->baseUrl . '/unrecord_many';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
             'cost_ids' => $unrecordedCostIds,
         ]);
@@ -243,21 +201,13 @@ class AppointmentCostTest extends TestCase
      */
     public function test_truncate_cost_from_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
-
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->create(['company_id' => $company->id]);
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $appointment = $company->appointments()->inRandomOrder()->first();
         $url = $this->baseUrl . '/truncate';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
         ]);
 

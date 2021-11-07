@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-use App\Models\{ Invoice, Company };
+use App\Models\{ Invoice, Company, Customer };
 
 use App\Enums\Invoice\{
     InvoiceStatus as Status,
@@ -33,7 +33,9 @@ class InvoiceFactory extends Factory
             }
 
             if (! $invoice->customer_id) {
-                $invoice->customer()->associate(Customer::factory()->create());
+                $invoice->customer()->associate(Customer::factory()->create([
+                    'company_id' => $invoice->company_id
+                ]));
             }
         });
     }
@@ -117,7 +119,16 @@ class InvoiceFactory extends Factory
      */
     public function paymentOverdue()
     {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::PaymentOverdue,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+            ];
+        });
     }
 
     /**

@@ -18,6 +18,12 @@ class CreateAppointmentablesTable extends Migration
 
             $table->integer('order_index')->default(1);
 
+            $table->uuid('company_id');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('CASCADE');
+
             $table->uuid('appointment_id');
             $table->foreign('appointment_id')
                 ->references('id')

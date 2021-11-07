@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ User, Company, Owner };
+use App\Models\{ User, Company, Owner, Invoice };
 
 use App\Enums\PaymentTerm\PaymentTermStatus;
 

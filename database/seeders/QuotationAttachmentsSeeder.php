@@ -23,6 +23,7 @@ class QuotationAttachmentsSeeder extends Seeder
             for ($amount = 0; $amount < rand(2, 5); $amount++) {
                 array_push($rawAttachments, [
                     'id' => generateUuid(),
+                    'company_id' => $quotation->company_id,
                     'quotation_id' => $quotation->id,
                     'name' => 'Fake Quotation Attachment',
                     'description' => 'This is seeder generated attachment',
@@ -33,6 +34,8 @@ class QuotationAttachmentsSeeder extends Seeder
             }
         }
 
-        QuotationAttachment::insert($rawAttachments);
+        foreach (array_chunk($rawAttachments, 50) as $chunk) {
+            QuotationAttachment::insert($chunk);
+        }
     }
 }

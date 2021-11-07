@@ -24,6 +24,7 @@ class QuotationAttachment extends Model
     public $incrementing = false;
 
     protected $fillable = [
+        'company_id',
         'quotation_id',
         'name',
         'description',
@@ -70,6 +71,11 @@ class QuotationAttachment extends Model
         }
 
         return $file->getDownloadUrl();
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function quotation()

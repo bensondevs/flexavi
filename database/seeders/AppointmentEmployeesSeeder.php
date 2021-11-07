@@ -4,9 +4,11 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Employee;
-use App\Models\Appointment;
-use App\Models\AppointmentEmployee;
+use App\Models\{
+    Employee,
+    Appointment,
+    AppointmentEmployee
+};
 
 class AppointmentEmployeesSeeder extends Seeder
 {
@@ -35,6 +37,8 @@ class AppointmentEmployeesSeeder extends Seeder
             }
         }
 
-        AppointmentEmployee::insert($rawAppointmentEmployees);
+        foreach (array_chunk($rawAppointmentEmployees, 500) as $chunk) {
+            AppointmentEmployee::insert($chunk);
+        }
     }
 }

@@ -27,9 +27,9 @@ class CompanyFactory extends Factory
     {
         $faker = $this->faker;
         return [
-            'company_name' => $faker->company,
-            'email' => $faker->safeEmail,
-            'phone_number' => $faker->phoneNumber,
+            'company_name' => $faker->company(),
+            'email' => $faker->safeEmail(),
+            'phone_number' => $faker->phoneNumber(),
             'vat_number' => $faker->randomNumber(5, true),
             'commerce_chamber_number' => rand(1, 100),
             'company_logo_path' => $faker->image(
@@ -39,7 +39,7 @@ class CompanyFactory extends Factory
                 null, 
                 false
             ),
-            'company_website_url' => $faker->url,
+            'company_website_url' => $faker->url(),
         ];
     }
 }

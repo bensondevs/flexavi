@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Traits\FactoryDeletedState;
 
-use App\Models\{ Owner, User, Company };
+use App\Models\{ Owner, User, Company, Address };
 
 class OwnerFactory extends Factory
 {
@@ -28,6 +28,7 @@ class OwnerFactory extends Factory
         return $this->afterMaking(function (Owner $owner) {
             if (! $owner->user_id) {
                 $user = User::factory()->create();
+                $user->assignRole('owner');
                 $owner->user()->associate($user);
             }
 
@@ -37,7 +38,7 @@ class OwnerFactory extends Factory
                 $owner->company()->associate($company);
             }
         })->afterCreating(function (Owner $owner) {
-            if (! $owner->user) {
+            if (! $owner->user_id) {
                 $user = User::factory()->create();
                 $owner->user()->associate($user);
             }
@@ -54,7 +55,7 @@ class OwnerFactory extends Factory
         $faker = $this->faker;
 
         return [
-            'is_prime_owner' => false,
+            'is_prime_owner' => true,
             'bank_name' => $faker->word(),
             'bic_code' => $faker->randomNumber(3, true),
             'bank_account' => $faker->randomNumber(5, true),
@@ -63,7 +64,7 @@ class OwnerFactory extends Factory
     }
 
     /**
-     * Indicate that the model's belongs to Company.
+     * Indicate that the model's prime owner.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
@@ -72,6 +73,20 @@ class OwnerFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'is_prime_owner' => true,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the model's not prime owner.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function notPrime()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'is_prime_owner' => false,
             ];
         });
     }

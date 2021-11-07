@@ -16,6 +16,12 @@ class CreateQuotationAttachmentsTable extends Migration
         Schema::create('quotation_attachments', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->uuid('company_id');
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('CASCADE');
+
             $table->uuid('quotation_id');
             $table->foreign('quotation_id')
                 ->references('id')

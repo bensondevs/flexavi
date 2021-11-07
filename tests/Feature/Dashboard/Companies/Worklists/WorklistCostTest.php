@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ Company, Owner, Workday, Worklist };
+use App\Models\{ Company, Owner, Workday, Worklist, Cost };
 
 class WorklistCostTest extends TestCase
 {
@@ -25,13 +25,13 @@ class WorklistCostTest extends TestCase
     public function test_view_all_worklist_costs()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $worklist = $company->worklists()
-            ->inRandomOrder()
-            ->first() ?: Worklist::factory()->create(['company_id' => $company->id]);
+        $worklist = Worklist::factory()
+            ->for($company)
+            ->has(Cost::factory()->count(3), 'costs')
+            ->create();
         $url = $this->baseUrl . '?worklist_id=' . $worklist->id;
         $response = $this->get($url);
 
@@ -49,13 +49,10 @@ class WorklistCostTest extends TestCase
     public function test_store_cost_and_record_to_worklist()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $worklist = $company->worklists()
-            ->inRandomOrder()
-            ->first() ?: Worklist::factory()->create(['company_id' => $company->id]);
+        $worklist = Worklist::factory()->for($company)->create();
         $url = $this->baseUrl . '/store_record';
         $response = $this->post($url, [
             'cost_name' => 'Cost Name Example',
@@ -82,13 +79,10 @@ class WorklistCostTest extends TestCase
     public function test_record_cost_to_worklist()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $worklist = $company->worklists()
-            ->inRandomOrder()
-            ->first() ?: Worklist::factory()->create(['company_id' => $company->id]);
+        $worklist = Worklist::factory()->for($company)->create();
         $cost = $company->costs()
             ->inRandomOrder()
             ->first() ?: Cost::factory()->create(['company_id' => $company->id]);
@@ -113,19 +107,15 @@ class WorklistCostTest extends TestCase
     public function test_unrecord_cost_from_worklist()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $cost = $company->costs()
-            ->inRandomOrder()
-            ->whereHas('costables', function ($costable) {
-                $costable->where('costable_type', Worklist::class);
-            })->first();
-        $costable = $cost->costables()
-            ->where('costable_type', Worklist::class)
-            ->first();
-        $worklist = $costable->costable;
+        $worklist = Worklist::factory()
+            ->for($company)
+            ->has(Cost::factory()->for($company)->count(5), 'costs')
+            ->create();
+        $cost = $worklist->costs()->first();
+        
         $url = $this->baseUrl . '/unrecord';
         $response = $this->post($url, [
             'worklist_id' => $worklist->id,
@@ -147,15 +137,16 @@ class WorklistCostTest extends TestCase
     public function test_record_many_costs_to_worklist()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
+        $costs = Cost::factory()->for($company)->count(10)->create();
+
         $costIds = [];
-        foreach ($company->costs()->take(10)->get() as $cost) {
+        foreach ($costs as $cost) {
             array_push($costIds, $cost->id);
         }
-        $worklist = $company->worklists()->inRandomOrder()->first();
+        $worklist = Worklist::factory()->for($company)->create();
         $url = $this->baseUrl . '/record_many';
         $response = $this->post($url, [
             'worklist_id' => $worklist->id,
@@ -177,15 +168,13 @@ class WorklistCostTest extends TestCase
     public function test_unrecord_many_costs_from_worklist()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        do {
-            $worklist = $company->worklists()
-                ->inRandomOrder()
-                ->first();
-        } while ($worklist->costs()->count() < 2);
+        $worklist = Worklist::factory()
+            ->for($company)
+            ->has(Cost::factory()->count(3))
+            ->create();
 
         $unrecordedCostIds = [];
         foreach ($worklist->costs as $index => $cost) {
@@ -217,20 +206,16 @@ class WorklistCostTest extends TestCase
     public function test_truncate_worklist_costs()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        do {
-            $worklist = $company->worklists()
-                ->inRandomOrder()
-                ->first();
-        } while ($worklist->costs()->count() < 2);
+        $worklist = Worklist::factory()
+            ->for($company)
+            ->has(Cost::factory()->count(3))
+            ->create();
 
         $url = $this->baseUrl . '/truncate';
-        $response = $this->post($url, [
-            'worklist_id' => $worklist->id,
-        ]);
+        $response = $this->post($url, ['worklist_id' => $worklist->id]);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {

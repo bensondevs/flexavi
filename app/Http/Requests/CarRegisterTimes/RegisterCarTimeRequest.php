@@ -59,10 +59,10 @@ class RegisterCarTimeRequest extends FormRequest
     {
         $this->setRules([
             'company_id' => ['required', 'string'],
-            'should_out_at' => ['required', 'datetime'],
-            'should_return_at' => ['required', 'datetime'],
-            'marked_out_at' => ['required', 'datetime'],
-            'marked_return_at' => ['required', 'datetime'],
+            'should_out_at' => ['required', 'date'],
+            'should_return_at' => ['required', 'date'],
+            'marked_out_at' => ['required', 'date'],
+            'marked_return_at' => ['required', 'date'],
         ]);
 
         return $this->returnRules();

@@ -11,8 +11,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Observers\SubAppointmentObserver;
 
-use App\Enums\SubAppointment\SubAppointmentStatus;
-use App\Enums\SubAppointment\SubAppointmentCancellationVault;
+use App\Enums\SubAppointment\{
+    SubAppointmentStatus,
+    SubAppointmentCancellationVault
+};
 
 class SubAppointment extends Model
 {
@@ -90,6 +92,11 @@ class SubAppointment extends Model
     public function rescheduledSubAppointment()
     {
         return $this->belongsTo(self::class, 'next_sub_appointment_id');
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     public function works()

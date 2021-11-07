@@ -32,6 +32,27 @@ class AppointmentFactory extends Factory
     protected $model = Appointment::class;
 
     /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (Appointment $appointment) {
+            if (! $appointment->company_id) {
+                $company = Company::inRandomOrder()->first() ?:
+                    Company::factory()->create();
+                $appointment->company()->associate($company);
+            }
+
+            if (! $appointment->customer_id) {
+                $customer = Customer::factory()->create(['company_id' => $appointment->company_id]);
+                $appointment->customer()->associate($customer);
+            }
+        });
+    }
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -40,18 +61,9 @@ class AppointmentFactory extends Factory
     {
         $faker = $this->faker;
 
-        $company = Company::inRandomOrder()->first() ?:
-            Company::factory()->create();
-        $customer = $company->customers()->inRandomOrder()->first() ?:
-            Customer::factory()->create(['company_id' => $company->id]);
-
         $start = $faker->datetime();
         $end = $faker->dateTimeBetween($start, '+10 days');
         return [
-            'id' => $faker->uuid(),
-            'company_id' => $company->id,
-            'customer_id' => $customer->id,
-
             'start' => $start,
             'end' => $end,
 
@@ -103,7 +115,7 @@ class AppointmentFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'status' => Status::InProcess,
-                'executed_at' => now(),
+                'in_process_at' => now(),
             ];
         });
     }

@@ -21,6 +21,30 @@ class EmployeeFactory extends Factory
     protected $model = Employee::class;
 
     /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (Employee $employee) {
+            if (! $employee->company_id) {
+                $company = Company::inRandomOrder()->first() ?:
+                    Company::factory()->first();
+                $employee->company()->associate($company);
+            }
+
+            if (! $employee->user_id) {
+                $user = User::inRandomOrder()
+                    ->whereDoesntHave('employee')
+                    ->whereDoesntHave('owner')
+                    ->first() ?: User::factory()->create();
+                $employee->user()->associate($user);
+            }
+        });
+    }
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -28,18 +52,9 @@ class EmployeeFactory extends Factory
     public function definition()
     {
         $faker = $this->faker;
-
-        $user = User::inRandomOrder()
-            ->whereDoesntHave('employee')
-            ->whereDoesntHave('owner')
-            ->first() ?: User::factory()->create();
-        $company = Company::inRandomOrder()->first() ?:
-            Company::factory()->first();
             
         return [
-            'user_id' => $user->id,
-            'company_id' => $company->id,
-            'title' => $this->faker->word,
+            'title' => $faker->word(),
             'employee_type' => rand(EmployeeType::Administrative, EmployeeType::Roofer),
             'employment_status' => rand(EmploymentStatus::Active, EmploymentStatus::Fired),
         ];

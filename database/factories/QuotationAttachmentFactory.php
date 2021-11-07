@@ -30,6 +30,12 @@ class QuotationAttachmentFactory extends Factory
     public function configure()
     {
         return $this->afterMaking(function (Attachment $attacment) {
+            if (! $attachment->company_id) {
+                $company = Company::inRandomOrder()->first() ?:
+                    Company::factory()->create();
+                $attacment->company()->associate($company);
+            }
+
             if (! $attachment->quotation_id) {
                 $quotation = Quotation::factory()->create([
                     'company_id' => $attacment->company_id

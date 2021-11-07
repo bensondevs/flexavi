@@ -9,7 +9,12 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ Company, Appointment, SubAppointment };
+use App\Models\{ 
+    Company, 
+    Owner, 
+    Appointment, 
+    SubAppointment 
+};
 
 use App\Enums\SubAppointment\{
     SubAppointmentStatus as Status,
@@ -29,23 +34,16 @@ class SubAppointmentTest extends TestCase
      */
     public function test_view_all_appointments()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $appointment = $company->appointments()
-            ->whereHas('subs')
-            ->first();
+        $appointment = Appointment::factory()
+            ->has(SubAppointment::factory()->count(3), 'subs')
+            ->for($company)
+            ->create();
         $url = $this->baseUrl . '?appointment_id=' . $appointment->id;
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->get($url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -60,23 +58,13 @@ class SubAppointmentTest extends TestCase
      */
     public function test_store_sub_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $appointment = $company->appointments()
-            ->inRandomOrder()
-            ->first();
+        $appointment = Appointment::factory()->for($company)->create();
         $url = $this->baseUrl . '/store';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'appointment_id' => $appointment->id,
             'start' => carbon()->parse($appointment->start)->addDays(1),
             'end' => carbon()->parse($appointment->end)->addDays(-1),
@@ -96,25 +84,13 @@ class SubAppointmentTest extends TestCase
      */
     public function test_update_sub_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ];
-
-        $subAppointment = $company->subAppointments()
-            ->where('status', Status::Created)
-            ->with('appointment')
-            ->first();
+        $subAppointment = SubAppointment::factory()->for($company)->created()->create();
         $url = $this->baseUrl . '/update';
-        $response = $this->withHeaders($headers)->patch($url, [
+        $response = $this->patch($url, [
             'sub_appointment_id' => $subAppointment->id,
             'start' => carbon()->parse($subAppointment->appointment->start)->addDays(1),
             'end' => carbon()->parse($subAppointment->appointment->end)->addDays(-1),
@@ -134,24 +110,16 @@ class SubAppointmentTest extends TestCase
      */
     public function test_execute_sub_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $subAppointment = $company->subAppointments()
-            ->where('status', Status::Created)
-            ->inRandomOrder()
-            ->first();
+        $subAppointment = SubAppointment::factory()
+            ->for($company)
+            ->created()
+            ->create();
         $url = $this->baseUrl . '/execute';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'sub_appointment_id' => $subAppointment->id,
         ]);
 
@@ -169,24 +137,16 @@ class SubAppointmentTest extends TestCase
      */
     public function test_process_sub_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $subAppointment = $company->subAppointments()
-            ->where('status', Status::InProcess)
-            ->inRandomOrder()
-            ->first();
+        $subAppointment = SubAppointment::factory()
+            ->for($company)
+            ->inProcess()
+            ->create();
         $url = $this->baseUrl . '/process';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'sub_appointment_id' => $subAppointment->id,
         ]);
 
@@ -200,25 +160,16 @@ class SubAppointmentTest extends TestCase
      */
     public function test_cancel_sub_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $subAppointment = $company->subAppointments()
-            ->where('status', '!=', Status::Processed)
-            ->where('status', '!=', Status::Cancelled)
-            ->inRandomOrder()
-            ->first();
+        $subAppointment = SubAppointment::factory()
+            ->for($company)
+            ->inProcess()
+            ->create();
         $url = $this->baseUrl . '/cancel';
-        $response = $this->withHeaders($headers)->post($url, [
+        $response = $this->post($url, [
             'sub_appointment_id' => $subAppointment->id,
             'cancellation_cause' => 'Cause Example',
             'cancellation_reason' => 'Reason Example',
@@ -239,25 +190,15 @@ class SubAppointmentTest extends TestCase
      */
     public function test_delete_sub_appointment()
     {
-        do {
-            $company = Company::inRandomOrder()->first();
-            $owner = $company->owners()->first();
-            $user = $owner->user;
-        } while (! $user);
-        $token = $user->generateToken();
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Bearer ' . $token,
-        ];
-
-        $subAppointment = $company->subAppointments()
-            ->inRandomOrder()
-            ->first();
+        $subAppointment = SubAppointment::factory()
+            ->for($company)
+            ->create();
         $url = $this->baseUrl . '/delete';
-        $response = $this->withHeaders($headers)->delete($url, [
-            'sub_appointment_id' => $subAppointment->id,
-        ]);
+        $response = $this->delete($url, ['sub_appointment_id' => $subAppointment->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

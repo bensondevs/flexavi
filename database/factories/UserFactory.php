@@ -7,6 +7,7 @@ use App\Traits\FactoryDeletedState;
 use Illuminate\Support\Str;
 
 use App\Models\User;
+use App\Models\Owner;
 use App\Models\RegisterInvitation;
 
 use App\Enums\User\UserIdCardType as CardType;
@@ -61,6 +62,19 @@ class UserFactory extends Factory
             return [
                 'email_verified_at' => null,
             ];
+        });
+    }
+
+    /**
+     * Indicate that the model's role is owner.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function owner()
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('owner');
+            $user->owner()->save(Owner::factory()->make());
         });
     }
 

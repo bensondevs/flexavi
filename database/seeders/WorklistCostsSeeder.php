@@ -4,9 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Cost;
-use App\Models\Worklist;
-use App\Models\Workday;
+use App\Models\{ Cost, Worklist, Workday, Costable };
 
 class WorklistCostsSeeder extends Seeder
 {
@@ -35,6 +33,7 @@ class WorklistCostsSeeder extends Seeder
 
                 array_push($rawCostables, [
                     'cost_id' => $id,
+                    'company_id' => $worklist->company_id,
                     'costable_id' => $worklist->id,
                     'costable_type' => Worklist::class,
                     'created_at' => now(),
@@ -44,6 +43,7 @@ class WorklistCostsSeeder extends Seeder
                 if ($workday = $worklist->workday) {
                     array_push($rawCostables, [
                         'cost_id' => $id,
+                        'company_id' => $workday->company_id,
                         'costable_id' => $workday->id,
                         'costable_type' => Workday::class,
                         'created_at' => now(),
@@ -58,7 +58,7 @@ class WorklistCostsSeeder extends Seeder
         }
 
         foreach (array_chunk($rawCostables, 5000) as $chunk) {
-            db('costables')->insert($chunk);
+            Costable::insert($chunk);
         }
     }
 }

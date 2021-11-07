@@ -21,6 +21,29 @@ class AddressFactory extends Factory
     protected $model = Address::class;
 
     /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterMaking(function (Address $address) {
+            if (! $address->addressable_id) {
+                // Addressable
+                $addressableTypes = [
+                    Company::class,
+                    Customer::class,
+                    Owner::class,
+                    Employee::class,
+                ];
+                $addressableType = $faker->randomElement($addressableTypes);
+                $addressable = (new $addressableType)->factory()->create();
+                $address->addressable()->attach($addressable);
+            }
+        });
+    }
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -29,25 +52,12 @@ class AddressFactory extends Factory
     {
         $faker = $this->faker;
 
-        // Addressable
-        $addressableTypes = [
-            Company::class,
-            Customer::class,
-            Owner::class,
-            Employee::class,
-        ];
-        $addressableType = $faker->randomElement($addressableTypes);
-        $addressable  = (new $addressableType)->factory()->create();
-
         // Address Type
         $type = rand(AddressType::VisitingAddress, AddressType::Other);
         $otherAddressTypeDescription = ($type == AddressType::Other) ?
             $faker->name : '';
 
         return [
-            'addressable_type' => $addressableType,
-            'addressable_id' => $addressable->id,
-
             'address_type' => $type,
             'other_address_type_description' => $otherAddressTypeDescription,
 
@@ -66,11 +76,14 @@ class AddressFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function company()
+    public function company($company = null)
     {
-        return $this->state(function (array $attributes) {
-            $company = Company::inRandomOrder()->first() ?: 
-                Company::factory()->create();
+        return $this->state(function (array $attributes) use ($company) {
+            if (! $company) {
+                $company = Company::inRandomOrder()->first() ?: 
+                    Company::factory()->create();
+            }
+
             return [
                 'addressable_type' => Company::class,
                 'addressable_id' => $company->id,
@@ -83,11 +96,14 @@ class AddressFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function customer()
+    public function customer($customer = null)
     {
-        return $this->state(function (array $attributes) {
-            $customer = Customer::inRandomOrder()->first() ?: 
-                Customer::factory()->create();
+        return $this->state(function (array $attributes) use ($customer) {
+            if (! $customer) {
+                $customer = Customer::inRandomOrder()->first() ?: 
+                    Customer::factory()->create();
+            }
+
             return [
                 'addressable_type' => Customer::class,
                 'addressable_id' => $customer->id,
@@ -100,14 +116,17 @@ class AddressFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function owner()
+    public function owner($owner = null)
     {
-        return $this->state(function (array $attributes) {
-            $owner = Ownere::inRandomOrder()->first() ?: 
-                Owner::factory()->create();
+        return $this->state(function (array $attributes) use ($owner) {
+            if (! $owner) {
+                $owner = Ownere::inRandomOrder()->first() ?: 
+                    Owner::factory()->create();
+            }
+            
             return [
                 'addressable_type' => Owner::class,
-                'addressable_id' => Owner::factory()->create()->id,
+                'addressable_id' => $owner->id,
             ];
         });
     }
@@ -117,14 +136,16 @@ class AddressFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function employee()
+    public function employee($employee = null)
     {
-        return $this->state(function (array $attributes) {
-            $employee = Employee::inRandomOrder()->first() ?:
-                Employee::factory()->create();
+        return $this->state(function (array $attributes) use ($employee) {
+            if (! $employee) {
+                $employee = Employee::inRandomOrder()->first() ?:
+                    Employee::factory()->create();
+            }
             return [
                 'addressable_type' => Employee::class,
-                'addressable_id' => Employee::factory()->create()->id,
+                'addressable_id' => $employee->id,
             ];
         });
     }

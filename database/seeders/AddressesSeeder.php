@@ -52,7 +52,9 @@ class AddressesSeeder extends Seeder
                 array_push($rawAddresses, $address);
             }
         }
-        Address::insert($rawAddresses);
+        foreach (array_chunk($rawAddresses, 50) as $ownerChunk) {
+            Address::insert($ownerChunk);
+        }
         $rawAddresses = array();
 
         foreach (Company::all() as $company) {
@@ -80,7 +82,9 @@ class AddressesSeeder extends Seeder
                 array_push($rawAddresses, $address);
             }
         }
-        Address::insert($rawAddresses);
+        foreach (array_chunk($rawAddresses, 500) as $companyChunk) {
+            Address::insert($companyChunk);
+        }
         $rawAddresses = array();
 
         foreach (Customer::all() as $customer) {
@@ -108,7 +112,9 @@ class AddressesSeeder extends Seeder
                 array_push($rawAddresses, $address);
             }
         }
-        Address::insert($rawAddresses);
+        foreach (array_chunk($rawAddresses, 500) as $customerChunk) {
+            Address::insert($customerChunk);
+        }
         $rawAddresses = array();
     
         foreach (Employee::with('user')->get() as $employee) {
@@ -136,7 +142,9 @@ class AddressesSeeder extends Seeder
                 array_push($rawAddresses, $address);
             }
         }
-        Address::insert($rawAddresses);
+        foreach (array_chunk($rawAddresses, 500) as $employeeChunk) {
+            Address::insert($employeeChunk);
+        }
         $rawAddresses = array();
     }
 }
