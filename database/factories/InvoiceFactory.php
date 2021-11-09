@@ -53,8 +53,8 @@ class InvoiceFactory extends Factory
             'invoice_number' => $faker->randomNumber(5, true),
 
             'total' => $faker->randomNumber(4, false),
-            'total_in_terms' => $faker->randomNumber(3, false),
             'total_paid' => $faker->randomNumber(3, false),
+            'total_in_terms' => $faker->randomNumber(3, false),
 
             'status' => rand(Status::Created, Status::PaidViaDebtCollector),
             'payment_method' => rand(PaymentMethod::Cash, PaymentMethod::BankTransfer),

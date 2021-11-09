@@ -3,6 +3,9 @@
 namespace App\Http\Requests\Companies;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+
+use Axiom\Rules\TelephoneNumber;
 
 use App\Models\Company;
 
@@ -16,8 +19,9 @@ class RegisterCompanyRequest extends FormRequest
 
     public function getOwner()
     {
-        return $this->owner = $this->owner ?: 
-            $this->user()->owner;
+        if ($this->owner) return $this->owner;
+
+        return $this->owner = $this->user()->owner;
     }
 
     /**
@@ -27,9 +31,8 @@ class RegisterCompanyRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $request->user(); 
-
-        return (! $user->owner) && $user->hasRole('owner');
+        $owner = $this->getOwner();
+        return Gate::allows('register-company', $owner);
     }
 
     /**
@@ -41,23 +44,24 @@ class RegisterCompanyRequest extends FormRequest
     {
         $this->setRules([
             // Visiting Address
-            'visiting_addresss_street' => ['required', 'string'],
-            'visiting_addresss_house_number' => ['required', 'string'],
-            'visiting_addresss_house_number_suffix' => ['string'],
-            'visiting_addresss_zip_code' => ['required', 'string'],
-            'visiting_addresss_city' => ['required', 'string'],
+            'visiting_address' => ['required', 'string'],
+            'visiting_address_house_number' => ['required', 'numeric'],
+            'visiting_address_house_number_suffix' => ['string'],
+            'visiting_address_zipcode' => ['required', 'numeric'],
+            'visiting_address_city' => ['required', 'string'],
 
             // Invoicing Address
-            'invoicing_addresss_street' => ['required', 'string'],
-            'invoicing_addresss_house_number' => ['required', 'string'],
-            'invoicing_addresss_house_number_suffix' => ['string'],
-            'invoicing_addresss_zip_code' => ['required', 'string'],
-            'invoicing_addresss_city' => ['required', 'string'],
+            'invoicing_address' => ['required', 'string'],
+            'invoicing_address_house_number' => ['required', 'numeric'],
+            'invoicing_address_house_number_suffix' => ['string'],
+            'invoicing_address_zipcode' => ['required', 'numeric'],
+            'invoicing_address_city' => ['required', 'string'],
             
+            'company_name' => ['required', 'string'],
             'email' => ['required', 'string', 'unique:companies,email'],
-            'phone_number' => ['required', 'string', 'unique:companies,phone_number'],
+            'phone_number' => ['required', new TelephoneNumber, 'unique:companies,phone_number'],
             'vat_number' => ['required', 'string', 'unique:companies,vat_number'],
-            'commerce_chamber_number' => ['required', 'string'],
+            'commerce_chamber_number' => ['required', 'numeric'],
             'company_website_url' => ['required', 'string'],
         ]);
 
@@ -66,29 +70,32 @@ class RegisterCompanyRequest extends FormRequest
 
     public function visitingAddress()
     {
-        return json_encode([
-            'street' => $this->input('visiting_addresss_street'),
-            'house_number' => $this->input('visiting_addresss_house_number'),
-            'house_number_suffix' => $this->input('visiting_addresss_house_number_suffix'),
-            'zip_code' => $this->input('visiting_addresss_zip_code'),
-            'city' => $this->input('visiting_addresss_city'),
-        ]);
+        return [
+            'address' => $this->input('visiting_address'),
+            'house_number' => $this->input('visiting_address_house_number'),
+            'house_number_suffix' => $this->input('visiting_address_house_number_suffix'),
+            'zipcode' => $this->input('visiting_address_zipcode'),
+            'city' => $this->input('visiting_address_city'),
+            'province' => $this->input('visiting_address_province'),
+        ];
     }
 
     public function invoicingAddress()
     {
-        return json_encode([
-            'street' => $this->input('invoicing_addresss_street'),
-            'house_number' => $this->input('invoicing_addresss_house_number'),
-            'house_number_suffix' => $this->input('visiting_addresss_house_number_suffix'),
-            'zip_code' => $this->input('invoicing_addresss_zip_code'),
-            'city' => $this->input('invoicing_addresss_city'),
-        ]);
+        return [
+            'address' => $this->input('invoicing_address'),
+            'house_number' => $this->input('invoicing_address_house_number'),
+            'house_number_suffix' => $this->input('visiting_address_house_number_suffix'),
+            'zipcode' => $this->input('invoicing_address_zipcode'),
+            'city' => $this->input('invoicing_address_city'),
+            'province' => $this->input('invoicing_address_province'),
+        ];
     }
 
     public function companyData()
     {
         $data = $this->only([
+            'company_name',
             'email',
             'phone_number',
             'vat_number',
@@ -97,7 +104,6 @@ class RegisterCompanyRequest extends FormRequest
         ]);
         $data['visiting_address'] = $this->visitingAddress();
         $data['invoicing_address'] = $this->invoicingAddress();
-
         return $data;
     }
 }

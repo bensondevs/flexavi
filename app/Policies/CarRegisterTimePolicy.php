@@ -67,7 +67,7 @@ class CarRegisterTimePolicy
      * @param  \App\Models\Worklist  $worklist
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function registerToWorklist(User $usr, Car $car, Worklist $worklist)
+    public function registerToWorklist(User $user, Car $car, Worklist $worklist)
     {
         if ($car->company_id !== $worklist->company_id) {
             return abort(403, 'Cannot use data from other company\'s data.');

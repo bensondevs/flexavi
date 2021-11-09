@@ -3,9 +3,26 @@
 namespace App\Http\Requests\CarRegisterTimes;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+
+use App\Traits\CompanyInputRequest;
+
+use App\Models\CarRegisterTime;
 
 class MarkReturnCarRegisterTimeRequest extends FormRequest
 {
+    use CompanyInputRequest;
+
+    private $time;
+
+    public function getCarRegisterTime()
+    {
+        if ($this->time) return $this->time;
+
+        $id = $this->input('car_register_time_id') ?: $this->input('id');
+        return $this->time = CarRegisterTime::findOrFail($id);
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +30,8 @@ class MarkReturnCarRegisterTimeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        $time = $this->getCarRegisterTime();
+        return Gate::allows('mark-return-car-register-time', $time);
     }
 
     /**

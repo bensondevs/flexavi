@@ -37,7 +37,7 @@ class WorklistAppointmentTest extends TestCase
 
         $worklist =  Worklist::factory()->for($company)->create();
         $url = $this->baseUrl . '?worklist_id=' . $worklist->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -61,7 +61,7 @@ class WorklistAppointmentTest extends TestCase
         $appointment = Appointment::factory()->for($company)->create();
 
         $url = $this->baseUrl . '/attach';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
             'appointment_id' => $appointment->id,
         ]);
@@ -84,18 +84,18 @@ class WorklistAppointmentTest extends TestCase
         $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $worklist = Worklist::factory()
+        $worklist = Worklist::factory()->for($company)->create();
+        $appointmentables = Appointmentable::factory()
             ->for($company)
-            ->has(Appointment::factory()->for($company)->count(5), 'appointments')
+            ->count(5)
             ->create();
-        $appointments = $worklist->appointments;
 
         $appointmentIds = [];
-        foreach ($appointments as $appointment) {
-            array_push($appointmentIds, $appointment->id);
+        foreach ($appointmentables as $appointmentable) {
+            array_push($appointmentIds, $appointmentable->appointment_id);
         }
         $url = $this->baseUrl . '/attach_many';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
             'appointment_ids' => $appointmentIds,
         ]);
@@ -120,14 +120,15 @@ class WorklistAppointmentTest extends TestCase
 
         $worklist = Worklist::factory()
             ->for($company)
-            ->has(Appointment::factory()->for($company)->count(5), 'appointments')
             ->create();
-        $appointments = $worklist->appointments()->first();
+        $appointmentable = Appointmentable::factory()
+            ->worklist($worklist)
+            ->create();
 
         $url = $this->baseUrl . '/detach';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
-            'appointment_id' => $appointment->id,
+            'appointment_id' => $appointmentable->appointment_id,
         ]);
 
         $response->assertStatus(201);
@@ -156,11 +157,11 @@ class WorklistAppointmentTest extends TestCase
             ->create();
 
         $appointmentIds = [];
-        foreach ($appointments as $appointment) {
-            array_push($appointmentIds, $appointment->id);
+        foreach ($appointmentables as $appointmentable) {
+            array_push($appointmentIds, $appointmentable->appointment_id);
         }
         $url = $this->baseUrl . '/detach_many';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
             'appointment_ids' => $appointmentIds,
         ]);
@@ -185,7 +186,7 @@ class WorklistAppointmentTest extends TestCase
 
         $worklist = Worklist::factory()->for($company)->create();
         $url = $this->baseUrl . '/truncate';
-        $response = $this->post($url, ['worklist_id' => $worklist->id]);
+        $response = $this->json('POST', $url, ['worklist_id' => $worklist->id]);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {

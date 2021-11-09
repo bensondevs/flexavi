@@ -9,7 +9,13 @@ use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ Owner, Company, Customer, Quotation };
+use App\Models\{ 
+    Owner, 
+    Company, 
+    Customer, 
+    Quotation, 
+    QuotationAttachment 
+};
 
 use App\Enums\Quotation\{ 
     QuotationType as Type, 
@@ -117,6 +123,7 @@ class QuotationTest extends TestCase
         $url = $this->baseUrl . '/view?id=' . $quotation->id;
         $response = $this->json('GET', $url);
 
+
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
             $json->has('quotation');
@@ -158,14 +165,13 @@ class QuotationTest extends TestCase
 
         $quotation = Quotation::factory()->for($company)->create();
 
-        $attachmentData = [
+        $url = $this->baseUrl . '/attachments/add';
+        $response = $this->json('POST', $url, [
             'quotation_id' => $quotation->id,
             'name' => 'Example attachment',
             'description' => 'Example description',
             'attachment' => file_get_contents(base_path() . '/tests/Resources/image_base64_example.txt'),
-        ];
-        $url = $this->baseUrl . '/attachments/add';
-        $response = $this->json('POST', $url, $attachmentData);
+        ]);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
@@ -260,7 +266,7 @@ class QuotationTest extends TestCase
         $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $quotation = Quotation::factory()->for($company)->create();
+        $quotation = Quotation::factory()->for($company)->draft()->create();
 
         $revisionData = [
             'quotation_id' => $quotation->id,

@@ -7,7 +7,7 @@ use Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\{ Car, CarRegisterTime };
+use App\Models\{ Car, CarRegisterTime, Worklist };
 
 class CarRegisterTimeRepository extends BaseRepository
 {
@@ -83,7 +83,7 @@ class CarRegisterTimeRepository extends BaseRepository
 	public function registerWorklist(Worklist $worklist)
 	{
 		try {
-			$car = $this->getModel();
+			$car = $this->getCar();
 			$registerTime = new CarRegisterTime([
 				'company_id' => $worklist->company_id,
 				'worklist_id' => $worklist->id,
@@ -168,7 +168,7 @@ class CarRegisterTimeRepository extends BaseRepository
 			$this->setSuccess('Successfully update car register time.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
-			$this->setError('Failed to update car register time.');
+			$this->setError('Failed to update car register time.', $error);
 		}
 
 		return $this->getModel();

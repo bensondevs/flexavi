@@ -64,7 +64,7 @@ class CostableFactory extends Factory
      */
     public function appointment(Appointment $appointment)
     {
-        return $this->state(function (Costable $costable) use ($appointment) {
+        return $this->state(function (array $attributes) use ($appointment) {
             return [
                 'company_id' => $appointment->company_id,
                 'costable_id' => $appointment->id,
@@ -80,7 +80,7 @@ class CostableFactory extends Factory
      */
     public function worklist(Worklist $worklist)
     {
-        return $this->state(function (Costable $costable) use ($worklist) {
+        return $this->state(function (array $attributes) use ($worklist) {
             return [
                 'company_id' => $worklist->company_id,
                 'costable_id' => $worklist->id,
@@ -96,7 +96,7 @@ class CostableFactory extends Factory
      */
     public function workday(Workday $workday)
     {
-        return $this->state(function (Costable $costable) use ($workday) {
+        return $this->state(function (array $attributes) use ($workday) {
             return [
                 'company_id' => $workday->company_id,
                 'costable_id' => $workday->id,

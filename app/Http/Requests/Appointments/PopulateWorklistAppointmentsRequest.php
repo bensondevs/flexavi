@@ -7,11 +7,22 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Worklist;
 
-use App\Traits\CompanyPopulateRequestOptions;
+use App\Traits\{
+    RequestHasRelations,
+    CompanyPopulateRequestOptions
+};
 
 class PopulateWorklistAppointmentsRequest extends FormRequest
 {
+    use RequestHasRelations;
     use CompanyPopulateRequestOptions;
+
+    protected $relationNames = [
+        'with_worklist' => false,
+        'with_workday' => false,
+        'with_works' => false,
+        'with_costs' => false,
+    ];
 
     private $worklist;
 
@@ -34,6 +45,11 @@ class PopulateWorklistAppointmentsRequest extends FormRequest
         return Gate::allows('view-any-appointment', $worklist);
     }
 
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -48,9 +64,38 @@ class PopulateWorklistAppointmentsRequest extends FormRequest
 
     public function options()
     {
-        $parentRequest = new PopulateCompanyAppointmentsRequest();
-        $options = $parentRequest->options();
+        if ($type = $this->get('type')) {
+            $this->addWhere([
+                'column' => 'type',
+                'operator' => '=',
+                'value' => $type,
+            ]);
+        }
+
+        if ($status = $this->get('status')) {
+            $this->addWhere([
+                'column' => 'status',
+                'operator' => '=',
+                'value' => $status,
+            ]);
+        }
+
+        if ($cancellationVault = $this->get('cancellation_vault')) {
+            $this->addWhere([
+                'column' => 'cancellation_vault',
+                'operator' => '=',
+                'value' => $cancellationVault,
+            ]);
+        }
+
+        if ($this->get('has_subs_only')) {
+            $this->addWhereHas('subs');
+        }
+
+        if ($relations = $this->relations()) {
+            $this->setWiths($relations);
+        }
         
-        return $options;
+        return $this->collectOptions();
     }
 }

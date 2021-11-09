@@ -46,7 +46,7 @@ class CostRepository extends BaseRepository
 			$costableTypePlural = str_to_plural($costableType);
 
 			$cost = $this->getModel();
-			$cost->{$costableTypePlural}()->attach($costable);
+			$cost->{$costableTypePlural}()->attach($costable, ['company_id' => $costable->company_id]);
 			$cost->save();
 
 			$this->setModel($cost);
@@ -64,6 +64,8 @@ class CostRepository extends BaseRepository
 	{
 		try {
 			$costableType = get_lower_class($costable);
+			$pivotData = array_fill(0, count($costs), ['company_id' => $costable->company_id]);
+			$costs = array_combine($costs, $pivotData);
 			$costable->costs()->syncWithoutDetaching($costs);
 
 			$this->setSuccess('Successfully record many costs in ' . $costableType . '.');

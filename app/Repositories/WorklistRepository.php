@@ -39,6 +39,7 @@ class WorklistRepository extends BaseRepository
 		try {
 			$worklist = $this->getModel();
 			$appointmentable = Appointmentable::create([
+				'company_id' => $appointment->company_id,
 				'appointmentable_id' => $worklist->id,
 				'appointmentable_type' => Worklist::class,
 				'appointment_id' => $appointment->id,
@@ -59,6 +60,7 @@ class WorklistRepository extends BaseRepository
 	{
 		try {
 			$worklist = $this->getModel();
+			
 			Appointmentable::attachMany($worklist, $appointmentIds);
 
 			$this->setModel($worklist);

@@ -40,10 +40,12 @@ class AppointmentableFactory extends Factory
             }
 
             if (! $appointmentable->appointmentable_id) {
-                $types = [Worklist::class, Workday::class];
+                $types = [new Worklist, new Workday];
                 $selectedType = $this->faker->randomElement($types);
                 $attachable = $selectedType::factory()->create(['company_id' => $appointmentable->company_id]);
-                $appointmentable->{get_lower_class($selectedType)}()->attach($attachable);
+                
+                $appointmentable->appointmentable_id = $attachable->id;
+                $appointmentable->appointmentable_type = $selectedType;
             }
         });
     }
@@ -88,6 +90,7 @@ class AppointmentableFactory extends Factory
             }
 
             return [
+                'company_id' => $worklist->company_id,
                 'appointmentable_type' => Worklist::class,
                 'appointmentable_id' => $worklist->id,
             ];

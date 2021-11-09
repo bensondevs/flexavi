@@ -9,8 +9,6 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use BenSampo\Enum\Traits\CastsEnums;
-
 use App\Casts\QuotationDamageCausesCast;
 
 use App\Enums\Quotation\{
@@ -26,7 +24,6 @@ class Quotation extends Model
     use HasFactory;
     use SoftDeletes;
     use Searchable;
-    use CastsEnums;
 
     protected $table = 'quotations';
     protected $primaryKey = 'id';
@@ -80,9 +77,6 @@ class Quotation extends Model
     ];
 
     protected $cast = [
-        'type' => QuotationType::class,
-        'damage_causes' => QuotationDamageCausesCast::class,
-        'payment_method' => QuotationPaymentMethod::class,
         'is_signed' => 'boolean',
         'honored_at' => 'datetime',
         'cancelled_at' => 'datetime',
@@ -177,7 +171,6 @@ class Quotation extends Model
     public function setAmountAttribute($amount)
     {
         $this->attributes['amount'] = $amount;
-        $vatAmount = $this->getVatAmountAttribute();
         $this->calculateTotal();
     }
 

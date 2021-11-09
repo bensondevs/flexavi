@@ -68,7 +68,7 @@ class CompanyController extends Controller
         return apiResponse($this->company);
     }
 
-    public function register(SaveRequest $request)
+    public function register(RegisterRequest $request)
     {
         // Create Company
         $input = $request->companyData();

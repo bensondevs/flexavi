@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 use App\Models\RegisterInvitation;
 
-use App\Enums\RegisterInvitation\RegisterInvitationStatus;
+use App\Enums\RegisterInvitation\RegisterInvitationStatus as Status;
 
 class RegisterTest extends TestCase
 {
@@ -24,7 +24,7 @@ class RegisterTest extends TestCase
      */
     public function test_success_register()
     {
-        $invitation = RegisterInvitation::where('status', RegisterInvitationStatus::Active)->first();
+        $invitation = RegisterInvitation::where('status', Status::Active)->first();
 
         $headers = ['Accept' => 'application/json'];
         $url = '/api/auth/register';
@@ -66,7 +66,7 @@ class RegisterTest extends TestCase
      */
     public function test_wrong_input_register()
     {
-        $invitation = RegisterInvitation::where('status', RegisterInvitationStatus::Active)->first();
+        $invitation = RegisterInvitation::where('status', Status::Active)->first();
         
         $headers = ['Accept' => 'application/json'];
         $url = '/api/auth/register';

@@ -53,6 +53,7 @@ class QuotationRepository extends BaseRepository
 			unset($attachmentData['attachment']);
 			$attachment->fill($attachmentData);
 			$attachment->quotation_id = $quotation->id;
+			$attachment->company_id = $quotation->company_id;
 			$attachment->save();
 
 			$this->setSuccess('Successfully add attachment to quotation.');

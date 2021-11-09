@@ -27,8 +27,7 @@ class CustomerFactory extends Factory
     {
         return $this->afterMaking(function (Customer $customer) {
             if (! $customer->company_id) {
-                $company = Company::inRandomOrder()->first() ?:
-                    Company::factory()->create();
+                $company = Company::inRandomOrder()->first();
                 $customer->company()->associate($company);
             }
         });

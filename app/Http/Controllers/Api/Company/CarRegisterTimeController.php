@@ -152,7 +152,7 @@ class CarRegisterTimeController extends Controller
         $this->time->setModel($time);
 
         $force = $request->input('force');
-        $this->time->delete($force);
+        $this->time->unregister($force);
 
         return apiResponse($this->time);
     }

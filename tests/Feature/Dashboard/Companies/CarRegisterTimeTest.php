@@ -71,7 +71,6 @@ class CarRegisterTimeTest extends TestCase
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {
-            $json->has('time');
             $json->has('message');
             $json->where('status', 'success');
         });
@@ -137,18 +136,17 @@ class CarRegisterTimeTest extends TestCase
     public function test_mark_car_return()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = $company->owners()->inRandomOrder()->first() ?:
-            Owner::factory()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = $this->baseUrl . '/mark_return';
 
         $car = Car::factory()->for($company)->out()->create();
 
-        $registerTime = CarRegisterTime::factory()->create([
-            'car_id' => $car->id,
-            'company_id' => $car->company_id,
-        ]);
+        $registerTime = CarRegisterTime::factory()
+            ->for($company)
+            ->for($car)
+            ->create();
         $response = $this->json('POST', $url, [
             'car_register_time_id' => $registerTime->id,
         ]);

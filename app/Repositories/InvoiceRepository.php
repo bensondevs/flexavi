@@ -102,28 +102,30 @@ class InvoiceRepository extends BaseRepository
 		$works = $quotation->works;
 		if (empty($works)) {
 			$this->setUnprocessedInput('Failed to generate invoice from quotation. Quotation has no work attached.');
-			return false;
+			return $this->getModel();
 		}
 
 		try {
 			$invoice = $this->getModel($invoiceData);
-			$invoice->fill($invoiceData);
 			$invoice->invoiceable_type = Quotation::class;
 			$invoice->invoiceable_id = $quotation->id;
 			$invoice->company_id = $quotation->company_id;
+			$invoice->customer_id = $quotation->customer_id;
 			$invoice->total = $works->sum('total');
+			$invoice->fill($invoiceData);
 			$invoice->save();
+
+			$invoice->refresh();
 
 			// Generate items from works
 			$invoice->generateItemsFromWorks($works);
 
-			$this->setModel($invoice->fresh());
+			$this->setModel($invoice);
 
 			$this->setSuccess('Successfully generate invoice from quotation.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to generate invoice from quotation.', $error);
-			return false;
 		}
 
 		return $this->getModel();

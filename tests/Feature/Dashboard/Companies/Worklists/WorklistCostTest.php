@@ -9,7 +9,14 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ Company, Owner, Workday, Worklist, Cost };
+use App\Models\{ 
+    Company, 
+    Owner, 
+    Workday, 
+    Worklist, 
+    Cost, 
+    Costable 
+};
 
 class WorklistCostTest extends TestCase
 {
@@ -30,10 +37,9 @@ class WorklistCostTest extends TestCase
 
         $worklist = Worklist::factory()
             ->for($company)
-            ->has(Cost::factory()->count(3), 'costs')
             ->create();
         $url = $this->baseUrl . '?worklist_id=' . $worklist->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -54,7 +60,7 @@ class WorklistCostTest extends TestCase
 
         $worklist = Worklist::factory()->for($company)->create();
         $url = $this->baseUrl . '/store_record';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'cost_name' => 'Cost Name Example',
             'amount' => 9000,
             'paid_amount' => 1000,
@@ -85,9 +91,9 @@ class WorklistCostTest extends TestCase
         $worklist = Worklist::factory()->for($company)->create();
         $cost = $company->costs()
             ->inRandomOrder()
-            ->first() ?: Cost::factory()->create(['company_id' => $company->id]);
+            ->first() ?: Cost::factory()->for($company)->create(['company_id' => $company->id]);
         $url = $this->baseUrl . '/record';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
             'cost_id' => $cost->id,
         ]);
@@ -112,14 +118,16 @@ class WorklistCostTest extends TestCase
 
         $worklist = Worklist::factory()
             ->for($company)
-            ->has(Cost::factory()->for($company)->count(5), 'costs')
             ->create();
-        $cost = $worklist->costs()->first();
+        $costable = Costable::factory()
+            ->for($company)
+            ->worklist($worklist)
+            ->create();
         
         $url = $this->baseUrl . '/unrecord';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
-            'cost_id' => $cost->id,
+            'cost_id' => $costable->cost_id,
         ]);
 
         $response->assertStatus(201);
@@ -148,7 +156,7 @@ class WorklistCostTest extends TestCase
         }
         $worklist = Worklist::factory()->for($company)->create();
         $url = $this->baseUrl . '/record_many';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
             'cost_ids' => $costIds,
         ]);
@@ -173,7 +181,10 @@ class WorklistCostTest extends TestCase
 
         $worklist = Worklist::factory()
             ->for($company)
-            ->has(Cost::factory()->count(3))
+            ->create();
+        $costables = Costable::factory()
+            ->worklist($worklist)
+            ->count(5)
             ->create();
 
         $unrecordedCostIds = [];
@@ -186,7 +197,7 @@ class WorklistCostTest extends TestCase
         }
 
         $url = $this->baseUrl . '/unrecord_many';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'worklist_id' => $worklist->id,
             'cost_ids' => $unrecordedCostIds,
         ]);
@@ -211,11 +222,10 @@ class WorklistCostTest extends TestCase
 
         $worklist = Worklist::factory()
             ->for($company)
-            ->has(Cost::factory()->count(3))
             ->create();
 
         $url = $this->baseUrl . '/truncate';
-        $response = $this->post($url, ['worklist_id' => $worklist->id]);
+        $response = $this->json('POST', $url, ['worklist_id' => $worklist->id]);
 
         $response->assertStatus(201);
         $response->assertJson(function (AssertableJson $json) {

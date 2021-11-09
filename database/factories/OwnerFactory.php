@@ -18,6 +18,8 @@ class OwnerFactory extends Factory
      */
     protected $model = Owner::class;
 
+    private $companyless = true;
+
     /**
      * Configure the model factory.
      *
@@ -29,17 +31,21 @@ class OwnerFactory extends Factory
             if (! $owner->user_id) {
                 $user = User::factory()->create();
                 $user->assignRole('owner');
+
                 $owner->user()->associate($user);
             }
 
-            if (! $owner->company_id) {
-                $company = Company::inRandomOrder()->first() ?:
-                    Company::factory()->create();
-                $owner->company()->associate($company);
+            if (! $this->companyless) {
+                if (! $owner->company_id) {
+                    $company = Company::inRandomOrder()->first();
+                    $owner->company()->associate($company);
+                }
             }
         })->afterCreating(function (Owner $owner) {
-            if (! $owner->user_id) {
+            if (! $owner->user) {
                 $user = User::factory()->create();
+                $user->assignRole('owner');
+                
                 $owner->user()->associate($user);
             }
         });
@@ -98,6 +104,8 @@ class OwnerFactory extends Factory
      */
     public function withoutCompany()
     {
+        $this->companyless = false;
+
         return $this->state(function (array $attributes) {
             return [
                 'company_id' => null,

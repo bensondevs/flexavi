@@ -9,7 +9,15 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ Company, Workday, Worklist, Appointment };
+use App\Models\{ 
+    Company, 
+    Workday, 
+    Worklist, 
+    Appointment, 
+    Owner, 
+    Cost, 
+    Costable 
+};
 
 class AppointmentCostTest extends TestCase
 {
@@ -29,7 +37,6 @@ class AppointmentCostTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $appointment = Appointment::factory()
-            ->hasCosts()
             ->for($company)
             ->create();
 
@@ -110,12 +117,12 @@ class AppointmentCostTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $appointment = Appointment::factory()->for($company)->create();
-        $cost = Cost::factory()->for($appointment)->create();
+        $costable = Costable::factory()->appointment($appointment)->create();
         
         $url = $this->baseUrl . '/unrecord';
         $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
-            'cost_id' => $cost->id,
+            'cost_id' => $costable->cost_id,
         ]);
 
         $response->assertStatus(201);

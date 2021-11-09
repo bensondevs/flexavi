@@ -11,6 +11,8 @@ use App\Traits\Searchable;
 use \Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Enums\Address\AddressType;
+
 class Company extends Model
 {
     use HasFactory;
@@ -58,11 +60,6 @@ class Company extends Model
         'commerce_chamber_number',
         'company_logo_path',
         'company_website_url',
-    ];
-
-    protected $casts = [
-        'visiting_address' => 'array',
-        'invoicing_address' => 'array',
     ];
 
     protected $hidden = [
@@ -176,7 +173,9 @@ class Company extends Model
     	parent::boot();
 
     	self::creating(function ($company) {
-            $company->id = Uuid::generate()->string;
+            if (! $company->id) {
+                $company->id = Uuid::generate()->string;
+            }
     	});
     }
 
@@ -189,44 +188,64 @@ class Company extends Model
 
     public function getVisitingAddressAttribute()
     {
-        $address = $this->attributes['visiting_address'];
-        
-        return json_decode($address, true);
+        $addresses = ($this->relationLoaded('addresses')) ?
+            $this->addresses : $this->addresses();
+
+        return $addresses->where('address_type', AddressType::VisitingAddress)->first();
     }
 
     public function setVisitingAddressAttribute(array $value)
     {
-        $_address = [
-            'street' => $value['street'],
+        if ($address = $this->getVisitingAddressAttribute()) {
+            $address->delete();
+        }
+
+        $address = new Address([
+            'address_type' => AddressType::VisitingAddress,
+
+            'addressable_id' => $this->attributes['id'],
+            'addressable_type' => self::class,
+
+            'address' => $value['address'],
             'house_number' => $value['house_number'],
             'house_number_suffix' => isset($value['house_number_suffix']) ?
                 $value['house_number_suffix'] : null,
             'zipcode' => $value['zipcode'],
             'city' => $value['city'],
-        ];
-
-        $this->attributes['visiting_address'] = json_encode($_address);
+            'province' => $value['province'],
+        ]);
+        $address->save();
     }
 
     public function getInvoicingAddressAttribute()
     {
-        $address = $this->attributes['invoicing_address'];
+        $addresses = ($this->relationLoaded('addresses')) ?
+            $this->addresses : $this->addresses();
 
-        return json_decode($address, true);
+        return $addresses->where('address_type', AddressType::InvoicingAddress)->first();
     }
 
     public function setInvoicingAddressAttribute(array $value)
     {
-        $_address = [
-            'street' => $value['street'],
+        if ($address = $this->getInvoicingAddressAttribute()) {
+            $address->delete();
+        }
+
+        $address = new Address([
+            'address_type' => AddressType::InvoicingAddress,
+
+            'addressable_id' => $this->attributes['id'],
+            'addressable_type' => self::class,
+
+            'address' => $value['address'],
             'house_number' => $value['house_number'],
             'house_number_suffix' => isset($value['house_number_suffix']) ?
                 $value['house_number_suffix'] : null,
             'zipcode' => $value['zipcode'],
             'city' => $value['city'],
-        ];
-
-        $this->attributes['invoicing_address'] = json_encode($_address);
+            'province' => $value['province'],
+        ]);
+        $address->save();
     }
 
     public function setCompanyLogoAttribute($logoFile)

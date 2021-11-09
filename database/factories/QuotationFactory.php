@@ -35,15 +35,18 @@ class QuotationFactory extends Factory
     {
         return $this->afterMaking(function (Quotation $quotation) {
             if (! $quotation->company_id) {
-                $quotation->company()->associate(Company::factory()->create());
+                $company = Company::factory()->create();
+                $quotation->company()->associate($company);
             }
 
             if (! $quotation->customer_id) {
-                $quotation->customer()->associate(Customer::factory()->create());
+                $customer = Customer::factory()->for($quotation->company)->create();
+                $quotation->customer()->associate($customer);
             }
 
             if (! $quotation->appointment_id) {
-                $quotation->appointment()->associate(Appointment::factory()->create());
+                $appointment = Appointment::factory()->for($quotation->company)->create();
+                $quotation->appointment()->associate($appointment);
             }
         });
     }
@@ -73,10 +76,9 @@ class QuotationFactory extends Factory
             
             'quotation_description' => $faker->word(),
 
-            'amount' => $faker->randomNumber(4, false),
-            'vat_percentage' => rand(0, 100),
+            'vat_percentage' => $faker->randomNumber(2, false),
             'discount_amount' => $faker->randomNumber(3, false),
-            'total_amount' => $faker->randomNumber(4, false),
+            'amount' => $faker->randomNumber(4, false),
 
             'expiry_date' => $faker->datetime(),
             'status' => rand(Status::Draft, Status::Cancelled),

@@ -36,7 +36,7 @@ class AppointmentTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/appointments';
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -59,7 +59,7 @@ class AppointmentTest extends TestCase
         $customer = Customer::factory()->for($company)->create();
 
         $url = '/api/dashboard/companies/appointments/of_customer?customer_id=' . $customer->id;
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -82,7 +82,7 @@ class AppointmentTest extends TestCase
         $customer = Customer::factory()->for($company)->create();
 
         $url = '/api/dashboard/companies/appointments/store';
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'customer_id' => $customer->id,
             'start' => '2021-05-15',
             'end' => '2021-05-18',
@@ -111,7 +111,7 @@ class AppointmentTest extends TestCase
 
         $url = '/api/dashboard/companies/appointments/update';
         $appointment = Appointment::factory()->for($company)->created()->create();
-        $response = $this->patch($url, [
+        $response = $this->json('PATCH', $url, [
             'id' => $appointment->id,
             'customer_id' => $appointment->customer_id,
             'start' => '2021-05-15',
@@ -141,7 +141,7 @@ class AppointmentTest extends TestCase
 
         $url = '/api/dashboard/companies/appointments/execute';
         $appointment = Appointment::factory()->for($company)->created()->create();
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
         ]);
 
@@ -165,7 +165,7 @@ class AppointmentTest extends TestCase
 
         $url = '/api/dashboard/companies/appointments/process';
         $appointment = Appointment::factory()->for($company)->inProcess()->create();
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
         ]);
 
@@ -189,7 +189,7 @@ class AppointmentTest extends TestCase
 
         $url = '/api/dashboard/companies/appointments/cancel';
         $appointment = Appointment::factory()->for($company)->created()->create();
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
             'cancellation_cause' => 'The rooder is terribly late',
             'cancellation_vault' => 1,
@@ -216,7 +216,7 @@ class AppointmentTest extends TestCase
 
         $url = '/api/dashboard/companies/appointments/reschedule';
         $appointment = Appointment::factory()->for($company)->created()->create();
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
             'type' => $appointment->status,
             'start' => '2021-10-22',
@@ -243,7 +243,7 @@ class AppointmentTest extends TestCase
 
         $url = '/api/dashboard/companies/appointments/generate_invoice';
         $appointment = Appointment::factory()->for($company)->calculated()->create();
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
             'payment_method' => 2,
         ]);
@@ -253,7 +253,6 @@ class AppointmentTest extends TestCase
             $json->where('status', 'success');
             $json->has('message');
             $json->has('invoice');
-            $json->has('invoice.appointment');
         });
     }
 
@@ -273,7 +272,7 @@ class AppointmentTest extends TestCase
             ->hasInvoice()
             ->for($company)
             ->create();
-        $response = $this->post($url, [
+        $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
             'payment_method' => 2,
         ]);
@@ -300,7 +299,7 @@ class AppointmentTest extends TestCase
 
         $appointment = Appointment::factory()->for($company)->create();
         $url = '/api/dashboard/companies/appointments/delete';
-        $response = $this->delete($url, [
+        $response = $this->json('DELETE', $url, [
             'appointment_id' => $appointment->id,
         ]);
 
@@ -323,7 +322,7 @@ class AppointmentTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/appointments/trasheds';
-        $response = $this->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
@@ -348,7 +347,7 @@ class AppointmentTest extends TestCase
             ->softDeleted()
             ->for($company)
             ->create();
-        $response = $this->patch($url, ['appointment_id' => $appointment->id]);
+        $response = $this->json('PATCH', $url, ['appointment_id' => $appointment->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

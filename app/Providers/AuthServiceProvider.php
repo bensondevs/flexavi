@@ -11,6 +11,7 @@ use App\Policies\{
     WorkPolicy,
     OwnerPolicy,
     AddressPolicy,
+    CompanyPolicy,
     InvoicePolicy,
     ReceiptPolicy,
     WorkdayPolicy,
@@ -39,7 +40,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        
+        //
     ];
 
     /**
@@ -54,6 +55,16 @@ class AuthServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             return $user->hasRole('admin') ? true : null;
         });
+
+        // Company
+        Gate::define('view-any-company', [CompanyPolicy::class, 'viewAny']);
+        Gate::define('view-company', [CompanyPolicy::class, 'view']);
+        Gate::define('create-company', [CompanyPolicy::class, 'create']);
+        Gate::define('register-company', [CompanyPolicy::class, 'register']);
+        Gate::define('edit-company', [CompanyPolicy::class, 'update']);
+        Gate::define('delete-company', [CompanyPolicy::class, 'delete']);
+        Gate::define('restore-company', [CompanyPolicy::class, 'restore']);
+        Gate::define('force-delete-company', [CompanyPolicy::class, 'forceDelete']);
 
         // Appointment
         Gate::define('view-any-appointment', [AppointmentPolicy::class, 'viewAny']);

@@ -29,18 +29,18 @@ class QuotationAttachmentFactory extends Factory
      */
     public function configure()
     {
-        return $this->afterMaking(function (Attachment $attacment) {
+        return $this->afterMaking(function (Attachment $attachment) {
             if (! $attachment->company_id) {
                 $company = Company::inRandomOrder()->first() ?:
                     Company::factory()->create();
-                $attacment->company()->associate($company);
+                $attachment->company()->associate($company);
             }
 
             if (! $attachment->quotation_id) {
                 $quotation = Quotation::factory()->create([
-                    'company_id' => $attacment->company_id
+                    'company_id' => $attachment->company_id
                 ]);
-                $attacment->quotation()->associate($quotation);
+                $attachment->quotation()->associate($quotation);
             }
         });
     }
@@ -62,7 +62,7 @@ class QuotationAttachmentFactory extends Factory
                 300, 
                 null, 
                 false
-            );
+            ),
         ];
     }
 }

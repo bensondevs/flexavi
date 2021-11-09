@@ -50,10 +50,10 @@ class Appointmentable extends Model
         static::addGlobalScope(new IndexOrderedScope);
     }
 
-    public function scopeSiblingsOf(Builder $query)
+    public function scopeSiblingsOf(Builder $query, $appointmentable)
     {
-        return $query->where('appointmentable_id', $this->attributes['appointmentable_id'])
-            ->where('appointmentable_type', $this->attributes['appointmentable_type']);
+        return $query->where('appointmentable_id', $appointmentable->appointmentable_id)
+            ->where('appointmentable_type', $appointmentable->appointmentable_type);
     }
 
     public function company()
@@ -112,10 +112,15 @@ class Appointmentable extends Model
     public static function attachMany($appointmentable, $appointmentIds)
     {
         $type = get_class($appointmentable);
+
+        $startIndex = self::siblingsOf($appointmentable)->max('order_index');
+
         $appointmentables = [];
         foreach ($appointmentIds as $id) {
             array_push($appointmentables, [
                 'id' => generateUuid(),
+                'order_index' => ++$startIndex,
+                'company_id' => $appointmentable->company_id,
                 'appointmentable_id' => $appointmentable->id,
                 'appointmentable_type' => $type,
                 'appointment_id' => $id,

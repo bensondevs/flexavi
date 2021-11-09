@@ -20,16 +20,18 @@ Content-Type | `multipart/form-data`
 
  Payload name | Required | Validation | Description    
 --------------|----------|------------|-------------
-`visiting_addresss_street` | Required | string | Visiting address street 
-`visiting_addresss_house_number` | Required | string | Visiting address house number
-`visiting_addresss_house_number_suffix` | Optional | string | Visiting address house number suffix
-`visiting_addresss_zipcode` | Required | string | Visiting address zip code
-`visiting_addresss_city` | Required | string | Visiting address city
-`invoicing_addresss_street` | Required | string | Invoicing address street
-`invoicing_addresss_house_number` | Required | string | Invoicing address house number
-`invoicing_addresss_house_number_suffix` | Optional | string | Invoicing address house number suffix
-`invoicing_addresss_zipcode` | Required | string | Invoicing address zip code
-`invoicing_addresss_city` | Required | string | Invoicing address city
+`visiting_address` | Required | string | Visiting address street 
+`visiting_address_house_number` | Required | string | Visiting address house number
+`visiting_address_house_number_suffix` | Optional | string | Visiting address house number suffix
+`visiting_address_zipcode` | Required | string | Visiting address zip code
+`visiting_address_city` | Required | string | Visiting address city
+`visiting_address_province` | Required | string | Visiting address province
+`invoicing_address` | Required | string | Invoicing address street
+`invoicing_address_house_number` | Required | string | Invoicing address house number
+`invoicing_address_house_number_suffix` | Optional | string | Invoicing address house number suffix
+`invoicing_address_zipcode` | Required | string | Invoicing address zip code
+`invoicing_address_city` | Required | string | Invoicing address city
+`invoicing_address_province` | Required | string | Invoicing address province
 `company_name` | Required | string, unique | Unique company name
 `email` | Required | string, unique | Email of the company
 `phone_number` | Required | string, unique, numeric | The phone number of the company
@@ -128,17 +130,18 @@ Content-Type | `application/x-www-form-urlencoded`
 
  Payload name | Required | Validation | Description    
 --------------|----------|------------|-------------
-`visiting_addresss_street` | Required | string | Visiting address street 
-`visiting_addresss_house_number` | Required | string | Visiting address house number
-`visiting_addresss_house_number_suffix` | Optional | string | Visiting address house number suffix
-`visiting_addresss_zip_code` | Required | string | Visiting address zip code
-`visiting_addresss_city` | Required | string | Visiting address city
-`company_name` | Required | string, unique | Unique company name
-`invoicing_addresss_street` | Required | string | Invoicing address street  
-`invoicing_addresss_house_number` | Required | string | Invoicing address house number
-`invoicing_addresss_house_number_suffix` | Optional | string | Invoicing address house number suffix
-`invoicing_addresss_zip_code` | Required | string | Invoicing address zip code
-`invoicing_addresss_city` | Required | string | Invoicing address city
+`visiting_address` | Required | string | Visiting address street 
+`visiting_address_house_number` | Required | string | Visiting address house number
+`visiting_address_house_number_suffix` | Optional | string | Visiting address house number suffix
+`visiting_address_zipcode` | Required | string | Visiting address zip code
+`visiting_address_city` | Required | string | Visiting address city
+`visiting_address_province` | Required | string | Visiting address province
+`invoicing_address` | Required | string | Invoicing address street
+`invoicing_address_house_number` | Required | string | Invoicing address house number
+`invoicing_address_house_number_suffix` | Optional | string | Invoicing address house number suffix
+`invoicing_address_zipcode` | Required | string | Invoicing address zip code
+`invoicing_address_city` | Required | string | Invoicing address city
+`invoicing_address_province` | Required | string | Invoicing address province
 `email` | Required | string, unique | Email of the company
 `phone_number` | Required | string, unique, numeric | The phone number of the company
 `vat_number` | Required | string, unique | VAT number of the company
@@ -149,16 +152,16 @@ Content-Type | `application/x-www-form-urlencoded`
 
 ```json
 {
-    "visiting_addresss_street": "11, Visited Address Street",
-    "visiting_addresss_house_number": "11",
-    "visiting_addresss_house_number_suffix": "A",
-    "visiting_addresss_zip_code": "11111",
-    "visiting_addresss_city": "Visited City",
-    "invoicing_addresss_street": "22, Invoiced Address Street",
-    "invoicing_addresss_house_number": "22",
-    "invoicing_addresss_house_number_suffix": "B",
-    "invoicing_addresss_zip_code": "22222",
-    "invoicing_addresss_city": "Invoiced City",
+    "visiting_address_street": "11, Visited Address Street",
+    "visiting_address_house_number": "11",
+    "visiting_address_house_number_suffix": "A",
+    "visiting_address_zip_code": "11111",
+    "visiting_address_city": "Visited City",
+    "invoicing_address_street": "22, Invoiced Address Street",
+    "invoicing_address_house_number": "22",
+    "invoicing_address_house_number_suffix": "B",
+    "invoicing_address_zip_code": "22222",
+    "invoicing_address_city": "Invoiced City",
     "company_name": "Another Company",
     "email": "company@flexavi.com",
     "phone_number": "333111222000",

@@ -64,7 +64,7 @@ class Worklist extends Model
     public function getStartTimeAttribute()
     {
         if (! $this->appointments->count()) {
-            return null;
+            return carbon($this->workday->date);
         }
 
         $appointment = $this->appointments->sortBy('start')->first();
@@ -74,7 +74,7 @@ class Worklist extends Model
     public function getEndTimeAttribute()
     {
         if (! $this->appointments->count()) {
-            return null;
+            return carbon($this->workday->date);
         }
 
         $appointment = $this->appointments->sortBy('end')->last();

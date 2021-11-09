@@ -40,13 +40,12 @@ class AppointmentFactory extends Factory
     {
         return $this->afterMaking(function (Appointment $appointment) {
             if (! $appointment->company_id) {
-                $company = Company::inRandomOrder()->first() ?:
-                    Company::factory()->create();
+                $company = Company::inRandomOrder()->first();
                 $appointment->company()->associate($company);
             }
 
             if (! $appointment->customer_id) {
-                $customer = Customer::factory()->create(['company_id' => $appointment->company_id]);
+                $customer = Customer::factory()->for($appointment->company)->create();
                 $appointment->customer()->associate($customer);
             }
         });

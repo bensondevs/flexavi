@@ -41,14 +41,14 @@ class SaveCompanyRequest extends FormRequest
     {
         $this->setRules([
             // Visiting Address
-            'visiting_address_street' => ['required', 'string'],
+            'visiting_address' => ['required', 'string'],
             'visiting_address_house_number' => ['required', 'numeric'],
             'visiting_address_house_number_suffix' => ['string'],
             'visiting_address_zipcode' => ['required', 'numeric'],
             'visiting_address_city' => ['required', 'string'],
 
             // Invoicing Address
-            'invoicing_address_street' => ['required', 'string'],
+            'invoicing_address' => ['required', 'string'],
             'invoicing_address_house_number' => ['required', 'numeric'],
             'invoicing_address_house_number_suffix' => ['string'],
             'invoicing_address_zipcode' => ['required', 'numeric'],
@@ -67,22 +67,24 @@ class SaveCompanyRequest extends FormRequest
     public function visitingAddress()
     {
         return [
-            'street' => $this->input('visiting_address_street'),
+            'address' => $this->input('visiting_address'),
             'house_number' => $this->input('visiting_address_house_number'),
             'house_number_suffix' => $this->input('visiting_address_house_number_suffix'),
-            'zipcode' => $this->input('visiting_address_zip_code'),
+            'zipcode' => $this->input('visiting_address_zipcode'),
             'city' => $this->input('visiting_address_city'),
+            'province' => $this->input('visiting_address_province'),
         ];
     }
 
     public function invoicingAddress()
     {
         return [
-            'street' => $this->input('invoicing_address_street'),
+            'address' => $this->input('invoicing_address'),
             'house_number' => $this->input('invoicing_address_house_number'),
             'house_number_suffix' => $this->input('visiting_address_house_number_suffix'),
-            'zipcode' => $this->input('invoicing_address_zip_code'),
+            'zipcode' => $this->input('invoicing_address_zipcode'),
             'city' => $this->input('invoicing_address_city'),
+            'province' => $this->input('invoicing_address_province'),
         ];
     }
 

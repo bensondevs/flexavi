@@ -23,6 +23,29 @@ class UpdateCarRegisterTimeRequest extends FormRequest
         return $this->time = CarRegisterTime::findOrFail($id);
     }
 
+    protected function prepareForValidation()
+    {
+        if ($this->has('should_out_at')) {
+            $shouldOutAt = carbon($this->input('should_out_at'));
+            $this->merge(['should_out_at' => $shouldOutAt]);
+        }
+
+        if ($this->has('should_return_at')) {
+            $shouldReturnAt = carbon($this->input('should_return_at'));
+            $this->merge(['should_return_at' => $shouldReturnAt]);
+        }
+
+        if ($this->has('marked_out_at')) {
+            $markedOutAt = carbon($this->input('marked_out_at'));
+            $this->merge(['should_out_at' => $markedOutAt]);
+        }
+
+        if ($this->has('marked_return_at')) {
+            $markedReturnAt = carbon($this->input('marked_return_at'));
+            $this->merge(['should_return_at' => $markedReturnAt]);
+        }
+    }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -31,7 +54,7 @@ class UpdateCarRegisterTimeRequest extends FormRequest
     public function authorize()
     {
         $time = $this->getCarRegisterTime();
-        return Gate::allows('update-car-register-time', $time);
+        return Gate::allows('edit-car-register-time', $time);
     }
 
     /**
@@ -42,11 +65,11 @@ class UpdateCarRegisterTimeRequest extends FormRequest
     public function rules()
     {
         $this->setRules([
-            'should_out_at' => ['datetime'],
-            'should_return_at' => ['datetime'],
+            'should_out_at' => ['date'],
+            'should_return_at' => ['date'],
 
-            'marked_out_at' => ['datetime'],
-            'marked_return_at' => ['datetime'],
+            'marked_out_at' => ['date'],
+            'marked_return_at' => ['date'],
         ]);
 
         return $this->returnRules();
