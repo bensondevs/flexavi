@@ -32,10 +32,8 @@ class RegisterCarTimeRequest extends FormRequest
     {
         $this->merge([
             'company_id' => $this->getCar()->company_id,
-            'should_out_at' => format_datetime($this->input('should_out_at')),
-            'should_return_at' => format_datetime($this->input('should_return_at')),
-            'marked_out_at' => format_datetime($this->input('marked_out_at')),
-            'marked_return_at' => format_datetime($this->input('marked_return_at')),
+            'should_out_at' => (new \DateTime($this->input('should_out_at')))->format('c'),
+            'should_return_at' => (new \DateTime($this->input('should_return_at')))->format('c'),
         ]);
     }
 
@@ -61,8 +59,6 @@ class RegisterCarTimeRequest extends FormRequest
             'company_id' => ['required', 'string'],
             'should_out_at' => ['required', 'date'],
             'should_return_at' => ['required', 'date'],
-            'marked_out_at' => ['required', 'date'],
-            'marked_return_at' => ['required', 'date'],
         ]);
 
         return $this->returnRules();

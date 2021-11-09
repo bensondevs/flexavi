@@ -120,7 +120,7 @@ class SaveQuotationRequest extends FormRequest
             'contact_person' => ['required', 'string'],
 
             'address' => ['required', 'string'],
-            'zip_code' => ['required', 'numeric'],
+            'zipcode' => ['required', 'numeric'],
             'phone_number' => ['required', 'string', 'numeric'],
             
             'damage_causes' => ['required', 'array'],

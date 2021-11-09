@@ -26,7 +26,7 @@ class CustomerAddressTest extends TestCase
         $owner = Owner::factory()->hasAddresses()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = Customer::factory()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->create();
 
         $url = '/api/dashboard/companies/addresses/customer?customer_id=' . $customer->id;
         $response = $this->json('GET', $url);
@@ -48,7 +48,7 @@ class CustomerAddressTest extends TestCase
         $owner = Owner::factory()->hasAddresses()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = Customer::factory()->create(['company_id' => $company->id]);
+        $customer = Customer::factory()->for($company)->create();
 
         $url = '/api/dashboard/companies/addresses/customer/trasheds?customer_id=' . $customer->id;
         $response = $this->json('GET', $url);
@@ -193,8 +193,8 @@ class CustomerAddressTest extends TestCase
         $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $customer = Customer::factory()->create(['company_id' => $company->id]);
-            
+        $customer = Customer::factory()->for($company)->create();
+        
         $address = Address::factory()
             ->customer($customer)
             ->softDeleted()

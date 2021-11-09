@@ -55,7 +55,7 @@ class QuotationsSeeder extends Seeder
                 'quotation_number' => strtoupper(randomString(8)),
                 'contact_person' => $customer->fullname,
                 'address' => 'Random Address',
-                'zip_code' => '111000',
+                'zipcode' => '111000',
                 'phone_number' => '02861282634',
                 'damage_causes' => json_encode($damageCauses),
                 'quotation_description' => 'Hello this is seeder quotation damage descripton',

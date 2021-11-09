@@ -265,6 +265,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('mark-out-car-register-time', [CarRegisterTimePolicy::class, 'markOut']);
         Gate::define('mark-return-car-register-time', [CarRegisterTimePolicy::class, 'markReturn']);
         Gate::define('edit-car-register-time', [CarRegisterTimePolicy::class, 'update']);
+        Gate::define('delete-car-register-time', [CarRegisterTimePolicy::class, 'delete']);
         Gate::define('restore-car-register-time', [CarRegisterTimePolicy::class, 'restore']);
         Gate::define('force-delete-car-register-time', [CarRegisterTimePolicy::class, 'forceDelete']);
 

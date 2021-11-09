@@ -41,7 +41,7 @@ class CreateQuotationsTable extends Migration
             $table->string('contact_person');
 
             $table->string('address');
-            $table->string('zip_code');
+            $table->string('zipcode');
             $table->string('phone_number')->nullable();
 
             $table->json('damage_causes');

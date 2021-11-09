@@ -37,7 +37,7 @@ class SubAppointmentFactory extends Factory
             }
 
             if (! $subAppointment->appointment_id) {
-                $appointment = Appointment::factory()->create();
+                $appointment = Appointment::factory()->created()->create();
                 $subAppointment->appointment()->associate($appointment);
             }
         });

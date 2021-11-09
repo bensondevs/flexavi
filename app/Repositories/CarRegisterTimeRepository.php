@@ -184,9 +184,7 @@ class CarRegisterTimeRepository extends BaseRepository
 	{
 		try {
 			$time = $this->getModel();
-			$force ?
-				$time->forceDelete() :
-				$time->delete();
+			$force ? $time->forceDelete() : $time->delete();
 
 			$this->destroyModel();
 

@@ -39,7 +39,6 @@ class SubAppointmentTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $appointment = Appointment::factory()
-            ->has(SubAppointment::factory()->for($company)->count(3), 'subs')
             ->for($company)
             ->create();
         $url = $this->baseUrl . '?appointment_id=' . $appointment->id;

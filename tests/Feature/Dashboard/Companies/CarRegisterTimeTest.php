@@ -35,8 +35,9 @@ class CarRegisterTimeTest extends TestCase
         $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
+        $carRegisterTimes = CarRegisterTime::factory()->count(5);
         $car = Car::factory()
-            ->has(CarRegisterTime::factory()->count(5), 'registeredTimes')
+            ->has($carRegisterTimes, 'registeredTimes')
             ->create();
         $url = $this->baseUrl . '?car_id=' . $car->id;
         $response = $this->json('GET', $url);
@@ -190,7 +191,7 @@ class CarRegisterTimeTest extends TestCase
      *
      * @return void
      */
-    public function test_delete_car_register_time()
+    public function test_unregister_car_register_time()
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
@@ -198,7 +199,7 @@ class CarRegisterTimeTest extends TestCase
 
         $time = CarRegisterTime::factory()->for($company)->create();
 
-        $url = $this->baseUrl . '/delete';
+        $url = $this->baseUrl . '/unregister';
         $response = $this->json('DELETE', $url, [
             'car_register_time_id' => $time->id,
             'force' => true,

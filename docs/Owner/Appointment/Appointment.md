@@ -430,8 +430,8 @@ Payload name | Required | Validation | Description
 ```json
 {
     "customer_id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
-    "start": "2021-05-15",
-    "end": "2021-05-18",
+    "start": "2021-05-15 08:00:00",
+    "end": "2021-05-18 12:00:00",
     "include_weekend": true,
     "type": 1,
     "note": "Fixing leaking rooftop",
@@ -481,8 +481,8 @@ Payload name | Required | Validation | Description
 {
     "id": "402d4950-b596-11eb-9dd1-6732e058f436",
     "customer_id": "2b6633c0-ee1a-11eb-afc9-f90464cdf390",
-    "start": "2021-05-15",
-    "end": "2021-05-18",
+    "start": "2021-05-15 08:00:00",
+    "end": "2021-05-18 12:00:00",
     "include_weekend": true,
     "type": 1,
     "note": "Fixing leaking rooftop",

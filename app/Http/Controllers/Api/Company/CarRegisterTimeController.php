@@ -146,7 +146,7 @@ class CarRegisterTimeController extends Controller
      * @param DeleteRequest  $request
      * @return  
      */
-    public function delete(DeleteRequest $request)
+    public function unregister(DeleteRequest $request)
     {
         $time = $request->getCarRegisterTime();
         $this->time->setModel($time);

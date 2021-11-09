@@ -84,7 +84,7 @@ Attribute Name  | Type  | Description
                 "quotation_number": "OLRA1RXV",
                 "contact_person": "Customer 59 of Company 1",
                 "address": "Random Address",
-                "zip_code": "111000",
+                "zipcode": "111000",
                 "phone_number": "02861282634",
                 "quotation_description": "Hello this is seeder quotation damage descripton",
                 "amount": "2,296.00",
@@ -124,7 +124,7 @@ Attribute Name  | Type  | Description
                 "quotation_number": "1L3I8KFX",
                 "contact_person": "Customer 52 of Company 1",
                 "address": "Random Address",
-                "zip_code": "111000",
+                "zipcode": "111000",
                 "phone_number": "02861282634",
                 "quotation_description": "Hello this is seeder quotation damage descripton",
                 "amount": "895.00",
@@ -164,7 +164,7 @@ Attribute Name  | Type  | Description
                 "quotation_number": "GZHMIVFM",
                 "contact_person": "Customer 99 of Company 1",
                 "address": "Random Address",
-                "zip_code": "111000",
+                "zipcode": "111000",
                 "phone_number": "02861282634",
                 "quotation_description": "Hello this is seeder quotation damage descripton",
                 "amount": "2,072.00",
@@ -204,7 +204,7 @@ Attribute Name  | Type  | Description
                 "quotation_number": "IPGCI6EU",
                 "contact_person": "Customer 19 of Company 1",
                 "address": "Random Address",
-                "zip_code": "111000",
+                "zipcode": "111000",
                 "phone_number": "02861282634",
                 "quotation_description": "Hello this is seeder quotation damage descripton",
                 "amount": "1,370.00",
@@ -244,7 +244,7 @@ Attribute Name  | Type  | Description
                 "quotation_number": "Y3OJKB2C",
                 "contact_person": "Customer 75 of Company 1",
                 "address": "Random Address",
-                "zip_code": "111000",
+                "zipcode": "111000",
                 "phone_number": "02861282634",
                 "quotation_description": "Hello this is seeder quotation damage descripton",
                 "amount": "2,210.00",
@@ -284,7 +284,7 @@ Attribute Name  | Type  | Description
                 "quotation_number": "Z36IAHUA",
                 "contact_person": "Customer 43 of Company 1",
                 "address": "Random Address",
-                "zip_code": "111000",
+                "zipcode": "111000",
                 "phone_number": "02861282634",
                 "quotation_description": "Hello this is seeder quotation damage descripton",
                 "amount": "2,818.00",
@@ -398,7 +398,7 @@ Attribute Name  | Type  | Description
                 "quotation_number": "Z36IAHUA",
                 "contact_person": "Customer 43 of Company 1",
                 "address": "Random Address",
-                "zip_code": "111000",
+                "zipcode": "111000",
                 "phone_number": "02861282634",
                 "quotation_description": "Hello this is seeder quotation damage descripton",
                 "amount": "2,818.00",
@@ -474,7 +474,7 @@ Payload name | Required | Validation | Description
 `quotation_date` | Required | Date string (YYYY-MM-DD) | Quotation Date, this must have format of [YYYY-MM-DD]
 `contact_person` | Required | String | The name of contact person in quotation, in some probable rare case, this can be different than customer name
 `address` | Required | String | The address of customer's house
-`zip_code` | Required | String | Zip Code of customer's house
+`zipcode` | Required | String | Zip Code of customer's house
 `phone_number` | Required | String | The callable phone number, this number will be called whenever roofer need certain contact with customer or people in charge of the house
 `damage_cause` | Required | Array, string | Damage causes needs to be fill with ARRAY, the number represents: `Leak` = `1`, `Fungus Mold` = `2`, `Bird Nuisance` = 3, `Storm Damage` = `4`, `Overdue Maintenance` = `5`
 `quotation_description` | Optional | String | The additional description about quotation, can be filled y the description of damage of the roof or anything related with and informing about everything needs to be known within quotation
@@ -526,7 +526,7 @@ Payload name | Required | Validation | Description
 `quotation_date` | Required | Date string (YYYY-MM-DD) | Quotation Date, this must have format of [YYYY-MM-DD]
 `contact_person` | Required | String | The name of contact person in quotation, in some probable rare case, this can be different than customer name
 `address` | Required | String | The address of customer's house
-`zip_code` | Required | String | Zip Code of customer's house
+`zipcode` | Required | String | Zip Code of customer's house
 `phone_number` | Required | String | The callable phone number, this number will be called whenever roofer need certain contact with customer or people in charge of the house
 `damage_cause` | Required | Array, string | Damage causes needs to be fill with ARRAY, the number represents: `Leak` = `1`, `Fungus Mold` = `2`, `Bird Nuisance` = `3`, `Storm Damage` = `4`, `Overdue Maintenance` = `5`
 `quotation_description` | Optional | String | The additional description about quotation, can be filled y the description of damage of the roof or anything related with and informing about everything needs to be known within quotation
@@ -1178,7 +1178,7 @@ Payload name | Required | Validation | Description
             "quotation_number": "OUNWE1TR",
             "contact_person": "Customer 1 of Company 1",
             "address": "Random Address",
-            "zip_code": "111000",
+            "zipcode": "111000",
             "phone_number": "02861282634",
             "quotation_description": "Hello this is seeder quotation damage descripton",
             "amount": "2,669.00",

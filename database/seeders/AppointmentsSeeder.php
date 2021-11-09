@@ -4,13 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Company;
-use App\Models\Workday;
-use App\Models\Appointment;
-use App\Models\Appointmentable;
+use App\Models\{
+    Company,
+    Workday,
+    Appointment,
+    Appointmentable
+};
 
-use App\Enums\Appointment\AppointmentType;
-use App\Enums\Appointment\AppointmentStatus;
+use App\Enums\Appointment\{ AppointmentType, AppointmentStatus };
 
 class AppointmentsSeeder extends Seeder
 {

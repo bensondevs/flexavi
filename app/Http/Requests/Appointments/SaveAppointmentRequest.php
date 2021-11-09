@@ -26,6 +26,26 @@ class SaveAppointmentRequest extends FormRequest
     }
 
     /**
+     * Prepare received request values before rules.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->has('start')) {
+            $start = $this->input('start');
+            $start = (new \DateTime($start))->format('c');
+        }
+
+        if ($this->has('end')) {
+            $end = $this->input('end');
+            $end = (new \DateTime($end))->format('c');
+        }
+
+        $this->merge(['start' => $start, 'end' => $end]);
+    }
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool

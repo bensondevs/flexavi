@@ -52,6 +52,10 @@ class MakeDocumentation extends Command
         $modelNameLowerCase = strtolower($modelName);
         $directory = str_replace($modelFileName, '', $filePath);
 
+        if (! file_exists($directory)) {
+            shell_exec('mkdir ' . $directory);
+        }
+
         // Preparing Template
         $documentationTemplate = file_get_contents(resource_path('stubs/Documentation.stub'));
 

@@ -34,7 +34,7 @@ class Quotation extends Model
         'quotation_number',
         'contact_person',
         'address',
-        'zip_code',
+        'zipcode',
         'address',
         'phone_number',
         'quotation_description',
@@ -55,7 +55,7 @@ class Quotation extends Model
         'contact_person',
 
         'address',
-        'zip_code',
+        'zipcode',
         'phone_number',
         
         'quotation_description',

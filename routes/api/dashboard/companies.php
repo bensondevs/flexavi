@@ -334,7 +334,7 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('mark_out', [CarRegisterTimeController::class, 'markOut']);
 			Route::post('mark_return', [CarRegisterTimeController::class, 'markReturn']);
 			Route::match(['PUT', 'PATCH'], 'update', [CarRegisterTimeController::class, 'update']);
-			Route::delete('delete', [CarRegisterTimeController::class, 'delete']);
+			Route::delete('unregister', [CarRegisterTimeController::class, 'unregister']);
 		});
 	});
 

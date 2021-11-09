@@ -111,6 +111,16 @@ class CarRegisterTime extends Model
             ->where('marked_out_at', '<=', $end);
     }
 
+    public function scopeMarkedOut(Builder $query)
+    {
+        return $query->whereNotNull('marked_out_at');
+    }
+
+    public function scopeMarkedReturned(Builder $query)
+    {
+        return $query->whereNotNull('marked_return_at');
+    }
+
     public function scopeMarkedReturnBetween(Builder $query, $start, $end = null)
     {
         if ($end === null) $end = now();
