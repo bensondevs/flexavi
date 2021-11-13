@@ -1,6 +1,38 @@
 ## Car
 
 -------------------------------------------------------
+### 0. About
+-------------------------------------------------------
+
+This section is going to describe you about the flow endpoints of the cars.
+
+- Each `companies` possibly has many cars in their warehouse. This feature will allow the user (including but not limited to `Owner`) to manage their fleet.
+
+- Car can have image and its uploadable
+
+- This feature rely on the database table of `cars` which contains
+
+Column Name | Data Type | Description
+-------------------------------------
+`id` | char(36) | Represents the ID of the car
+`company_id` | char(36) | Represents the ID of company where car belong.
+`car_image_path` | varchar(255) | The column to store path where uploaded image for car.
+`brand` | varchar(255) | Represents the brand of the car.
+`model` | varchar(255) | Represents the model of the car.
+`year` | int | Represents the year when car is produced by the manufacturer.
+`car_name` | varchar(255) | Represents the name given by the company for the car.
+`car_license` | varchar(255) | represents the license number of the car.
+`insured` | tinyint(1) | Represents the status of insurance of the car.
+`status` | tinyint | represents the status of the car, to see the list of statuses available for the car, please see [Documentation](/docs/Meta/Car.md).
+`created_at` | timestamp, nullable | The time when the record created.
+`updated_at` | timestamp, nullable | The time when the record lastly edited.
+`deleted_at` | timestamp, nullable | This column will be filled with the time when the row is soft-deleted.
+
+- Car can be registered to certain time by the administrative. This will create new instance called `CarRegisterTime` with relationship with tables of `companies`, `cars` and `worklists` in certain condition
+
+- This feature has ability to do soft delete and hard delete. If we do soft delete, the record will not be destroyed immediately, instead, deleted row's `deleted_at` will be set and eliminated from the normal query or search result. 
+
+-------------------------------------------------------
 ### 1. Populate Company Cars
 -------------------------------------------------------
 

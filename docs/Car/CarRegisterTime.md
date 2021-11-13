@@ -1,6 +1,42 @@
 ## Car Register Time
 
 -------------------------------------------------------
+### 0. About
+-------------------------------------------------------
+
+This section is going to describe you about the flow endpoints of the car's registered times. This section is the child section of [Car Section](docs/Car/Car.md). To understand the flow of this section, you need to have understanding about the [Car Section](docs/Car/Car.md).
+
+This section has purpose to serve the cases of car timing. Sometimes, company need to take care and control of their fleets, because the fleet is important infrastucture to help the employees to work through the schedule. Fleet can be under the control of the assigned employees. This condition needs the responsibility shifting from the company to the assigned employees. Those assigned employees will be responsible of the car as long as the registered time.
+
+- To assign the car with certain time is to set the value of `should_out_at` as time when the car should be out from the warehouse or garage and `should_return_at` as time when the car should be returned to warehouse. By system, the defined time is not strict time to follow, instead, the administrative implementation of it may be so.
+
+- This feature rely on the database table of `car_register_times` which contains
+
+Column Name | Data Type | Description
+-------------------------------------
+`id` | char(36), primary | Represents the ID of Car Register Time.
+`company_id` | char(36) | Represents the Company ID where this record is belong
+`worklist_id` | char(36), nullable | Represents the Worklist ID which this record is attached.
+`car_id` | char(36) | Represents the Car ID which this record is attached to.
+`should_out_at` | timestamp | Represents the time when the car should be out from warehouse/garage.
+`should_return_at` | timestamp | Represents the time when the car should returned to the warehouse/garage
+`marked_out_at` | timestamp | Represents the time car is marked out from the warehouse/garage.
+`marked_return_at` | timestamp | Represents the time car is marked returned to the warehouse/garage.
+`created_at` | timestamp | Represents the time when the time is registered (created).
+`updated_at` | timestamp | Represents the time when the last time time is updated.
+`deleted_at` | timestamp | Represents the time when the time record is deleted. If not deleted, this column will be empty or null.
+
+- User of the company can mark the car as out and the system will set the value for column of `marked_out_at`.
+
+- As well as marking car out, the user can also mark the car as returned and the system will set the value for column of `marked_return_at`
+
+- The value of `marked_out_at` can be different with `should_out_at`. It's impossible to be EXACTLY perfect at right time to set the car out from the warehouse. This system do understand the dynamics of the business. This is applied to `marked_return_at` with `should_return_at` as well.
+
+- Car can be registered to worklist. This will set the value in `worklist_id` in the model.
+
+- User (Administrative Employees and Owner) can add employees to this registered time. The relation of database for this ability is one `car_register_times` has many `car_register_time_employees`. To see detail about the car register time employee please see the [Documentation](./CarRegisterTimeEmployee.md)
+
+-------------------------------------------------------
 ### 1. Populate Car Register Time
 -------------------------------------------------------
 

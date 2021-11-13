@@ -7,7 +7,13 @@ use Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\{ Car, CarRegisterTime, Worklist };
+use App\Models\{ 
+	Car, 
+	CarRegisterTime,
+	CarRegisterTimeEmployee as AssignedEmployee,
+	Employee,
+	Worklist 
+};
 
 class CarRegisterTimeRepository extends BaseRepository
 {
@@ -42,7 +48,7 @@ class CarRegisterTimeRepository extends BaseRepository
 	/**
      * Get parent model
      *  
-     * @return  void
+     * @return  \App\Models\Car  $car
      */
 	public function getCar()
 	{
@@ -154,7 +160,7 @@ class CarRegisterTimeRepository extends BaseRepository
 	 * Update registered time to apply changes.
 	 * 
 	 * @param array  $timeData
-	 * @return \App\Models\CarRegisterTime  mixed
+	 * @return array  mixed
 	 */
 	public function update(array $timeData = [])
 	{

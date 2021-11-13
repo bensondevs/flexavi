@@ -18,15 +18,12 @@ class CreateCompaniesTable extends Migration
 
             $table->string('company_name');
 
-            // $table->json('visiting_address');
-            // $table->json('invoicing_address');
-
-            $table->string('email');
+            $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('phone_number');
 
             $table->string('vat_number'); // Need validation from API
-            $table->string('commerce_chamber_number');
+            $table->string('commerce_chamber_number')->nullable();
 
             $table->string('company_logo_path')->nullable();
             $table->string('company_website_url')->nullable();

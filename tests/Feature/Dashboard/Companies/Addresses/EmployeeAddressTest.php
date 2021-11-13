@@ -26,7 +26,7 @@ class EmployeeAddressTest extends TestCase
         $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $employee = $company->employees()->first();
+        $employee = Employee::factory()->for($company)->create();
         $url = '/api/dashboard/companies/addresses/employee?employee_id=' . $employee->id;
         $response = $this->json('GET', $url);
 
@@ -68,10 +68,7 @@ class EmployeeAddressTest extends TestCase
         $owner = Owner::factory()->for($company)->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
-        $employee = Employee::factory()
-            ->for($company)
-            ->hasAddresses()
-            ->create();
+        $employee = Employee::factory()->for($company)->create();
         $url = '/api/dashboard/companies/addresses/employee/store';
         $response = $this->json('POST', $url, [
             'address_type' => 1,

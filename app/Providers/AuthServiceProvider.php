@@ -30,6 +30,7 @@ use App\Policies\{
     ExecuteWorkPhotoPolicy,
     AppointmentWorkerPolicy,
     RegisterInvitationPolicy,
+    CarRegisterTimeEmployeePolicy
 };
 
 class AuthServiceProvider extends ServiceProvider
@@ -268,6 +269,14 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-car-register-time', [CarRegisterTimePolicy::class, 'delete']);
         Gate::define('restore-car-register-time', [CarRegisterTimePolicy::class, 'restore']);
         Gate::define('force-delete-car-register-time', [CarRegisterTimePolicy::class, 'forceDelete']);
+
+        // Car Register Time Employee
+        Gate::define('view-any-car-register-time-employee', [CarRegisterTimeEmployeePolicy::class, 'viewAny']);
+        Gate::define('view-car-register-time-employee', [CarRegisterTimeEmployeePolicy::class, 'view']);
+        Gate::define('assign-car-register-time-employee', [CarRegisterTimeEmployeePolicy::class, 'assign']);
+        Gate::define('set-as-driver-car-register-time-employee', [CarRegisterTimeEmployeePolicy::class, 'setAsDriver']);
+        Gate::define('set-out-car-register-time-employee', [CarRegisterTimeEmployeePolicy::class, 'setOut']);
+        Gate::define('unassign-car-register-time-employee', [CarRegisterTimeEmployeePolicy::class, 'unassign']);
 
         // Workday
         Gate::define('view-any-workday', [WorkdayPolicy::class, 'viewAny']);

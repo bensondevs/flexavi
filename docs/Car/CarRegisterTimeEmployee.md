@@ -1,10 +1,10 @@
-## CarRegisterEmployee
+## Car Register Employee
 
 -------------------------------------------------------
-### 1. Populate CarRegisterEmployee
+### 1. Populate Car Register Employee
 -------------------------------------------------------
 
-**Endpoint:** `/api/dashboard/companies/cars/register_times`
+**Endpoint:** `/api/dashboard/companies/cars/register_times/assigned_employees`
 
 **Method:** `GET`
 
@@ -19,6 +19,7 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
+`car_register_time_id` | Required | uuid, uuid string | The ID of car register time.
 `page` | Optional | number | Page of pagination
 `search` | Optional | string | Searched keyword, will be matched through all attribute of owner
 `per_page` | Optional | number | Amount of data per page, default amount is 10
@@ -27,21 +28,60 @@ Payload name | Required | Validation | Description
 
 Attribute Name  | Type  | Description   
 ----------------|-------|---------------
-`carregisteremployee` | Object | The owner object, contains pagination information and array of `data`
+`assigned_employees` | Object | The owner object, contains pagination information and array of `data`
 
 **Success Response Example:**
 
 ```json
 {
-    
+    "assigned_employees": {
+        "current_page": 1,
+        "data": [
+            {
+                "id": "0da23db0-42f4-11ec-8535-0150d13c22c5",
+                "car_register_time_id": "604e3e40-4290-11ec-81a0-739e140fcc23",
+                "employee_id": "6050b810-4290-11ec-9b58-9d7a50e172c6",
+                "passanger_type": 1,
+                "passanger_type_description": "Driver",
+                "out_time": null
+            }
+        ],
+        "first_page_url": "/?page=1",
+        "from": 1,
+        "last_page": 1,
+        "last_page_url": "/?page=1",
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": null,
+        "path": "/",
+        "per_page": 10,
+        "prev_page_url": null,
+        "to": 1,
+        "total": 1
+    }
 }
 ```
 
 -------------------------------------------------------
-### 2. Store CarRegisterEmployee
+### 2. Assign Car Register Time Employee
 -------------------------------------------------------
 
-**Endpoint:** `/store`
+**Endpoint:** `/api/dashboard/companies/cars/register_times/assigned_employees/assign`
 
 **Method:** `POST`
 
@@ -56,6 +96,9 @@ Authorization | `Bearer {token}`
 
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
+`car_register_time_id` | Required | uuid, uuid string | ID of the car register time.
+`employee_id` | Required | uuid, uuid string | ID of the target employee
+`passanger_type` | Optional | 
 
 
 **Request Body Example:**

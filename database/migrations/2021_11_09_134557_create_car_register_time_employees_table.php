@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCarRegisterEmployeesTable extends Migration
+class CreateCarRegisterTimeEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateCarRegisterEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::create('car_register_employees', function (Blueprint $table) {
+        Schema::create('car_register_time_employees', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
             $table->uuid('company_id');
@@ -22,13 +22,7 @@ class CreateCarRegisterEmployeesTable extends Migration
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->uuid('car_id');
-            $table->foreign('car_id')
-                ->references('id')
-                ->on('cars')
-                ->onDelete('CASCADE');
-
-            $table->uuid('car_register_time_id')->nullable();
+            $table->uuid('car_register_time_id');
             $table->foreign('car_register_time_id')
                 ->references('id')
                 ->on('car_register_times')
@@ -42,8 +36,7 @@ class CreateCarRegisterEmployeesTable extends Migration
 
             $table->tinyInteger('passanger_type')->default(1);
 
-            $table->datetime('out_time')->nullable();
-            $table->datetime('in_time')->nullable();
+            $table->timestamp('out_time')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -57,6 +50,6 @@ class CreateCarRegisterEmployeesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('car_register_employees');
+        Schema::dropIfExists('car_register_time_employees');
     }
 }

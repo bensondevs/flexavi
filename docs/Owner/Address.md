@@ -1,6 +1,16 @@
 ## Address
 
 -------------------------------------------------------
+### 0. About
+-------------------------------------------------------
+
+This section is going to describe you about the flow endpoints of the addresses.
+
+- Each `addresses` will have [morph relationship](https://laravel.com/docs/8.x/eloquent-relationships#one-to-many-polymorphic-relations) which the address is the child of the relationship.
+
+- 
+
+-------------------------------------------------------
 ### 1. Populate Company Addresses
 -------------------------------------------------------
 

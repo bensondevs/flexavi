@@ -10,6 +10,8 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Enums\CarRegisterTimeEmployee\PassangerType;
+
 use App\Observers\CarRegisterTimeObserver;
 
 class CarRegisterTime extends Model
@@ -206,5 +208,22 @@ class CarRegisterTime extends Model
     public function car()
     {
         return $this->belongsTo(Car::class);
+    }
+
+    public function assignedEmployees()
+    {
+        return $this->hasMany(CarRegisterTimeEmployee::class);
+    }
+
+    public function currentDriver()
+    {
+        $assignedEmployees = $this->assignedEmployees();
+        if ($this->relationLoaded('assignedEmployees')) {
+            $assignedEmployees = $this->assignedEmployees;
+        }
+
+        return $this->assignedEmployees
+            ->where('passanger_type', PassangerType::Driver)
+            ->first();
     }
 }

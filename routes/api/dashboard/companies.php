@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Company\{
 	CarController,
-		CarRegisterTimeController,
+		Car\CarRegisterTimeController,
+		Car\CarRegisterTimeEmployeeController,
+
 	InvoiceController,
 		InvoiceItemController,
 	CompanyController,
@@ -219,16 +221,6 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 
 		/*
-			Appointment Workers Module
-		*/
-		/*Route::group(['prefix' => 'workers'], function () {
-			Route::get('/', [AppointmentWorkerController::class, 'companyAppointmentWorkers']);
-			Route::post('store', [AppointmentWorkerController::class, 'store']);
-			Route::match(['PUT', 'PATCH'], 'update', [AppointmentWorkerController::class, 'update']);
-			Route::delete('delete', [AppointmentWorkerController::class, 'delete']);
-		});*/
-
-		/*
 			Appointment Employees Module
 		*/
 		Route::group(['prefix' => 'employees'], function () {
@@ -335,6 +327,18 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('mark_return', [CarRegisterTimeController::class, 'markReturn']);
 			Route::match(['PUT', 'PATCH'], 'update', [CarRegisterTimeController::class, 'update']);
 			Route::delete('unregister', [CarRegisterTimeController::class, 'unregister']);
+
+			/*
+				Company Car Register Time Employees
+			*/
+			Route::group(['prefix' => 'assigned_employees'], function () {
+				Route::get('/', [CarRegisterTimeEmployeeController::class, 'assignedEmployees']);
+				Route::post('assign', [CarRegisterTimeEmployeeController::class, 'assignEmployee']);
+				Route::get('show', [CarRegisterTimeEmployeeController::class, 'show']);
+				Route::post('set_as_driver', [CarRegisterTimeEmployeeController::class, 'setAsDriver']);
+				Route::post('set_out', [CarRegisterTimeEmployeeController::class, 'setOut']);
+				Route::delete('unassign', [CarRegisterTimeEmployeeController::class, 'unassignEmployee']);
+			});
 		});
 	});
 

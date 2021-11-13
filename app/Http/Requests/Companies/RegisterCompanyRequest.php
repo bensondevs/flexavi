@@ -61,8 +61,8 @@ class RegisterCompanyRequest extends FormRequest
             'email' => ['required', 'string', 'unique:companies,email'],
             'phone_number' => ['required', new TelephoneNumber, 'unique:companies,phone_number'],
             'vat_number' => ['required', 'string', 'unique:companies,vat_number'],
-            'commerce_chamber_number' => ['required', 'numeric'],
-            'company_website_url' => ['required', 'string'],
+            'commerce_chamber_number' => ['numeric'],
+            'company_website_url' => ['string'],
         ]);
 
         return $this->returnRules();

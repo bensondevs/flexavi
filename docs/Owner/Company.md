@@ -1,6 +1,36 @@
 ## Company
 
 -------------------------------------------------------
+### 0. About
+-------------------------------------------------------
+
+This section is going to describe you about the flow endpoints of the companies.
+
+- The `companies` is the parent root of almost all data in the database.
+
+- Company will have `visiting_address` and `invoicing_address`. These two addresses will be stored in `addresses` table. `companies` will have one to many [morph relationship](https://laravel.com/docs/8.x/eloquent-relationships#one-to-many-polymorphic-relations) with `addresses`. To see details about addresses feature please see [Documentation](/docs/Owner/Address/CompanyAddress.md)
+
+- Only user that registered as <b>Main Owner</b> can register (create) new company.
+
+- This feature rely on the database table of `companies` which contains
+
+Column Name | Data Type | Description
+-------------------------------------
+`id` | char(36), primary | Represents the ID of the company.
+`company_name` | char(36) | Represents the name of company.
+`email` | char(36), unique | Represents the email of company. This email should be unique for each company.
+`email_verified_at` | timestamp, nullable | The time when the email of company is verified.
+`phone_number` | varchar(255) | Represents the phone number of company.
+`vat_number` | varchar(255) | Represents the VAT number of company.
+`commerce_chamber_number` | varchar(255), nullable | Represents the commerce chamber number
+`commerce_website_url` | varchar(255), nullable | Represents the commerce website url
+`created_at` | timestamp | Represents the time when the company is registered (created).
+`updated_at` | timestamp | Represents the time when the last time company is updated
+`deleted_at` | timestamp | Represents the time when the company record is deleted. If not deleted, this column will be empty or null.
+
+- Subscription will happen based on the company.
+
+-------------------------------------------------------
 ### 1. Register Company
 -------------------------------------------------------
 
@@ -18,7 +48,7 @@ Content-Type | `multipart/form-data`
 
 **Parameters:**
 
- Payload name | Required | Validation | Description    
+Payload name | Required | Validation | Description    
 --------------|----------|------------|-------------
 `visiting_address` | Required | string | Visiting address street 
 `visiting_address_house_number` | Required | string | Visiting address house number
@@ -36,7 +66,7 @@ Content-Type | `multipart/form-data`
 `email` | Required | string, unique | Email of the company
 `phone_number` | Required | string, unique, numeric | The phone number of the company
 `vat_number` | Required | string, unique | VAT number of the company
-`commerce_chamber_number` | Required | string | The value of the ID
+`commerce_chamber_number` | Optional | string | The commerce chamber number of company
 `company_website_url` | Required | string, unique | Valid address of the user
 
 
@@ -66,7 +96,7 @@ Attribute Name  | Type  | Description
 
 **Headers:**
 
- Header Name | Value 
+Header Name | Value 
 ------------|--------------
 Accept | `application/json`
 Authorization | `Bearer {token}`
@@ -104,7 +134,7 @@ Attribute Name  | Type  | Description
         "phone_number": "5549100",
         "vat_number": "24745309",
         "commerce_chamber_number": "29",
-        "company_logo_url": "http://backend.test/storage/uploads/cars/20210503070400pp.jpeg",
+        "company_logo_url": "http://backend.test/storage/uploads/companys/20210503070400pp.jpeg",
         "company_website_url": "www.randomwebsite.com"
     }
 }
@@ -128,7 +158,7 @@ Content-Type | `application/x-www-form-urlencoded`
 
 **Parameters:**
 
- Payload name | Required | Validation | Description    
+Payload name | Required | Validation | Description    
 --------------|----------|------------|-------------
 `visiting_address` | Required | string | Visiting address street 
 `visiting_address_house_number` | Required | string | Visiting address house number

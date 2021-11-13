@@ -94,7 +94,6 @@ class Car extends Model
     {
         return $this->belongsToMany(Worklist::class)
             ->withPivot(
-                'employee_in_charge_id',
                 'should_return_at',
                 'returned_at'
             );

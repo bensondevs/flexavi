@@ -57,7 +57,7 @@ class SaveCompanyRequest extends FormRequest
             'email' => ['required', 'string', 'unique:companies,email'],
             'phone_number' => ['required', 'string', 'unique:companies,phone_number'],
             'vat_number' => ['required', 'string', 'unique:companies,vat_number'],
-            'commerce_chamber_number' => ['required', 'numeric'],
+            'commerce_chamber_number' => ['numeric'],
             'company_website_url' => ['required', 'string'],
         ]);
 
