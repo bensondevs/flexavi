@@ -9,6 +9,8 @@ use App\Traits\CompanyInputRequest;
 
 use App\Models\{ CarRegisterTime, Employee };
 
+use App\Rules\OnlyOneDriver;
+
 class AssignCarRegisterTimeEmployeeRequest extends FormRequest
 {
     use CompanyInputRequest;
@@ -51,8 +53,10 @@ class AssignCarRegisterTimeEmployeeRequest extends FormRequest
      */
     public function rules()
     {
+        $time = $this->getCarRegisterTime();
         return [
-            'passanger_type' => ['numeric'],
+            'employee_id' => ['required']
+            'passanger_type' => ['numeric', new OnlyOneDriver($time)],
         ];
     }
 }

@@ -226,4 +226,11 @@ class CarRegisterTime extends Model
             ->where('passanger_type', PassangerType::Driver)
             ->first();
     }
+
+    public function hasDriver()
+    {
+        return $this->assignedEmployees()
+            ->where('passanger_type', PassangerType::Driver)
+            ->exists();
+    }
 }
