@@ -18,7 +18,11 @@ class Company extends Model
     use HasFactory;
     use SoftDeletes, CascadeSoftDeletes;
     use Searchable;
-
+    /**
+     * Related tables that will be soft-deleted in model soft-delete
+     * 
+     * @var array
+     */
     protected $cascadeDeletes = [
         'owners', 
         'employees', 
@@ -34,13 +38,47 @@ class Company extends Model
         'taxtSettings',
         'workdays',
     ];
+
+    /**
+     * Soft delete column marker
+     * 
+     * @var array
+     */
     protected $dates = ['deleted_at'];
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'companies';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'company_name',
 
@@ -51,6 +89,11 @@ class Company extends Model
         'company_website_url',
     ];
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
     protected $fillable = [
         'company_name',
 
@@ -62,138 +105,200 @@ class Company extends Model
         'company_website_url',
     ];
 
-    protected $hidden = [
-        'created_at',
-        'updated_at',
-        'deleted_at',
-    ];
+    /**
+     * Perform any actions required before the model boots.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
 
+        self::creating(function ($company) {
+            if (! $company->id) {
+                $company->id = Uuid::generate()->string;
+            }
+        });
+    }
+
+    /**
+     * Get the company owners
+     */
     public function owners()
     {
         return $this->hasMany(Owner::class)->whereNotNull('user_id');
     }
 
+    /**
+     * Get the company addresses
+     */
     public function addresses()
     {
         return $this->morphMany(Address::class, 'addressable');
     }
 
+    /**
+     * Get the company employees
+     */
     public function employees()
     {
         return $this->hasMany(Employee::class)->whereNotNull('user_id');
     }
 
+    /**
+     * Get the company customers
+     */
     public function customers()
     {
         return $this->hasMany(Customer::class);
     }
 
+    /**
+     * Get the company appointments
+     */
     public function appointments()
     {
         return $this->hasMany(Appointment::class);
     }
 
+    /**
+     * Get the company sub-appointments
+     */
     public function subAppointments()
     {
         return $this->hasMany(SubAppointment::class);
     }
 
+    /**
+     * Get the company quotations
+     */
     public function quotations()
     {
         return $this->hasMany(Quotation::class);
     }
 
+    /**
+     * Get the company work contracts
+     */
     public function workContracts()
     {
         return $this->hasMany(WorkContract::class);
     }
 
+    /**
+     * Get the company inspections
+     */
     public function inspections()
     {
         return $this->hasMany(Inspection::class);
     }
 
+    /**
+     * Get the company invoices
+     */
     public function invoices()
     {
         return $this->hasMany(Invoice::class);
     }
 
+    /**
+     * Get the company invoice items
+     */
     public function invoiceItems()
     {
         return $this->hasMany(InvoiceItem::class);
     }
 
+    /**
+     * Get the company payment terms
+     */
     public function paymentTerms()
     {
         return $this->hasMany(PaymentTerm::class);
     }
 
+    /**
+     * Get the company cars
+     */
     public function cars()
     {
         return $this->hasMany(Car::class);
     }
 
+    /**
+     * Get the company car register times
+     */
     public function carRegisterTimes()
     {
         return $this->hasMany(CarRegisterTime::class);
     }
 
-    public function schedules()
-    {
-        return $this->hasMany(Schedule::class);
-    }
-
-    public function taxSetting()
-    {
-        return $this->hasOne(TaxSetting::class);
-    }
-
+    /**
+     * Get the company costs
+     */
     public function costs()
     {
         return $this->hasMany(Cost::class);
     }
 
+    /**
+     * Get the company workdays
+     */
     public function workdays()
     {
         return $this->hasMany(Workday::class);
     }
 
+    /**
+     * Get the company worklists
+     */
     public function worklists()
     {
         return $this->hasMany(Worklist::class);
     }
 
+    /**
+     * Get the company settings
+     */
     public function settings()
     {
         return $this->morphMany(Setting::class, 'settingable');
     }
 
-    protected static function boot()
-    {
-    	parent::boot();
-
-    	self::creating(function ($company) {
-            if (! $company->id) {
-                $company->id = Uuid::generate()->string;
-            }
-    	});
-    }
-
+    /**
+     * Get prime owner of the company
+     * 
+     * @return App\Models\Owner  $owner
+     */
     public function getPrimeOwnerAttribute()
     {
-        return $this->owners
-            ->where('is_prime_owner', true)
-            ->first();
+        $owners = $this->owners();
+        if ($this->relationLoaded('owners')) {
+            $owners = $this->owners;
+        }
+
+        return $owners->where('is_prime_owner', true)->first();
     }
 
+    /**
+     * Get visiting address of company
+     * 
+     * @return App\Models\Address  $address
+     */
     public function getVisitingAddressAttribute()
     {
         $addresses = ($this->relationLoaded('addresses')) ?
             $this->addresses : $this->addresses();
 
-        return $addresses->where('address_type', AddressType::VisitingAddress)->first();
+        $type = AddressType::VisitingAddress;
+        return $addresses->where('address_type', $type)->first();
     }
 
+    /**
+     * Set visiting address of company
+     * 
+     * @return App\Models\Address  $address
+     */
     public function setVisitingAddressAttribute(array $value)
     {
         if ($address = $this->getVisitingAddressAttribute()) {
@@ -217,14 +322,25 @@ class Company extends Model
         $address->save();
     }
 
+    /**
+     * Get invoicing address of company
+     * 
+     * @return App\Models\Address  $address
+     */
     public function getInvoicingAddressAttribute()
     {
         $addresses = ($this->relationLoaded('addresses')) ?
             $this->addresses : $this->addresses();
 
-        return $addresses->where('address_type', AddressType::InvoicingAddress)->first();
+        $type = AddressType::InvoicingAddress;
+        return $addresses->where('address_type', $type)->first();
     }
 
+    /**
+     * Set invoicing address of company
+     * 
+     * @return App\Models\Address  $address
+     */
     public function setInvoicingAddressAttribute(array $value)
     {
         if ($address = $this->getInvoicingAddressAttribute()) {
@@ -248,6 +364,12 @@ class Company extends Model
         $address->save();
     }
 
+    /**
+     * Set company logo
+     * 
+     * @param mixed  $logoFile
+     * @return void
+     */
     public function setCompanyLogoAttribute($logoFile)
     {
         $path = 'uploads/companies/logos/';
@@ -256,17 +378,32 @@ class Company extends Model
         $this->attributes['company_logo_path'] = $logo->path;
     }
 
+    /**
+     * Get company logo url
+     * 
+     * @return string  $url
+     */
     public function getCompanyLogoUrlAttribute()
     {
         $path = $this->attributes['company_logo_path'];
         return Storage::url($path);
     }
 
+    /**
+     * Get company ID in other way
+     * 
+     * @return string $id
+     */
     public function getCompanyIdAttribute()
     {
         return $this->attributes['id'];
     }
 
+    /**
+     * Set company ID in other way
+     * 
+     * @return void
+     */
     public function setCompanyIdAttribute(string $id)
     {
         $this->attributes['id'] = $id;

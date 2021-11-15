@@ -8,14 +8,18 @@ use Illuminate\Database\QueryException;
 
 use App\Enums\AppointmentableType;
 
-use App\Models\Work;
-use App\Models\Employee;
-use App\Models\AppointmentEmployee;
-use App\Models\Appointment;
-use App\Models\Appointmentable;
+use App\Models\{
+	Work,
+	Employee,
+	AppointmentEmployee,
+	Appointment,
+	Appointmentable
+};
 
-use App\Repositories\WorkRepository;
-use App\Repositories\ExecuteWorkRepository;
+use App\Repositories\{
+	WorkRepository,
+	ExecuteWorkRepository
+};
 
 use App\Repositories\Base\BaseRepository;
 
@@ -24,6 +28,15 @@ class AppointmentRepository extends BaseRepository
 	public function __construct()
 	{
 		$this->setInitModel(new Appointment);
+	}
+
+	public function unplanneds(array $options = [], bool $pagination = false)
+	{
+		$model = $this->getModel();
+		$model = $model->whereDoesntHave('worklists');
+		$this->setModel($model);
+
+		return $this->all($options, $pagination);
 	}
 
 	public function save(array $appointmentData)

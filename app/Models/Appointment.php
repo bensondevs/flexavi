@@ -14,9 +14,9 @@ use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Enums\Appointment\{
-    AppointmentType,
-    AppointmentStatus,
-    AppointmentCancellationVault
+    AppointmentType as Type,
+    AppointmentStatus as Status,
+    AppointmentCancellationVault as CancellationVault
 };
 
 use App\Enums\Work\WorkStatus;
@@ -30,16 +30,49 @@ class Appointment extends Model
     use HasRelationships;
     use BelongsToThrough;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'appointments';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'cancellation_note',
         'note',
     ];
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
     protected $fillable = [
         'company_id',
         'customer_id',
@@ -69,6 +102,11 @@ class Appointment extends Model
         'end' => 'datetime',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     *
+     * @return void
+     */
     protected static function boot()
     {
     	parent::boot();
@@ -78,61 +116,119 @@ class Appointment extends Model
     	});
     }
 
+    /**
+     * Add query only populate appointments with specified Status
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @return Illuminate\Database\Eloquent\Builder  $query
+     */
+    public function scopeWhereStatus(int $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    /**
+     * Add query only populate appointments with status of Created
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @return Illuminate\Database\Eloquent\Builder  $query
+     */
     public function scopeCreated(Builder $query)
     {
-        return $query->where('status', AppointmentStatus::Created);
+        return $query->where('status', Status::Created);
     }
 
+    /**
+     * Add query only populate employees with status of Calculated
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @return Illuminate\Database\Eloquent\Builder  $query
+     */
     public function scopeCalculated(Builder $query)
     {
-        return $query->where('status', AppointmentStatus::Calculated);
+        return $query->where('status', Status::Calculated);
     }
 
+    /**
+     * Set appointment status based on the enum
+     * 
+     * @return void
+     */
     public function setAppointmentStatusAttribute($status)
     {
         if (! is_int($status)) {
-            $status = AppointmentStatus::getValue($status);
+            $status = Status::getValue($status);
         }
 
         $this->attributes['status'] = $status;
     }
 
+    /**
+     * Set appointment type based on the enum
+     * 
+     * @return void
+     */
     public function setAppointmentTypeAttribute($type)
     {
         if (! is_int($type)) {
-            $type = AppointmentType::getValue($type);
+            $type = Type::getValue($type);
         }
 
         $this->attributes['type'] = $type;
     }
 
-    public function setAppointmentCancellationVaultAttribute($vault)
+    /**
+     * Set appointment cancellation vault based on the enum
+     * 
+     * @return void
+     */
+    public function setCancellationVaultAttribute($vault)
     {
         if (! is_int($vault)) {
-            $vault = AppointmentCancellationVault::getValue($vault);
+            $vault = CancellationVault::getValue($vault);
         }
 
         $this->attributes['cancellation_vault'] = $vault;
     }
 
+    /**
+     * Get all possible appointment types based on the enum
+     * 
+     * @return void
+     */
     public function getTypeDescriptionAttribute()
     {
         $typeCode = $this->attributes['type'];
-        return AppointmentType::getDescription($typeCode);
+        return Type::getDescription($typeCode);
     }
 
+    /**
+     * Get all possible appointment statuses based on the enum
+     * 
+     * @return void
+     */
     public function getStatusDescriptionAttribute()
     {
         $statusCode = $this->attributes['status'];
-        return AppointmentStatus::getDescription($statusCode);
+        return Status::getDescription($statusCode);
     }
 
+    /**
+     * Get all possible appointment cancellation vaults based on the enum
+     * 
+     * @return void
+     */
     public function getCancellationVaultDescriptionAttribute()
     {
         $cancellationVaultCode = $this->attributes['cancellation_vault'];
-        return AppointmentCancellationVault::getDescription($cancellationVaultCode);
+        return CancellationVault::getDescription($cancellationVaultCode);
     }
 
+    /**
+     * Get duration in day based on start and end of appointment
+     * 
+     * @return int
+     */
     public function getDurationInDaysAttribute()
     {
         $start = $this->attributes['start'];
@@ -143,31 +239,55 @@ class Appointment extends Model
         return $startDate->diffInDays($endDate);
     }
 
-    public static function collectAllCancellationVaults()
-    {
-        return AppointmentCancellationVault::asSelectArray();
-    }
-
+    /**
+     * Get all possible appointment statuses based on the enum
+     * 
+     * @return array
+     */
     public static function collectAllStatuses()
     {
-        return AppointmentStatus::asSelectArray();
+        return Status::asSelectArray();
     }
 
+    /**
+     * Get all possible appointment types based on the enum
+     * 
+     * @return array
+     */
     public static function collectAllTypes()
     {
-        return AppointmentType::asSelectArray();
+        return Type::asSelectArray();
     }
 
+    /**
+     * Get all possible appointment cancellation vaults based on the enum
+     * 
+     * @return array
+     */
+    public static function collectAllCancellationVaults()
+    {
+        return CancellationVault::asSelectArray();
+    }
+
+    /**
+     * Get the company of appointment
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get the company of appointment
+     */
     public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
 
+    /**
+     * Get the appointment employees
+     */
     public function employees()
     {
         return $this->hasManyThrough(
@@ -180,150 +300,202 @@ class Appointment extends Model
         );
     }
 
+    /**
+     * Get the subs of appointment
+     */
     public function subs()
     {
         return $this->hasMany(SubAppointment::class);
     }
 
+    /**
+     * Get the company of appointment
+     */
     public function inspection()
     {
         return $this->hasOne(Inspection::class);
     }
 
+    /**
+     * Get the quotation generated from appointment
+     */
     public function quotation()
     {
         return $this->hasOne(Quotation::class);
     }
 
+    /**
+     * Get the appointment works
+     */
     public function works()
     {
         return $this->morphToMany(Work::class, 'workable');
     }
 
+    /**
+     * Get the appointment finished works
+     */
     public function finishedWorks()
     {
         return $this->hasMany(Work::class, 'finished_at_appointment_id');
     }
 
+    /**
+     * Get the company of appointment
+     */
     public function executeWorks()
     {
         return $this->hasMany(ExecuteWork::class);
     }
 
+    /**
+     * Get the appointment warranty
+     */
     public function warranty()
     {
         return $this->hasOne(Warranty::class);
     }
 
-    public function paymentReminder()
-    {
-        return $this->hasOne(PaymentReminder::class);
-    }
-
-    public function costs()
-    {
-        return $this->morphToMany(Cost::class, 'costable');
-    }
-
-    public function receipts()
-    {
-        return $this->morphMany(Receipt::class, 'receiptable');
-    }
-
-    public function revenueables()
-    {
-        return $this->morphMany(Revenueable::class, 'revenueable');
-    }
-
-    public function revenues()
-    {
-        return $this->morphToMany(Revenue::class, 'revenueable');
-    }
-
-    public function invoice()
-    {
-        return $this->morphOne(Invoice::class, 'invoiceable');
-    }
-
-    public function calculation()
-    {
-        return $this->morphOne(Calculation::class, 'calculationable');
-    }
-
-    public function appointmentables()
-    {
-        return $this->hasMany(Appointmentable::class);
-    }
-
-    public function worklists()
-    {
-        return $this->morphedByMany(Worklist::class, 'appointmentable');
-    }
-
-    public function workdays()
-    {
-        return $this->morphedByMany(Workday::class, 'appointmentable');
-    }
-
+    /**
+     * Get the appointment warranties
+     */
     public function warranties()
     {
         return $this->hasMany(Warranty::class);
     }
 
-    public static function typeOptions()
+    /**
+     * Get the appointment payment reminder
+     */
+    public function paymentReminder()
     {
-        return AppointmentType::asSelectArray();
+        return $this->hasOne(PaymentReminder::class);
     }
 
-    public static function statusOptions()
+    /**
+     * Get the appointment costs
+     */
+    public function costs()
     {
-        return AppointmentStatus::asSelectArray();
+        return $this->morphToMany(Cost::class, 'costable');
     }
 
-    public static function cancellationVaultOptions()
+    /**
+     * Get the appointment receipts
+     */
+    public function receipts()
     {
-        return AppointmentCancellationVault::asSelectArray();
+        return $this->morphMany(Receipt::class, 'receiptable');
     }
 
+    /**
+     * Get the appointment revenue pivot
+     */
+    public function revenueables()
+    {
+        return $this->morphMany(Revenueable::class, 'revenueable');
+    }
+
+    /**
+     * Get the appointment revenues
+     */
+    public function revenues()
+    {
+        return $this->morphToMany(Revenue::class, 'revenueable');
+    }
+
+    /**
+     * Get the appointment invoice
+     */
+    public function invoice()
+    {
+        return $this->morphOne(Invoice::class, 'invoiceable');
+    }
+
+    /**
+     * Get the appointment calculation
+     */
+    public function calculation()
+    {
+        return $this->morphOne(Calculation::class, 'calculationable');
+    }
+
+    /**
+     * Get the appointment pivot relation with other model
+     */
+    public function appointmentables()
+    {
+        return $this->hasMany(Appointmentable::class);
+    }
+
+    /**
+     * Get the worklists attached to appointment
+     */
+    public function worklists()
+    {
+        return $this->morphedByMany(Worklist::class, 'appointmentable');
+    }
+
+    /**
+     * Get the worklists attached to appointment
+     */
+    public function workdays()
+    {
+        return $this->morphedByMany(Workday::class, 'appointmentable');
+    }
+
+    /**
+     * Check appointment has active works
+     * 
+     * @return bool
+     */
     public function hasActiveWorks()
     {
-        return $this->works()
-            ->where('status', WorkStatus::Active)->count() > 0;
+        $status = WorkStatus::Active;
+        return $this->works()->where('status', $status)->exists();
     }
 
+    /**
+     * Check appointment has unfinished works
+     * 
+     * @return bool
+     */
     public function hasUnfinishedWorks()
     {
-        return $this->works()->where('status', WorkStatus::Unfinished)->count() > 0;
+        $status = WorkStatus::Unfinished;
+        return $this->works()->where('status', $status)->exists();
     }
 
+    /**
+     * Get appointment amount of finsihed works
+     * 
+     * @return bool
+     */
     public function getNumFinishedWorksAttribute()
     {
-        return $this->works()->where('status', WorkStatus::Finished)->count();
+        $status = WorkStatus::Finished;
+        return $this->works()->where('status', $status)->count();
     }
 
+    /**
+     * Sync workdays passed by the appointment
+     * 
+     * @return bool
+     */
     public function syncWorkdays()
     {
         $workdays = Workday::inAppointmentRange($this->first())->get();
         return $this->workdays()->sync($workdays);
     }
 
-    public function isLate()
-    {
-        $end = carbon()->parse($this->attributes['end']);
-        $now = carbon()->now();
-        return ($now > $end);
-    }
-
-    public function isOnTime()
-    {
-        $end = carbon()->parse($this->attributes['end']);
-        $now = carbon()->now();
-        return ($now < $end);
-    }
-
+    /**
+     * Execute the appointment and change status to in process
+     * 
+     * @return bool
+     */
     public function execute()
     {
-        $this->attributes['status'] = AppointmentStatus::InProcess;
+        $this->attributes['status'] = Status::InProcess;
         $this->attributes['in_process_at'] = carbon()->now();
         $execute = $this->save();
 
@@ -332,9 +504,14 @@ class Appointment extends Model
         return $execute;
     }
 
+    /**
+     * Process the appointment and change status to processed
+     * 
+     * @return bool
+     */
     public function process()
     {
-        $this->attributes['status'] = AppointmentStatus::Processed;
+        $this->attributes['status'] = Status::Processed;
         $this->attributes['processed_at'] = carbon()->now();
         $process = $this->save();
 
@@ -343,9 +520,14 @@ class Appointment extends Model
         return $process;
     }
 
+    /**
+     * Cancel appointment and change status to cancelled
+     * 
+     * @return bool
+     */
     public function cancel()
     {
-        $this->attributes['status'] = AppointmentStatus::Cancelled;
+        $this->attributes['status'] = Status::Cancelled;
         $this->attributes['cancelled_at'] = carbon()->now();
         $cancel = $this->save();
 
@@ -354,6 +536,12 @@ class Appointment extends Model
         return $cancel;
     }
 
+    /**
+     * Reschedule appointment
+     * 
+     * @param  array  $rescheduleData
+     * @return \App\Models\Appointment  $rescheduleAppointment
+     */
     public function reschedule(array $rescheduleData)
     {
         $rescheduleAppointment = new self($rescheduleData);
@@ -364,9 +552,16 @@ class Appointment extends Model
         ]);
         $rescheduleAppointment->save();
 
+        $this->attributes['next_appointment_id'] = $rescheduleAppointment->id;
+
         return $rescheduleAppointment;
     }
 
+    /**
+     * Mark appointment as calculated and change its status
+     * 
+     * @return bool
+     */
     public function markCalculated()
     {
         $this->attributes['status'] = AppointmentStatus::Calculated;

@@ -13,6 +13,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Spatie\Activitylog\Traits\CausesActivity;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+use Znck\Eloquent\Traits\BelongsToThrough;
 
 use App\Models\EmailVerification;
 
@@ -30,6 +31,7 @@ class User extends Authenticatable
     use HasRoles;
     use CausesActivity;
     use Notifiable;
+    use BelongsToThrough;
 
     protected $table = 'users';
     protected $primaryKey = 'id';
@@ -117,6 +119,17 @@ class User extends Authenticatable
     public function employee()
     {
         return $this->hasOne(Employee::class);
+    }
+
+    public function getCompanyAttribute()
+    {
+        if ($this->hasRole('owner')) {
+            $role = $this->owner;
+        } else if ($this->hasRole('employee')) {
+            $role = $this->employee;
+        }
+
+        return $role->company;
     }
 
     public function register_invitation()

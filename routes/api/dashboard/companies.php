@@ -46,7 +46,8 @@ use App\Http\Controllers\Api\Company\{
 	WarrantyController,
 	WorkContractController,
 	ExecuteWorkController,
-		ExecuteWorkPhotoController
+		ExecuteWorkPhotoController,
+	PostItController
 };
 
 Route::post('register', [CompanyController::class, 'register']);
@@ -177,6 +178,7 @@ Route::group(['middleware' => ['has_company']], function () {
 	*/
 	Route::group(['prefix' => 'appointments'], function () {
 		Route::get('/', [AppointmentController::class, 'companyAppointments']);
+		Route::get('unplanneds', [AppointmentController::class, 'unplannedAppointments']);
 		Route::get('trasheds', [AppointmentController::class, 'trashedAppointments']);
 		Route::get('of_customer', [AppointmentController::class, 'customerAppointments']);
 		Route::post('store', [AppointmentController::class, 'store']);
@@ -542,6 +544,18 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::delete('delete', [EmployeeAddressController::class, 'delete']);
 			Route::patch('restore', [EmployeeAddressController::class, 'restore']);
 		});
+	});
+
+	/*
+		Company Post It Module
+	*/
+	Route::group(['prefix' => 'post_its'], function () {
+		Route::get('/', [PostItController::class, 'companyPostIts']);
+		Route::post('store', [PostItController::class, 'store']);
+		Route::match(['PUT', 'PATCH'], 'update', [PostItController::class, 'update']);
+		Route::post('assign_user', [PostItController::class, 'assignUser']);
+		Route::post('unassign_user', [PostItController::class, 'unassignUser']);
+		Route::delete('delete', [PostItController::class, 'delete']);
 	});
 
 	/*

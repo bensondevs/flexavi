@@ -2,8 +2,7 @@
 
 namespace App\Observers;
 
-use App\Models\Workday;
-use App\Models\Appointment;
+use App\Models\{ Workday, Appointment };
 
 class AppointmentObserver
 {

@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             AddressesSeeder::class,
             CostsSeeder::class,
             CarRegisterTimesSeeder::class,
+            PostItsSeeder::class,
         ]);
     }
 }

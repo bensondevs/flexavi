@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
-class {{modelName}} extends Model
+class PostItAssignedUser extends Model
 {
     use HasFactory;
     use SoftDeletes;
@@ -21,7 +21,7 @@ class {{modelName}} extends Model
      * 
      * @var string
      */
-    protected $table = '{{modelNamePluralLowerCase}}';
+    protected $table = 'post_it_assigned_users';
 
     /**
      * Table name primary key
@@ -56,23 +56,40 @@ class {{modelName}} extends Model
     /**
      * Set which columns are mass fillable
      * 
-     * @var array
+     * @var bool
      */
     protected $fillable = [
-        //
+        'post_it_id',
+        'user_id',
     ];
 
     /**
-     * Perform any actions required before the model boots.
-     *
-     * @return void
+     * Function that will be run whenever event happened
+     * 
+     * @return  void
      */
     protected static function boot()
     {
     	parent::boot();
 
-    	self::creating(function (${{modelNameSingularLowerCase}}) {
-            ${{modelNameSingularLowerCase}}->id = Uuid::generate()->string;
+    	self::creating(function ($postItAssignedUser) {
+            $postItAssignedUser->id = Uuid::generate()->string;
     	});
+    }
+
+    /**
+     * Get the post it
+     */
+    public function postIt()
+    {
+        return $this->belongsTo(PostIt::class);
+    }
+
+    /**
+     * Get the user assigned to this pivot model 
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

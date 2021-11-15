@@ -5,11 +5,9 @@ namespace App\Http\Requests\Cars;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Models\Car;
-use App\Models\Company;
+use App\Models\{ Car, Company };
 
-use App\Rules\AmongStrings;
-use App\Rules\UniqueWithConditions;
+use App\Rules\{ AmongStrings, UniqueWithConditions };
 
 use App\Traits\CompanyInputRequest;
 

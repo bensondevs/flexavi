@@ -10,18 +10,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
-class {{modelName}} extends Model
+class PostIt extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use Searchable;
-
     /**
      * The table name
      * 
      * @var string
      */
-    protected $table = '{{modelNamePluralLowerCase}}';
+    protected $table = 'post_its';
 
     /**
      * Table name primary key
@@ -50,7 +49,7 @@ class {{modelName}} extends Model
      * @var array
      */
     protected $searchable = [
-        //
+        'content',
     ];
 
     /**
@@ -59,7 +58,9 @@ class {{modelName}} extends Model
      * @var array
      */
     protected $fillable = [
-        //
+        'company_id',
+        'user_id',
+        'content',
     ];
 
     /**
@@ -71,8 +72,40 @@ class {{modelName}} extends Model
     {
     	parent::boot();
 
-    	self::creating(function (${{modelNameSingularLowerCase}}) {
-            ${{modelNameSingularLowerCase}}->id = Uuid::generate()->string;
+    	self::creating(function ($postIt) {
+            $postIt->id = Uuid::generate()->string;
     	});
+    }
+
+    /**
+     * Get company of the post it
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Get the user that created the post it
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the pivot table of the assigned user
+     */
+    public function assignedUsersPivot()
+    {
+        return $this->hasMany(PostItAssignedUser::class);
+    }
+    
+    /**
+     * Get the assigned users to this post it
+     */
+    public function assignedUsers()
+    {
+        return $this->belongsToMany(User::class, PostItAssignedUser::class);
     }
 }

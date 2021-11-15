@@ -343,6 +343,15 @@ class PermissionsSeeder extends Seeder
             'delete addresses',
             'restore addresses',
             'force delete addresses',
+
+            // Post It
+            'view any post its',
+            'create post its',
+            'assign user post its',
+            'unassign user post its',
+            'edit post its',
+            'delete post its',
+            'force delete post its',
         ];
 
         $rawPermissions = [];

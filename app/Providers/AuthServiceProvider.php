@@ -10,6 +10,7 @@ use App\Policies\{
     CostPolicy,
     WorkPolicy,
     OwnerPolicy,
+    PostItPolicy,
     AddressPolicy,
     CompanyPolicy,
     InvoicePolicy,
@@ -305,6 +306,16 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-worklist', [WorklistPolicy::class, 'delete']);
         Gate::define('restore-worklist', [WorklistPolicy::class, 'restore']);
         Gate::define('force-delete-worklist', [WorklistPolicy::class, 'forceDelete']);
+
+        // Post It
+        Gate::define('view-any-post-it', [PostItPolicy::class, 'viewAny']);
+        Gate::define('view-post-it', [PostItPolicy::class, 'view']);
+        Gate::define('create-post-it', [PostItPolicy::class, 'create']);
+        Gate::define('edit-post-it', [PostItPolicy::class, 'update']);
+        Gate::define('assign-user-post-it', [PostItPolicy::class, 'assignUser']);
+        Gate::define('unassign-user-post-it', [PostItPolicy::class, 'unassignUser']);
+        Gate::define('delete-post-it', [PostItPolicy::class, 'delete']);
+        Gate::define('force-delete-post-it', [PostItPolicy::class, 'forceDelete']);
 
         // Register Invitation
         Gate::define('send-employee-register-invitation', [RegisterInvitationPolicy::class, 'sendEmployeeRegisterInvitation']);

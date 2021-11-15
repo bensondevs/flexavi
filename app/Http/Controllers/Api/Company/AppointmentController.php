@@ -62,6 +62,17 @@ class AppointmentController extends Controller
         return response()->json(['appointments' => $appointments]);
     }
 
+    public function unplannedAppointments(CompanyPopulateRequest $request)
+    {
+        $options = $request->options();
+
+        $appointments = $this->appointment->unplanneds($options);
+        $appointments = $this->appointment->paginate();
+        $appointments = AppointmentResource::apiCollection($appointments);
+
+        return response()->json(['appointments' => $appointments]);
+    }
+
     public function customerAppointments(CustomerPopulateRequest $request)
     {
         $options = $request->options();

@@ -200,6 +200,205 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
+### 1.1 Populate Company Unplanned Appointments
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/unplanneds`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`page` | Optional | number | Page of pagination
+`search` | Optional | string | Searched keyword, will be matched through attributes of `cancellation_note`, `note`
+`per_page` | Optional | numeric | Amount of data per page, default amount is 10
+`type` | Optional | numeric, min:1, max:6  | The type code to populate only certain appointment with any type requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+`status` | Optional | numeric, min:1, max:5 | The status code to populate only certain appointment with any status requested, detail see: [Appointment Meta](/docs/Meta/Appointment.md)
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`appointments` | Object | The customer object, contains pagination information and array of `data`
+
+**Success Response Example:**
+
+```json
+{
+    "appointments": {
+        "current_page": 2,
+        "data": [
+            {
+                "id": "691051e0-ed23-11eb-a069-8b02febb1280",
+                "customer": {
+                    "id": "5a8668b0-ed23-11eb-8735-d34b492ad6ed",
+                    "addresses": [],
+                    "fullname": "Customer 553 of Company 1",
+                    "email": "customer553@company1.com",
+                    "phone": "8338059136000",
+                    "second_phone": null
+                },
+                "status": 2,
+                "status_description": "In Process",
+                "type": 3,
+                "type_description": "Execute Work",
+                "start": "2021-07-20T08:36:30.000000Z",
+                "end": "2021-07-24T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z",
+                "in_process_at": null
+            },
+            {
+                "id": "6912fd80-ed23-11eb-8dcd-7bf2cf7aa3c2",
+                "customer": {
+                    "id": "5a8a0cc0-ed23-11eb-884d-a9264d379826",
+                    "addresses": [],
+                    "fullname": "Customer 784 of Company 1",
+                    "email": "customer784@company1.com",
+                    "phone": "3836682131320",
+                    "second_phone": null
+                },
+                "status": 1,
+                "status_description": "Created",
+                "type": 6,
+                "type_description": "Payment Reminder",
+                "start": "2021-07-28T08:36:30.000000Z",
+                "end": "2021-07-28T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z"
+            },
+            {
+                "id": "69133c00-ed23-11eb-858e-8fa632462ff2",
+                "customer": {
+                    "id": "5a87c3b0-ed23-11eb-b014-f9dadfd730d7",
+                    "addresses": [],
+                    "fullname": "Customer 645 of Company 1",
+                    "email": "customer645@company1.com",
+                    "phone": "8806705850616",
+                    "second_phone": null
+                },
+                "status": 5,
+                "status_description": "Cancelled",
+                "type": 5,
+                "type_description": "Payment Pick-Up",
+                "start": "2021-07-23T08:36:30.000000Z",
+                "end": "2021-07-25T08:36:30.000000Z",
+                "include_weekend": true,
+                "note": "This is seeder appointment",
+                "created_at": "2021-07-25T08:36:30.000000Z",
+                "in_process_at": null,
+                "processed_at": null,
+                "calculated_at": null,
+                "cancelled_at": null,
+                "cancellation_vault": null,
+                "cancellation_vault_description": "",
+                "cancellation_cause": null,
+                "cancellation_note": null
+            }
+        ],
+        "first_page_url": "/?page=1",
+        "from": 4,
+        "last_page": 35,
+        "last_page_url": "/?page=35",
+        "links": [
+            {
+                "url": "/?page=1",
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "/?page=1",
+                "label": "1",
+                "active": false
+            },
+            {
+                "url": "/?page=2",
+                "label": "2",
+                "active": true
+            },
+            {
+                "url": "/?page=3",
+                "label": "3",
+                "active": false
+            },
+            {
+                "url": "/?page=4",
+                "label": "4",
+                "active": false
+            },
+            {
+                "url": "/?page=5",
+                "label": "5",
+                "active": false
+            },
+            {
+                "url": "/?page=6",
+                "label": "6",
+                "active": false
+            },
+            {
+                "url": "/?page=7",
+                "label": "7",
+                "active": false
+            },
+            {
+                "url": "/?page=8",
+                "label": "8",
+                "active": false
+            },
+            {
+                "url": "/?page=9",
+                "label": "9",
+                "active": false
+            },
+            {
+                "url": "/?page=10",
+                "label": "10",
+                "active": false
+            },
+            {
+                "url": null,
+                "label": "...",
+                "active": false
+            },
+            {
+                "url": "/?page=34",
+                "label": "34",
+                "active": false
+            },
+            {
+                "url": "/?page=35",
+                "label": "35",
+                "active": false
+            },
+            {
+                "url": "/?page=3",
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": "/?page=3",
+        "path": "/",
+        "per_page": "3",
+        "prev_page_url": "/?page=1",
+        "to": 6,
+        "total": 103
+    }
+}
+```
+
+-------------------------------------------------------
 ### 2. Populate Customer Appointments
 -------------------------------------------------------
 

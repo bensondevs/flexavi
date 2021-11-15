@@ -47,15 +47,18 @@ class Workday extends Model
     	});
     }
 
-    public function scopeWhereCompany($query, $companyId)
+    public function scopeWhereCompany(Builder $query, string $id)
     {
-        return $query->where('company_id', $companyId);
+        return $query->where('company_id', $id);
     }
 
-    public function scopeInAppointmentRange(Appointment $appointment)
+    public function scopeInAppointmentRange(Builder $query, Appointment $appointment)
     {
+        $start = $appointment->start;
+        $end = $appointment->end;
+
         return $query->whereCompany($appointment->company_id)
-            ->whereBetween('date', [$appointment->start, $appointment->end]);
+            ->whereBetween('date', [$start, $end]);
     }
 
     public function getStatusDescriptionAttribute()
