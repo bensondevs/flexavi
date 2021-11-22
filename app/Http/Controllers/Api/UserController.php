@@ -5,37 +5,54 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\User\SaveUserRequest;
-use App\Http\Requests\Users\ChangePasswordRequest;
-use App\Http\Requests\Users\SetProfilePictureRequest;
+use App\Http\Requests\Users\{
+    SaveUserRequest,
+    ChangePasswordRequest,
+    SetProfilePictureRequest
+};
+use App\Http\Resources\UserResource;
 
 use App\Enums\User\UserIdCardType;
 
 use App\Repositories\UserRepository;
 
-use App\Http\Resources\UserResource;
-
 class UserController extends Controller
 {
-    protected $user;
+    /**
+     * User Repository class container
+     * 
+     * @var App\Repositories\UserRepository
+     */
+    private $user;
 
-    public function __construct(UserRepository $userRepository)
+    /**
+     * Controller constructor method
+     * 
+     * @param App\Repositories\UserRepository  $user
+     * @return void
+     */
+    public function __construct(UserRepository $user)
     {
-    	$this->user = $userRepository;
+    	$this->user = $user;
     }
 
+    /**
+     * Get current requesting user
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function current()
     {
-        $user = auth()->user();
-    	return response()->json(['user' => new UserResource($user)]);
+        $user = new UserResource(auth()->user());
+    	return response()->json(['user' => $user]);
     }
 
-    public function idCardTypes()
-    {
-        $types = UserIdCardType::asSelectArray();
-        return response()->json($types);
-    }
-
+    /**
+     * Set user profile picture
+     * 
+     * @param App\Http\Requests\Users\SetProfilePictureRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function setProfilePicture(SetProfilePictureRequest $request)
     {
         $user = $request->user();
@@ -47,6 +64,12 @@ class UserController extends Controller
         return apiResponse($this->user, ['profile_picture' => $user->profile_picture]);
     }
 
+    /**
+     * Update user
+     * 
+     * @param App\Http\Requests\Users\SaveUserRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveUserRequest $request)
     {
         $user = $request->user();
@@ -58,6 +81,12 @@ class UserController extends Controller
         return apiResponse($this->user, ['user' => $user]);
     }
 
+    /**
+     * Change user password
+     * 
+     * @param App\Http\Requests\Users\ChangePasswordRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function changePassword(ChangePasswordRequest $request)
     {
         $user = $request->user();

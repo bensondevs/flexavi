@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\User;
-use App\Models\Role;
+use App\Models\{ User, Role };
 
 class UserRepository extends BaseRepository
 {
@@ -37,7 +36,8 @@ class UserRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save user data.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to save user data', $qe->getMessage());
+			$error = $qe->getMessage();
+			$this->setError('Failed to save user data', $error);
 		}
 
 		return $this->getModel();
@@ -54,10 +54,8 @@ class UserRepository extends BaseRepository
 
 			$this->setSuccess('Successfully set user profile picture.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to set user profile picture.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to set user profile picture.', $error);
 		}
 
 		return $this->getModel();

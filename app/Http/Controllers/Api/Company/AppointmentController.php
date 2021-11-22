@@ -20,37 +20,61 @@ use App\Http\Requests\Appointments\{
     PopulateCustomerAppointmentsRequest as CustomerPopulateRequest
 };
 
-use App\Http\Resources\{
-    InvoiceResource,
-    AppointmentResource
-};
+use App\Http\Resources\{ InvoiceResource, AppointmentResource };
 
 use App\Repositories\{
     AppointmentRepository,
-    WorkRepository,
     InvoiceRepository,
     CalculationRepository
 };
 
 class AppointmentController extends Controller
 {
+    /**
+     * Appointment Repository class container
+     * 
+     * @var \App\Repositori\AppointmentRepository
+     */
     private $appointment;
-    private $work;
+
+    /**
+     * Invoice Repository class container
+     * 
+     * @var \App\Repositories\InvoiceRepository
+     */
     private $invoice;
+
+    /**
+     * Calculation Repository class container
+     * 
+     * @var \App\Repositories\CalculationRepository
+     */
     private $calculation;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\AppointmentRepository  $appointment
+     * @param \App\Repositories\InvoiceRepository  $invoice
+     * @param \App\Repositories\CalculationRepository  $calculation
+     * @return void
+     */
     public function __construct(
         AppointmentRepository $appointment, 
-        WorkRepository $work,
         InvoiceRepository $invoice,
         CalculationRepository $calculation
     ) {
     	$this->appointment = $appointment;
-        $this->work = $work;
         $this->invoice = $invoice;
         $this->calculation = $calculation;
     }
 
+    /**
+     * Populate company appointments
+     * 
+     * @param CompanyPopulateRuquest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyAppointments(CompanyPopulateRequest $request)
     {
         $options = $request->options();
@@ -62,6 +86,12 @@ class AppointmentController extends Controller
         return response()->json(['appointments' => $appointments]);
     }
 
+    /**
+     * Populate company unplanned appointments
+     * 
+     * @param CompanyPopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function unplannedAppointments(CompanyPopulateRequest $request)
     {
         $options = $request->options();
@@ -73,6 +103,12 @@ class AppointmentController extends Controller
         return response()->json(['appointments' => $appointments]);
     }
 
+    /**
+     * Populate company customer appointments
+     * 
+     * @param CustomerPopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response 
+     */
     public function customerAppointments(CustomerPopulateRequest $request)
     {
         $options = $request->options();
@@ -84,6 +120,12 @@ class AppointmentController extends Controller
         return response()->json(['appointments' => $appointments]);
     }
 
+    /**
+     * Populate company trashed appointments
+     * 
+     * @param CompanyPopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function trashedAppointments(CompanyPopulateRequest $request)
     {
         $options = $request->options();
@@ -95,14 +137,25 @@ class AppointmentController extends Controller
         return response()->json(['appointments' => $appointments]);
     }
 
+    /**
+     * Store company appointment
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
         $appointment = $this->appointment->save($input);
-
         return apiResponse($this->appointment);
     }
 
+    /**
+     * View company appointment
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -114,6 +167,12 @@ class AppointmentController extends Controller
         return response()->json(['appointment' => $appointment]);
     }
 
+    /**
+     * Execute company appointment
+     * 
+     * @param ExecuteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function execute(ExecuteRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -124,6 +183,12 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment);
     }
 
+    /**
+     * Process company appointment
+     * 
+     * @param ProcessRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function process(ProcessRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -133,6 +198,12 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment);
     }
 
+    /**
+     * Cancel company appointment
+     * 
+     * @param CancelRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function cancel(CancelRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -144,6 +215,12 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment);
     }
 
+    /**
+     * Reschedule company appointment
+     * 
+     * @param RescheduleRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function reschedule(RescheduleRequest $request)
     {
         $appointment = $request->getPreviousAppointment();
@@ -155,13 +232,19 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment);
     }
 
+    /**
+     * Calculate company appointment
+     * 
+     * @param CalculateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function calculate(CalculateRequest $request)
     {
         $appointment = $request->getAppointment();
         $appointment = $this->appointment->setModel($appointment);
         $appointment = $this->appointment->syncRevenues();
 
-        if ($this->appointment->status != 'error') {
+        if ($this->appointment->status === 'error') {
             return apiResponse($this->appointment);
         }
 
@@ -170,6 +253,12 @@ class AppointmentController extends Controller
         ]);
     }
 
+    /**
+     * Generate Invoice from appointment
+     * 
+     * @param GenerateInvoiceRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function generateInvoice(GenerateInvoiceRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -205,6 +294,12 @@ class AppointmentController extends Controller
         return apiResponse($this->appointment);
     }
 
+    /**
+     * Restore deleted company appointment
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $appointment = $request->getTrashedAppointment();

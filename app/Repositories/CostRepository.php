@@ -2,25 +2,35 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\Cost;
-use App\Models\Workday;
-use App\Models\Worklist;
-use App\Models\Appointment;
+use App\Models\{
+	Cost, Workday, Worklist, Appointment
+};
 
 use App\Jobs\Cost\DeleteAttachlessCosts;
 
 class CostRepository extends BaseRepository
 {
+	/**
+	 * Repository class constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Cost);
 	}
 
+	/**
+	 * Save cost
+	 * 
+	 * @param array  $costData
+	 * @return \App\Models\Cost
+	 */
 	public function save(array $costData = [])
 	{
 		try {
@@ -39,6 +49,12 @@ class CostRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Record cost to a costable model
+	 * 
+	 * @param mixed  $costable
+	 * @return \App\Models\Cost
+	 */
 	public function record($costable)
 	{
 		try {
@@ -60,7 +76,14 @@ class CostRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function recordMany($costable, $costs)
+	/**
+	 * Record many cost to costable
+	 * 
+	 * @param mixed  $costable
+	 * @param array  $costs
+	 * @return bool
+	 */
+	public function recordMany($costable, array $costs)
 	{
 		try {
 			$costableType = get_lower_class($costable);
@@ -77,7 +100,14 @@ class CostRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
-	public function replaceRecord($costable, $costs)
+	/**
+	 * Replace costables with new list of costs
+	 * 
+	 * @param mixed  $costable
+	 * @param array  $costs
+	 * @return bool
+	 */
+	public function replaceRecord($costable, array $costs)
 	{
 		try {
 			$costableType = get_lower_class($costable);
@@ -92,6 +122,12 @@ class CostRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Unrecord cost from costable
+	 * 
+	 * @param mixed  $costable
+	 * @return bool
+	 */
 	public function unrecord($costable)
 	{
 		try {
@@ -114,7 +150,14 @@ class CostRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
-	public function unrecordMany($costable, $costIds)
+	/**
+	 * Unrecord many costs from costable model
+	 * 
+	 * @param mixed  $costable
+	 * @param array  $costIds
+	 * @return bool
+	 */
+	public function unrecordMany($costable, array $costIds)
 	{
 		try {
 			$costableType = get_lower_class($costable);
@@ -131,6 +174,12 @@ class CostRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Truncate costs from costable model
+	 * 
+	 * @param mixed  $costable
+	 * @return bool
+	 */
 	public function truncate($costable)
 	{
 		try {
@@ -154,9 +203,15 @@ class CostRepository extends BaseRepository
 			$this->setError('Failed to unrecord costs within ' . $costableType);
 		}
 
-		return $this->getModel();
+		return $this->returnResponse();
 	}
 
+	/**
+	 * Delete cost, set parameter to true to execute force delete
+	 * 
+	 * @param bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -176,6 +231,11 @@ class CostRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Restore cost from soft-deleted state
+	 * 
+	 * @return \App\Models\Cost
+	 */
 	public function restore()
 	{
 		try {

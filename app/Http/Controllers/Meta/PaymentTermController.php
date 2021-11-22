@@ -9,6 +9,11 @@ use App\Models\PaymentTerm;
 
 class PaymentTermController extends Controller
 {
+    /**
+     * Get all payment terms statuses enums
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function allStatuses()
     {
         $statuses = PaymentTerm::collectAllStatuses();

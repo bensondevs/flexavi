@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Warranties\SaveWarrantyRequest as SaveRequest;
-use App\Http\Requests\Warranties\FindWarrantyRequest as FindRequest;
-use App\Http\Requests\Warranties\PopulateWarrantiesRequest as PopulateRequest;
+use App\Http\Requests\Warranties\{
+    SaveWarrantyRequest as SaveRequest,
+    FindWarrantyRequest as FindRequest,
+    PopulateWarrantiesRequest as PopulateRequest
+};
 
 use App\Http\Resources\WarrantyResource;
 
@@ -15,13 +17,30 @@ use App\Repositories\WarrantyRepository;
 
 class WarrantyController extends Controller
 {
+    /**
+     * Warranty repository class container
+     * 
+     * @var \App\Repositories\WarrantyRepository
+     */
     private $warranty;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\WarrantyRepository  $warranty
+     * @return void
+     */
     public function __construct(WarrantyRepository $warranty)
     {
     	$this->warranty = $warranty;
     }
 
+    /**
+     * Populate company warranties
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyWarranties(PopulateRequest $request)
     {
     	$options = $request->options();
@@ -32,6 +51,12 @@ class WarrantyController extends Controller
     	return response()->json(['warranties' => $warranties]);
     }
 
+    /**
+     * Store multiple warranty
+     * 
+     * @param MultipleStoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function multipleStore(MultipleStoreRequest $request)
     {
         $rawWarranties = $request->collectRawWarranties();
@@ -44,6 +69,12 @@ class WarrantyController extends Controller
         ]);
     }
 
+    /**
+     * Store warranty
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->validated();
@@ -52,6 +83,12 @@ class WarrantyController extends Controller
         return apiResponse($this->warranty);
     }
 
+    /**
+     * Update warranty
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $warranty = $request->getWarranty();
@@ -63,6 +100,12 @@ class WarrantyController extends Controller
         return apiResponse($this->warranty);
     }
 
+    /**
+     * View warranty
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $warranty = $request->getWarranty();
@@ -74,6 +117,12 @@ class WarrantyController extends Controller
         return response()->json(['warranty' => $warranty]);
     }
 
+    /**
+     * Delete warranty
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(FindRequest $request)
     {
     	$warranty = $request->getWarranty();

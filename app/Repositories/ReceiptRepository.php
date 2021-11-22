@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\Receipt;
@@ -21,6 +20,12 @@ class ReceiptRepository extends BaseRepository
 		$this->setInitModel(new Receipt);
 	}
 
+	/**
+	 * Save or update receipt
+	 * 
+	 * @param array $receiptData
+	 * @return \App\Models\Receipt
+	 */
 	public function save(array $receiptData = [])
 	{
 		try {
@@ -42,6 +47,12 @@ class ReceiptRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Replace the receipt of a receiptable
+	 * 
+	 * @param mixed  $receiptable
+	 * @return \App\Models\Receipt
+	 */
 	public function replace($receiptable)
 	{
 		try {

@@ -29,11 +29,42 @@ use App\Repositories\{
 
 class AuthController extends Controller
 {
+    /**
+     * Auth repository class container
+     * 
+     * @var \App\Repositories\AuthRepository
+     */
     private $auth;
+
+    /**
+     * Owner repository class container
+     * 
+     * @var \App\Repositories\OwnerRepository
+     */
     private $owner;
+
+    /**
+     * Address repository class container
+     * 
+     * @var \App\Repositories\AddressRepository
+     */
     private $address;
+
+    /**
+     * Register Invitation class container
+     * 
+     * @var \App\Repositories\RegisterInvitationRepository
+     */
     private $invitation;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\AuthRepository  $auth
+     * @param \App\Repositories\OwnerRepository  $owner
+     * @param \App\Repositories\AddressRepository  $address
+     * @return Illuminate\Support\Facades\Response
+     */
     public function __construct(
         AuthRepository $auth, 
         OwnerRepository $owner, 
@@ -46,9 +77,15 @@ class AuthController extends Controller
         $this->invitation = $invitation;
     }
 
+    /**
+     * Attempt login execution
+     * 
+     * @param \App\Http\Requests\Auths\LoginRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function login(LoginRequest $request)
     {
-    	$input = $request->onlyInRules();
+    	$input = $request->validated();
         if ($user = $this->auth->login($input)) {
             $user = new UserResource($user);
         }
@@ -56,32 +93,12 @@ class AuthController extends Controller
     	return apiResponse($this->auth, ['user' => $user]); 
     }
 
-    public function customerLogin(CustomerLoginRequest $request)
-    {
-        $input = $request->validated();
-        $customer = $this->auth->customerLogin($input);
-
-        return apiResponse($this->auth, ['customer' => $customer]);
-    }
-
-    public function socialMediaLoginRedirect(Request $request, $driver)
-    {
-        return Socialite::driver($driver)
-            ->stateless()
-            ->redirect()
-            ->getTargetUrl();
-    }
-
-    public function socialMediaLoginCallback(Request $request, $driver)
-    {
-        $socialiteUser = Socialite::driver($driver)
-            ->stateless()
-            ->user();
-        $user = $this->auth->socialiteLogin($socialiteUser);
-
-        return apiResponse($this->auth, ['user' => $user]);
-    }
-
+    /**
+     * Register execution
+     * 
+     * @param \App\Http\Requests\Auth\RegisterRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function register(RegisterRequest $request)
     {   
         // Register User
@@ -133,6 +150,12 @@ class AuthController extends Controller
     	return apiResponse($this->auth);
     }
 
+    /**
+     * Verify email by sending code given through email confirmation
+     * 
+     * @param Illuminate\Http\Request  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function verifyEmail(Request $request)
     {
         $code = $request->input('code');
@@ -141,6 +164,12 @@ class AuthController extends Controller
         return apiResponse($this->auth);
     }
 
+    /**
+     * Resend email verification email
+     * 
+     * @param Illuminate\Http\Request  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function resendEmailVerification(Request $request)
     {
         $email = $request->email;
@@ -149,13 +178,12 @@ class AuthController extends Controller
         return apiResponse($this->auth);
     }
 
-    public function socialMediaRegister(Request $request, $driver)
-    {
-        $metaUser = $this->auth->socialiteRegister($driver);
-
-        return apiResponse($this->auth, ['meta_user' => $metaUser]);
-    }
-
+    /**
+     * Attempt logout for requesting user
+     * 
+     * @param Illuminate\Http\Request  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function logout(Request $request)
     {
         $user = $request->user();
@@ -165,14 +193,12 @@ class AuthController extends Controller
     	return apiResponse($this->auth);
     }
 
-    public function customerLogout(Request $request)
-    {
-        $user = $request->user();
-        $this->auth->customerLogout($user);
-
-        return apiResponse($this->auth);
-    }
-
+    /**
+     * Attempt forgot password by sending reset password token
+     * 
+     * @param ForgotPasswordRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function forgotPassword(ForgotPasswordRequest $request)
     {
         $user = $request->getUser();
@@ -183,6 +209,12 @@ class AuthController extends Controller
         return apiResponse($this->auth);
     }
 
+    /**
+     * Execute reset password after clicking reset password link
+     * 
+     * @param Illuminate\Http\Request  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function resetPassword(ResetPasswordRequest $request)
     {
         $user = $request->getUser();

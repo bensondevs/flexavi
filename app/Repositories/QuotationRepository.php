@@ -2,28 +2,33 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
-use App\Enums\Quotation\QuotationStatus;
-
-use App\Models\Quotation;
-use App\Models\QuotationAttachment;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
+use App\Enums\Quotation\QuotationStatus;
+use App\Models\{ Quotation, QuotationAttachment };
+use App\Mail\Quotation\{ QuotationMail, NotifyQuotationRevision };
 use App\Jobs\SendMail;
-
-use App\Mail\Quotation\QuotationMail;
-use App\Mail\Quotation\NotifyQuotationRevision;
 
 class QuotationRepository extends BaseRepository
 {
+	/**
+	 * Repository class constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Quotation);
 	}
 
+	/**
+	 * Save quotation
+	 * 
+	 * @param array  $quotationData
+	 * @return \App\Models\Quotation
+	 */
 	public function save(array $quotationData)
 	{
 		try {
@@ -43,6 +48,12 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Add attachment to quotation
+	 * 
+	 * @param array  $attachmentData
+	 * @return \App\Models\Appointment
+	 */
 	public function addAttachment(array $attachmentData = [])
 	{
 		try {
@@ -65,6 +76,12 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Remove quotation attachment
+	 * 
+	 * @param \App\Models\QuotationAttachment  $attachment
+	 * @return bool
+	 */
 	public function removeAttachment(QuotationAttachment $attachment)
 	{
 		try {
@@ -80,6 +97,13 @@ class QuotationRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Send quotation through email and  
+	 * set the status of quotation \App\Enums\Quotation\QuotationStatus::Sent
+	 * 
+	 * @param array  $sentData
+	 * @return \App\Models\Quotation
+	 */
 	public function send(array $sendData = [])
 	{
 		try {
@@ -116,6 +140,12 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Return quotation data and set the status of quotation to
+	 * \App\Enums\Quotation\QuotationStatus::Sent
+	 * 
+	 * @return \App\Models\Quotation
+	 */
 	public function print()
 	{
 		try {
@@ -136,6 +166,13 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Revise quotation and set the status of quotation to
+	 * \App\Enums\Quotation\QuotationStatus::Revised
+	 * 
+	 * @param array  $revisionData
+	 * @return \App\Models\Quotation
+	 */
 	public function revise(array $revisionData = [])
 	{
 		try {
@@ -162,6 +199,13 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Honor the quotation and set the status of quotation to
+	 * \App\Enums\Quotation\QuotationStatus::Honored
+	 * 
+	 * @param array  $honorData
+	 * @return \App\Models\Quotation
+	 */
 	public function honor(array $honorData = [])
 	{
 		try {
@@ -185,12 +229,19 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Cancel quotation and set the status of quotation to
+	 * \App\Enums\Quotation\QuotationStatus::Cancelled
+	 * 
+	 * @param array  $cancellationData
+	 * @return \App\Models\Quotation
+	 */
 	public function cancel(array $cancellationData = [])
 	{
 		try {
 			$quotation = $this->getModel();
 			$quotation->fill($cancellationData);
-			$quotation->status = 5;
+			$quotation->status = QuotationStatus::Cancelled;
 			$quotation->cancelled_at = carbon()->now();
 			$quotation->save();
 
@@ -205,6 +256,13 @@ class QuotationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete or force delete quotation
+	 * To do force delete, set the parameter to TRUE
+	 * 
+	 * @param bool $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -222,5 +280,26 @@ class QuotationRepository extends BaseRepository
 		}
 
 		return $this->returnResponse();
+	}
+
+	/**
+	 * Restore soft-deleted quotation
+	 * 
+	 * @return \App\Models\Quotation
+	 */
+	public function restore()
+	{
+		try {
+			$quotation = $this->getModel();
+			$quotation->restore();
+			$this->setModel($quotation);
+
+			$this->setSuccess('Successfully restore quotation');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore quotation', $error);
+		}
+
+		return $this->getModel();
 	}
 }

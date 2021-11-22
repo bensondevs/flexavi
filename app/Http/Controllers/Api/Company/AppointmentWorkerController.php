@@ -19,13 +19,30 @@ use App\Models\AppointmentWorker;
 
 class AppointmentWorkerController extends Controller
 {
+    /**
+     * Appointment Worker Repository Class Container
+     * 
+     * @var \App\Repositories\AppointmentWorkerRepository
+     */
     private $worker;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repotories\AppointmentWorkerRepository  $worker
+     * @return void
+     */
     public function __construct(WorkerRepository $worker)
     {
     	$this->worker = $worker;
     }
 
+    /**
+     * Populate company appointment workers
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyAppointmentWorkers(PopulateRequest $request)
     {
     	$options = $request->options();
@@ -37,14 +54,25 @@ class AppointmentWorkerController extends Controller
     	return response()->json(['workers' => $workers]);
     }
 
+    /**
+     * Store appointment worker
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
     	$input = $request->validated();
     	$worker = $this->worker->save($input);
-
     	return apiResponse($this->worker, ['worker' => $worker]);
     }
 
+    /**
+     * Update appointment worker
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $worker = $request->getAppointmentWorker();
@@ -56,6 +84,12 @@ class AppointmentWorkerController extends Controller
     	return apiResponse($this->worker, ['worker' => $worker]);
     }
 
+    /**
+     * Delete appointment worker
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(FindRequest $request)
     {
         $worker = $request->getAppointmentWorker();

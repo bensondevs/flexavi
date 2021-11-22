@@ -9,28 +9,51 @@ use App\Http\Requests\Appointments\PopulateWorklistAppointmentsRequest as Popula
 use App\Http\Requests\Worklists\Appointments\{
     AttachAppointmentRequest as AttachRequest,
     AttachManyAppointmentsRequest as AttachManyRequest,
+    MoveAppointmentRequest as MoveRequest,
     DetachAppointmentRequest as DetachRequest,
     DetachManyAppointmentsRequest as DetachManyRequest,
     TruncateAppointmentsRequest as TruncateRequest
 };
-
 use App\Http\Resources\AppointmentResource;
-
 use App\Repositories\{
     WorklistRepository, AppointmentRepository
 };
 
 class WorklistAppointmentController extends Controller
 {
+    /**
+     * Worklist Repository Class Container
+     * 
+     * @var \App\Repositories\WorklistRepository
+     */
     private $worklist;
+
+    /**
+     * Appointment Repository Class Container
+     * 
+     * @var \App\Repositories\AppointmentRepository
+     */
     private $appointment;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\WorklistRepository  $worklist
+     * @param \App\Repositories\AppointmentRepository  $appointment
+     * @return void
+     */
     public function __construct(WorklistRepository $worklist, AppointmentRepository $appointment)
     {
         $this->worklist = $worklist;
         $this->appointment = $appointment;
     }
 
+    /**
+     * Populate with worklist appointments
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function worklistAppointments(PopulateRequest $request)
     {
         $options = $request->options();
@@ -45,6 +68,12 @@ class WorklistAppointmentController extends Controller
         return response()->json(['appointments' => $appointments]);
     }
 
+    /**
+     * Attach appointment to worklist
+     * 
+     * @param AttachRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function attach(AttachRequest $request)
     {
         $worklist = $request->getWorklist();
@@ -56,6 +85,12 @@ class WorklistAppointmentController extends Controller
         return apiResponse($this->worklist);
     }
 
+    /**
+     * Attach many appointments to worklist
+     * 
+     * @param AttachManyRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function attachMany(AttachManyRequest $request)
     {
         $worklist = $request->getWorklist();
@@ -67,6 +102,29 @@ class WorklistAppointmentController extends Controller
         return apiResponse($this->worklist);
     }
 
+    /**
+     * Move appointment to another worklist
+     * 
+     * @param MoveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function move(MoveRequest $request)
+    {
+        $appointment = $request->getAppointment();
+        $this->appointment->setModel($appointment);
+
+        $worklist = $request->getWorklist();
+        $this->appointment->moveTo($worklist);
+
+        return apiResponse($this->worklist);
+    }
+
+    /**
+     * Detach appointment from worklist
+     * 
+     * @param DetachRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function detach(DetachRequest $request)
     {
         $worklist = $request->getWorklist();
@@ -78,6 +136,12 @@ class WorklistAppointmentController extends Controller
         return apiResponse($this->worklist);
     }
 
+    /**
+     * Detach many appointments from worklist
+     * 
+     * @param DetachManyRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function detachMany(DetachManyRequest $request)
     {
         $worklist = $request->getWorklist();
@@ -89,6 +153,12 @@ class WorklistAppointmentController extends Controller
         return apiResponse($this->worklist);
     }
 
+    /**
+     * Truncate worklist appointments
+     * 
+     * @param TruncateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function truncate(TruncateRequest $request)
     {
         $worklist = $request->getWorklist();

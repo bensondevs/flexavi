@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 use App\Repositories\Base\BaseRepository;
 
@@ -11,18 +11,39 @@ use App\Models\Address;
 
 class AddressRepository extends BaseRepository
 {
+	/**
+	 * Addressable model container
+	 * 
+	 * @var mixed
+	 */
 	private $addressable;
 
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Address);
 	}
 
+	/**
+	 * Set addressable model
+	 * 
+	 * @param mixed  $addressable
+	 * @return void
+	 */
 	public function setAddressable($addressable)
 	{
 		$this->addressable = $addressable;
 	}
 
+	/**
+	 * Get addressable model
+	 * 
+	 * @return mixed
+	 */
 	public function getAddressable()
 	{
 		if ($this->addressable) {
@@ -36,6 +57,12 @@ class AddressRepository extends BaseRepository
 		return null;
 	}
 
+	/**
+	 * Save address and attach to a addressable model
+	 * 
+	 * @param array  $addressData
+	 * @return \App\Models\Address
+	 */
 	public function save(array $addressData = [])
 	{
 		try {
@@ -58,6 +85,12 @@ class AddressRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete address
+	 * 
+	 * @param bool  $force   set to true to do force delete
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -75,6 +108,11 @@ class AddressRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Restore address
+	 * 
+	 * @return \App\Models\Address
+	 */
 	public function restore()
 	{
 		try {

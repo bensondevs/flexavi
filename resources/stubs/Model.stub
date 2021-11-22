@@ -17,7 +17,7 @@ class {{modelName}} extends Model
     use Searchable;
 
     /**
-     * The table name
+     * Database table name
      * 
      * @var string
      */
@@ -31,14 +31,14 @@ class {{modelName}} extends Model
     protected $primaryKey = 'id';
 
     /**
-     * Timestamp recording
+     * Set timestamp each time model is saved
      * 
      * @var bool
      */
     public $timestamps = true;
 
     /**
-     * Set whether primary key use increment or not
+     * Set whether primary key use incrementing value or not
      * 
      * @var bool
      */
@@ -64,6 +64,8 @@ class {{modelName}} extends Model
 
     /**
      * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
      *
      * @return void
      */

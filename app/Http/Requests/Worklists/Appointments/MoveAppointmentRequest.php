@@ -4,14 +4,29 @@ namespace App\Http\Requests\Worklists\Appointments;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
-
 use App\Models\{ Worklist, Appointment };
 
-class DetachAppointmentRequest extends FormRequest
+class MoveAppointmentRequest extends FormRequest
 {
+    /**
+     * Target worklist model container
+     * 
+     * @var \App\Models\Worklist
+     */
     private $worklist;
-    private $appointment;
 
+    /**
+     * Moved appointment model container
+     * 
+     * @var \App\Models\Appointment
+     */
+    private $appointment
+
+    /**
+     * Get worklist from the request value
+     * 
+     * @return \App\Models\Worklist
+     */
     public function getWorklist()
     {
         if ($this->worklist) return $this->worklist;
@@ -20,6 +35,11 @@ class DetachAppointmentRequest extends FormRequest
         return $this->worklist = Worklist::findOrFail($id);
     }
 
+    /**
+     * Get appointment from the request value
+     * 
+     * @return \App\Models\Appointment
+     */
     public function getAppointment()
     {
         if ($this->appointment) return $this->appointment;
@@ -37,7 +57,7 @@ class DetachAppointmentRequest extends FormRequest
     {
         $worklist = $this->getWorklist();
         $appointment = $this->getAppointment();
-        return Gate::allows('detach-appointment-worklist', [$worklist, $appointment]);
+        return Gate::allows('move-appointment-worklist', [$worklist, $appointment]);
     }
 
     /**

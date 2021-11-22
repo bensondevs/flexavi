@@ -9,6 +9,11 @@ use App\Models\Address;
 
 class AddressController extends Controller
 {
+    /**
+     * Get all address types enum
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function allAddressTypes()
     {
         $types = Address::collectAllTypes();

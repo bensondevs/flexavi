@@ -34,7 +34,7 @@ class RevenueController extends Controller
      * Populate whole company revenues
      * 
      * @param PopulateRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function companyRevenues(PopulateRequest $request)
     {
@@ -50,7 +50,7 @@ class RevenueController extends Controller
      * Store revenue
      * 
      * @param SaveRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function store(SaveRequest $request)
     {
@@ -64,7 +64,7 @@ class RevenueController extends Controller
      * Update revenue
      * 
      * @param SaveRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function update(SaveRequest $request)
     {
@@ -81,7 +81,7 @@ class RevenueController extends Controller
      * Delete revenue, WARNING! deleting revenue will detach the record from all relationship upon deleted revenue
      * 
      * @param DeleteRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function delete(DeleteRequest $request)
     {
@@ -97,7 +97,7 @@ class RevenueController extends Controller
      * Restore revenue
      * 
      * @param RestoreRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function restore(RestoreRequest $request)
     {

@@ -2,23 +2,31 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
-use App\Models\User;
-use App\Models\RegisterInvitation;
-
-use App\Enums\RegisterInvitation\RegisterInvitationStatus;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
+
+use App\Models\{ User, RegisterInvitation };
+use App\Enums\RegisterInvitation\RegisterInvitationStatus as Status;
 
 class RegisterInvitationRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new RegisterInvitation);
 	}
 
+	/**
+	 * Send invitation to the pre-registered user
+	 * 
+	 * @param array  $invitationData
+	 * @return \App\Models\RegisterInvitation
+	 */
 	public function sendInvitation(array $invitationData)
 	{
 		try {
@@ -41,6 +49,14 @@ class RegisterInvitationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Invite employee to register to the application
+	 * 
+	 * @param string  $email
+	 * @param array  $employeeData
+	 * @param \DateTime  $expiryTime
+	 * @return \App\Models\RegisterInvitation
+	 */
 	public function inviteEmployee(string $email, array $employeeData, $expiryTime = null)
 	{
 		$invitationData = [
@@ -53,6 +69,14 @@ class RegisterInvitationRepository extends BaseRepository
 		return $this->sendInvitation($invitationData);
 	}
 
+	/**
+	 * Invite owner to register to the application
+	 * 
+	 * @param string  $email
+	 * @param array $ownerData
+	 * @param \DateTime  $expiryTime
+	 * @return \App\Models\RegisterInvitation
+	 */
 	public function inviteOwner(string $email, array $ownerData, $expiryTime = null)
 	{
 		$invitationData = [
@@ -65,6 +89,11 @@ class RegisterInvitationRepository extends BaseRepository
 		return $this->sendInvitation($invitationData);
 	}
 
+	/**
+	 * Handle invitation using process
+	 * 
+	 * @return \App\Models\RegisterInvitation 
+	 */
 	public function handleInvitationFulfilled()
 	{
 		try {
@@ -82,7 +111,8 @@ class RegisterInvitationRepository extends BaseRepository
 			$role['user_id'] = $user->id;
 			$role->save();
 
-			$invitation->status = 
+			$invitation->status = Status::Used;
+			$invitation->save();
 
 			$this->setSuccess('Successfully handle invitation fulfillment.');
 		} catch (QueryException $qe) {
@@ -93,18 +123,16 @@ class RegisterInvitationRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function findByCode($code)
-	{
-		$invitation = $this->getModel();
-		$invitation = $invitation->findByCode($code);
-		$this->setModel($invitation);
-	}
-
+	/**
+	 * Mark register invitation as used
+	 * 
+	 * @return \App\Models\RegisterInvitation
+	 */
 	public function markAsUsed()
 	{
 		try {
 			$invitation = $this->getModel();
-			$invitation->status = RegisterInvitationStatus::Used;
+			$invitation->status = Status::Used;
 			$invitation->save();
 
 			$this->setModel($invitation);

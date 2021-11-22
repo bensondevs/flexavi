@@ -5,25 +5,46 @@ namespace App\Http\Requests\Quotations;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Rules\FloatValue;
-use App\Rules\AmongStrings;
-use App\Rules\UniqueWithConditions;
+use App\Rules\{
+    FloatValue,
+    AmongStrings,
+    UniqueWithConditions
+};
 
-use App\Models\Customer;
-use App\Models\Quotation;
-
+use App\Models\{ Customer, Quotation };
 use App\Enums\Quotation\QuotationStatus;
-
 use App\Traits\CompanyInputRequest;
 
 class SaveQuotationRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Customer target model container
+     * 
+     * @var \App\Models\Customer
+     */
     private $customer;
+
+    /**
+     * Quotation target model container
+     * 
+     * @var \App\Models\Quotation
+     */
     private $quotation;
+
+    /**
+     * Appointment target model container
+     * 
+     * @var \App\Models\Appointment
+     */
     private $appointment;
 
+    /**
+     * Get customer from input value payload
+     * 
+     * @return \App\Models\Customer
+     */
     public function getCustomer()
     {   
         if ($this->customer) return $this->customer;
@@ -40,6 +61,11 @@ class SaveQuotationRequest extends FormRequest
         return $this->customer;
     }
 
+    /**
+     * Get quotation from input value payload
+     * 
+     * @return \App\Models\Quotation
+     */
     public function getQuotation()
     {
         if ($this->quotation) return $this->quotation;
@@ -48,6 +74,11 @@ class SaveQuotationRequest extends FormRequest
         return $this->quotation = $this->model = Quotation::findOrFail($id);
     }
 
+    /**
+     * Get appointment from input value payload
+     * 
+     * @return \App\Models\Appointment
+     */
     public function getAppointment()
     {
         if ($this->appointment) return $this->appointment;
@@ -88,6 +119,11 @@ class SaveQuotationRequest extends FormRequest
         return false;
     }
 
+    /**
+     * Format input payload before validation
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $this->merge([
@@ -136,6 +172,11 @@ class SaveQuotationRequest extends FormRequest
         return $this->returnRules();
     }
 
+    /**
+     * Get quotation data with injected value
+     * 
+     * @return array
+     */
     public function quotationData()
     {
         $data = $this->ruleWithCompany();

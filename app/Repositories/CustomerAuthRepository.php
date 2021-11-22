@@ -2,20 +2,30 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\Customer;
 
 class CustomerAuthRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Customer);
 	}
 
+	/**
+	 * Attemp customer login
+	 * 
+	 * @param array  $credentials
+	 * @return \App\Models\Customer
+	 */
 	public function login(array $credentials)
 	{
 		try {
@@ -38,6 +48,11 @@ class CustomerAuthRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Reset unique key of the customer
+	 * 
+	 * @return \App\Models\Customer
+	 */
 	public function resetUniqueKey()
 	{
 		try {

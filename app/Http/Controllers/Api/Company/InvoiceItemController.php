@@ -18,13 +18,30 @@ use App\Repositories\InvoiceItemRepository;
 
 class InvoiceItemController extends Controller
 {
+    /**
+     * Invoice Item Repository Class Container
+     * 
+     * @var \App\Repositories\InvoiceItemRepository
+     */
     private $item;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\InvoiceItemRepository  $item
+     * @return void
+     */
     public function __construct(InvoiceItemRepository $item)
     {
         $this->item = $item;
     }
 
+    /**
+     * Populate invoice items
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function invoiceItems(PopulateRequest $request)
     {
         $options = $request->options();
@@ -35,6 +52,12 @@ class InvoiceItemController extends Controller
         return response()->json(['invoice_items' => $items]);
     }
 
+    /**
+     * Add item to invoice
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->validated();
@@ -42,6 +65,12 @@ class InvoiceItemController extends Controller
         return apiResponse($this->item);
     }
 
+    /**
+     * Update invoice item
+     * 
+     * @param UpdateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(UpdateRequest $request)
     {
         $item = $request->getInvoiceItem();
@@ -53,6 +82,12 @@ class InvoiceItemController extends Controller
         return apiResponse($this->item);
     }
 
+    /**
+     * Delete invoice item
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $item = $request->getInvoiceItem();

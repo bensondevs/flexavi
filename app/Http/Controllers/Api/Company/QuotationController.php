@@ -14,6 +14,7 @@ use App\Http\Requests\Quotations\{
     HonorQuotationRequest as HonorRequest,
     DeleteQuotationRequest as DeleteRequest,
     CancelQuotationRequest as CancelRequest,
+    RestoreQuotationRequest as RestoreRequest,
     GenerateQuotationInvoiceRequest as GenerateInvoiceRequest,
     PopulateCompanyQuotationsRequest as CompanyPopulateRequest,
     PopulateCustomerQuotationsRequest as CustomerPopulateRequest,
@@ -36,15 +37,41 @@ use App\Repositories\{
 
 class QuotationController extends Controller
 {
+    /**
+     * Quotation Repository Class Container
+     * 
+     * @var \App\Repositories\QuotationRepository
+     */
     private $quotation;
+
+    /**
+     * Invoice Repository Class Container
+     * 
+     * @var \App\Repositories\InvoiceRepository
+     */
     private $invoice;
 
-    public function __construct(QuotationRepository $quotation, InvoiceRepository $invoice)
-    {
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\QuotationRepository  $quotation
+     * @param \App\Repositories\InvoiceRepository  $invoice
+     * @return void
+     */
+    public function __construct(
+        QuotationRepository $quotation, 
+        InvoiceRepository $invoice
+    ) {
     	$this->quotation = $quotation;
         $this->invoice = $invoice;
     }
 
+    /**
+     * Populate company quotations
+     * 
+     * @param CompanyPopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyQuotations(CompanyPopulateRequest $request)
     {
         $options = $request->options();
@@ -56,6 +83,12 @@ class QuotationController extends Controller
     	return response()->json(['quotations' => $quotations]);
     }
 
+    /**
+     * Populate customer quotations
+     * 
+     * @param CustomerPopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function customerQuotations(CustomerPopulateRequest $request)
     {
         $options = $request->options();
@@ -67,6 +100,12 @@ class QuotationController extends Controller
         return response()->json(['quotations' => $quotations]);
     }
 
+    /**
+     * Populate trashed quotations
+     * 
+     * @param CompanyPopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function trashedQuotations(CompanyPopulateRequest $request)
     {
         $options = $request->options();
@@ -78,6 +117,12 @@ class QuotationController extends Controller
         return response()->json(['quotations' => $quotations]);
     }
 
+    /**
+     * Store company quoation
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->quotationData();
@@ -86,6 +131,12 @@ class QuotationController extends Controller
     	return apiResponse($this->quotation);
     }
 
+    /**
+     * View company quotation
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -96,6 +147,12 @@ class QuotationController extends Controller
         return response()->json(['quotation' => $quotation]);
     }
 
+    /**
+     * Populate quotation attachments
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function attachments(FindRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -105,6 +162,12 @@ class QuotationController extends Controller
         return response()->json(['attachments' => $attachments]);
     }
 
+    /**
+     * Add quotation attachment
+     * 
+     * @param AddAttachmentRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function addAttachment(AddAttachmentRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -119,6 +182,12 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    /**
+     * Remove quotation attachment
+     * 
+     * @param RemoveAttachmentRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function removeAttachment(RemoveAttachmentRequest $request)
     {
         $attachment = $request->getQuotationAttachment();
@@ -132,6 +201,12 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    /**
+     * Send quotation
+     * 
+     * @param SendRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function send(SendRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -143,6 +218,12 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    /**
+     * Print quotation
+     * 
+     * @param PrintRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function print(PrintRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -152,6 +233,12 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    /**
+     * Revise quotation
+     * 
+     * @param ReviseRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function revise(ReviseRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -163,6 +250,12 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    /**
+     * Cancel quotation
+     * 
+     * @param CancelRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function cancel(CancelRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -175,6 +268,12 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    /**
+     * Honor quotation
+     * 
+     * @param HonorRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function honor(HonorRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -186,6 +285,12 @@ class QuotationController extends Controller
         return apiResponse($this->quotation);
     }
 
+    /**
+     * Generate invoice from quotation
+     * 
+     * @param GenerateInvoiceRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function generateInvoice(GenerateInvoiceRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -198,6 +303,12 @@ class QuotationController extends Controller
         return apiResponse($this->invoice, ['invoice' => $invoice]);
     }
 
+    /**
+     * Update quotation
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -209,6 +320,12 @@ class QuotationController extends Controller
     	return apiResponse($this->quotation);
     }
 
+    /**
+     * Delete quotation
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $quotation = $request->getQuotation();
@@ -218,5 +335,21 @@ class QuotationController extends Controller
     	$this->quotation->delete($force);
 
     	return apiResponse($this->quotation);
+    }
+
+    /**
+     * Restore quotation
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function restore(RestoreRequest $request)
+    {
+        $quotation = $request->getQuotation();
+        
+        $this->quotation->setModel($quotation);
+        $quotation = $this->quotation->restore();
+        
+        return apiResponse($this->quotation, ['quotation' => $quotation]);
     }
 }

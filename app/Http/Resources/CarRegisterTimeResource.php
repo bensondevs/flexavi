@@ -30,6 +30,20 @@ class CarRegisterTimeResource extends JsonResource
             'marked_return_at' => $this->marked_return_at,
         ];
 
+        if ($this->is_out_late) {
+            $structure['out_late'] = true;
+
+            $difference = $this->late_out_difference;
+            $structure['late_out_difference_minute'] = $difference;
+        }
+
+        if ($this->is_return_late) {
+            $structure['return_late'] = true;
+
+            $difference = $this->late_return_difference;
+            $structure['late_return_difference_minute'] = $difference;
+        }
+
         if ($this->relationLoaded('worklist')) {
             $worklist = new WorklistResource($this->worklist);
             $structure['worklist'] = $worklist;

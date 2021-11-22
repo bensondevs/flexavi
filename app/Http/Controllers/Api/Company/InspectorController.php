@@ -11,8 +11,6 @@ use App\Http\Requests\PopulateInspectorsRequest as PopulateRequest;
 
 use App\Models\Inspector;
 
-// use App\Repositories\InspectorRepository;
-
 class InspectorController extends Controller
 {
     private $inspector;

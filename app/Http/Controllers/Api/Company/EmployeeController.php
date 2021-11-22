@@ -21,14 +21,30 @@ use App\Repositories\EmployeeRepository;
 
 class EmployeeController extends Controller
 {
-    protected $employee;
-    protected $company;
+    /**
+     * Employee Repository Class Container
+     * 
+     * @var \App\Repositories\EmployeeRepository
+     */
+    private $employee;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\EmployeeRepository  $employee
+     * @return void
+     */
     public function __construct(EmployeeRepository $employee)
     {
     	$this->employee = $employee;
     }
 
+    /**
+     * Populate company employees
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyEmployees(PopulateRequest $request)
     {
         $options = $request->options();
@@ -40,6 +56,13 @@ class EmployeeController extends Controller
     	return response()->json(['employees' => $employees]);
     }
 
+    /**
+     * Populate Company Inviteable employees
+     * Employee that does not have controlling user
+     * 
+     * @param PopulateRequst  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function inviteableEmployees(PopulateRequest $request)
     {
         $options = $request->options();
@@ -51,6 +74,12 @@ class EmployeeController extends Controller
         return response()->json(['employees' => $employees]);
     }
 
+    /**
+     * Populate soft-deleted employees
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function trashedEmployees(PopulateRequest $request)
     {
         $options = $request->options();
@@ -62,6 +91,12 @@ class EmployeeController extends Controller
         return response()->json(['employees' => $employees]);
     }
 
+    /**
+     * Store employee
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
@@ -70,6 +105,12 @@ class EmployeeController extends Controller
     	return apiResponse($this->employee);
     }
 
+    /**
+     * View employee with relationships related to it
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $employee = $request->getEmployee();
@@ -79,6 +120,12 @@ class EmployeeController extends Controller
         return response()->json(['employee' => $employee]);
     }
 
+    /**
+     * Update employee
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $employee = $request->getEmployee();

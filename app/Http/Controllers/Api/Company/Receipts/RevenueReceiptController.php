@@ -9,13 +9,30 @@ use App\Repositories\ReceiptRepository;
 
 class RevenueReceiptController extends Controller
 {
+    /**
+     * Receipt Repository Class Container
+     * 
+     * @var \App\Repositories\ReceiptRepository
+     */
     private $receipt;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\ReceiptRepository  $receipt
+     * @return void
+     */
     public function __construct(ReceiptRepository $receipt)
     {
         $this->receipt = $receipt;
     }
 
+     /**
+     * Attach receipt to a revenue
+     * 
+     * @param AttachRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function attach(AttachRequest $request)
     {
         $receipt = $request->getReceipt();
@@ -27,6 +44,12 @@ class RevenueReceiptController extends Controller
         return apiResponse($this->receipt);
     }
 
+    /**
+     * Replace receipt of a revenue
+     * 
+     * @param ReplaceRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function replace(ReplaceRequest $request)
     {
         $input = $request->validated();

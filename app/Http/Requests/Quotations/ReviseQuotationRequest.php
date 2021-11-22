@@ -6,17 +6,25 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Rules\FloatValue;
-
 use App\Traits\InputRequest;
-
 use App\Models\Quotation;
 
 class ReviseQuotationRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Target quotation model container
+     * 
+     * @var \App\Models\Quotation 
+     */
     private $quotation;
 
+    /**
+     * Get quotation from the input payload
+     * 
+     * @return \App\Models\Quotation
+     */
     public function getQuotation()
     {
         if ($this->quotation) return $this->quotation;
@@ -36,6 +44,9 @@ class ReviseQuotationRequest extends FormRequest
         return Gate::allows('revise-quotation', $quotation);
     }
 
+    /**
+     * Prepare 
+     */
     protected function prepareForValidation()
     {
         $this->merge([
@@ -59,6 +70,11 @@ class ReviseQuotationRequest extends FormRequest
         return $this->returnRules();
     }
 
+    /**
+     * Get revision data after validation
+     * 
+     * @return array
+     */
     public function revisionData()
     {
         return $this->validated();

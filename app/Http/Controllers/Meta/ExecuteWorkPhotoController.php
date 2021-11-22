@@ -9,10 +9,14 @@ use App\Models\ExecuteWorkPhoto;
 
 class ExecuteWorkPhotoController extends Controller
 {
+    /**
+     * Get all photo condition types enums
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function allPhotoConditionTypes()
     {
         $types = ExecuteWorkPhoto::collectAllPhotoConditionTypes();
-
         return response()->json($types);
     }
 }

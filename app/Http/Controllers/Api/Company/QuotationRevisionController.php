@@ -16,13 +16,30 @@ use App\Repositories\QuotationRevisionRepository as RevisionRepository;
 
 class QuotationRevisionController extends Controller
 {
+    /**
+     * Quotation Revision Repository Class Container
+     * 
+     * @var \App\Repositories\RevisionRepository
+     */
     private $revision;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\QuotationRevisionRepository  $revision
+     * @return void
+     */
     public function __construct(RevisionRepository $revision)
     {
         $this->revision = $revision;
     }
 
+    /**
+     * Populate quotation revisions
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function quotationRevisions(PopulateRequest $request)
     {
         $options = $request->options();
@@ -33,6 +50,12 @@ class QuotationRevisionController extends Controller
         return response()->json(['revisions' => $revisions]);
     }
 
+    /**
+     * Store quotation revision
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->onlyInRules();
@@ -41,6 +64,12 @@ class QuotationRevisionController extends Controller
         return apiResponse($this->revision);
     }
 
+    /**
+     * Apply quotation revision
+     * 
+     * @param ApplyRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function apply(ApplyRequest $request)
     {
         $revision = $request->getRevision();
@@ -50,6 +79,12 @@ class QuotationRevisionController extends Controller
         return apiResponse($this->revision);
     }
 
+    /**
+     * Update quotation revision
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $revision = $request->getRevision();
@@ -61,6 +96,12 @@ class QuotationRevisionController extends Controller
         return apiResponse($this->revision);
     }
 
+    /**
+     * Delete quotation revision
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $revision = $request->getRevision();

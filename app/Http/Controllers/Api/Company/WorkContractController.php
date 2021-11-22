@@ -7,21 +7,40 @@ use Illuminate\Http\Request;
 
 use App\Http\Resources\WorkContractResource;
 
-use App\Http\Requests\WorkContracts\FindWorkContractRequest as FindRequest;
-use App\Http\Requests\WorkContracts\SaveWorkContractRequest as SaveRequest;
-use App\Http\Requests\WorkContracts\PopulateCompanyWorkContractsRequest as PopulateRequest;
+use App\Http\Requests\WorkContracts\{
+    FindWorkContractRequest as FindRequest,
+    SaveWorkContractRequest as SaveRequest,
+    PopulateCompanyWorkContractsRequest as PopulateRequest
+};
 
 use App\Repositories\WorkContractRepository;
 
 class WorkContractController extends Controller
 {
+    /**
+     * Work Contract Repository class
+     * 
+     * @var \App\Repositories\WorkContractRepository
+     */
     private $contract;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\WorkContractRepository  $contract
+     * @return void
+     */
     public function __construct(WorkContractRepository $contract)
     {
     	$this->contract = $contract;
     }
 
+    /**
+     * Populate company work contracts
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyWorkContracts(PopulateRequest $request)
     {
     	$contracts = $this->contract->all($request->options());
@@ -31,6 +50,12 @@ class WorkContractController extends Controller
     	return response()->json(['contracts' => $contracts]);
     }
 
+    /**
+     * Store company work contract
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
     	// Upload the file
@@ -44,6 +69,12 @@ class WorkContractController extends Controller
     	return apiResponse($this->contract, ['contract' => $contract]);
     }
 
+    /**
+     * Update company work contract
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $contract = $request->getWorkContract();
@@ -61,6 +92,12 @@ class WorkContractController extends Controller
         return apiResponse($this->contract, ['contract' => $contract]);
     }
 
+    /**
+     * Delete company work contract
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(FindRequest $request)
     {
         $contract = $request->getWorkContract();

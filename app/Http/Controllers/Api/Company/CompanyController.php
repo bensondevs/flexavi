@@ -27,15 +27,40 @@ use App\Repositories\{
 
 class CompanyController extends Controller
 {
+    /**
+     * Company Repository Class Container
+     * 
+     * @var \App\Repositories\CompanyRepository
+     */
     protected $company;
+
+    /**
+     * Owner Repository Class Container
+     * 
+     * @var \App\Repositories\CompanyOwnerRepository
+     */
     protected $owner;
 
-    public function __construct(CompanyRepository $company, CompanyOwnerRepository $owner)
-    {
+    /**
+     * Controller Constructor Method
+     * 
+     * @param \App\Repository\CompanyRepository  $company
+     * @param \App\Repository\CompanyOwnerRepository  $owner
+     * @return void 
+     */
+    public function __construct(
+        CompanyRepository $company, 
+        CompanyOwnerRepository $owner
+    ) {
     	$this->company = $company;
         $this->owner = $owner;
     }
 
+    /**
+     * Company of the owner user
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function userCompany()
     {
         if (! $owner = (auth()->user())->owner) {
@@ -46,6 +71,11 @@ class CompanyController extends Controller
         return response()->json(['company' => $company]);
     }
 
+    /**
+     * Get company settings
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function settings()
     {
         if (! $owner = (auth()->user())->owner) {
@@ -57,6 +87,12 @@ class CompanyController extends Controller
         return response()->json(['settings' => SettingResource::collection($settings)]);
     }
 
+    /**
+     * Upload Company Logo
+     * 
+     * @param UploadLogoRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function uploadCompanyLogo(UploadLogoRequest $request)
     {
         $company = $request->getCompany();
@@ -68,6 +104,12 @@ class CompanyController extends Controller
         return apiResponse($this->company);
     }
 
+    /**
+     * Register company
+     * 
+     * @param RegisterRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function register(RegisterRequest $request)
     {
         // Create Company
@@ -82,6 +124,12 @@ class CompanyController extends Controller
         return apiResponse($this->company);
     }
 
+    /**
+     * Upload company
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $company = $request->getCompany();

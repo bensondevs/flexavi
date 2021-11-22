@@ -19,13 +19,30 @@ use App\Repositories\AddressRepository;
 
 class EmployeeAddressController extends Controller
 {
+    /**
+     * Address Repository Class Container
+     * 
+     * @var \App\Repositories\AddressRepository
+     */
     private $address;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\AddressRepository  $address
+     * @return void
+     */
     public function __construct(AddressRepository $address)
     {
         $this->address = $address;
     }
 
+    /**
+     * Populate Employee Addresses
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function employeeAddresses(PopulateRequest $request)
     {
         $options = $request->employeeOptions();
@@ -36,6 +53,12 @@ class EmployeeAddressController extends Controller
         return response()->json(['addresses' => $addresses]);
     }
 
+    /**
+     * Populate employee trashed addresses
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function employeeTrashedAddresses(PopulateRequest $request)
     {
         $options = $request->employeeOptions();
@@ -46,6 +69,12 @@ class EmployeeAddressController extends Controller
         return response()->json(['addresses' => $addresses]);
     }
 
+    /**
+     * Store new address and attach to employee
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $customer = $request->getEmployee();
@@ -57,6 +86,12 @@ class EmployeeAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * View customer address
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $address = $request->getAddress();
@@ -67,6 +102,12 @@ class EmployeeAddressController extends Controller
         return response()->json(['address' => $address]);
     }
 
+    /**
+     * Update customer address
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $address = $request->getAddress();
@@ -78,6 +119,12 @@ class EmployeeAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * Delete customer address
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $address = $request->getAddress();
@@ -89,6 +136,12 @@ class EmployeeAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * Restore customer address
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $address = $request->getTrashedAddress();

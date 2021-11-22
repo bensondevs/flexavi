@@ -19,13 +19,30 @@ use App\Repositories\PaymentTermRepository;
 
 class PaymentTermController extends Controller
 {
+    /**
+     * Payment Term Repository Class Container
+     * 
+     * @var \App\Repositories\PaymentTermRepository
+     */
     private $term;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\PaymentTermRepository  $term
+     * @return void
+     */
     public function __construct(PaymentTermRepository $term)
     {
     	$this->term = $term;
     }
 
+    /**
+     * Populate company payment terms
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function paymentTerms(PopulateRequest $request)
     {
     	$options = $request->options();
@@ -36,6 +53,12 @@ class PaymentTermController extends Controller
     	return response()->json(['payment_terms' => $terms]);
     }
 
+    /**
+     * Store company payment term
+     * 
+     * @param CreateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(CreateRequest $request)
     {
         $input = $request->validated();
@@ -44,6 +67,12 @@ class PaymentTermController extends Controller
     	return apiResponse($this->term);
     }
 
+    /**
+     * Update company payment term
+     * 
+     * @param UpdateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(UpdateRequest $request)
     {
         $term = $request->getPaymentTerm();
@@ -55,6 +84,12 @@ class PaymentTermController extends Controller
         return apiResponse($this->term);
     }
 
+    /**
+     * Mark payment term as paid
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function markAsPaid(FindRequest $request)
     {
         $term = $request->getPaymentTerm();
@@ -65,11 +100,20 @@ class PaymentTermController extends Controller
         return apiResponse($this->term);
     }
 
+    /**
+     * Register Payment Term
+     */
     public function registerPayment()
     {
         //
     }
 
+    /**
+     * Cancel payment paid status
+     * 
+     * @param CancelPaidStatusRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function cancelPaidStatus(CancelPaidStatusRequest $request)
     {
         $term = $request->getPaymentTerm();
@@ -81,6 +125,12 @@ class PaymentTermController extends Controller
         return apiResponse($this->term);
     }
 
+    /**
+     * Forward to debt collector
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function forwardToDebtCollector(FindRequest $request)
     {
         $term = $request->getPaymentTerm();
@@ -91,6 +141,12 @@ class PaymentTermController extends Controller
         return apiResponse($this->term);
     }
 
+    /**
+     * Delete payment term
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(FindRequest $request)
     {
     	$term = $request->getPaymentTerm();

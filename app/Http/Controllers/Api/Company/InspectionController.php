@@ -5,8 +5,6 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-// use App\Repositories\InspectionRepository;
-
 class InspectionController extends Controller
 {
     private $inspection;

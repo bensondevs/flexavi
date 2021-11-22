@@ -12,3 +12,4 @@ This Documentation Section contains the `<select>`, `<option>` and not limited t
 - [Register Invitation](RegisterInvitation.md)
 - [User](User.md)
 - [Work](Work.md)
+- [Cost](Cost.md)

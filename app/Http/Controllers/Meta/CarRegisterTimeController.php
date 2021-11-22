@@ -5,18 +5,18 @@ namespace App\Http\Controllers\Meta;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Cost;
+use App\Models\CarRegisterTime;
 
-class CostController extends Controller
+class CarRegisterTimeController extends Controller
 {
     /**
-     * Get all costable types enums
+     * Get all car register time types enum
      * 
      * @return Illuminate\Support\Facades\Response
      */
-    public function allCostableTypes()
+    public function allTypes()
     {
-        $types = Cost::collectAllCostableTypes();
+        $types = CarRegisterTime::collectAllPassangerTypes();
         return response()->json($types);
     }
 }

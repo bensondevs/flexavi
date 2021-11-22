@@ -15,20 +15,35 @@ use App\Http\Requests\Invoices\{
     UpdateInvoiceRequest as UpdateRequest,
     DeleteInvoiceRequest as DeleteRequest
 };
-
 use App\Http\Resources\InvoiceResource;
-
 use App\Repositories\InvoiceRepository;
 
 class InvoiceController extends Controller
 {
+    /**
+     * Invoice Repository Class Container
+     * 
+     * @var \App\Repositories\InvoiceRepository
+     */
     private $invoice;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\InvoiceRepository  $invoice
+     * @return void
+     */
     public function __construct(InvoiceRepository $invoice)
     {
     	$this->invoice = $invoice;
     }
 
+    /**
+     * Populate company invoices
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyInvoices(PopulateRequest $request)
     {
         $options = $request->options();
@@ -39,6 +54,12 @@ class InvoiceController extends Controller
         return response()->json(['invoices' => $invoices]);
     }
 
+    /**
+     * Populate company overdue invoices
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyOverdueInvoices(PopulateRequest $request)
     {
         $options = $request->options();
@@ -49,6 +70,12 @@ class InvoiceController extends Controller
         return response()->json(['invoices' => $invoices]);
     }
 
+    /**
+     * Store invoice 
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->validated();
@@ -57,6 +84,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
+    /**
+     * Update invoice
+     * 
+     * @param UpdateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(UpdateRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -68,6 +101,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
+    /**
+     * Send Invoice to target email or customer email
+     * 
+     * @param SendRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function send(SendRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -79,6 +118,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
+    /**
+     * Print invoice and set the status to sent
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function print(FindRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -91,6 +136,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice, ['invoice' => $invoice]);
     }
 
+    /**
+     * Print draft the invoice
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function printDraft(FindRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -103,6 +154,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice, ['invoice' => $invoice]);
     }
 
+    /**
+     * Send reminder to customer about the invoice
+     * 
+     * @param SendReminderRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function sendReminder(SendReminderRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -113,6 +170,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
+    /**
+     * Change status of invoice to selected status
+     * 
+     * @param ChangeStatusRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function changeStatus(ChangeStatusRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -124,6 +187,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
+    /**
+     * Mark invoice as paid
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function markAsPaid(FindRequest $request)
     {
         $invoice = $request->getInvoice();
@@ -135,6 +204,12 @@ class InvoiceController extends Controller
         return apiResponse($this->invoice);
     }
 
+    /**
+     * Delete invoice
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $invoice = $request->getInvoice();

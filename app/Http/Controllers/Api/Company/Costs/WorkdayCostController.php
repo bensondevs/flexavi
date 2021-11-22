@@ -31,6 +31,7 @@ class WorkdayCostController extends Controller
     /**
      * Create New Controller Instance
      * 
+     * @param \App\Repositories\CostRepository  $cost
      * @return void
      */
     public function __construct(CostRepository $cost)
@@ -42,7 +43,7 @@ class WorkdayCostController extends Controller
      * Populate workday costs
      * 
      * @param PopulateRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function workdayCosts(PopulateRequest $request)
     {
@@ -58,7 +59,7 @@ class WorkdayCostController extends Controller
      * Store cost and simuleniously attach it to workday
      * 
      * @param SaveRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function storeRecord(SaveRequest $request)
     {
@@ -75,7 +76,7 @@ class WorkdayCostController extends Controller
      * Record cost to workday
      * 
      * @param RecordRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function record(RecordRequest $request)
     {
@@ -92,7 +93,7 @@ class WorkdayCostController extends Controller
      * Record many costs to workday
      * 
      * @param RecordManyRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function recordMany(RecordManyRequest $request)
     {
@@ -108,7 +109,7 @@ class WorkdayCostController extends Controller
      * Unrecord cost from workday
      * 
      * @param UnrecordRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function unrecord(UnrecordRequest $request)
     {
@@ -125,7 +126,7 @@ class WorkdayCostController extends Controller
      * Unrecord many costs from workday
      * 
      * @param UnrecordManyRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function unrecordMany(UnrecordManyRequest $request)
     {
@@ -141,13 +142,12 @@ class WorkdayCostController extends Controller
      * Truncate workday costs
      * 
      * @param TruncateRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function truncate(TruncateRequest $request)
     {
         $workday = $request->getWorkday();
         $this->cost->truncate($workday);
-
         return apiResponse($this->cost);
     }
 }

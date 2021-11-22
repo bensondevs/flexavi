@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Api\Company\Works;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Works\AttachWorkRequest as AttachRequest;
-use App\Http\Requests\Works\AttachManyWorksRequest as AttachManyRequest;
-use App\Http\Requests\Works\DetachWorkRequest as DetachRequest;
-use App\Http\Requests\Works\DetachManyWorksRequest as DetachManyRequest;
-use App\Http\Requests\Works\TruncateWorksRequest as TruncateRequest;
-use App\Http\Requests\Works\Appointments\SaveAppointmentWorkRequest as SaveRequest;
-use App\Http\Requests\Works\Appointments\PopulateAppointmentWorksRequest as PopulateRequest;
+use App\Http\Requests\Works\{
+    AttachWorkRequest as AttachRequest,
+    AttachManyWorksRequest as AttachManyRequest,
+    DetachWorkRequest as DetachRequest,
+    DetachManyWorksRequest as DetachManyRequest,
+    TruncateWorksRequest as TruncateRequest,
+    Appointments\SaveAppointmentWorkRequest as SaveRequest,
+    Appointments\PopulateAppointmentWorksRequest as PopulateRequest
+};
 
 use App\Http\Resources\WorkResource;
 
@@ -40,7 +42,7 @@ class AppointmentWorkController extends Controller
      * Populate works that attached within appointment
      * 
      * @param PopulateRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function appointmentWorks(PopulateRequest $request)
     {
@@ -57,7 +59,7 @@ class AppointmentWorkController extends Controller
      * Populate works that finished at certain appointment.
      * 
      * @param PopulateRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function appointmentFinishedWorks(PopoulateFinishedRequest $request)
     {
@@ -73,7 +75,7 @@ class AppointmentWorkController extends Controller
      * Store work and directly attach it to appointment
      * 
      * @param SaveRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     /*public function store(SaveRequest $request)
     {
@@ -90,7 +92,7 @@ class AppointmentWorkController extends Controller
      * Attach work to appointment
      * 
      * @param AttachRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function attach(AttachRequest $request)
     {
@@ -107,7 +109,7 @@ class AppointmentWorkController extends Controller
      * Attach many works to appointment
      * 
      * @param AttachManyRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function attachMany(AttachManyRequest $request)
     {
@@ -123,7 +125,7 @@ class AppointmentWorkController extends Controller
      * Detach work from appointment
      * 
      * @param DetachRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function detach(DetachRequest $request)
     {
@@ -140,7 +142,7 @@ class AppointmentWorkController extends Controller
      * Detach many works from appointment
      * 
      * @param DetachManyRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function detachMany(DetachManyRequest $request)
     {
@@ -156,7 +158,7 @@ class AppointmentWorkController extends Controller
      * Truncate works inside appointment
      * 
      * @param TruncateRequest $request
-     * @return json
+     * @return Illuminate\Support\Facades\Response
      */
     public function truncate(TruncateRequest $request)
     {

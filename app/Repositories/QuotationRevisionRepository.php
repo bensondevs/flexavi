@@ -2,21 +2,30 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\Quotation;
-use App\Models\QuotationRevision;
+use App\Models\{ Quotation, QuotationRevision };
 
 class QuotationRevisionRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new QuotationRevision);
 	}
 
+	/**
+	 * Create or Update Quotation Revision
+	 * 
+	 * @param array  $revisionData
+	 * @return \App\Models\Quotation
+	 */
 	public function save(array $revisionData = [])
 	{
 		try {
@@ -35,6 +44,11 @@ class QuotationRevisionRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Apply quotation revision to quotation
+	 * 
+	 * @return \App\Models\QuotationRevision
+	 */
 	public function apply()
 	{
 		try {
@@ -62,6 +76,12 @@ class QuotationRevisionRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete quotation revision
+	 * 
+	 * @param bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {

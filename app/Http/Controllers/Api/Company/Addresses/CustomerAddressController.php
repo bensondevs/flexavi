@@ -19,13 +19,30 @@ use App\Repositories\AddressRepository;
 
 class CustomerAddressController extends Controller
 {
+    /**
+     * Address Repository Class Container
+     * 
+     * @var \App\Repositories\AddressRepository
+     */
     private $address;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\AddressRepository  $address
+     * @return void
+     */
     public function __construct(AddressRepository $address)
     {
         $this->address = $address;
     }
 
+    /**
+     * Populate customer addresses
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function customerAddresses(PopulateRequest $request)
     {
         $options = $request->customerOptions();
@@ -36,6 +53,12 @@ class CustomerAddressController extends Controller
         return response()->json(['addresses' => $addresses]);
     }
 
+    /**
+     * Populate trashed customer address
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function customerTrashedAddresses(PopulateRequest $request)
     {
         $options = $request->customerOptions();
@@ -46,6 +69,12 @@ class CustomerAddressController extends Controller
         return response()->json(['addresses' => $addresses]);
     }
 
+    /**
+     * Store customer address
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $customer = $request->getCustomer();
@@ -57,6 +86,12 @@ class CustomerAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * View customer address and load relationships
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $address = $request->getAddress();
@@ -67,6 +102,12 @@ class CustomerAddressController extends Controller
         return response()->json(['address' => $address]);
     }
 
+    /**
+     * Update customer address
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $address = $request->getAddress();
@@ -78,6 +119,12 @@ class CustomerAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * Delete customer address
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $address = $request->getAddress();
@@ -89,6 +136,12 @@ class CustomerAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * Restore customer address
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $address = $request->getTrashedAddress();

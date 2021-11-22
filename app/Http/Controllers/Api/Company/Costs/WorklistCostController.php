@@ -23,13 +23,30 @@ use App\Repositories\CostRepository;
 
 class WorklistCostController extends Controller
 {
+    /**
+     * Cost Repository class container
+     * 
+     * @var
+     */
     private $cost;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\CostRepository  $cost
+     * @return void
+     */
     public function __construct(CostRepository $cost)
     {
         $this->cost = $cost;
     }
 
+    /**
+     * Populate worklist costs
+     * 
+     * @param PopulateRequest  $request
+     * @return void
+     */
     public function worklistCosts(PopulateRequest $request)
     {
         $options = $request->options();
@@ -40,6 +57,12 @@ class WorklistCostController extends Controller
         return response()->json(['costs' => $costs]);
     }
 
+    /**
+     * Store and record cost to a worklist
+     * 
+     * @param SaveRequest  $request
+     * @return void
+     */
     public function storeRecord(SaveRequest $request)
     {
         $input = $request->validated();
@@ -51,6 +74,12 @@ class WorklistCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Restore cost to a worklist
+     * 
+     * @param RecordRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function record(RecordRequest $request)
     {
         $cost = $request->getCost();
@@ -67,6 +96,12 @@ class WorklistCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Record many costs to a worklist
+     * 
+     * @param RecordManyRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function recordMany(RecordManyRequest $request)
     {
         $worklist = $request->getWorklist();
@@ -82,6 +117,12 @@ class WorklistCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Unrecord cost a from a worklist
+     * 
+     * @param UnrecordRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function unrecord(UnrecordRequest $request)
     {
         $cost = $request->getCost();
@@ -93,6 +134,12 @@ class WorklistCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Unrecord many costs from a worklist
+     * 
+     * @param UnrecordManyRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function unrecordMany(UnrecordManyRequest $request)
     {
         $worklist = $request->getWorklist();
@@ -103,6 +150,12 @@ class WorklistCostController extends Controller
         return apiResponse($this->cost);
     }
 
+    /**
+     * Remove all costs from a worklist
+     * 
+     * @param TruncateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function truncate(TruncateRequest $request)
     {
         $worklist = $request->getWorklist();

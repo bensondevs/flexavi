@@ -18,13 +18,30 @@ use App\Repositories\CompanyOwnerRepository;
 
 class OwnerController extends Controller
 {
+    /**
+     * Owner Repository Class Container
+     * 
+     * @var \App\Repositories\CompanyOwnerRepository
+     */
     private $owner;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\CompanyOwnerRepository  $owner
+     * @return void
+     */
     public function __construct(CompanyOwnerRepository $owner)
     {
         $this->owner = $owner;
     }
 
+    /**
+     * Populate company owners
+     * 
+     * @param PopulateRequest  $request
+     * @return void 
+     */
     public function companyOwners(PopulateRequest $request)
     {
         $options = $request->options();
@@ -36,6 +53,12 @@ class OwnerController extends Controller
         return response()->json(['owners' => $owners]);
     }
 
+    /**
+     * Populate company inviteable owners
+     * 
+     * @param PopulateRequest  $request
+     * @return void
+     */
     public function inviteableOwners(PopulateRequest $request)
     {
         $options = $request->options();
@@ -47,6 +70,12 @@ class OwnerController extends Controller
         return response()->json(['owners' => $owners]);
     }
 
+    /**
+     * Populate company trashed owners
+     * 
+     * @param PopulateRequest  $request
+     * @return void
+     */
     public function trashedOwners(PopoulateRequest $request)
     {
         $options = $request->options();
@@ -58,6 +87,12 @@ class OwnerController extends Controller
         return response()->json(['owners' => $owners]);
     }
 
+    /**
+     * Store company owners
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
@@ -67,6 +102,12 @@ class OwnerController extends Controller
         return apiResponse($this->owner, ['owner' => $owner]);
     }
 
+    /**
+     * View company owners
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $owner = $request->getOwner();
@@ -75,6 +116,12 @@ class OwnerController extends Controller
         return response()->json(['owner' => $owner]);
     }
 
+    /**
+     * Update company owners
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $owner = $request->getOwner();
@@ -86,6 +133,12 @@ class OwnerController extends Controller
         return apiResponse($this->owner, ['owner' => $owner]);
     }
 
+    /**
+     * Delete company owners
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $owner = $request->getTargetedOwner();
@@ -97,6 +150,12 @@ class OwnerController extends Controller
         return apiResponse($this->owner);
     }
 
+    /**
+     * Restore company owners
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $owner = $request->getTrashedOwner();

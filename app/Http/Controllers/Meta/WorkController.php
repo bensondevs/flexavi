@@ -9,8 +9,14 @@ use App\Models\Work;
 
 class WorkController extends Controller
 {
+    /**
+     * Get all work statuses
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function allStatuses()
     {
-        return response()->json(Work::collectAllStatuses());
+        $statuses = Work::collectAllStatuses();
+        return response()->json($statuses);
     }
 }

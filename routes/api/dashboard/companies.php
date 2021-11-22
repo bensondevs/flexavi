@@ -121,15 +121,6 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('unrecord_many', [WorkdayCostController::class, 'unrecordMany']);
 			Route::post('truncate', [WorkdayCostController::class, 'truncate']);
 		});
-
-		Route::group(['prefix' => 'worklists'], function () {
-			Route::get('/', [WorkdayWorklistController::class, 'workdayWorklists']);
-			Route::get('attach', [WorkdayWorklistController::class, 'attach']);
-			Route::get('attach_many', [WorkdayWorklistController::class, 'attachMany']);
-			Route::get('detach', [WorkdayWorklistController::class, 'detach']);
-			Route::get('detach_many', [WorkdayWorklistController::class, 'detachMany']);
-			Route::get('truncate', [WorkdayWorklistController::class, 'truncate']);
-		});
 	});
 
 	/*
@@ -167,6 +158,7 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::get('/', [WorklistAppointmentController::class, 'worklistAppointments']);
 			Route::post('attach', [WorklistAppointmentController::class, 'attach']);
 			Route::post('attach_many', [WorklistAppointmentController::class, 'attachMany']);
+			Route::post('move', [WorklistAppointmentController::class, 'move']);
 			Route::post('detach', [WorklistAppointmentController::class, 'detach']);
 			Route::post('detach_many', [WorklistAppointmentController::class, 'detachMany']);
 			Route::post('truncate', [WorklistAppointmentController::class, 'truncate']);

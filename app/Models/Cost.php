@@ -22,15 +22,48 @@ class Cost extends Model
     use HasRelationships;
     use HasMorphToOne;
 
+    /**
+     * Database table name
+     * 
+     * @var string
+     */
     protected $table = 'costs';
+
+    /**
+     * Table name primary key
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Set timestamp each time model is saved
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use incrementing value or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'cost_name',
     ];
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
     protected $fillable = [
         'company_id',
 
@@ -39,6 +72,13 @@ class Cost extends Model
         'paid_amount',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @return void
+     */
     protected static function boot()
     {
     	parent::boot();
@@ -48,6 +88,11 @@ class Cost extends Model
     	});
     }
 
+    /**
+     * Create attribute of `unpaid_amount` and get unpaid amount
+     * 
+     * @return double
+     */
     public function getUnpaidAmountAttribute()
     {
         $amount = $this->attributes['amount'];
@@ -59,12 +104,23 @@ class Cost extends Model
         return $amount - $paid;
     }
 
+    /**
+     * Create attribute of `is_settled` 
+     * and get status whether cost is settled or not
+     * 
+     * @return bool
+     */
     public function getIsSettledAttribute()
     {
         $unpaid = $this->getUnpaidCostAttribute();
         return $unpaid <= 0;
     }
 
+    /**
+     * Create attribute of `receipt_file` and get cost receipt path
+     * 
+     * @return string
+     */
     public function setReceiptFileAttribute($receiptFile)
     {
         $directory = 'uploads/costs/receipts/';
@@ -73,51 +129,87 @@ class Cost extends Model
         return $this->attributes['receipt_path'] = $receipt->path;
     }
 
+    /**
+     * Get all costable types as array
+     * 
+     * @return array
+     */
     public static function collectAllCostableTypes()
     {
         return CostableType::asSelectArray();
     }
 
+    /**
+     * Get company of the cost
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get appointments attached to cost
+     */
     public function appointments()
     {
         return $this->morphedByMany(Appointment::class, 'costable');
     }
 
+    /**
+     * Get first appointment attached
+     */
     public function getAppointmentAttribute()
     {
         return $this->appointments->first();
     }
 
+    /**
+     * Get list of worklists attached to the cost
+     */
     public function worklists()
     {
         return $this->morphedByMany(Worklist::class, 'costable');
     }
 
+    /**
+     * Get first attached worklist of the cost
+     * 
+     * @return \App\Models\Worklist
+     */
     public function getWorklistAttribute()
     {
-        return $this->worklists()->first();
+        return $this->worklists->first();
     }
 
+    /**
+     * Get list of attached workdays of the cost
+     */
     public function workdays()
     {
         return $this->morphedByMany(Workday::class, 'costable');
     }
 
+    /**
+     * Get first workday attached to the cost
+     * 
+     * @return \App\Models\Workday
+     */
     public function getWorkdayAttribute()
     {
-        return $this->workdays()->first();
+        return $this->workdays->first();
     }
 
+    /**
+     * Get pivot costable
+     */
     public function costables()
     {
         return $this->hasMany(Costable::class);
     }
 
+    /**
+     * Get attached receipt to the cost
+     */
     public function receipt()
     {
         return $this->morphOne(Receipt::class, 'receiptable');

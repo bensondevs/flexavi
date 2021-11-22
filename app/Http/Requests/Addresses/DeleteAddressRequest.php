@@ -27,6 +27,11 @@ class DeleteAddressRequest extends FormRequest
             Gate::allows('delete-address', [$address, $addressable]);
     }
 
+    /**
+     * Prepare input requests before validation
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $force = $this->input('force');

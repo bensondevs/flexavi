@@ -25,11 +25,23 @@ use App\Repositories\Base\BaseRepository;
 
 class AppointmentRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Appointment);
 	}
 
+	/**
+	 * Get unplanned appointments
+	 * 
+	 * @param array  $options
+	 * @param bool  $pagination
+	 * @return array
+	 */
 	public function unplanneds(array $options = [], bool $pagination = false)
 	{
 		$model = $this->getModel();
@@ -39,6 +51,12 @@ class AppointmentRepository extends BaseRepository
 		return $this->all($options, $pagination);
 	}
 
+	/**
+	 * Create or update appointment
+	 * 
+	 * @param array  $appointmentData
+	 * @return \App\Models\Appointment
+	 */
 	public function save(array $appointmentData)
 	{
 		try {
@@ -50,15 +68,18 @@ class AppointmentRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save appointment');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save appointment.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save appointment.', $error);
 		}
 
 		return $this->getModel();
 	}
 
+	/**
+	 * Execute appointment
+	 * 
+	 * @return \App\Models\Appointment
+	 */
 	public function execute()
 	{
 		try {
@@ -76,6 +97,12 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Create and attach work to appointment
+	 * 
+	 * @param array  $workData
+	 * @return \App\Models\Appointment
+	 */
 	public function addWork(array $workData)
 	{
 		try {
@@ -99,6 +126,12 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Assign employee to appointment
+	 * 
+	 * @param \App\Models\Employee  $employee
+	 * @return bool
+	 */
 	public function assignEmployee(Employee $employee)
 	{
 		try {
@@ -116,6 +149,12 @@ class AppointmentRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Unassign employee from appointment
+	 * 
+	 * @param \App\Models\AppointmentEmployee  $appointmentEmployee
+	 * @return bool
+	 */
 	public function unassignEmployee(AppointmentEmployee $appointmentEmployee)
 	{
 		try {
@@ -130,6 +169,11 @@ class AppointmentRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Process appointment
+	 * 
+	 * @return \App\Models\Appointment
+	 */
 	public function process()
 	{
 		try {
@@ -147,6 +191,12 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Cancel appointment
+	 * 
+	 * @param array  $cancelData
+	 * @return \App\Models\Appointment
+	 */
 	public function cancel(array $cancelData)
 	{
 		try {
@@ -169,6 +219,12 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Reschedule cancelled appointment
+	 * 
+	 * @param array  $rescheduleData
+	 * @return \App\Models\Appointment
+	 */
 	public function reschedule(array $rescheduleData)
 	{
 		try {
@@ -186,6 +242,43 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Move appointment from one appointmentable 
+	 * to another appointmentable
+	 * 
+	 * @param mixed  $appointmentable
+	 * @return \App\Models\Appointment
+	 */
+	public function moveTo($appointmentable)
+	{
+		try {
+			$appointment = $this->getModel();
+
+			$type = get_class($appointmentable);
+			$pivot = $appointment->appointmentables()
+				->where('appointmentable_type', $type)
+				->first();
+			if ($pivot) return $pivot->delete();
+
+			$appointmentable->appointment()->attach(
+				$appointment, 
+				['id' => generateUuid()]
+			);
+
+			$this->setSuccess('Successfully move appointment to another ' get_lower_class($appointmentable));
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to move appointment', $error);
+		}
+
+		return $this->getModel();
+	}
+
+	/**
+	 * Sync revenues of the appointment
+	 * 
+	 * @return \App\Models\Appointment
+	 */
 	public function syncRevenues()
 	{
 		try {
@@ -220,6 +313,12 @@ class AppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete appointment
+	 * 
+	 * @param bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -237,6 +336,11 @@ class AppointmentRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Restore appointment
+	 * 
+	 * @return \App\Models\Appointment
+	 */
 	public function restore()
 	{
 		try {

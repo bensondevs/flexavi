@@ -83,49 +83,85 @@ class CarRegisterTimeEmployee extends Model
     	});
     }
 
+    /**
+     * Create callable attribute of `passanger_type_description`
+     * and get the passanger type description of the enum
+     * 
+     * @return string
+     */
     public function getPassangerTypeDescriptionAttribute()
     {
         $type = $this->attributes['passanger_type'];
         return PassangerType::getDescription($type);
     }
 
+    /**
+     * Create assignable attribute of `employee` which will fill
+     * this model attribute of `employee_id` and `company_id` 
+     */
     public function setEmployeeAttribute(Employee $employee)
     {
         $this->attributes['employee_id'] = $employee->id;
         $this->attributes['company_id'] = $employee->company_id;
     }
 
+    /**
+     * Create assignable attribute of `time` which will fill
+     * this model attribute of `car_register_time_id`
+     */
     public function setTimeAttribute(CarRegisterTime $time)
     {
         $this->attributes['car_register_time_id'] = $time->id;
     }
 
+    /**
+     * Get car register time employee company 
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get car register time
+     */
     public function carRegisterTime()
     {
         return $this->belongsTo(CarRegisterTime::class);
     }
 
+    /**
+     * Get car assigned to this model
+     */
     public function car()
     {
         return $this->belongsTo(Car::class, CarRegisterTime::class);
     }
 
+    /**
+     * Get registered employee
+     */
     public function employee()
     {
         return $this->belongsTo(Employee::class);
     }
 
+    /**
+     * Set this registered employee as driver of the car
+     * 
+     * @return bool
+     */
     public function setAsDriver()
     {
         $this->attributes['passanger_type'] = PassangerType::Driver;
         return $this->save();
     }
 
+    /**
+     * Set this registered employee as passanger of the car
+     * 
+     * @return bool
+     */
     public function setAsPassanger()
     {
         $this->attributes['passanger_type'] = PassangerType::Passanger;

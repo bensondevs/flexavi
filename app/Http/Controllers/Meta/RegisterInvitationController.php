@@ -9,10 +9,14 @@ use App\Models\RegisterInvitation;
 
 class RegisterInvitationController extends Controller
 {
+    /**
+     * Get all register invitation statuses enums
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
     public function allStatuses()
     {
         $statuses = RegisterInvitation::collectAllStatuses();
-
         return response()->json($statuses);
     }
 }

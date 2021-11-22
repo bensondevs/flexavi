@@ -16,26 +16,34 @@ use App\Http\Requests\Cars\{
 use App\Http\Resources\CarResource;
 
 use App\Models\Company;
-
-use App\Repositories\{
-    CarRepository,
-    CarRegisterTime
-};
+use App\Repositories\{ CarRepository, CarRegisterTime };
 
 class CarController extends Controller
 {
     /**
-     * Repository container variable
+     * Car repository container variable
      * 
-     * @var \App\Models\Car  $car 
+     * @var \App\Models\Car
      */
     private $car;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param CarRepository  $car
+     * @return void
+     */
     public function __construct(CarRepository $car) 
     {
     	$this->car = $car;
     }
 
+    /**
+     * Populate company cars
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyCars(PopulateRequest $request)
     {
         $options = $request->options();
@@ -47,6 +55,12 @@ class CarController extends Controller
     	return response()->json(['cars' => $cars]);
     }
 
+    /**
+     * Populate company free cars
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function freeCars(PopulateRequest $request)
     {
         $options = $request->options();
@@ -58,6 +72,12 @@ class CarController extends Controller
         return response()->json(['cars' => $cars]);
     }
 
+    /**
+     * Populate company soft-deleted cars
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function trashedCars(PopulateRequest $request)
     {
         $options = $request->options();
@@ -69,6 +89,12 @@ class CarController extends Controller
         return response()->json(['cars' => $cars]);
     }
 
+    /**
+     * Store company car
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->ruleWithCompany();
@@ -77,6 +103,12 @@ class CarController extends Controller
     	return apiResponse($this->car);
     }
 
+    /**
+     * View company car
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $car = $request->getCar();
@@ -84,6 +116,12 @@ class CarController extends Controller
         return response()->json(['car' => $car]);
     }
 
+    /**
+     * Validate car insurance
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function validateInsurance(FindRequest $request)
     {
         $car = $request->getCar();
@@ -93,6 +131,12 @@ class CarController extends Controller
         return apiResponse($this->car);
     }
 
+    /**
+     * Update company car
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $car = $request->getCar();
@@ -104,6 +148,12 @@ class CarController extends Controller
     	return apiResponse($this->car);
     }
 
+    /**
+     * Set car image
+     * 
+     * @param SetImageRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function setCarImage(SetImageRequest $request)
     {
         $car = $request->getCar();
@@ -115,6 +165,12 @@ class CarController extends Controller
         return apiResponse($this->car, ['car' => $car]);
     }
 
+    /**
+     * Delete car
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(FindRequest $request)
     {
         $car = $request->getCar();
@@ -126,6 +182,12 @@ class CarController extends Controller
     	return apiResponse($this->car);
     }
 
+    /**
+     * Restore car
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $car = $request->getTrashedCar();

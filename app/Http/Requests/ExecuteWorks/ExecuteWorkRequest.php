@@ -7,16 +7,31 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
 
-use App\Models\Work;
-use App\Models\Appointment;
+use App\Models\{ Work, Appointment };
 
 class ExecuteWorkRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Work model container
+     * 
+     * @var \App\Models\Work
+     */
     private $work;
+
+    /**
+     * Appointment model container
+     * 
+     * @var \App\Models\Appointment
+     */
     private $appointment;
 
+    /**
+     * Get work based on the inputted parameter
+     * 
+     * @return \App\Models\Work
+     */
     public function getWork()
     {
         if ($this->work) return $this->work;
@@ -31,6 +46,11 @@ class ExecuteWorkRequest extends FormRequest
         return $this->work = $work;
     }
 
+    /**
+     * Get appointment based on the inputted parameter
+     * 
+     * @return \App\Models\Appointment
+     */
     public function getAppointment()
     {
         if ($this->appointment) return $this->appointment;
@@ -68,6 +88,11 @@ class ExecuteWorkRequest extends FormRequest
         return $this->returnRules();
     }
 
+    /**
+     * Collect the execution data
+     * 
+     * @return array
+     */
     public function executeData()
     {
         $input = $this->validated();

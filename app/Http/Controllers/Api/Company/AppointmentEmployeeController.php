@@ -12,22 +12,47 @@ use App\Http\Requests\Appointments\Employees\{
     UnassignAppointmentEmployeeRequest as UnassignEmployeeRequest
 };
 
-use App\Repositories\EmployeeRepository;
-use App\Repositories\AppointmentRepository;
+use App\Repositories\{ EmployeeRepository, AppointmentRepository };
 
 use App\Http\Resources\AppointmentEmployeeResource;
 
 class AppointmentEmployeeController extends Controller
 {
+    /**
+     * Employee repository class container
+     * 
+     * @var \App\Repositories\EmployeeRepository
+     */
     private $employee;
+
+    /**
+     * Appointment repository class container
+     * 
+     * @var \App\Repositories\AppointmentRepository
+     */
     private $appointment;
 
-    public function __construct(EmployeeRepository $employee, AppointmentRepository $appointment)
-    {
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\EmployeeRepository  $employee
+     * @param \App\Repositories\AppointmentRepository  $appointment
+     * @return void
+     */
+    public function __construct(
+        EmployeeRepository $employee, 
+        AppointmentRepository $appointment
+    ) {
         $this->employee = $employee;
         $this->appointment = $appointment;
     }
 
+    /**
+     * Populate appointment employees
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function appointmentEmployees(PopulateRequest $request)
     {
         $options = $request->options();
@@ -38,16 +63,12 @@ class AppointmentEmployeeController extends Controller
         return response()->json(['appointment_employees' => $appointmentEmployees]);
     }
 
-    /*public function trashedAppointmentEmployees(PopulateTrashedsRequest $request)
-    {
-        $options = $request->options();
-
-        $appointmentEmployees = $this->employee->trashedAppointmentEmployees($options, true);
-        $appointmentEmployees = AppointmentEmployeeResource::apiCollection($appointmentEmployees);
-
-        return response()->json(['appointment_employees' => $appointmentEmployees]);
-    }*/
-
+    /**
+     * Assign employee to appointment
+     * 
+     * @param AssignEmployeeRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function assignEmployee(AssignEmployeeRequest $request)
     {
         $appointment = $request->getAppointment();
@@ -59,6 +80,12 @@ class AppointmentEmployeeController extends Controller
         return apiResponse($this->appointment);
     }
 
+    /**
+     * Unassign employee from appointment
+     * 
+     * @param UnassignEmployeeRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function unassignEmployee(UnassignEmployeeRequest $request)
     {
         $appointmentEmployee = $request->getAppointmentEmployee();

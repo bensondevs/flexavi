@@ -19,13 +19,30 @@ use App\Repositories\CustomerRepository;
 
 class CustomerController extends Controller
 {
+    /**
+     * Customer Repository Class container
+     * 
+     * @var \App\Repositories\CustomerRepository
+     */
     private $customer;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\CustomerRepository  $customer
+     * @return void
+     */
     public function __construct(CustomerRepository $customer)
     {
     	$this->customer = $customer;
     }
 
+    /**
+     * Populate company customers
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function companyCustomers(PopulateRequest $request)
     {
         $options = $request->options();
@@ -37,6 +54,12 @@ class CustomerController extends Controller
     	return response()->json(['customers' => $customers]);
     }
 
+    /**
+     * Populate soft-deleted customers
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function trashedCustomers(PopulateRequest $request)
     {
         $options = $request->options();
@@ -48,6 +71,12 @@ class CustomerController extends Controller
         return response()->json(['customers' => $customers]);
     }
 
+    /**
+     * Store customer
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $input = $request->validated();
@@ -56,6 +85,12 @@ class CustomerController extends Controller
     	return apiResponse($this->customer);
     }
 
+    /**
+     * View customer
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $customer = $request->getCustomer();
@@ -66,6 +101,12 @@ class CustomerController extends Controller
         return response()->json(['customer' => $customer]);
     }
 
+    /**
+     * Update customer
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $customer = $request->getCustomer();
@@ -77,6 +118,12 @@ class CustomerController extends Controller
     	return apiResponse($this->customer);
     }
 
+    /**
+     * Delete customer
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $customer = $request->getCustomer();
@@ -88,6 +135,12 @@ class CustomerController extends Controller
     	return apiResponse($this->customer);
     }
 
+    /**
+     * Restore customer
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $customer = $request->getTrashedCustomer();

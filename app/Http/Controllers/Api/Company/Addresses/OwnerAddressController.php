@@ -19,13 +19,30 @@ use App\Repositories\AddressRepository;
 
 class OwnerAddressController extends Controller
 {
+    /**
+     * Address Repository Class Container
+     * 
+     * @var \App\Repositories\AddressRepository
+     */
     private $address;
 
+    /**
+     * Controller constructor method
+     * 
+     * @param \App\Repositories\AddressRepository  $address
+     * @return void
+     */
     public function __construct(AddressRepository $address)
     {
         $this->address = $address;
     }
 
+    /**
+     * Populate owner address
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function ownerAddresses(PopulateRequest $request)
     {
         $options = $request->ownerOptions();
@@ -36,6 +53,12 @@ class OwnerAddressController extends Controller
         return response()->json(['addresses' => $addresses]);
     }
 
+    /**
+     * Populate owner trashed addresses
+     * 
+     * @param PopulateRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function ownerTrashedAddresses(PopulateRequest $request)
     {
         $options = $request->ownerOptions();
@@ -46,6 +69,12 @@ class OwnerAddressController extends Controller
         return response()->json(['addresses' => $addresses]);
     }
 
+    /**
+     * Store owner address
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function store(SaveRequest $request)
     {
         $owner = $request->getOwner();
@@ -57,6 +86,12 @@ class OwnerAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * View owner address
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function view(FindRequest $request)
     {
         $address = $request->getAddress();
@@ -68,6 +103,12 @@ class OwnerAddressController extends Controller
         return response()->json(['address' => $address]);
     }
 
+    /**
+     * Update owner address
+     * 
+     * @param SaveRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function update(SaveRequest $request)
     {
         $address = $request->getAddress();
@@ -79,6 +120,12 @@ class OwnerAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * Delete owner address
+     * 
+     * @param DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $address = $request->getAddress();
@@ -90,6 +137,12 @@ class OwnerAddressController extends Controller
         return apiResponse($this->address);
     }
 
+    /**
+     * Restore owner address
+     * 
+     * @param RestoreRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $address = $request->getTrashedAddress();

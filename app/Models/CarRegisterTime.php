@@ -89,6 +89,15 @@ class CarRegisterTime extends Model
     	});
     }
 
+    /**
+     * Create callable method of shouldOutBetween($start, $end)
+     * And query only car_register_times which set should be out within range
+     * 
+     * @param Illuminate\Database\Eloquent\Builder  $query
+     * @param mixed  $string
+     * @param mixed  $end
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     public function scopeShouldOutBetween(Builder $query, $start, $end = null)
     {
         if ($end === null) $end = now();
@@ -97,6 +106,15 @@ class CarRegisterTime extends Model
             ->where('shoud_out_at', '<=', $end);
     }
 
+    /**
+     * Create callable method of shouldReturnBetween($start, $end)
+     * And query only car_register_times which set should be return within range
+     * 
+     * @param Illuminate\Database\Eloquent\Builder  $query
+     * @param mixed  $string
+     * @param mixed  $end
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     public function scopeShouldReturnBetween(Builder $query, $start, $end = null)
     {
         if ($end === null) $end = now();
@@ -105,6 +123,15 @@ class CarRegisterTime extends Model
             ->where('shoud_return_at', '<=', $end);
     }
 
+    /**
+     * Create callable method of markedOutBetween($start, $end)
+     * And query only car_register_times which set marked out within range
+     * 
+     * @param Illuminate\Database\Eloquent\Builder  $query
+     * @param mixed  $string
+     * @param mixed  $end
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     public function scopeMarkedOutBetween(Builder $query, $start, $end = null)
     {
         if ($end === null) $end = now();
@@ -113,16 +140,15 @@ class CarRegisterTime extends Model
             ->where('marked_out_at', '<=', $end);
     }
 
-    public function scopeMarkedOut(Builder $query)
-    {
-        return $query->whereNotNull('marked_out_at');
-    }
-
-    public function scopeMarkedReturned(Builder $query)
-    {
-        return $query->whereNotNull('marked_return_at');
-    }
-
+    /**
+     * Create callable method of markedReturnBetween($start, $end)
+     * And query only car_register_times which set marked return within range
+     * 
+     * @param Illuminate\Database\Eloquent\Builder  $query
+     * @param mixed  $string
+     * @param mixed  $end
+     * @return Illuminate\Database\Eloquent\Builder
+     */
     public function scopeMarkedReturnBetween(Builder $query, $start, $end = null)
     {
         if ($end === null) $end = now();
@@ -131,6 +157,37 @@ class CarRegisterTime extends Model
             ->where('marked_return_at', '<=', $end);
     }
 
+    /**
+     * Create callable method of markedOut() 
+     * And query only car_register_times which already marked out
+     * 
+     * @param Illuminate\Database\Eloquent\Builder  $query
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeMarkedOut(Builder $query)
+    {
+        return $query->whereNotNull('marked_out_at');
+    }
+
+    /**
+     * Create callable method of markedReturned() 
+     * And query only car_register_times which already marked returned
+     * 
+     * @param Illuminate\Database\Eloquent\Builder  $query
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeMarkedReturned(Builder $query)
+    {
+        return $query->whereNotNull('marked_return_at');
+    }
+
+    /**
+     * Create callable attribute of `is_out_early` and get
+     * whether the car_register_time is marked out earlier
+     * than the `should_be_out` column value
+     * 
+     * @return bool
+     */
     public function getIsOutEarlyAttribute()
     {
         $should = carbon($this->attributes['should_out_at']);
@@ -139,6 +196,13 @@ class CarRegisterTime extends Model
         return $marked < $should;
     }
 
+    /**
+     * Create callable attribute of `is_out_late` and get
+     * whether the car_register_time is marked out later
+     * than the `should_be_out` column value
+     * 
+     * @return bool
+     */
     public function getIsOutLateAttribute()
     {
         $should = carbon($this->attributes['should_out_at']);
@@ -147,6 +211,13 @@ class CarRegisterTime extends Model
         return $marked > $should;
     }
 
+    /**
+     * Create callable attribute of `is_return_early` and get
+     * whether the car_register_time is marked out earlier
+     * than the `should_return_at` column value
+     * 
+     * @return bool
+     */
     public function getIsReturnEarlyAttibute()
     {
         $should = carbon($this->attributes['should_return_at']);
@@ -155,6 +226,13 @@ class CarRegisterTime extends Model
         return $marked < $should;
     }
 
+    /**
+     * Create callable attribute of `is_return_late` and get
+     * whether the car_register_time is marked out later
+     * than the `should_return_at` column value
+     * 
+     * @return bool
+     */
     public function getIsReturnLateAttribute()
     {
         $should = carbon($this->attributes['should_return_at']);
@@ -163,6 +241,12 @@ class CarRegisterTime extends Model
         return $marked > $should;
     }
 
+    /**
+     * Create callable attribute of `late_out_difference` and get
+     * how much time late in minutes
+     * 
+     * @return int
+     */
     public function getLateOutDifferenceAttribute()
     {
         $should = carbon($this->attributes['should_out_at']);
@@ -171,14 +255,12 @@ class CarRegisterTime extends Model
         return $should->diffInMinutes($marked);
     }
 
-    public function getEarlyLateDifferenceAttribute()
-    {
-        $should = carbon($this->attributes['should_return_at']);
-        $marked = carbon($this->attributes['marked_return_at']);
-
-        return $marked->diffInMinutes($should);
-    }
-
+    /**
+     * Create callable attribute of `early_out_difference` and get
+     * how much time late in minutes
+     * 
+     * @return int
+     */
     public function getLateReturnDifferenceAttribute()
     {
         $should = carbon($this->attributes['should_return_at']);
@@ -187,34 +269,41 @@ class CarRegisterTime extends Model
         return $marked->diffInMinutes($should);
     }
 
-    public function getEarlyReturnDifferenceAttribute()
-    {
-        $should = carbon($this->attributes['should_return_at']);
-        $marked = carbon($this->attributes['marked_return_at']);
-
-        return $should->diffInMinutes($marked);
-    }
-
+    /**
+     * Get company of the car register time
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get worklist of the car register time
+     */
     public function worklist()
     {
         return $this->belongsTo(Worklist::class);
     }
 
+    /**
+     * Get car of the car register time
+     */
     public function car()
     {
         return $this->belongsTo(Car::class);
     }
 
+    /**
+     * Get list of assigned employees
+     */
     public function assignedEmployees()
     {
         return $this->hasMany(CarRegisterTimeEmployee::class);
     }
 
+    /**
+     * Get current driver
+     */
     public function currentDriver()
     {
         $assignedEmployees = $this->assignedEmployees();
@@ -227,10 +316,23 @@ class CarRegisterTime extends Model
             ->first();
     }
 
+    /**
+     * Get whether the registered time has driver
+     */
     public function hasDriver()
     {
         return $this->assignedEmployees()
             ->where('passanger_type', PassangerType::Driver)
             ->exists();
+    }
+
+    /**
+     * Collect all car register times passanger types
+     * 
+     * @return array
+     */
+    public static function collectAllPassangerTypes()
+    {
+        return PassangerType::asSelectArray();
     }
 }

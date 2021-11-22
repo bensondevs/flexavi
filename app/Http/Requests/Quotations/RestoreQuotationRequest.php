@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Models\Quotation;
 
-class DeleteQuotationRequest extends FormRequest
+class RestoreQuotationRequest extends FormRequest
 {
     /**
      * Target quotation model container
@@ -17,7 +17,7 @@ class DeleteQuotationRequest extends FormRequest
     private $quotation;
 
     /**
-     * Get quotation from request payload
+     * Get target quotation from the request payload
      * 
      * @return \App\Models\Quotation
      */
@@ -25,19 +25,8 @@ class DeleteQuotationRequest extends FormRequest
     {
         if ($this->quotation) return $this->quotation;
 
-        $id = $this->input('id') ?: $this->input('quotation_id');
-        return $this->quotation = Quotation::findOrFail($id);
-    }
-
-    /**
-     * Format input values before validations
-     * 
-     * @return void
-     */
-    protected function prepareForValidation()
-    {
-        $force = strtobool($this->input('force'));
-        $this->merge(['force' => $force]);
+        $id = $this->input('quotation_id') ?: $this->input('id');
+        return $this->quotation = Quotation::onlyTrashed()->findOrFail($id);
     }
 
     /**
@@ -48,7 +37,7 @@ class DeleteQuotationRequest extends FormRequest
     public function authorize()
     {
         $quotation = $this->getQuotation();
-        return Gate::allows('delete-quotation', $quotation);
+        return Gate::allows('restore-quotation', $quotation);
     }
 
     /**

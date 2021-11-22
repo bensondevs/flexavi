@@ -9,8 +9,18 @@ use App\Models\Worklist;
 
 class AttachManyAppointmentsRequest extends FormRequest
 {
+    /**
+     * Worklist Model Container
+     * 
+     * @var \App\Models\Worklist
+     */
     private $worklist;
 
+    /**
+     * Get requested worklist
+     * 
+     * @return \App\Models\Worklist 
+     */
     public function getWorklist()
     {
         if ($this->worklist) return $this->worklist;
