@@ -21,7 +21,7 @@ class Appointmentable extends Model
      * 
      * @var string
      */
-    protected $table = 'appointments';
+    protected $table = 'appointmentables';
 
     /**
      * The primary key of the model

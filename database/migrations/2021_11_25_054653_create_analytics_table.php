@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRevenuesTable extends Migration
+class CreateAnalyticsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,19 @@ class CreateRevenuesTable extends Migration
      */
     public function up()
     {
-        Schema::create('revenues', function (Blueprint $table) {
+        Schema::create('analytics', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id')->nullable();
+            $table->uuid('company_id');
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
                 ->onDelete('CASCADE');
 
-            $table->string('revenue_name');
-            $table->double('amount', 8, 2);
-            $table->double('paid_amount', 8, 2);
+            $table->tinyInteger('analytic_type')->default(1);
+            $table->date('start');
+            $table->date('end');
+            $table->json('analysis_result');
 
             $table->timestamps();
             $table->softDeletes();
@@ -38,6 +39,6 @@ class CreateRevenuesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('revenues');
+        Schema::dropIfExists('analytics');
     }
 }

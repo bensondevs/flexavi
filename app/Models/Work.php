@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;

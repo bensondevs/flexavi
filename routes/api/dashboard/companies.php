@@ -47,7 +47,8 @@ use App\Http\Controllers\Api\Company\{
 	WorkContractController,
 	ExecuteWorkController,
 		ExecuteWorkPhotoController,
-	PostItController
+	PostItController,
+	AnalyticController
 };
 
 Route::post('register', [CompanyController::class, 'register']);
@@ -553,8 +554,15 @@ Route::group(['middleware' => ['has_company']], function () {
 	/*
 		Company Register Invitation Module
 	*/
-	Route::group(['prefix' => 'register_invitations', 'as' => 'register_invitations.'], function () {
+	Route::group(['prefix' => 'register_invitations'], function () {
 		Route::post('invite_employee', [RegisterInvitationController::class, 'inviteEmployee']);
 		Route::post('invite_owner', [RegisterInvitationController::class, 'inviteOwner']);
+	});
+
+	/**
+	 * Company Analytic Module
+	 */
+	Route::group(['prefix' => 'analytics'], function () {
+		Route::get('revenue_trends', [AnalyticController::class, 'revenueTrends']);
 	});
 });

@@ -193,7 +193,7 @@ class RegisterInvitation extends Model
                 break;
             case 'employee':
                 return new Employee();
-                break
+                break;
 
             default:
                 return new Owner();
@@ -215,7 +215,7 @@ class RegisterInvitation extends Model
                 break;
             case 'employee':
                 return Employee::class;
-                break
+                break;
 
             default:
                 return Owner::class;

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
@@ -83,6 +84,22 @@ class Revenue extends Model
     	self::creating(function ($revenue) {
             $revenue->id = Uuid::generate()->string;
     	});
+    }
+
+    /**
+     * Create callable static "createdBetween" method
+     * This callable method will query only revenue that's 
+     * created between certain range of time
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param mixed  $start
+     * @param mixed  $end
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeCreatedBetween(Builder $query, $start, $end)
+    {
+        return $query->where('created_at', '>=', $start)
+            ->where('created_at', '<=', $end);
     }
 
     /**
