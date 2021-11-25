@@ -20,15 +20,48 @@ class Worklist extends Model
     use Searchable;
     use HasRelationships;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'worklists';
+
+    /**
+     * Table name primary key
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'worklist_name',
     ];
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var bool
+     */
     protected $fillable = [
         'company_id',
         'workday_id',
@@ -36,6 +69,14 @@ class Worklist extends Model
         'worklist_name',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @static
+     * @return void
+     */
     protected static function boot()
     {
     	parent::boot();
@@ -45,22 +86,45 @@ class Worklist extends Model
     	});
     }
 
+    /**
+     * Create static-callable `prepared()` method
+     * This callable method will query only worklist with status of Prepared
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopePrepared(Builder $query)
     {
         return $query->where('status', WorklistStatus::Prepared);
     }
 
+    /**
+     * Create static-callable `processed()` method.
+     * This callable method will query only worklist with status of Processed
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeProcessed(Builder $query)
     {
         return $query->where('status', WorklistStatus::Processed);
     }
 
+    /**
+     * Create callable "status_description" attribute.
+     * This callable attribute will return status description of enum value
+     * 
+     * @return string
+     */
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
         return WorklistStatus::getDescription($status);
     }
 
+    /**
+     * Create callable "start_time" attribute
+     */
     public function getStartTimeAttribute()
     {
         if (! $this->appointments->count()) {

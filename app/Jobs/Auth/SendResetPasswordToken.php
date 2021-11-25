@@ -10,20 +10,24 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
 use App\Models\User;
-
 use App\Mail\Auth\ForgotPassword;
-
 use App\Jobs\SendMail;
 
 class SendResetPasswordToken implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * Target user model container
+     * 
+     * @var \App\Models\User
+     */
     private $user;
 
     /**
      * Create a new job instance.
      *
+     * @param \App\Models\User  $user
      * @return void
      */
     public function __construct(User $user)

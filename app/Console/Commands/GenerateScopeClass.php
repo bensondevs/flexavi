@@ -76,6 +76,6 @@ class GenerateScopeClass extends Command
             return $this->error('Failed to create scope class file to folder.');
         }
 
-        return $this->info($scopeName . ' has been created successfully');
+        return $this->info('Scope has been created successfully');
     }
 }

@@ -78,11 +78,17 @@ class CarRegisterEmployee extends Model
     	});
     }
 
+    /**
+     * Get car of the registered employee
+     */
     public function car()
     {
         return $this->belongsTo(Car::class);
     }
 
+    /**
+     * Get employee of this pivot
+     */
     public function employee()
     {
         return $this->belongsTo(Employee::class);

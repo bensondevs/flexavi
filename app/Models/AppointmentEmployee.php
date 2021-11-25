@@ -75,6 +75,13 @@ class AppointmentEmployee extends Model
     	});
     }
 
+    /**
+     * Check if employee is alread attached to the appointment
+     * 
+     * @param \App\Models\Appointment  $appointment
+     * @param \App\Models\Employee  $employee
+     * @return bool
+     */
     public static function isExists(Appointment $appointment, Employee $employee)
     {
         return self::where('appointment_id', $appointment->id)
@@ -82,11 +89,17 @@ class AppointmentEmployee extends Model
             ->exists();
     }
 
+    /**
+     * Get appointment of this pivot model
+     */
     public function appointment()
     {
         return $this->belongsTo(Appointment::class);
     }
 
+    /**
+     * Get employee of this pivot model
+     */
     public function employee()
     {
         return $this->belongsTo(Employee::class);

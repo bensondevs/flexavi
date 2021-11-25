@@ -68,9 +68,11 @@ class Setting extends Model
     ];
 
     /**
-     * Function that will be run whenever event happened
-     * 
-     * @return  void
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @return void
      */
     protected static function boot()
     {
@@ -81,11 +83,24 @@ class Setting extends Model
     	});
     }
 
+    /**
+     * Get all default settings
+     * 
+     * @static
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public static function defaults()
     {
         return self::where('type', SettingType::Default)->get();
     }
 
+    /**
+     * Get company settings
+     * 
+     * @static
+     * @param \App\Models\Company  $company
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public static function ofCompany(Company $company)
     {
         $defaultSettings = self::defaults();

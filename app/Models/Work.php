@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Query\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Staudenmeir\EloquentHasManyDeep\HasRelationships;
@@ -22,11 +23,39 @@ class Work extends Model
     use SoftDeletes;
     use HasRelationships;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'works';
+
+    /**
+     * Table name primary key
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'quantity_unit',
         'description',
@@ -35,13 +64,11 @@ class Work extends Model
         'finish_note',
     ];
 
-    protected $observeables = [
-        'executed',
-        'processed', 
-        'markedFinsihed', 
-        'markedUnfinished'
-    ];
-
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var bool
+     */
     protected $fillable = [
         'status',
         'quantity',
@@ -55,10 +82,23 @@ class Work extends Model
         'revenue_recorded',
     ];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'include_tax' => 'boolean',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @static
+     * @return void
+     */
     protected static function boot()
     {
     	parent::boot();
@@ -73,31 +113,53 @@ class Work extends Model
         });
     }
 
-    public function countTotalPrice()
-    {
-        $quantity = $this->attributes['quantity'];
-        $unitPrice = $this->attributes['unit_price'];
-        $total = $quantity * $unitPrice;
-
-        return $this->attributes['total_price'] = $total;
-    }
-
-    public function scopeOnlyStatus($query, int $status)
+    /**
+     * Create callable `onlyStatus(int $status)` method
+     * This callable method will query only work with certain
+     * requested status based on the status given
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param int  $status
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOnlyStatus(Builder $query, int $status)
     {
         return $query->where('status', $status);
     }
 
-    public function scopeFinishedAt($query, Appointment $appointment)
+    /**
+     * Create static callable `finishedAt(Appointment $appointment)` method
+     * This static callable method will query only work that finished at the
+     * specified appointment.
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param \App\Models\Appointment  $appointment
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFinishedAt(Builder $query, Appointment $appointment)
     {
         return $query->where('finished_at_appointment_id', $appointment->id);
     }
 
+    /**
+     * Create callable "status_description" attribute
+     * This callable attribute will return the enum description
+     * of the work status
+     * 
+     * @return string
+     */
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
         return WorkStatus::getDescription($status);
     }
 
+    /**
+     * Create callable "unit_total" attribute
+     * This callable attribute will return the unit total of the work
+     * 
+     * @return double
+     */
     public function getUnitTotalAttribute()
     {
         $quantity = $this->attributes['quantity'];
@@ -106,6 +168,13 @@ class Work extends Model
         return $quantity * $unitPrice;
     }
 
+    /**
+     * Create callable "formatted_unit_total" attribute
+     * This callable attribute will return the currency formatted
+     * unit total of the work
+     * 
+     * @return string
+     */
     public function getFormattedUnitTotalAttribute()
     {
         $unitTotal = $this->getUnitTotalAttribute();
@@ -113,6 +182,12 @@ class Work extends Model
         return currency_format($unitTotal);
     }
 
+    /**
+     * Create callable "formatted_tax_percentage" attribute
+     * This attribute will return percentage format of tax
+     * 
+     * @return string
+     */
     public function getFormattedTaxPercentageAttribute()
     {
         $percentage = $this->attributes['tax_percentage'];
@@ -148,26 +223,62 @@ class Work extends Model
         return currency_format($totalPaid);
     }
 
+    /**
+     * Count the total price of the work
+     * The total is acquired by multiplication of quantity and unit_price
+     * 
+     * @return double
+     */
+    public function countTotalPrice()
+    {
+        $quantity = $this->attributes['quantity'];
+        $unitPrice = $this->attributes['unit_price'];
+        $total = $quantity * $unitPrice;
+
+        return $this->attributes['total_price'] = $total;
+    }
+
+    /**
+     * Get quotations of the work
+     */
     public function quotations()
     {
         return $this->morphedByMany(Quotation::class, 'workable');
     }
 
+    /**
+     * Create callable attribute of "quotation"
+     * This callable attribute will return one quotation
+     * 
+     * @return \App\Models\Quotation
+     */
     public function getQuotationAttribute()
     {
         return $this->quotations->first();
     }
 
+    /**
+     * Get appointments of work
+     */
     public function appointments()
     {
         return $this->morphedByMany(Appointment::class, 'workable');
     }
 
+    /**
+     * Create callable attribute of "appointment"
+     * This callable attribute will return one appointment
+     * 
+     * @return \App\Models\Appointment
+     */
     public function getAppointmentAttribute()
     {
         return $this->appointments->first();
     }
 
+    /**
+     * Get appointment where work is finished
+     */
     public function finishedAtAppointment()
     {
         return $this->belongsTo(
@@ -177,28 +288,49 @@ class Work extends Model
         );
     }
 
+    /**
+     * Get the execute work log
+     */
     public function executeWorks()
     {
         return $this->hasMany(ExecuteWork::class);
     }
 
+    /**
+     * Get current execution of work 
+     */
     public function currentExecuteWork()
     {
         return $this->hasOne(ExecuteWork::class)
             ->where('status', ExecuteWorkStatus::InProcess);
     }
 
+    /**
+     * Get revenueable type of this work
+     */
     public function revenueable()
     {
         return $this->morphOne(Revenueable::class, 'revenueable')
             ->oldestOfMany();
     }
 
+    /**
+     * Collect all possible statuses of work
+     * 
+     * @static
+     * @return array
+     */
     public static function collectAllStatuses()
     {
         return WorkStatus::asSelectArray();
     }
 
+    /**
+     * Execute the work by appointment
+     * 
+     * @param \App\Models\Appointment  $appointment
+     * @return bool
+     */
     public function execute(Appointment $appointment)
     {
         $this->attributes['status'] = WorkStatus::InProcess;
@@ -207,6 +339,12 @@ class Work extends Model
         return $execute;
     }
 
+    /**
+     * Attach revenue to the work
+     * 
+     * @param mixed  $revenue
+     * @return bool
+     */
     public function attachRevenue($revenue)
     {
         $revenueable = new Revenueable();
@@ -217,6 +355,14 @@ class Work extends Model
         return $revenueable->save();
     }
 
+    /**
+     * Mark work as finished. To mark the work as finished
+     * need to assign the work at certain appointment and give optional finish note
+     * 
+     * @param App\Models\Appointment  $appointment
+     * @param string  $finishNote
+     * @return bool
+     */
     public function markFinished(Appointment $appointment, string $finishNote = '')
     {
         $this->attributes['status'] = WorkStatus::Finished;
@@ -230,6 +376,12 @@ class Work extends Model
         return $markFinsih;
     }
 
+    /**
+     * Mark work as unfinished to continue work at another day.
+     * 
+     * @param string  $unfinishNote
+     * @return bool
+     */
     public function markUnfinished(string $unfinishNote = '')
     {
         $this->attributes['status'] = WorkStatus::Unfinished;
@@ -242,16 +394,30 @@ class Work extends Model
         return $markUnfinish;
     }
 
+    /**
+     * Mark revenue of work as recorded.
+     * When the revenue is recorded, this will prevent multiple recording of revenue.
+     * 
+     * @return bool
+     */
     public function markRevenueRecorded()
     {
-        if (! $this->attributes['revenue_recorded']) {
-            $this->attributes['revenue_recorded'] = true;
-        }
+        $this->attributes['revenue_recorded'] = true;
         return $this->save();
     }
 
+    /**
+     * Unmark revenue of work.
+     * If work has recorded pivot table of revenueable, this method will delete it
+     * 
+     * @return bool
+     */
     public function unmarkRevenueRecorded()
     {
+        if ($revenueable = $this->revenueable) {
+            $revenueable->delete();
+        }
+
         $this->attributes['revenue_recorded'] = false;
         return $this->save();
     }

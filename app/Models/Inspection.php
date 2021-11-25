@@ -15,11 +15,41 @@ class Inspection extends Model
     use Searchable;
     use SoftDeletes;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'inspections';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * A collection of inspection questions
+     * By these questions, 
+     * it's decideable to generate the condition of the inspection
+     * 
+     * @var array
+     */
     const QUESTIONS = [
         // First phase question
         [
@@ -90,6 +120,11 @@ class Inspection extends Model
         ],
     ];
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'sidenote',
     ];

@@ -16,11 +16,8 @@ use App\Traits\Searchable;
 use Znck\Eloquent\Traits\BelongsToThrough;
 
 use App\Models\EmailVerification;
-
 use App\Repositories\AuthRepository;
-
 use App\Observers\UserObserver;
-
 use App\Enums\User\UserIdCardType;
 
 class User extends Authenticatable
@@ -33,11 +30,39 @@ class User extends Authenticatable
     use Notifiable;
     use BelongsToThrough;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'users';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'fullname',
         'id_card_number',
@@ -89,6 +114,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @static
+     * @return void
+     */
     protected static function boot()
     {
         parent::boot();
@@ -100,68 +133,113 @@ class User extends Authenticatable
         });
     }
 
+    /**
+     * Create callable "id_card_type_description" attribute
+     * This callable attribute return the enum description of
+     * ID Card Type
+     * 
+     * @return string
+     */
     public function getIdCardTypeDescriptionAttribute()
     {
         $type = $this->attributes['id_card_type'];
         return UserIdCardType::getDescription($type);
     }
 
+    /**
+     * Get user addresses
+     */
     public function addresses()
     {
         return $this->hasMany(Address::class);
     }
 
+    /**
+     * Get user owner model
+     */
     public function owner()
     {
         return $this->hasOne(Owner::class);
     }
 
+    /**
+     * Get user employee model
+     */
     public function employee()
     {
         return $this->hasOne(Employee::class);
     }
 
+    /**
+     * Get company of the user
+     * 
+     * @return \App\Models\Company
+     */
     public function getCompanyAttribute()
     {
-        if ($this->hasRole('owner')) {
-            $role = $this->owner;
-        } else if ($this->hasRole('employee')) {
-            $role = $this->employee;
+        switch (true) {
+            case $this->hasRole('owner'):
+                $role = $this->owner;
+                break;
+            case $this->hasRole('employee'):
+                $role = $this->employee;
+                break;
+            
+            default:
+                $role = $this->owner;
+                break;
         }
 
-        return $role->company;
+        return $this->company = $role->company;
     }
 
+    /**
+     * Get register invitation of user
+     */
     public function register_invitation()
     {
-        return $this->belongsTo(RegisterInvitation::class, 'registration_code', 'registration_code');
+        $class = RegisterInvitation::class;
+        $code = 'registration_code';
+        return $this->belongsTo($class, $code, $code);
     }
 
+    /**
+     * Alias of register_invitation() method
+     */
     public function registerInvitation()
     {
         return $this->register_invitation();
     }
 
+    /**
+     * Reset password token of the user
+     */
     public function resetPasswordToken()
     {
         return $this->hasOne(PasswordReset::class, 'email', 'email');
     }
 
-    public static function findByEmail(string $email)
+    /**
+     * Create settable "unhashed_password" attribute.
+     * This settable attribute will allow password assignation
+     * with encryption before delivered to database
+     * 
+     * @param string  $password
+     * @return void
+     */
+    public function setUnhashedPasswordAttribute(string $password)
     {
-        return self::where('email', $email)->first();
+        $this->attributes['password'] = bcrypt($password);
     }
 
-    public static function findByEmailOrFail(string $email)
-    {
-        return self::where('email', $email)->firstOrFail();
-    }
-
-    public function setUnhashedPasswordAttribute(string $value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
+    /**
+     * Create settable "profile_picture" attribute.
+     * This settable attribute will allow uploading image and record the
+     * path where image uploaded to column of "profile_picture_path"
+     * 
+     * @param mixed  $imageFile
+     * @return void
+     */
     public function setProfilePictureAttribute($imageFile)
     {
         $path = 'uploads/users/profile_pictures/';
@@ -170,12 +248,29 @@ class User extends Authenticatable
         $this->attributes['profile_picture_path'] = $image->path;
     }
 
+    /**
+     * Create callable "profile_picture_url" attribute.
+     * This callable attribute will return url where profile picture
+     * can be accessed through browser or as downloadable resource
+     * 
+     * @return string
+     */
     public function getProfilePictureUrlAttribute()
     {
-        return Storage::url($this->attributes['profile_picture_path']);
+        $path = $this->attributes['profile_picture_path'];
+        return Storage::url($path);
     }
 
-    public function setProfilePictureUrlAttribute($pictureUrl)
+    /**
+     * Create settable "profile_pictire_url" attribute.
+     * This settable attribute will execute image download from inserted url
+     * and save it into the storage. After that, this will record the
+     * path to the file into the column of "profile_picture_path"
+     * 
+     * @param string  $pictureUrl
+     * @return void
+     */
+    public function setProfilePictureUrlAttribute(string $pictureUrl)
     {
         // Prepare content and name
         $tmp = explode('/', $pictureUrl);
@@ -191,6 +286,12 @@ class User extends Authenticatable
         $this->attributes['profile_picture_path'] = $picturePath;
     }
 
+    /**
+     * Create callable "user_role" attribute
+     * This callable attribute will return the role name of the user
+     * 
+     * @return string
+     */
     public function getUserRoleAttribute()
     {
         $role = $this->roles->first();
@@ -199,34 +300,72 @@ class User extends Authenticatable
         return $roleName;
     }
 
+    /**
+     * Create callable "role_model" attribute
+     * This callable attribute will return the laravel role model
+     * attached to user
+     * 
+     * @return mixed
+     */
     public function getRoleModelAttribute()
     {
         $roleName = $this->getUserRoleAttribute() ?: 'owner';
         return $this->{$roleName};
     }
 
+    /**
+     * Create callable "phone_verified_status" attribute
+     * This callable attribute will return the boolean status
+     * of the phone verification
+     * 
+     * @return bool
+     */
     public function getPhoneVerifiedStatusAttribute()
     {
         $verifiedAt = $this->attributes['phone_verified_at'];
         return (bool) $verifiedAt;
     }
 
+    /**
+     * Create callable "email_verified_status" attribute
+     * This callable attribute will return the boolean status
+     * of the email verification
+     * 
+     * @return bool
+     */
     public function getEmailVerifiedStatusAttribute()
     {
         $verifiedAt = $this->attributes['email_verified_at'];
         return (bool) $verifiedAt;
     }
 
+    /**
+     * Generate authentication token API for user
+     * The generated token will be used in request header of
+     * API request in all authenticated routes.
+     * 
+     * If the user has active token already, then this method
+     * will destroy old token and give new token.
+     *  
+     * @return string
+     */
     public function generateToken()
     {
         // Delete old tokens
         $this->tokens()->delete();
 
         // Create Token
-        $plainTextToken = $this->createToken(time())->plainTextToken;
-        return $this->token = $plainTextToken;
+        $token = $this->createToken(time())->plainTextToken;
+        return $this->token = $token;
     }
 
+    /**
+     * Generate reset password token.
+     * This reset password token will be used in user forgot password.
+     * This method will return the PasswordReset model
+     * 
+     * @return \App\Models\PasswordReset
+     */
     public function generateResetPasswordToken()
     {
         return $this->resetPasswordToken = PasswordReset::create([
@@ -236,6 +375,11 @@ class User extends Authenticatable
         ]);
     }
 
+    /**
+     * Create email verification and send to user
+     * 
+     * @return \App\Models\EmailVerification
+     */
     public function createEmailVerification()
     {
         $verification = new EmailVerification();
@@ -281,14 +425,24 @@ class User extends Authenticatable
         return UserIdCardType::asSelectArray();
     }
 
+    public static function checkEmailUsed(string $email)
+    {
+        return self::where('email', $email)->exists();
+    }
+
+    public static function findByEmail(string $email)
+    {
+        return self::where('email', $email)->first();
+    }
+
     public static function findBySocialId(string $driver, string $id)
     {
         return self::where($driver . '_id', $id)->first();
     }
 
-    public static function checkEmailUsed($email)
+    public static function findByEmailOrFail(string $email)
     {
-        return self::where('email', $email)->count() > 0;
+        return self::where('email', $email)->firstOrFail();
     }
 
     public function sendEmailVerification()

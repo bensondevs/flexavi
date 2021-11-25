@@ -94,6 +94,11 @@ class Appointment extends Model
         'note',
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
     protected $casts = [
         'worklists.appointmentables.id' => 'string',
 
@@ -104,7 +109,10 @@ class Appointment extends Model
 
     /**
      * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
      *
+     * @static
      * @return void
      */
     protected static function boot()
@@ -120,7 +128,8 @@ class Appointment extends Model
      * Add query only populate appointments with specified Status
      * 
      * @param \Illuminate\Database\Eloquent\Builder  $query
-     * @return Illuminate\Database\Eloquent\Builder  $query
+     * @param int  $status
+     * @return \Illuminate\Database\Eloquent\Builder  $query
      */
     public function scopeWhereStatus(int $status)
     {
@@ -262,6 +271,7 @@ class Appointment extends Model
     /**
      * Get all possible appointment cancellation vaults based on the enum
      * 
+     * @static
      * @return array
      */
     public static function collectAllCancellationVaults()

@@ -12,8 +12,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Observers\SubAppointmentObserver;
 
 use App\Enums\SubAppointment\{
-    SubAppointmentStatus,
-    SubAppointmentCancellationVault
+    SubAppointmentStatus as Status,
+    SubAppointmentCancellationVault as CancellationVault
 };
 
 class SubAppointment extends Model
@@ -22,11 +22,39 @@ class SubAppointment extends Model
     use Searchable;
     use SoftDeletes;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'sub_appointments';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
     protected $fillable = [
         'company_id',
         'appointment_id',
@@ -43,10 +71,14 @@ class SubAppointment extends Model
         'cancellation_note',
     ];
 
-    protected $hidden = [
-        
-    ];
-
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @static
+     * @return void
+     */
     protected static function boot()
     {
     	parent::boot();
@@ -57,71 +89,101 @@ class SubAppointment extends Model
     	});
     }
 
+    /**
+     * Collect all possible sub appointment cancellation vaults
+     * 
+     * @return array
+     */
     public static function collectAllCancellationVaults()
     {
-        return SubAppointmentStatus::asSelectArray();
+        return Status::asSelectArray();
     }
 
+    /**
+     * Collect all possible sub appointment statuses
+     * 
+     * @return array
+     */
     public static function collectAllStatuses()
     {
-        return SubAppointmentStatus::asSelectArray();
+        return Status::asSelectArray();
     }
 
+    /**
+     * Create callable "status_description" attribute
+     * This callable attribute will return status enum description
+     * 
+     * @return string
+     */
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
-        return SubAppointmentStatus::getDescription($status);
+        return Status::getDescription($status);
     }
 
+    /**
+     * Create callable "cancellation_vault_description" attribute
+     * This callable attribute will return cancellation vault 
+     * enum description
+     * 
+     * @return string
+     */
     public function getCancellationVaultDescriptionAttribute()
     {
         $vault = $this->attributes['cancellation_vault'];
-        return SubAppointmentCancellationVault::getDescription($vault);
+        return CancellationVault::getDescription($vault);
     }
 
+    /**
+     * Get appointment parent of this sub appointment
+     */
     public function appointment()
     {
         return $this->belongsTo(Appointment::class);
     }
 
+    /**
+     * Get continued previous sub appointment
+     */
     public function previousSubAppointment()
     {
         return $this->belongsTo(self::class, 'previous_sub_appointment_id');
     }
 
+    /**
+     * Rescheduled sub appointment by this sub appointment 
+     */
     public function rescheduledSubAppointment()
     {
         return $this->belongsTo(self::class, 'next_sub_appointment_id');
     }
 
+    /**
+     * Get company parent of sub appointment
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get sub appointment works
+     */
     public function works()
     {
         return $this->morphToMany(Work::class, 'workable');
     }
 
-    public function isLate()
-    {
-        $end = carbon()->parse($this->attributes['end']);
-        $now = carbon()->now();
-        return ($now > $end);
-    }
-
-    public function isOnTime()
-    {
-        $end = carbon()->parse($this->attributes['end']);
-        $now = carbon()->now();
-        return ($now < $end);
-    }
-
+    /**
+     * Cancel sub appointment
+     * 
+     * @param array  $cancellationData
+     * @return bool
+     */
     public function cancel(array $cancellationData = [])
     {
         $this->fill($cancellationData);
-        $this->attributes['status'] = SubAppointmentStatus::Cancelled;
+        $this->attributes['status'] = Status::Cancelled;
         $this->attributes['cancelled_at'] = now();
         $cancel = $this->save();
 
@@ -130,9 +192,14 @@ class SubAppointment extends Model
         return $cancel;
     }
 
+    /**
+     * Execute sub appointment
+     * 
+     * @return bool
+     */
     public function execute()
     {
-        $this->attributes['status'] = SubAppointmentStatus::InProcess;
+        $this->attributes['status'] = Status::InProcess;
         $this->attributes['in_process_at'] = now();
         $execute = $this->save();
 
@@ -141,9 +208,14 @@ class SubAppointment extends Model
         return $execute;
     }
 
+    /**
+     * Process sub appointment
+     * 
+     * @return bool
+     */
     public function process()
     {
-        $this->attributes['status'] = SubAppointmentStatus::Processed;
+        $this->attributes['status'] = Status::Processed;
         $this->attributes['processed_at'] = now();
         $processed = $this->save();
 

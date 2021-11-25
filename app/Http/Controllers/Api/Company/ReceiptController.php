@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Receipts\PopulateCompanyReceiptsRequest as PopulateRequest;
-use App\Http\Requests\Receipts\SaveReceiptRequest as SaveRequest;
-use App\Http\Requests\Receipts\DeleteReceiptRequest as DeleteRequest;
-use App\Http\Requests\Receipts\RestoreReceiptRequest as RestoreRequest;
+use App\Http\Requests\Receipts\{
+    PopulateCompanyReceiptsRequest as PopulateRequest,
+    SaveReceiptRequest as SaveRequest,
+    DeleteReceiptRequest as DeleteRequest,
+    RestoreReceiptRequest as RestoreRequest
+};
 
 use App\Http\Resources\ReceiptResource;
 

@@ -15,15 +15,39 @@ class Revenueable extends Model
     use SoftDeletes;
     use Searchable;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'revenueables';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
-    protected $searchable = [
-
-    ];
-
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
     protected $fillable = [
         'revenue_id',
 
@@ -31,6 +55,14 @@ class Revenueable extends Model
         'revenueable_id',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @static
+     * @return void
+     */
     protected static function boot()
     {
     	parent::boot();
@@ -40,11 +72,17 @@ class Revenueable extends Model
     	});
     }
 
+    /**
+     * Get revenue connected through this model pivot
+     */
     public function revenue()
     {
         return $this->belongsTo(Revenue::class);
     }
 
+    /**
+     * Get revenueable model connected through this model
+     */
     public function revenueable()
     {
         return $this->morphTo();

@@ -15,10 +15,40 @@ use App\Scopes\IndexOrderedScope;
 class Appointmentable extends Model
 {
     use HasFactory;
+
+    /**
+     * The table name
+     * 
+     * @var string
+     */
+    protected $table = 'appointments';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
     protected $fillable = [
         'order_index',
 
@@ -29,6 +59,13 @@ class Appointmentable extends Model
         'appointment_id',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @return void
+     */
     public static function boot()
     {
         parent::boot();
@@ -41,7 +78,8 @@ class Appointmentable extends Model
     }
 
     /**
-     * The "booted" method of the model.
+     * The "booted" method of the model. 
+     * This method will handle scope declaration
      *
      * @return void
      */
@@ -50,44 +88,84 @@ class Appointmentable extends Model
         static::addGlobalScope(new IndexOrderedScope);
     }
 
+    /**
+     * Create callable method sublingsOf()
+     * This method will query another appointmentable pivot 
+     * for certain appointmentable model
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param mixed  $appointmentable
+     * @return \Illuminate\Database\Eloquent\Builder  $query
+     */
     public function scopeSiblingsOf(Builder $query, $appointmentable)
     {
         return $query->where('appointmentable_id', $appointmentable->appointmentable_id)
             ->where('appointmentable_type', $appointmentable->appointmentable_type);
     }
 
+    /**
+     * Get appointmentable pivot company
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get appointment of the appointment pivot 
+     */
     public function appointment()
     {
         return $this->belongsTo(Appointment::class);
     }
 
+    /**
+     * Get appointmentable model if its worklist
+     */
     public function worklist()
     {
         return $this->morphTo(Worklist::class, 'appointmentable');
     }
 
+    /**
+     * Get appointmentable model if its workday
+     */
     public function workday()
     {
         return $this->morphTo(Workday::class, 'appointmentable');
     }
 
+    /**
+     * Set order index.
+     * This function is to set the order index for the appointment
+     * For an example to put a certain appointment to first order in worklist
+     * 
+     * @return int
+     */
     public function setOrderIndex()
     {
         $index = self::siblingsOf($this)->count() + 1;
         return $this->attributes['order_index'] = $index;
     }
 
+    /**
+     * Move order index to certain index
+     * 
+     * @param int  $targetIndex
+     * @return void
+     */
     public function moveOrderIndex(int $targetIndex)
     {
         $appointmentables = self::siblingsOf($this)->get();
         $currentIndex = $this->attributes['order_index'];
     }
 
+    /**
+     * Massive reorder index
+     * This will fix missing index in between a set of order
+     * 
+     * @return void
+     */
     public function reorderIndex()
     {
         $appointmentables = self::siblingsOf($this)->get();
@@ -99,6 +177,14 @@ class Appointmentable extends Model
         }
     }
 
+    /**
+     * Get if a certain appointment is already 
+     * attached to a certain appointmentable
+     * 
+     * @param \App\Models\Appointment  $appointment
+     * @param Illuminate\Database\Eloquent\Model|mixed  $appointmentable
+     * @return \App\Models\Appointmentable 
+     */
     public function isAlreadyAttached(Appointment $appointment, $appointmentable)
     {
         $appointmentableType = get_class($appointmentable);
@@ -109,6 +195,12 @@ class Appointmentable extends Model
             ->count() > 1;
     }
 
+    /**
+     * Attach many appointment to a certain appointmentable
+     * 
+     * @param Illuminate\Database\Eloquent\Model|mixed  $appointmentable
+     * @return bool
+     */
     public static function attachMany($appointmentable, $appointmentIds)
     {
         $type = get_class($appointmentable);

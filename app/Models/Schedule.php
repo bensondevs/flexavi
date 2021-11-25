@@ -42,18 +42,12 @@ class Schedule extends Model
 
     public function employee()
     {
-        return $this->hasManyThrough(
-            Employee::class,
-            ScheduleEmployee::class
-        );
+        return $this->hasManyThrough(Employee::class, ScheduleEmployee::class);
     }
 
     public function car()
     {
-        return $this->hasManyThrough(
-            Car::class,
-            ScheduleCar::class
-        );
+        return $this->hasManyThrough(Car::class, ScheduleCar::class);
     }
 
     public function company()

@@ -329,6 +329,7 @@ class CarRegisterTime extends Model
     /**
      * Collect all car register times passanger types
      * 
+     * @static
      * @return array
      */
     public static function collectAllPassangerTypes()

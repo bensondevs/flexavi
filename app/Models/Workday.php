@@ -22,21 +22,62 @@ class Workday extends Model
     use Searchable;
     use HasRelationships;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'workdays';
+
+    /**
+     * The primary key of the model
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
     protected $searchable = [
         'date',
     ];
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
     protected $fillable = [
         'company_id',
         'date',
         'status',
     ];
 
+    /**
+     * Perform any actions required before the model boots.
+     * This is where observer should be put.
+     * Any events and listener logic can be added in this method
+     *
+     * @static
+     * @return void
+     */
     protected static function boot()
     {
     	parent::boot();
@@ -47,11 +88,24 @@ class Workday extends Model
     	});
     }
 
+    /**
+     * Create static callable `whereCompany(string $id)` method
+     * This callable method will query only workday for a certain company
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param string  $id
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
     public function scopeWhereCompany(Builder $query, string $id)
     {
         return $query->where('company_id', $id);
     }
 
+    /**
+     * Create static callable `inAppointmentRange(Appointment $appointment)` method
+     * This callable static method will query workdays in between start and end of
+     * a certain appointment
+     */
     public function scopeInAppointmentRange(Builder $query, Appointment $appointment)
     {
         $start = $appointment->start;
@@ -61,6 +115,13 @@ class Workday extends Model
             ->whereBetween('date', [$start, $end]);
     }
 
+    /**
+     * Create callable attribute of "status_description"
+     * This callable attribute will return status description
+     * by enum value given in status
+     * 
+     * @return string
+     */
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];

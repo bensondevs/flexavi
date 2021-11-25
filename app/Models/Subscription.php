@@ -27,10 +27,6 @@ class Subscription extends Model
         'subscription_end',
     ];
 
-    protected $hidden = [
-        
-    ];
-
     protected static function boot()
     {
     	parent::boot();

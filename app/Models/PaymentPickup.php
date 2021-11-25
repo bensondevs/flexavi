@@ -15,17 +15,41 @@ class PaymentPickup extends Model
     use Searchable;
     use SoftDeletes;
 
+    /**
+     * The table name
+     * 
+     * @var string
+     */
     protected $table = 'payment_pickups';
+
+    /**
+     * Table name primary key
+     * 
+     * @var string
+     */
     protected $primaryKey = 'id';
+
+    /**
+     * Timestamp recording
+     * 
+     * @var bool
+     */
     public $timestamps = true;
+
+    /**
+     * Set whether primary key use increment or not
+     * 
+     * @var bool
+     */
     public $incrementing = false;
 
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var bool
+     */
     protected $fillable = [
-
-    ];
-
-    protected $hidden = [
-        
+        //
     ];
 
     protected static function boot()
