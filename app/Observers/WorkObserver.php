@@ -3,9 +3,7 @@
 namespace App\Observers;
 
 use App\Models\Work;
-
 use App\Enums\Work\WorkStatus;
-
 use App\Repositories\RevenueRepository;
 
 class WorkObserver

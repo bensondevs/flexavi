@@ -375,6 +375,14 @@ class Appointment extends Model
     }
 
     /**
+     * Get payment pickup happen inside this appointment
+     */
+    public function paymentPickup()
+    {
+        return $this->hasOne(PaymentPickup::class);
+    }
+
+    /**
      * Get the appointment payment reminder
      */
     public function paymentReminder()

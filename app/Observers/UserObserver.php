@@ -2,10 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\User;
-use App\Models\StorageFile;
-
 use App\Repositories\AuthRepository;
+use App\Models\{ User, StorageFile };
 
 class UserObserver
 {

@@ -29,33 +29,14 @@ class AnalyticController extends Controller
     /**
      * Revenue and turnover trends
      * 
-     * @param Illuminate\Http\Request  $request
      * @return Illuminate\Support\Facades\Response
      */
-    public function revenueTrends(Request $request)
+    public function revenueTrends()
     {
-        if ($type = $request->input('type')) {
-            switch (true) {
-                case $type == 'last_week':
-                    // code...
-                    break;
-                
-                case $type == 'last_month':
-
-                    break;
-
-                default:
-                    $type = 'last_week';
-                    break;
-            }
-        }
-
-        if ($request->has('start') && $request->has('end')) {
-            //
-        }
-
-        $revenueTrends = $this->analytic->revenueTrends();
-        return response()->json(['chart_data' => $revenueTrends]);
+        $revenues = $this->analytic
+            ->guessDateRange() // This will guess date range
+            ->revenueTrends(); // Populate the revenue trends
+        return response()->json(['revenues' => $revenues]);
     }
 
     /**
@@ -65,7 +46,10 @@ class AnalyticController extends Controller
      */
     public function costTrends()
     {
-        //
+        $costs = $this->analytic
+            ->guessDateRange()
+            ->costTrends();
+        return response()->json(['costs' => $costs]);
     }
 
     /**

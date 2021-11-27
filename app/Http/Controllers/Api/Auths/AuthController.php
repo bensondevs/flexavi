@@ -90,6 +90,8 @@ class AuthController extends Controller
             $user = new UserResource($user);
         }
 
+        $user->recordActivity('')
+
     	return apiResponse($this->auth, ['user' => $user]); 
     }
 

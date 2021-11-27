@@ -9,14 +9,14 @@ class ChartJsModel extends ChartModel
 	 * 
 	 * @var array
 	 */
-	public $chartDatasets;
+	public $chartDatasets = [];
 
 	/**
 	 * Array of chart labels
 	 * 
 	 * @var array
 	 */
-	public $chartLabels;
+	public $chartLabels = [];
 
 	/**
 	 * Add label to the chart
@@ -24,7 +24,7 @@ class ChartJsModel extends ChartModel
 	 * @param string  $label
 	 * @return void
 	 */
-	public function addLabel(string $label)
+	public function addChartLabel(string $label)
 	{
 		array_push($this->chartLabels, $label);
 	}
@@ -41,6 +41,16 @@ class ChartJsModel extends ChartModel
 	}
 
 	/**
+	 * Get chart labels
+	 * 
+	 * @return array
+	 */
+	public function getChartLabels()
+	{
+		return $this->chartLabels;
+	}
+
+	/**
 	 * Remove label from the chart
 	 * 
 	 * @param int|string  $target
@@ -49,8 +59,9 @@ class ChartJsModel extends ChartModel
 	public function removeLabel($target)
 	{
 		if (is_int($target)) {
-			isset($this->chartLabels[$target]) ? 
-				unset($this->chartLabels[$target]) : null;
+			if (isset($this->chartLabels[$target])) {
+				unset($this->chartLabels[$target]);
+			}
 
 			return true;
 		}
@@ -90,11 +101,11 @@ class ChartJsModel extends ChartModel
 		string $borderColor = null, 
 		string $bgColor = null
 	) {
-		array_push($this->chartData, [
+		array_push($this->chartDatasets, [
 			'label' => $label,
 			'data' => $datasetData,
-			'borderColor' => $borderColor,
-			'backgroundColor' => $bgColor,
+			'borderColor' => $borderColor ?: random_hex_color(),
+			'backgroundColor' => $bgColor ?: random_hex_color(),
 		]);
 	}
 
@@ -105,6 +116,6 @@ class ChartJsModel extends ChartModel
 	 */
 	public function generateChartData()
 	{
-		return $this->chartData;
+		return $this->chartDatasets;
 	}
 }

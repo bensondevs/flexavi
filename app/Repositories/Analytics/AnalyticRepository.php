@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\{ Revenue, Cost, Analytic };
+use App\Enums\Analytic\AnalyticType;
 use App\Repositories\Analytics\Models\{
 	ApexChartModel, ChartJsModel
 };
@@ -59,6 +60,7 @@ class AnalyticRepository extends BaseRepository
 	public function __construct($start = null, $end = null)
 	{
 		$this->groupBy = 'month';
+		$this->chartModel = new ChartJsModel;
 		$this->setStart($start ?: now()->copy()->addMonth(-3));
 		$this->setEnd(now()->copy());
 	}
@@ -151,7 +153,7 @@ class AnalyticRepository extends BaseRepository
 	/**
 	 * Set timeframe to last 90 days until now
 	 * 
-	 * @return void
+	 * @return $this
 	 */
 	public function currentQuarter()
 	{
@@ -165,7 +167,7 @@ class AnalyticRepository extends BaseRepository
 	/**
 	 * Set timeframe from start of quarter until now
 	 * 
-	 * @return void
+	 * @return $this
 	 */
 	public function sinceLastTrimester()
 	{
@@ -178,76 +180,127 @@ class AnalyticRepository extends BaseRepository
 	/**
 	 * Set timeframe from start of semester till now
 	 * 
-	 * @return void
+	 * @return $this
 	 */
 	public function currentSemester()
 	{
 		$semesterStart = now()->copy()->startOfYear()->addMonth(6);
 		$this->setStart($semesterStart);
 		$this->setEnd(now());
+
+		return $this;
 	}
 
 	/**
 	 * Set timeframe to last year
 	 * 
-	 * @return void
+	 * @return $this
 	 */
 	public function sinceLastYear()
 	{
 		$this->setStart(now()->copy()->subYear()->startOfDay());
 		$this->setEnd(now());
+
+		return $this;
 	}
 
 	/**
-	 * Create the query groupper for model query select
+	 * Guess the date range by calling input from request helper
 	 * 
-	 * @param string  $column
-	 * @return Illuminate\Support\Facades\DB
+	 * @return $this
 	 */
-	public function createQueryGroupper(string $column)
+	public function guessDateRange()
 	{
-		if ($this->groupBy == 'month') {
-			return \DB::raw('MONTH(created_at) as month');
-		} else if ($this->groupBy == 'year') {
-			\DB::raw('YEAR(created_at) as year');
+		if (request()->has('start') && request()->has('end')) {
+			$this->setStart(request()->input('start'));
+			$this->setEnd(request()->input('end'));
 		}
 
-		return \DB::raw('DAY(created_at) as day');
+		switch (request()->input('type')) {
+			case 'last_week':
+				return $this->sinceLastWeek();
+				break;
+			case 'last_two_weeks':
+				return $this->sinceTwoWeeksAgo();
+				break;
+			case 'last_couple_weeks':
+				return $this->sinceTwoWeeksAgo();
+				break;
+			case 'last_month':
+				return $this->sinceLastMonth();
+				break;
+			case 'current_month':
+				return $this->sinceLastMonth();
+				break;
+			case 'current_quarter':
+				return $this->currentQuarter();
+				break;
+			case '90_days':
+				return $this->currentQuarter();
+				break;
+			case 'last_trimester':
+				return $this->sinceLastTrimester();
+				break;
+			case 'current_semester':
+				return $this->currentSemester();
+				break;
+			case 'last_year':
+				return $this->sinceLastYear();
+				break;
+			
+			default:
+				return $this->sinceLastWeek();
+				break;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Save result to database
+	 * 
+	 * @param array  $result
+	 * @return \App\Models\Analytic
+	 */
+	private function saveResult(array $result)
+	{
+		$analytic = new Analytic([
+			'company_id' => auth()->user()->company->id,
+			'start' => $this->start,
+			'end' => $this->end,
+		]);
+		$analytic->analysis_result = $result;
+		$analytic->save();
+
+		return $analytic;
 	}
 
 	/**
 	 * Analyze revenue and prepare data to be modelled
 	 * 
+	 * @param bool  $forceRecount
 	 * @return array
 	 */
-	public function revenueTrends()
+	public function revenueTrends(bool $forceRecount = false)
 	{
-		$start = $this->start;
-		$end = $this->end;
-		$existingAnalytic = Analytic::revenueTrends()
-			->whereStart($start)
-			->whereEnd($end)
+		$analytic = Analytic::revenueTrends()
+			->whereDate('start', $this->start)
+			->whereDate('end', $this->end)
 			->first();
-		if ($existingAnalytic) {
-			return $existingAnalytic->analysis_result;
+		if ((! $analytic) || $forceRecount) {
+			$revenues = Revenue::selectRaw('SUM(amount) AS total, MONTHNAME(created_at) AS month')
+				->createdBetween($this->start, $this->end)
+				->groupByRaw('MONTHNAME(created_at)')
+				->get();
+
+			$formattedRevenues = [];
+			foreach ($revenues as $revenue) {
+				$formattedRevenues[$revenue->month] = $revenue->total;
+			}
+
+			// Save result and return analytic model
+			$analytic = $this->saveResult($formattedRevenues);
 		}
-
-		$revenues = Revenue::select($this->createQueryGroupper('created_at'))
-			->createdBetween($start, $end)
-			->groupBy($this->groupBy)
-			->get();
-
-		$model = $this->chartModel;
-		$model->setLabels(($revenues->keys())->all());
-		$model->addDataset($revenues, 'green', 'green');
-
-		$analytic = new Analytic([
-			'analytic_type' => AnalyticType::RevenueTrends,
-			'start' => $this->start,
-			'end' => $this->end,
-		]);
-		$analytic->analysis_result = $model->generateChartData();
-		$analytic->save();
 
 		return $analytic->analysis_result;
 	}
@@ -255,11 +308,31 @@ class AnalyticRepository extends BaseRepository
 	/**
 	 * Generate trend analytic for costs
 	 * 
-	 * @return bool
+	 * @param bool  $forceRecount
+	 * @return array
 	 */
-	public function costTrends()
+	public function costTrends(bool $forceRecount = false)
 	{
-		//
+		$analytic = Analytic::costTrends()
+			->whereDate('start', $this->start)
+			->whereDate('end', $this->end)
+			->first();
+		if ((! $analytic) || $forceRecount) {
+			$costs = Cost::selectRaw('SUM(amount) AS total, MONTHNAME(created_at) AS month')
+				->createdBetween($this->start, $this->end)
+				->groupByRaw('MONTHNAME(created_at)')
+				->get();
+
+			$formattedCosts = [];
+			foreach ($costs as $cost) {
+				$formattedCosts[$cost->month] = $cost->total;
+			}
+
+			// Save result and return analytic model
+			$analytic = $this->saveResult($formattedRevenues);
+		}
+
+		return $analytic->analysis_result;
 	}
 
 	/**
@@ -269,6 +342,9 @@ class AnalyticRepository extends BaseRepository
 	 */
 	public function profitTrends()
 	{
-		//
+		$analytic = Analytic::profitTrends()
+			->whereDate('start', $this->start)
+			->whereDate('end', $this->end)
+			->first();
 	}
 }

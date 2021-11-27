@@ -6,9 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Rules\MoneyValue;
-
 use App\Traits\CompanyInputRequest;
-
 use App\Models\Cost;
 
 class SaveCostRequest extends FormRequest

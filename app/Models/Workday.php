@@ -128,36 +128,57 @@ class Workday extends Model
         return WorkdayStatus::getDescription($status);
     }
 
+    /**
+     * Get workday company
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get list of worklists of workday
+     */
     public function worklists()
     {
         return $this->hasMany(Worklist::class);
     }
 
+    /**
+     * Get list of appointments attached to workday
+     */
     public function appointments()
     {
         return $this->morphToMany(Appointment::class, 'appointmentable');
     }
 
+    /**
+     * Get list of costs attached to workday 
+     */
     public function costs()
     {
         return $this->morphToMany(Cost::class, 'costable');
     }
 
+    /**
+     * Get receipts attached to workday
+     */
     public function receipts()
     {
         return $this->morphMany(Receipt::class, 'receiptable');
     }
 
+    /**
+     * Get costs from worklists under this workday
+     */
     public function worklistsCosts()
     {
         return $this->hasManyThrough(Cost::class, Worklist::class);
     }
 
+    /**
+     * Get employees attached to this workday
+     */
     public function employees()
     {
         return $this->hasManyDeep(
@@ -168,28 +189,54 @@ class Workday extends Model
         );
     }
 
+    /**
+     * Generate certain amount of worklists 
+     * under current workday
+     * 
+     * @param int $amount
+     * @return bool
+     */
+    public function generateWorklists(int $amount)
+    {
+        $rawWorklists = [];
+        for ($index = 0; $index < $amount; $index++) {
+            array_push($rawWorklists, [
+                'id' => generateUuid(),
+                'company_id' => $this->attributes['company_id'],
+                'workday_id' => $this->attributes['id'],
+                'status' => \App\Enums\Worklist\WorklistStatus::Created,
+                'worklist_name' => 'Worklist ' . ($index + 1),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+
+        return Worklist::insert($rawWorklists);
+    }
+
+    /**
+     * Process workday and set the status to be processed
+     * 
+     * @return bool
+     */
     public function process()
     {
         $this->attributes['status'] = WorkdayStatus::Processed;
         $this->attributes['processed_at'] = now();
-        $process = $this->save();
-
-        // $this->fireModelEvent('processed');
-
-        return $process;
+        
+        return $this->save();
     }
 
+    /**
+     * Calculate workday and set the status to be calculated
+     * 
+     * @return bool
+     */
     public function calculate()
     {
-        // Calculation happens here
-        //
-
         $this->attributes['status'] = WorkdayStatus::Calculated;
         $this->attributes['calculated_at'] = now();
-        $calculate = $this->save();
 
-        // $this->fireModelEvent('calculate');
-
-        return $calculate;
+        return $this->save();
     }
 }

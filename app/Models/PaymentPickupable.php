@@ -5,43 +5,53 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Revenueable extends Model
+class PaymentPickupable extends Model
 {
     use HasFactory;
     use SoftDeletes;
     use Searchable;
 
     /**
-     * The table name
+     * Database table name
      * 
      * @var string
      */
-    protected $table = 'revenueables';
+    protected $table = 'payment_pickupables';
 
     /**
-     * The primary key of the model
+     * Table name primary key
      * 
      * @var string
      */
     protected $primaryKey = 'id';
 
     /**
-     * Timestamp recording
+     * Set timestamp each time model is saved
      * 
      * @var bool
      */
     public $timestamps = true;
 
     /**
-     * Set whether primary key use increment or not
+     * Set whether primary key use incrementing value or not
      * 
      * @var bool
      */
     public $incrementing = false;
+
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
+    protected $searchable = [
+        //
+    ];
 
     /**
      * Set which columns are mass fillable
@@ -49,10 +59,9 @@ class Revenueable extends Model
      * @var array
      */
     protected $fillable = [
-        'revenue_id',
-
-        'revenueable_type',
-        'revenueable_id',
+        'payment_pickup_id',
+        'payment_pickupable_type',
+        'payment_pickupable_id',
     ];
 
     /**
@@ -60,35 +69,29 @@ class Revenueable extends Model
      * This is where observer should be put.
      * Any events and listener logic can be added in this method
      *
-     * @static
      * @return void
      */
     protected static function boot()
     {
     	parent::boot();
 
-    	self::creating(function ($revenueable) {
-            $revenueable->id = Uuid::generate()->string;
+    	self::creating(function ($paymentPickupable) {
+            $paymentPickupable->id = Uuid::generate()->string;
     	});
     }
 
     /**
-     * Get revenue connected through this model pivot
+     * Get payment pickup
      */
-    public function revenue()
+    public function paymentPickup()
     {
-        return $this->belongsTo(Revenue::class);
+        //
     }
 
     /**
-     * Get revenueable model connected through this model
+     * Get payment pickupable
      * 
-     * Possible revenueables:
-     * - \App\Models\Work
-     * - \App\Models\InvoiceItem
+     * Possible types:
+     * \App\Models\Revenue
      */
-    public function revenueable()
-    {
-        return $this->morphTo();
-    }
 }

@@ -61,9 +61,6 @@ class Revenue extends Model
     protected $fillable = [
         'company_id',
 
-        'revenueable_type',
-        'revenueable_id',
-
         'revenue_name',
         'amount',
         'paid_amount',

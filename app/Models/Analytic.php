@@ -84,6 +84,11 @@ class Analytic extends Model
     }
 
     /**
+     * Create callable static "whereCreatedFrom()" method
+     * This callable static method will query only analytic created
+     */
+
+    /**
      * Create callable static "revenueTrends()" method
      * This callable statis method will query only "analytic_type"
      * that has value of AnalyticType::RevenueTrends
@@ -105,7 +110,7 @@ class Analytic extends Model
      */
     public function setAnalysisResultAttribute(array $analysisResult)
     {
-        $this->attributes['analysis_result'] = json_encode($analysis_result);
+        $this->attributes['analysis_result'] = json_encode($analysisResult);
     }
 
     /**

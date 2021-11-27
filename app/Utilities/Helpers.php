@@ -44,6 +44,19 @@ function urlToUsername($urlString)
     return $domainName . $domainExtension;
 }
 
+if (! function_exists('num_to_month_name')) {
+    function num_to_month_name(int $number)
+    {
+        $monthNames = [
+            'January',  'February', 'March', 'April',
+            'May',      'June',     'July',  'August',
+            'September', 'October', 'November', 'December',
+        ];
+
+        return isset($monthNames[$number - 1]) ? $monthNames[$number - 1] : null;
+    }
+}
+
 function last_character(string $string)
 {
     return substr($string, -1);
@@ -198,6 +211,12 @@ function randomDate($format = 'd/m/Y')
         ->format($format);
 
     return $date;
+}
+
+if (! function_exists('random_hex_color')) {
+    function random_hex_color() {
+        return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
 }
 
 if (! function_exists('format_date')) {

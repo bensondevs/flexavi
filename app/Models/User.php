@@ -391,6 +391,13 @@ class User extends Authenticatable
         return $verification;
     }
 
+    /**
+     * Check if user has company permission
+     * 
+     * @param string  $companyId
+     * @param string|null  $doAction
+     * @return bool
+     */
     public function hasCompanyPermission($companyId, string $doAction = '')
     {
         $role = $this->roles->first();
@@ -420,31 +427,73 @@ class User extends Authenticatable
         return false;
     }
 
+    /**
+     * Collect all id card types as array
+     * 
+     * @static
+     * @return array
+     */
     public static function collectAllIdCardTypes()
     {
         return UserIdCardType::asSelectArray();
     }
 
+    /**
+     * Check if email is used by any user
+     * 
+     * @static
+     * @param string  $email
+     * @return bool
+     */
     public static function checkEmailUsed(string $email)
     {
         return self::where('email', $email)->exists();
     }
 
-    public static function findByEmail(string $email)
+    /**
+     * Find user by email
+     * 
+     * @static
+     * @param string  $email
+     * @param bool  $abortIfNotFound
+     * @return \App\Models\User|null
+     */
+    public static function findByEmail(string $email, bool $abortIfNotFound = false)
     {
-        return self::where('email', $email)->first();
+        $query = self::where('email', $email);
+        return $abortIfNotFound ?
+            $query->firstOrFail() :
+            $query->first();
     }
 
+    /**
+     * Find user by email, if not found abort it
+     * 
+     * @param string  $email
+     * @return  \App\Models\User|abort(404)
+     */
+    public static function findByEmailOrFail(string $email)
+    {
+        return self::findByEmail($email, true);
+    }
+
+    /**
+     * Find user by social id using driver of social media and id
+     * 
+     * @param string  $driver
+     * @param string  $id
+     * @return \App\Models\User|null
+     */
     public static function findBySocialId(string $driver, string $id)
     {
         return self::where($driver . '_id', $id)->first();
     }
 
-    public static function findByEmailOrFail(string $email)
-    {
-        return self::where('email', $email)->firstOrFail();
-    }
-
+    /**
+     * Send email verification to verify user email
+     * 
+     * @return void
+     */
     public function sendEmailVerification()
     {
         $authRepository = new AuthRepository();
@@ -452,9 +501,33 @@ class User extends Authenticatable
         $authRepository->sendEmailVerification();
     }
 
+    /**
+     * Unverify user email
+     * Usually used when email is changed
+     * 
+     * @return bool
+     */
     public function unverifyEmail()
     {
         $this->attributes['email_verified_at'] = null;
         return $this->save();
+    }
+
+    /**
+     * Log activity done by user
+     * 
+     * @param string  $message
+     * @param mixed|null  $model
+     * @param array|null  $extra
+     * @return void
+     */
+    public function recordActivity(string $message, $model = null, $extras = [])
+    {
+        $activity = activity();
+
+        if ($model) $activity = $activity->performedOn($model);
+        if ($extra) $activity = $activity->withProperties($extras);
+
+        $activity->log($message);
     }
 }

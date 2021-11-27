@@ -357,7 +357,10 @@ class Work extends Model
 
     /**
      * Mark work as finished. To mark the work as finished
-     * need to assign the work at certain appointment and give optional finish note
+     * need to assign the work at certain appointment and 
+     * give optional finish note. 
+     * 
+     * THIS ACTION WILL RECORD WORK AMOUNT AS REVENUE
      * 
      * @param App\Models\Appointment  $appointment
      * @param string  $finishNote

@@ -16,7 +16,17 @@ class WorkdayObserver
     {
         $company = $workday->company;
         $settings = $company->settings;
-        //
+        
+        // Get settings about amount of worklists
+        if ($setting = $settings->where('key', 'worklist_per_workday')->first()) {
+            $setting = $settings
+                ->where('key', 'default_worklist_per_workday')
+                ->first();
+        }
+        $amountOfWorklists = (isset($setting->value)) ? $setting->value : 3;
+
+        // Generate certain amount of worklist under it
+        $workday->generateWorklists($amountOfWorklists);
     }
 
     /**

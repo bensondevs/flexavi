@@ -124,6 +124,10 @@ class Worklist extends Model
 
     /**
      * Create callable "start_time" attribute
+     * This callable attribute will return 
+     * the first attached appointment start time
+     * 
+     * @return \DateTime
      */
     public function getStartTimeAttribute()
     {
@@ -135,6 +139,13 @@ class Worklist extends Model
         return $appointment->start;
     }
 
+    /**
+     * Create callable "end_time" attribute
+     * This callable attribute will return
+     * the last attachedt appointment end time
+     * 
+     * @return \DateTime
+     */
     public function getEndTimeAttribute()
     {
         if (! $this->appointments->count()) {
@@ -145,21 +156,33 @@ class Worklist extends Model
         return $appointment->end;
     }
 
+    /**
+     * Get company of the worklist
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
     }
 
+    /**
+     * Get cars attached to the worklist
+     */
     public function worklistCars()
     {
         return $this->hasMany(WorklistCar::class);
     }
 
+    /**
+     * Get workday of the worklist
+     */
     public function workday()
     {
         return $this->belongsTo(Workday::class);
     }
 
+    /**
+     * Get list of appointments in worklist
+     */
     public function appointments()
     {
         return $this->morphToMany(Appointment::class, 'appointmentable');

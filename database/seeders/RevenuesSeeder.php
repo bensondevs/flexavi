@@ -4,12 +4,12 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Work;
-use App\Models\Revenue;
-use App\Models\Revenueable;
-
+use App\Models\{
+    Work,
+    Revenue,
+    Revenueable
+};
 use App\Enums\Work\WorkStatus;
-
 use App\Jobs\Test\SyncWorkRevenue;
 
 class RevenuesSeeder extends Seeder

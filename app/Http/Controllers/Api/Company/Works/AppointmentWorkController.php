@@ -77,7 +77,7 @@ class AppointmentWorkController extends Controller
      * @param SaveRequest $request
      * @return Illuminate\Support\Facades\Response
      */
-    /*public function store(SaveRequest $request)
+    public function store(SaveRequest $request)
     {
         $input = $request->validated();
         $this->work->save($input);
@@ -86,7 +86,7 @@ class AppointmentWorkController extends Controller
         $this->work->attachTo($appointment);
 
         return apiResponse($this->work);
-    }*/
+    }
 
     /**
      * Attach work to appointment

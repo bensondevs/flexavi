@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Http\Requests\Revenues;
+
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
+
+use App\Rules\MoneyValue;
+use App\Traits\CompanyInputRequest;
+use App\Models\Revenue;
+
+class SaveRevenueRequest extends FormRequest
+{
+    use CompanyInputRequest;
+
+    /**
+     * Found revenue model container
+     * 
+     * @return \App\Models\Revenue|null
+     */
+    private $revenue;
+
+    /**
+     * Found revenueable model container
+     * 
+     * @return \App\Models\Revenueable
+     */
+    private $revenueable;
+
+    /**
+     * Find revenue by supplied parameter "revenue_id" or "id"
+     * 
+     * @return \App\Models\Revenue|null
+     */
+    public function getRevenue()
+    {
+        if ($this->revenue) return $this->revenue;
+
+        $id = $request->input('revenue_id');
+        return $this->revenue = Revenue::findOrFail($id);
+    }
+
+    /**
+     * Find revenueable by supplied parameter
+     * 
+     * @return mixed
+     */
+    public function getRevenueable()
+    {
+        if ($this->revenueable) return $this->revenueable;
+
+        if ($this->input('work_id')) {
+            $id = $this->input('work_id');
+            return $this->revenueable = Work::findOrFail($id);
+        }
+    }
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        if (! $this->isMethod('POST')) {
+            $revenue = $this->getRevenue();
+            return Gate::allows('edit-revenue', $revenue);
+        }
+
+        return Gate::allows('create-revenue');
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'company_id' => ['required', 'string', 'exists:companies,id'],
+            'work_id' => ['required', 'string', 'uuid']
+        ];
+    }
+}

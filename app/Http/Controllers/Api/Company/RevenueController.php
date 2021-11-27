@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Api\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Http\Requests\Revenues\PopulateCompanyRevenuesRequest as PopulateRequest;
+use App\Http\Requests\Revenues\{
+    PopulateCompanyRevenuesRequest as PopulateRequest,
+    SaveRevenueRequest as SaveRequest,
+    FindRevenueRequest as FindRequest,
+    DeleteRevenueRequest as DeleteRequest,
+    RestoreRevenueRequest as RestoreRequest
+};
 
 use App\Http\Resources\RevenueResource;
-
 use App\Repositories\RevenueRepository;
 
 class RevenueController extends Controller
@@ -61,6 +66,20 @@ class RevenueController extends Controller
     }
 
     /**
+     * View revenue
+     * 
+     * @param FindRequest
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function view(FindRequest $request)
+    {
+        $revenue = $request->getRevenue();
+        $revenue->load(['revenueables']);
+
+        return response()->json(['revenue' => $revenue]);
+    }
+
+    /**
      * Update revenue
      * 
      * @param SaveRequest $request
@@ -78,7 +97,8 @@ class RevenueController extends Controller
     }
 
     /**
-     * Delete revenue, WARNING! deleting revenue will detach the record from all relationship upon deleted revenue
+     * Delete revenue, WARNING! deleting revenue will detach the record 
+     * from all relationship upon deleted revenue
      * 
      * @param DeleteRequest $request
      * @return Illuminate\Support\Facades\Response
