@@ -4,13 +4,17 @@ namespace App\Http\Requests\PaymentPickups;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
-use App\Traits\RequestHasRelations;
+use App\Traits\{
+    RequestHasRelations,
+    CompanyPopulateRequestOptions
+};
 
 use App\Models\PaymentPickup;
 
 class PopulateCompanyPaymentPickupsRequest extends FormRequest
 {
     use RequestHasRelations;
+    use CompanyPopulateRequestOptions;
 
     /**
      * List of relationships that will be loaded
@@ -65,6 +69,6 @@ class PopulateCompanyPaymentPickupsRequest extends FormRequest
      */
     public function options()
     {
-        //
+        return $this->collectCompanyOptions();
     }
 }

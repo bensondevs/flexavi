@@ -5,24 +5,41 @@ namespace App\Http\Requests\Invoices;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\CompanyInputRequest;
-
 use App\Models\{ Invoice, Customer };
+use App\Traits\CompanyInputRequest;
 
 class SaveInvoiceRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Target customer for invoice creation
+     * 
+     * @var \App\Models\Customer
+     */
     private $customer;
 
+    /**
+     * Get customer from the supplied parameter data of `customer_id`
+     * 
+     * @return \App\Models\Customer|abort 404
+     */
     public function getCustomer()
     {
         if ($this->customer) return $this->customer;
 
         $id = $this->input('customer_id');
-        $this->customer = Customer::findOrFail($id);
+        return $this->model = $this->customer = Customer::findOrFail($id);
     }
 
+    /**
+     * Prepare input for validation
+     * 
+     * This will make sure the input of invoice 
+     * goes to right company
+     * 
+     * @return void
+     */
     public function prepareForValidation()
     {
         $company = $this->getCompany();

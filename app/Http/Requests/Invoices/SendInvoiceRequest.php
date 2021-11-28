@@ -5,21 +5,32 @@ namespace App\Http\Requests\Invoices;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\InputRequest;
-
 use App\Models\Invoice;
+use App\Traits\InputRequest;
 
 class SendInvoiceRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Found invoice from get function execution
+     * container
+     * 
+     * @var \App\Models\Invoice
+     */
     private $invoice;
 
+    /**
+     * Get invoice from supplied parameter of
+     * `invoice_id` or `id`
+     * 
+     * @return \App\Models\Invoice|abort 404
+     */
     public function getInvoice()
     {
         if ($this->invoice) return $this->invoice;
 
-        $id = $this->input('invoice_id');
+        $id = $this->input('invoice_id') ?: $this->input('id');
         return $this->invoice = Invoice::findOrFail($id);
     }
 

@@ -35,7 +35,7 @@ class PaymentPickupResource extends JsonResource
             //
         }
 
-        if ($this->relationLoaded('revenues')) {
+        if ($this->relationLoaded('paymentPickupable')) {
             //
         }
 

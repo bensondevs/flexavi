@@ -247,6 +247,35 @@ class Invoice extends Model
     }
 
     /**
+     * Get which columns is the target of payment
+     * This selected column will be the column that become
+     * target of substraction when payment is done
+     * 
+     * @return string
+     */
+    public function getPayableColumnAttibute()
+    {
+        return 'total_paid';
+    }
+
+    /**
+     * Get amount that should be paid
+     * 
+     * @return double
+     */
+    public function getShouldBePaidAmountAttribute()
+    {
+        return $this->total_unpaid;
+    }
+
+    /**
+     * Set added paid amount after the payment
+     * 
+     * @return void
+     */
+    public function setAddedPaidAmountAttribute(double $amount);
+
+    /**
      * Get invoice items
      */
     public function items()

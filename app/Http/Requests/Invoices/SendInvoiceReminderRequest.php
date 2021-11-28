@@ -6,15 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Invoice;
-
 use App\Traits\InputRequest;
 
 class SendInvoiceReminderRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Found invoice from get function execution 
+     * container
+     * 
+     * @var \App\Models\Invoice
+     */
     private $invoice;
 
+    /**
+     * Get invoice from supplied parameter of
+     * `id` or `invoice_id`
+     * 
+     * @return \App\Models\Invoice|abort 404
+     */
     public function getInvoice()
     {
         if ($this->invoice) return $this->invoice;

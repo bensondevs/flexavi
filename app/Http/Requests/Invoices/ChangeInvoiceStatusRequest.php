@@ -6,17 +6,25 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
-
 use App\Models\Invoice;
-
 use App\Enums\Invoice\InvoiceStatus;
 
 class ChangeInvoiceStatusRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Found invoice from get function execution
+     * 
+     * @var \App\Models\Invoice
+     */
     private $invoice;
 
+    /**
+     * Get invoice from supplied parameter of `id` or `invoice_id`
+     * 
+     * @return \App\Models\Invoice
+     */
     public function getInvoice()
     {
         if ($this->invoice) return $this->invoice;

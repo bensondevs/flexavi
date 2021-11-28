@@ -13,6 +13,13 @@ class PopulateCompanyOwnersRequest extends FormRequest
     use RequestHasRelations;
     use CompanyPopulateRequestOptions;
 
+    /**
+     * List of relationships that will be loaded
+     * Set the attribute to true, it will load the relationship
+     * upon the response
+     * 
+     * @var array
+     */
     private $relationNames = [
         'with_addresses' => true,
     ];
@@ -27,6 +34,11 @@ class PopulateCompanyOwnersRequest extends FormRequest
         return Gate::allows('view-any-owner');
     }
 
+    /**
+     * Prepare input to load the relationships
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $this->prepareRelationInputs();
@@ -45,6 +57,13 @@ class PopulateCompanyOwnersRequest extends FormRequest
         ];
     }
 
+    /**
+     * Get populate options.
+     * 
+     * This functions include queries where, with and etc...
+     * 
+     * @return array
+     */
     public function options()
     {
         return $this->collectCompanyOptions();

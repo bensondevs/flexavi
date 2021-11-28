@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Interfaces\PaymentPickupable;
 
-class Revenue extends Model
+class Revenue extends Model implements PaymentPickupable
 {
     use HasFactory;
     use SoftDeletes;
@@ -111,6 +112,38 @@ class Revenue extends Model
         $paid = $this->attributes['paid_amount'];
 
         return $amount - $paid;
+    }
+
+    /**
+     * Get which columns is the target of payment
+     * This selected column will be the column that become
+     * target of substraction when payment is done
+     * 
+     * @return string
+     */
+    public function getPayableColumnAttibute()
+    {
+        return 'paid_amount';
+    }
+
+    /**
+     * Get amount that should be paid
+     * 
+     * @return double
+     */
+    public function getShouldBePaidAmountAttribute()
+    {
+        return $this->unpaid_amount;
+    }
+
+    /**
+     * Set added paid amount after the payment
+     * 
+     * @return void
+     */
+    public function setAddedPaidAmountAttribute(double $amount)
+    {
+        $this->attributes['paid_amount'] += $amount;
     }
 
     /**

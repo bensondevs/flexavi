@@ -85,13 +85,36 @@ class PaymentPickupable extends Model
      */
     public function paymentPickup()
     {
-        //
+        return $this->belongsTo(PaymentPickup::class);
     }
 
     /**
      * Get payment pickupable
      * 
-     * Possible types:
-     * \App\Models\Revenue
+     * Possible pickupable types:
+     *  \App\Models\Revenue
+     *  \App\Models\Invoice
+     *  \App\Models\PaymentTerm
      */
+    public function pickupable()
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * Convert any clue to certain class.
+     * Class found can be used as value for 
+     * `payment_pickupable_type`
+     * 
+     * @param string  $clue
+     */
+    public static function guessType(string $clue)
+    {
+        // Convert clue to lower case
+        $clue = strtolower($clue);
+
+        if ($clue == 'revenue') {
+            //
+        }
+    }
 }

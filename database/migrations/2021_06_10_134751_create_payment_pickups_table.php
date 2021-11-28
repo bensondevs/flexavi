@@ -28,18 +28,12 @@ class CreatePaymentPickupsTable extends Migration
                 ->on('employees')
                 ->onDelete('CASCADE');
 
-            $table->uuid('pickup_for_appointment_id');
-            $table->foreign('pickup_for_appointment_id')
-                ->references('id')
-                ->on('appointments')
-                ->onDelete('CASCADE');
-
             $table->double('should_pickup_amount')->default(0); // should be picked up amount
             $table->double('picked_up_amount')->default(0);
             $table->text('reason_not_all')->nullable();
             
             $table->timestamp('should_picked_up_at');
-            $table->timestamps('picked_up_at')->nullable();
+            $table->timestamp('picked_up_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

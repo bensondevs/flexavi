@@ -25,6 +25,13 @@ class PopulateCompanyInvoicesRequest extends FormRequest
         return Gate::allows('view-any-invoice');
     }
 
+    /**
+     * Prepare input before validation
+     * 
+     * This is for loading the needed relationships of the results
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $this->prepareRelationInputs();
@@ -43,6 +50,11 @@ class PopulateCompanyInvoicesRequest extends FormRequest
         ];
     }
 
+    /**
+     * Collect options for the queries in repository
+     * 
+     * @return array
+     */
     public function options()
     {
         if ($this->has('start')) {

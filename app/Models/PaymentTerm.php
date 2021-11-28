@@ -9,12 +9,11 @@ use Illuminate\Database\Query\Builder;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use App\Interfaces\PaymentPickupable;
 use App\Observers\PaymentTermObserver;
-
 use App\Enums\PaymentTerm\PaymentTermStatus;
 
-class PaymentTerm extends Model
+class PaymentTerm extends Model implements PaymentPickupable
 {
     use HasFactory;
     use Searchable;
@@ -135,6 +134,46 @@ class PaymentTerm extends Model
     {
         $dueDate = $this->attributes['due_date'];
         return carbon()->parse($dueDate)->format('M d, Y');
+    }
+
+    /**
+     * Get which columns is the target of payment
+     * This selected column will be the column that become
+     * target of substraction when payment is done
+     * 
+     * @return string
+     */
+    public function getPayableColumnAttibute()
+    {
+        return 'amount';
+    }
+
+    /**
+     * Get amount that should be paid
+     * 
+     * @return double
+     */
+    public function getShouldBePaidAmountAttribute()
+    {
+        if ($this->attributes['status'] == PaymentTermStatus::Unpaid) {
+            return 0;
+        }
+
+        return $this->attributes['amount'];
+    }
+
+    /**
+     * Set added paid amount after the payment
+     * 
+     * @return void
+     */
+    public function setAddedPaidAmountAttribute(double $amount)
+    {
+        if ($this->attributes['amount'] <= $amount) {
+            return $this->attributes['status'] = PaymentTermStatus::Paid;
+        }
+
+        abort(403, 'Cannot pay less than the requested amount of payment term.');
     }
 
     /**

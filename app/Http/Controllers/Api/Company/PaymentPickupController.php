@@ -8,7 +8,11 @@ use App\Repositories\PaymentPickupRepository;
 
 use App\Http\Requests\PaymentPickups\{
     PopulateCompanyPaymentPickupsRequest as CompanyPopulateRequest,
-    StorePaymentPickupRequest as StoreRequest
+    StorePaymentPickupRequest as StoreRequest,
+    SelectPaymentPickupablesRequest as SelectPickupablesRequest,
+    AddPaymentPickupPickupableRequest as AddPickupableRequest,
+    RemovePaymentPickupPickupableRequest as RemovePickupableRequest,
+    DeletePaymentPickupRequest as DeleteRequest
 };
 
 class PaymentPickupController extends Controller
@@ -78,25 +82,69 @@ class PaymentPickupController extends Controller
     }
 
     /**
-     * Select revenue to be picked up
+     * Add pickupable in payment pickup
      * 
-     * @param SelectRevenuesRequest  $request
+     * @param AddPickupableRequest  $request
      * @return \Illuminate\Support\Facades\Response
      */
-    public function selectRevenues(SelectRevenuesRequest $request)
+    public function addPickupable(AddPickupableRequest $request)
     {
-        //
+        $paymentPickup = $request->getPaymentPickup();
+        $this->paymentPickup->setModel($paymentPickup);
+
+        $pickupable = $request->getPickupable();
+        $this->paymentPickup->addPickupable($pickupable);
+
+        return apiResponse($this->paymentPickup);
     }
 
     /**
-     * Update payment pickup
+     * Select pickupables payment to be picked up
      * 
-     * @param UpdateRequest  $request
+     * @param SelectPickupablesRequest  $request
      * @return \Illuminate\Support\Facades\Response
      */
-    public function update()
+    public function addMultiplePickupables(SelectPickupablesRequest $request)
     {
-        //
+        $paymentPickup = $request->getPaymentPickup();
+        $this->paymentPickup->setModel($paymentPickup);
+
+        $pickupables = $request->getPickupables();
+        $this->paymentPickup->addMultiplePickupables($pickupables);
+
+        return apiResponse($this->paymentPickup);
+    }
+
+    /**
+     * Remove pickupable from payment pickup
+     * 
+     * @param RemovePickupableRequest  $request
+     * @return \Illuminate\Support\Facades\Response
+     */
+    public function removePickupable(RemovePickupableRequest $request)
+    {
+        $paymentPickup = $request->getPaymentPickup();
+        $this->paymentPickup->setModel($paymentPickup);
+
+        $pickupable = $request->getPickupable();
+        $this->paymentPickup->removePickupable($pickupable);
+
+        return api($this->paymentPickup);
+    }
+
+    /**
+     * Remove multiple payment pickupable
+     * 
+     * @param SelectPickupablesRequest  $request
+     * @return \Illuminate\Support\Facades\Response
+     */
+    public function removeMultiplePickupables(SelectPickupablesRequest $request)
+    {
+        $paymentPickup = $request->getPaymentPickup();
+        $this->paymentPickup->setModel($paymentPickup);
+
+        $pickupables = $request->getPickupables();
+        $this->paymentPickup->removeMultiplePickupables($pickupables);
     }
 
     /**
@@ -105,8 +153,14 @@ class PaymentPickupController extends Controller
      * @param DeleteRequest  $request
      * @return \Illuminate\Support\Facades\Response
      */
-    public function delete()
+    public function delete(DeleteRequest $request)
     {
-        //
+        $paymentPickup = $request->getPaymentPickup();
+        $this->paymentPickup->setModel($paymentPickup);
+
+        $force = $request->input('force');
+        $this->paymentPickup->delete($force);
+
+        return apiResponse($this->paymentPickup);
     }
 }

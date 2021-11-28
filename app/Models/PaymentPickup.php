@@ -92,18 +92,10 @@ class PaymentPickup extends Model
     }
 
     /**
-     * Get all revenues that'll be picked up
+     * Get pickupable morph pivots
      */
-    public function revenues()
+    public function pickupables()
     {
-        return $this->hasManyThrough(Revenue::class, PaymentPickupRevenue::class);
-    }
-
-    /**
-     * Get all revenues pivot
-     */
-    public function revenuePivots()
-    {
-        return $this->hasMany(PaymentPickupRevenue::class);
+        return $this->hasMany(PaymentPickupable::class);
     }
 }

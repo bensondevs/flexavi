@@ -14,8 +14,18 @@ class CreatePaymentPickupablesTable extends Migration
     public function up()
     {
         Schema::create('payment_pickupables', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+
+            $table->uuid('payment_pickup_id');
+            $table->foreign('payment_pickup_id')
+                ->references('id')
+                ->on('payment_pickups')
+                ->onDelete('CASCADE');
+
+            $table->uuidMorphs('pickupable');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

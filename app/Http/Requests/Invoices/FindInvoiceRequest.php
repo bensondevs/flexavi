@@ -9,8 +9,18 @@ use App\Models\Invoice;
 
 class FindInvoiceRequest extends FormRequest
 {
+    /**
+     * Found invoice from get function execution
+     * 
+     * @var \App\Models\Invoice
+     */
     private $invoice;
 
+    /**
+     * Get invoice from supplied parameter of `id` or `invoice_id`
+     * 
+     * @return \App\Models\Invoice
+     */
     public function getInvoice()
     {
         if ($this->invoice) return $this->invoice;

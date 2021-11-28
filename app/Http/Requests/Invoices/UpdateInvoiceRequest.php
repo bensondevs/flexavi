@@ -6,15 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Invoice;
-
 use App\Traits\InputRequest;
 
 class UpdateInvoiceRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Found invoice from the get function execution
+     * container
+     * 
+     * @var \App\Models\Invoice
+     */
     private $invoice;
 
+    /**
+     * Get invoice from supplied parameter of
+     * `id` of `invoice_id`
+     * 
+     * @return \App\Models\Invoice
+     */
     public function getInvoice()
     {
         if ($this->invoice) return $this->invoice;
