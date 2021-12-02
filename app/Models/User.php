@@ -16,7 +16,7 @@ use App\Traits\Searchable;
 use Znck\Eloquent\Traits\BelongsToThrough;
 
 use App\Models\EmailVerification;
-use App\Repositories\AuthRepository;
+use App\Repositories\Auths\AuthRepository;
 use App\Observers\UserObserver;
 use App\Enums\User\UserIdCardType;
 
