@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Repositories\Auths;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
