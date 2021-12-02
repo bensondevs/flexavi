@@ -12,7 +12,6 @@ use App\Http\Requests\Revenues\{
     DeleteRevenueRequest as DeleteRequest,
     RestoreRevenueRequest as RestoreRequest
 };
-
 use App\Http\Resources\RevenueResource;
 use App\Repositories\RevenueRepository;
 
@@ -60,9 +59,9 @@ class RevenueController extends Controller
     public function store(SaveRequest $request)
     {
         $input = $request->validated();
-        $this->revenue->save($input);
+        $revenue = $this->revenue->save($input);
 
-        return apiResponse($this->revenue);
+        return apiResponse($this->revenue, ['revenue' => $revenue]);
     }
 
     /**

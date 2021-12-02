@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Enums\Car\CarStatus;
 

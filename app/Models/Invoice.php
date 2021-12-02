@@ -6,12 +6,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use App\Observers\InvoiceObserver;
-
 use App\Enums\Invoice\{
     InvoiceStatus as Status,
     InvoicePaymentMethod as PaymentMethod
@@ -273,7 +272,10 @@ class Invoice extends Model
      * 
      * @return void
      */
-    public function setAddedPaidAmountAttribute(double $amount);
+    public function setAddedPaidAmountAttribute(double $amount)
+    {
+        $this->attributes['total_paid'] += $amount;
+    }
 
     /**
      * Get invoice items

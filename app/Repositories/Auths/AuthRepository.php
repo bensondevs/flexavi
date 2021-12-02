@@ -2,31 +2,42 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
-use Socialite;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
+use App\Repositories\Base\BaseRepository;
 
 use App\Mail\Auth\VerifyEmail;
-
-use App\Jobs\SendMail;
-use App\Jobs\Auth\SendResetPasswordToken;
-
-use App\Models\User;
-use App\Models\Customer;
-use App\Models\EmailVerification;
-use App\Models\RegisterInvitation;
-
-use App\Repositories\EmployeeRepository;
-use App\Repositories\Base\BaseRepository;
+use App\Jobs\{
+	SendMail,
+	Auth\SendResetPasswordToken
+};
+use App\Models\{
+	User,
+	Customer,
+	EmailVerification,
+	RegisterInvitation
+};
 
 class AuthRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new User);
 	}
 
+	/**
+	 * Register user using array with user data
+	 * 
+	 * @param array  $registerData
+	 * @return \App\Models\User
+	 */
 	public function register(array $registerData)
 	{
 		try {
@@ -49,6 +60,11 @@ class AuthRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Send user email verification
+	 * 
+	 * @return bool
+	 */
 	public function sendEmailVerification()
 	{
 		try {
@@ -62,9 +78,15 @@ class AuthRepository extends BaseRepository
 			$this->setError('Failed to send email verification', $error);
 		}
 
-		return;
+		return $this->returnResponse();
 	}
 
+	/**
+	 * Verify email using encrypted code
+	 * 
+	 * @param string  $encryptedCode
+	 * @return \App\Models\EmailVerification
+	 */
 	public function verifyEmail(string $encryptedCode)
 	{
 		try {
@@ -81,6 +103,12 @@ class AuthRepository extends BaseRepository
 		return $verification;
 	}
 
+	/**
+	 * Execute API Login
+	 * 
+	 * @param array  $credentials
+	 * @return \App\Models\User
+	 */
 	public function login(array $credentials)
 	{
 		try {
@@ -88,22 +116,21 @@ class AuthRepository extends BaseRepository
 			$email = $credentials['email'];
 			$password = $credentials['password'];
 
-			// Find user
-			$user = $this->getModel()->where('email', $email)->first();
-			if (! $user) {
+			// Is there any user with the inserted email?
+			if (! $user = $this->getModel()->findByEmail($email)) {
 				$this->setNotFound('User not found!');
 				return null;
 			}
-			$this->setModel($user); // Found!
 
-			// Check if password matched the record
-			if (! hashCheck($password, $user->password)) {
+			// Is the inserted password match with user record?
+			if (! $user->isPasswordMatch($password)) {
 				$this->setUnprocessedInput('Password mismatch the record!');
 				return null;
 			}
 
-			// API Login Token
-			$user->token = $user->createToken(time())->plainTextToken;
+			// Authenticate the user and set the token
+			$user->generateToken();
+			Auth::login($user);
 
 			$this->setModel($user);
 
@@ -116,84 +143,11 @@ class AuthRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function customerLogin(array $credentials)
-	{
-		try {
-			if (! $customer = Customer::findUsingCredentials($credentials)) {
-				return $this->setNotFound('Customer account not found.');
-			}
-
-			if (! $customer = $customer->attemptAutenticate($credentials['unique_key'])) {
-				return $this->setUnprocessedInput('Failed to logging in, the unique key does not match out record.');
-			}
-
-			$this->setSuccess('Successfully logged in as customer');
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to login to customer.', $error);
-		}
-
-		return $customer;
-	}
-
-	public function socialiteLogin($driver)
-	{
-		try {
-			$socialiteUser = Socialite::driver($driver)
-	            ->stateless()
-	            ->user();
-			$user = $this->getModel()
-				->where('email', $socialiteUser->getEmail())
-				->first();
-
-			if (! $user) {
-				return $this->setNotFound('This user is not yet registered.');
-			}
-
-			/*
-				Login the found user
-			*/
-			$user->token = $user->createToken(time())->plainTextToken;
-
-			$this->setModel($user);
-
-			$this->setSuccess('Successfully login.');
-		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to execute login from social media', 
-				$qe->getMessage()
-			);
-		}
-
-		return $this->getModel();
-	}
-
-	public function socialiteRegister($driver)
-	{
-		try {
-			$socialiteUser = Socialite::driver($driver)
-	            ->stateless()
-	            ->user();
-
-			$user = new User;
-			$user->id = generateUUID();
-			$user->fullname = $socialiteUser->getName();
-			$user->email = $socialiteUser->getEmail();
-			$user->profile_picture_url = $socialiteUser->getAvatar();
-
-			$this->setModel($user);
-
-			$this->setSuccess('Successfully do socialite register');
-		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to register user through social media.', 
-				$qe->getMessage()
-			);
-		}
-
-		return $this->getModel();
-	}
-
+	/**
+	 * Execute user logout
+	 * 
+	 * @return bool
+	 */
 	public function logout()
 	{
 		try {
@@ -210,22 +164,11 @@ class AuthRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
-	public function customerLogout(Customer $customer)
-	{
-		try {
-			$customer->tokens()->delete();
-
-			$this->setSuccess('Successfully logged out');
-		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to log out', 
-				$qe->getMessage()
-			);
-		}
-
-		return $this->returnResponse();
-	}
-
+	/**
+	 * Send reset password token to user email
+	 * 
+	 * @return bool
+	 */
 	public function sendResetPasswordToken()
 	{
 		try {
@@ -246,6 +189,12 @@ class AuthRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Change user password using unhashed password
+	 * 
+	 * @param string  $password
+	 * @return \App\Models\User
+	 */
 	public function changePassword(string $password)
 	{
 		try {
@@ -264,6 +213,11 @@ class AuthRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Claim reset password token
+	 * 
+	 * @return \App\Models\User
+	 */
 	public function claimResetPasswordToken()
 	{
 		try {

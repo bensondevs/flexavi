@@ -165,9 +165,10 @@ class PaymentTerm extends Model implements PaymentPickupable
     /**
      * Set added paid amount after the payment
      * 
+     * @param float
      * @return void
      */
-    public function setAddedPaidAmountAttribute(double $amount)
+    public function setAddedPaidAmountAttribute(float $amount)
     {
         if ($this->attributes['amount'] <= $amount) {
             return $this->attributes['status'] = PaymentTermStatus::Paid;

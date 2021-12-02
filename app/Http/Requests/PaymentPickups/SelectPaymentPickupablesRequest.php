@@ -57,7 +57,7 @@ class SelectPaymentPickupablesRequest extends FormRequest
     {
         $pickupables = [];
         foreach ($request->pickupables as $rawPickupable) {
-            $type = $rawPickupable['type'];
+            $type = PaymentPickupable::guessType($rawPickupable['type']);
             $id = $rawPickupable['id'];
 
             if ($pickupable = $type::find($id)) {

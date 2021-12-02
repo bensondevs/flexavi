@@ -139,9 +139,10 @@ class Revenue extends Model implements PaymentPickupable
     /**
      * Set added paid amount after the payment
      * 
+     * @param float  $amount
      * @return void
      */
-    public function setAddedPaidAmountAttribute(double $amount)
+    public function setAddedPaidAmountAttribute(float $amount)
     {
         $this->attributes['paid_amount'] += $amount;
     }

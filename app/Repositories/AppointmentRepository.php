@@ -265,7 +265,7 @@ class AppointmentRepository extends BaseRepository
 				['id' => generateUuid()]
 			);
 
-			$this->setSuccess('Successfully move appointment to another ' get_lower_class($appointmentable));
+			$this->setSuccess('Successfully move appointment to another ', get_lower_class($appointmentable));
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
 			$this->setError('Failed to move appointment', $error);

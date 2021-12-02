@@ -13,18 +13,13 @@ use App\Http\Requests\Auths\{
     ForgotPasswordRequest,
     ResetPasswordRequest,
 };
-
-use Socialite;
-
 use App\Models\User;
-
 use App\Http\Resources\UserResource;
-
 use App\Repositories\{
-    AuthRepository,
+    Auths\AuthRepository,
     CompanyOwnerRepository as OwnerRepository,
+    AddressRepository,
     RegisterInvitationRepository,
-    AddressRepository
 };
 
 class AuthController extends Controller
@@ -88,9 +83,9 @@ class AuthController extends Controller
     	$input = $request->validated();
         if ($user = $this->auth->login($input)) {
             $user = new UserResource($user);
+            $user->recordActivity($user->fullname . ' [' . $user->role . '] ' . 'has logged in');
         }
 
-        $user->recordActivity('')
 
     	return apiResponse($this->auth, ['user' => $user]); 
     }

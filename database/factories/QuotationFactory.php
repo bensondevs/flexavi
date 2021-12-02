@@ -71,7 +71,7 @@ class QuotationFactory extends Factory
             'contact_person' => $faker->name(),
 
             'address' => $faker->address(),
-            'zip_code' => $faker->postcode(),
+            'zipcode' => $faker->postcode(),
             'phone_number' => $faker->phoneNumber(),
             
             'quotation_description' => $faker->word(),

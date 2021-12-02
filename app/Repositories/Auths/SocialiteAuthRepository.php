@@ -2,39 +2,80 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
-use Auth;
-use Socialite;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Socialite\Facades\Socialite;
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\User;
 
 class SocialiteAuthRepository extends BaseRepository
 {
+	/**
+	 * Current selected social media driver of socialite
+	 * 
+	 * @var string|null
+	 */
 	private $driver;
+
+	/**
+	 * Created socialite class to handle the actions
+	 * 
+	 * @var \Laravel\Socialite\Facades\Socialite|null
+	 */
 	private $socialite;
+
+	/**
+	 * Acquired socialite user instance from API
+	 * 
+	 * @var Laravel\Socialite\Two\User
+	 */
 	private $socialiteUser;
 
-	public static function setDriver($driver)
+	/**
+	 * Set used driver of socialite.
+	 * This will select which social media is going to be used
+	 * 
+	 * @param string  $driver
+	 * @return $this
+	 */
+	public static function setDriver(string $driver)
 	{
 		$this->driver = $driver;
 		$this->socialite = Socialite::driver($driver);
 		return $this;
 	}
 
+	/**
+	 * Get url to loggin to vendor login service
+	 * 
+	 * @return string
+	 */
 	public function urlToVendor()
 	{
-		return $this->socialite->stateless()->redirect()->getTargetUrl();
+		return $this->socialite
+			->stateless()
+			->redirect()
+			->getTargetUrl();
 	}
 
+	/**
+	 * Receive callback response of socialite user
+	 * 
+	 * @return Laravel\Socialite\Two\User
+	 */
 	public function recieveCallback()
 	{
 		return $this->socialiteUser = $this->socialite->stateless()->user();
 	}
 
+	/**
+	 * Register user using socialite data
+	 * 
+	 * @param array  $registerData
+	 * @return \App\Models\User|abort 500|abort 403|abort 422
+	 */
 	public function register(array $registerData)
 	{
 		if (! $this->socialiteUser) {
@@ -65,6 +106,12 @@ class SocialiteAuthRepository extends BaseRepository
 		return $user;
 	}
 
+	/**
+	 * Login the acquired socialite user
+	 * 
+	 * @param bool  $remember
+	 * @return \App\Models\User|abort 500|abort 403|abort 422
+	 */
 	public function login(bool $remember = false)
 	{
 		if (! $this->socialiteUser) {
@@ -84,6 +131,12 @@ class SocialiteAuthRepository extends BaseRepository
 		return $user;
 	}
 
+	/**
+	 * Connect social media to user
+	 * 
+	 * @param \App\Models\User  $user
+	 * @return \App\Models\User
+	 */
 	public function connect(User $user)
 	{
 		if ($user->{$this->driver . '_id'}) {
@@ -103,7 +156,14 @@ class SocialiteAuthRepository extends BaseRepository
 		return $user;
 	}
 
-	public function disconnect(User $user, $driver)
+	/**
+	 * Disconnect social media from user
+	 * 
+	 * @param \App\Models\User  $user
+	 * @param string  $driver
+	 * @return \App\Models\User
+	 */
+	public function disconnect(User $user, string $driver)
 	{
 		try {
 			$user->{$driver . '_id'} = null;

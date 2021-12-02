@@ -5,11 +5,9 @@ namespace App\Repositories\Base;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
-use \Illuminate\Database\QueryException;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Builder;
-
 use Illuminate\Http\Resources\Json\JsonResource;
-
 use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 

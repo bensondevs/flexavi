@@ -5,14 +5,23 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Webpatser\Uuid\Uuid;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Webpatser\Uuid\Uuid;
+use App\Traits\Searchable;
 
-use Spatie\Activitylog\Models\Activity as SpatieActivity;
-
-class Activity extends SpatieActivity
+class UserSocialiteAccount extends Model
 {
     use HasFactory;
+    use SoftDeletes;
+    use Searchable;
+
+    /**
+     * Database table name
+     * 
+     * @var string
+     */
+    protected $table = 'user_socialite_accounts';
 
     /**
      * Table name primary key
@@ -36,6 +45,26 @@ class Activity extends SpatieActivity
     public $incrementing = false;
 
     /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
+    protected $searchable = [
+        //
+    ];
+
+    /**
+     * Set which columns are mass fillable
+     * 
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'type',
+        'vendor_user_id',
+    ];
+
+    /**
      * Perform any actions required before the model boots.
      * This is where observer should be put.
      * Any events and listener logic can be added in this method
@@ -46,9 +75,8 @@ class Activity extends SpatieActivity
     {
     	parent::boot();
 
-    	self::creating(function ($activity) {
-            $activity->id = Uuid::generate()->string;
-            $activity->company_id = auth()->user()->role_model->company->id;
+    	self::creating(function ($account) {
+            $account->id = Uuid::generate()->string;
     	});
     }
 }

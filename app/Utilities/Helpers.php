@@ -111,16 +111,25 @@ function generateUuid()
     return Uuid::generate()->string;
 }
 
-function db($table = null)
+function genarate_uuid()
 {
-    return ($table) ? 
-        DB::table($table) :
-        new DB;
+    return generateUuid();
 }
 
-function hashCheck($check, $hashed)
+function db($table = '')
+{
+    return ($table) ? 
+        DB::table($table) : new DB;
+}
+
+function hashCheck(string $check, string $hashed)
 {
     return Hash::check($check, $hashed);
+}
+
+function hash_check(string $check, string $hashed)
+{
+    return hashCheck($check, $password);
 }
 
 function encryptArray(array $array)

@@ -6,20 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
-
 use App\Enums\PaymentTerm\PaymentTermStatus;
-
 use App\Rules\FloatValue;
-
 use App\Models\Invoice;
 
 class CreatePaymentTermRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Target invoice to create payment term
+     * 
+     * @var \App\Models\Invoice
+     */
     private $invoice;
-    private $paymentTerm;
 
+    /**
+     * Get invoice from the supplied input of `invoice_id`
+     * 
+     * @return \App\Models\Invoice
+     */
     public function getInvoice()
     {
         if ($this->invoice) return $this->invoice;

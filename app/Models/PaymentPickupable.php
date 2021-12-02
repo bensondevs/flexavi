@@ -113,8 +113,34 @@ class PaymentPickupable extends Model
         // Convert clue to lower case
         $clue = strtolower($clue);
 
-        if ($clue == 'revenue') {
-            //
+        switch ($clue) {
+            case 'revenue':
+                return Revenue::class;
+                break;
+
+            case 'invoice';
+                return Invoice::class;
+                break;
+
+            case 'payment_term':
+                return PaymentTerm::class;
+                break;
+
+            case Revenue::class:
+                return Revenue::class;
+                break;
+
+            case Invoice::class:
+                return Invoice::class;
+                break;
+
+            case PaymentTerm::class:
+                return PaymentTerm::class;
+                break;
+            
+            default:
+                return Revenue::class;
+                break;
         }
     }
 }

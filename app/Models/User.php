@@ -356,7 +356,7 @@ class User extends Authenticatable
 
         // Create Token
         $token = $this->createToken(time())->plainTextToken;
-        return $this->token = $token;
+        return $this->attributes['token'] = $token;
     }
 
     /**
@@ -490,6 +490,17 @@ class User extends Authenticatable
     }
 
     /**
+     * Check password correct is match or not
+     * 
+     * @param string  $password
+     * @return bool
+     */
+    public function isPasswordMatch(string $password)
+    {
+        return hash_check($password, $this->attributes['password']);
+    }
+
+    /**
      * Send email verification to verify user email
      * 
      * @return void
@@ -526,7 +537,7 @@ class User extends Authenticatable
         $activity = activity();
 
         if ($model) $activity = $activity->performedOn($model);
-        if ($extra) $activity = $activity->withProperties($extras);
+        if ($extras) $activity = $activity->withProperties($extras);
 
         $activity->log($message);
     }

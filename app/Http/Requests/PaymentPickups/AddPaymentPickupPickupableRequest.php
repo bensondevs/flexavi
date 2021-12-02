@@ -44,7 +44,11 @@ class AddPaymentPickupPickupableRequest extends FormRequest
      */
     public function getPickupable()
     {
-        //
+        if ($this->pickupable) return $this->pickupable;
+
+        $id = $this->input('pickupable_id');
+        $type = PaymentPickupable::guessType($this->input('pickupable_type'));
+        return $this->pickupable = $type->findOrFail($id);
     }
 
     /**

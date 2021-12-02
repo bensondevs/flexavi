@@ -56,6 +56,22 @@ class SaveRevenueRequest extends FormRequest
     }
 
     /**
+     * Prepare input before validation
+     * 
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        if (! $this->input('paid_amount')) {
+            $amount = $this->input('amount');
+            $this->merge(['paid_amount' => $amount]);
+        }
+
+        $revenueable = $this->getRevenueable();
+        $this->merge(['company_id' => $revenueable->company_id]);
+    }
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -79,7 +95,9 @@ class SaveRevenueRequest extends FormRequest
     {
         return [
             'company_id' => ['required', 'string', 'exists:companies,id'],
-            'work_id' => ['required', 'string', 'uuid']
+            'revenue_name' => ['required', 'string'],
+            'amount' => ['required', new MoneyValue],
+            'paid_amount' => [new MoneyValue],
         ];
     }
 }
