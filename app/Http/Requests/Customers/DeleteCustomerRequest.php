@@ -9,8 +9,24 @@ use App\Models\Customer;
 
 class DeleteCustomerRequest extends FormRequest
 {
+    /**
+     * Found customer data container after the getCustomer() 
+     * function firstly called.
+     * 
+     * @var \App\Models\Customer|null
+     */
     private $customer;
 
+    /**
+     * Get target customer from supplied input of
+     * `id` or `customer_id`. 
+     * 
+     * To prevent repeated query, the result of query will be stored
+     * inside the $customer attribute above and get data from that variable
+     * once the data is stored into variable.
+     * 
+     * @return \App\Models\Customer|abort 404
+     */
     public function getCustomer()
     {
         if ($this->customer) return $this->customer;
@@ -19,6 +35,11 @@ class DeleteCustomerRequest extends FormRequest
         return $this->customer = Customer::withTrashed()->findOrFail($id);
     }
 
+    /**
+     * Prepare needed value for validation and input
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         if ($force = $this->input('force')) {

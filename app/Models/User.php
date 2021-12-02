@@ -408,19 +408,13 @@ class User extends Authenticatable
         // Allow Owner
         if ($role->name == 'owner') {
             $owner = $this->owner;
-            $company = $owner->company;
-
-            return ($company->id === $companyId);
+            return ($owner->company_id === $companyId);
         }
 
         // Allow Employee
         if ($role->name == 'employee') {
             $employee = $this->employee;
-            if ($employee->company_id == $companyId) {
-                if ($employee->hasPermissionTo($doAction ?: 'any action')) {
-                    return true;
-                }
-            }
+            return ($employee->company_id == $companyId) && $employee->hasPermissionTo($doAction);
         }
 
         // Disallow, because pass none

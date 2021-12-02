@@ -23,6 +23,6 @@ trait BelongsToCompany
      */
     public function isBelongsToCompany(Company $company)
     {
-        //
+        return $this->attributes['company_id'] == $company->id;
     }
 }

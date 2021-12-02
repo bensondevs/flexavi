@@ -129,7 +129,7 @@ function hashCheck(string $check, string $hashed)
 
 function hash_check(string $check, string $hashed)
 {
-    return hashCheck($check, $password);
+    return hashCheck($check, $hashed);
 }
 
 function encryptArray(array $array)

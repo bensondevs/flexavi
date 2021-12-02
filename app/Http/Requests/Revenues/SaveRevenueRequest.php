@@ -37,7 +37,11 @@ class SaveRevenueRequest extends FormRequest
         if ($this->revenue) return $this->revenue;
 
         $id = $request->input('revenue_id');
-        return $this->revenue = Revenue::findOrFail($id);
+        $revenue = Revenue::findOrFail($id);
+        $this->revenue = $revenue;
+        $this->revenueable = $revenue->revenueable;
+
+        return $revenue;
     }
 
     /**

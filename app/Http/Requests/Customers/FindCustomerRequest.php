@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
-
 use App\Traits\RequestHasRelations;
 
 class FindCustomerRequest extends FormRequest
