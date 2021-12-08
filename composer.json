@@ -44,12 +44,12 @@
     },
     "autoload-dev": {
         "files": [
-            "app/Utilities/Helpers.php",
-            "app/Utilities/UrlHelpers.php",
-            "app/Utilities/FileHelpers.php",
-            "app/Utilities/StringHelpers.php",
-            "app/Utilities/DateTimeHelpers.php",
-            "app/Utilities/EncryptionHelpers.php"
+            "app/Helpers/Helpers.php",
+            "app/Helpers/UrlHelpers.php",
+            "app/Helpers/FileHelpers.php",
+            "app/Helpers/StringHelpers.php",
+            "app/Helpers/DateTimeHelpers.php",
+            "app/Helpers/EncryptionHelpers.php"
         ],
         "psr-4": {
             "Tests\\": "tests/"
