@@ -23,7 +23,7 @@ class AddressTest extends TestCase
     public function test_populate_company_addresses()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/addresses';
@@ -43,7 +43,7 @@ class AddressTest extends TestCase
     public function test_populate_company_trasheds_addresses()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/addresses/trasheds';
@@ -63,7 +63,7 @@ class AddressTest extends TestCase
     public function test_store_company_address()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/addresses/store';
@@ -95,7 +95,7 @@ class AddressTest extends TestCase
     public function test_view_company_address()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $address = Address::factory()->create([
@@ -119,7 +119,7 @@ class AddressTest extends TestCase
     public function test_update_company_address()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/addresses/update';
@@ -155,7 +155,7 @@ class AddressTest extends TestCase
     public function test_delete_company_address()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/addresses/delete';
@@ -182,7 +182,7 @@ class AddressTest extends TestCase
     public function test_restore_company_address()
     {
         $company = Company::inRandomOrder()->first();
-        $owner = Owner::factory()->prime()->create(['company_id' => $company->id]);
+        $owner = Owner::factory()->for($company)->prime()->create();
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $url = '/api/dashboard/companies/addresses/restore';

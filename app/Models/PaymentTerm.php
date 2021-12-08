@@ -11,7 +11,7 @@ use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Interfaces\PaymentPickupable;
 use App\Observers\PaymentTermObserver;
-use App\Enums\PaymentTerm\PaymentTermStatus;
+use App\Enums\PaymentTerm\PaymentTermStatus as Status;
 
 class PaymentTerm extends Model implements PaymentPickupable
 {
@@ -109,7 +109,7 @@ class PaymentTerm extends Model implements PaymentPickupable
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
-        return PaymentTermStatus::getDescription($status);
+        return Status::getDescription($status);
     }
 
     /**
@@ -155,7 +155,7 @@ class PaymentTerm extends Model implements PaymentPickupable
      */
     public function getShouldBePaidAmountAttribute()
     {
-        if ($this->attributes['status'] == PaymentTermStatus::Unpaid) {
+        if ($this->attributes['status'] == Status::Unpaid) {
             return 0;
         }
 
@@ -171,7 +171,7 @@ class PaymentTerm extends Model implements PaymentPickupable
     public function setAddedPaidAmountAttribute(float $amount)
     {
         if ($this->attributes['amount'] <= $amount) {
-            return $this->attributes['status'] = PaymentTermStatus::Paid;
+            return $this->attributes['status'] = Status::Paid;
         }
 
         abort(403, 'Cannot pay less than the requested amount of payment term.');
@@ -201,7 +201,7 @@ class PaymentTerm extends Model implements PaymentPickupable
      */
     public static function collectAllStatuses()
     {
-        return PaymentTermStatus::asSelectArray();
+        return Status::asSelectArray();
     }
 
     /**

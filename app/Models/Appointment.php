@@ -13,12 +13,13 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Observers\AppointmentObserver;
+
 use App\Enums\Appointment\{
     AppointmentType as Type,
     AppointmentStatus as Status,
     AppointmentCancellationVault as CancellationVault
 };
-
 use App\Enums\Work\WorkStatus;
 
 class Appointment extends Model
@@ -101,11 +102,22 @@ class Appointment extends Model
      */
     protected $casts = [
         'worklists.appointmentables.id' => 'string',
+        'workdays.appointmentables.id' => 'string',
 
         'include_weekend' => 'boolean',
         'start' => 'datetime',
         'end' => 'datetime',
     ];
+
+    /**
+     * Model booting method
+     * 
+     * @return void
+     */
+    protected static function booting()
+    {
+        //
+    }
 
     /**
      * Perform any actions required before the model boots.
@@ -118,10 +130,7 @@ class Appointment extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($appointment) {
-            $appointment->id = Uuid::generate()->string;
-    	});
+        self::observe(AppointmentObserver::class);
     }
 
     /**
@@ -151,11 +160,22 @@ class Appointment extends Model
      * Add query only populate employees with status of Calculated
      * 
      * @param \Illuminate\Database\Eloquent\Builder  $query
-     * @return Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder  $query
      */
     public function scopeCalculated(Builder $query)
     {
         return $query->where('status', Status::Calculated);
+    }
+
+    /**
+     * Add query only populate payment pickup type of appointments
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder  $query
+     */
+    public function scopePaymentPickupOnly()
+    {
+        //
     }
 
     /**
@@ -503,7 +523,11 @@ class Appointment extends Model
     public function syncWorkdays()
     {
         $workdays = Workday::inAppointmentRange($this->first())->get();
-        return $this->workdays()->sync($workdays);
+        $pivots = [];
+        foreach ($workdays as $index => $workday) {
+            $pivots[$workday->id] = generateUuid();
+        }
+        return $this->workdays()->sync($pivots, false);
     }
 
     /**

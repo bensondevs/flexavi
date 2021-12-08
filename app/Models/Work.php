@@ -195,6 +195,13 @@ class Work extends Model
         return $percentage . '%';
     }
 
+    /**
+     * Create callable "tax_amount" attribute
+     * This attribute will return the amount of tax that
+     * will be added to the total
+     * 
+     * @return double
+     */
     public function getTaxAmountAttribute()
     {
         $unitTotal = $this->getUnitTotalAttribute();
@@ -236,6 +243,14 @@ class Work extends Model
         $total = $quantity * $unitPrice;
 
         return $this->attributes['total_price'] = $total;
+    }
+
+    /**
+     * Get work company
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
     }
 
     /**

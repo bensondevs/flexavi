@@ -114,7 +114,7 @@ class EmployeeController extends Controller
     public function view(FindRequest $request)
     {
         $employee = $request->getEmployee();
-        $employee->load(['user', 'addresses', 'company', 'todayInspections']);
+        $employee->load(['user', 'addresses', 'company']);
         $employee = new EmployeeResource($employee);
 
         return response()->json(['employee' => $employee]);

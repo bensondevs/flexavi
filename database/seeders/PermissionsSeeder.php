@@ -3,9 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-
-use App\Models\Role;
-use App\Models\Permission;
+use App\Models\{ Role, Permission };
 
 class PermissionsSeeder extends Seeder
 {
@@ -352,6 +350,21 @@ class PermissionsSeeder extends Seeder
             'edit post its',
             'delete post its',
             'force delete post its',
+
+            // Payment Pickup
+            'view any payment pickups',
+            'create payment pickups',
+            'view payment pickups',
+            'edit payment pickups',
+            'pickup payment pickups',
+            'delete payment pickups',
+            'force delete payment pickups',
+            'restore payment pickups',
+            'add pickupable payment pickups',
+            'add multiple pickupables payment pickups',
+            'remove pickupable payment pickups',
+            'remove multiple pickupables payment pickups',
+            'truncate pickupables payment pickups',
         ];
 
         $rawPermissions = [];

@@ -13,8 +13,18 @@ class SavePostItRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Found post it to be updated
+     * 
+     * @var \App\Models\PostIt|null
+     */
     private $postIt;
 
+    /**
+     * Get post it from supplied input of `post_it_id`
+     * 
+     * @return \App\Models\PostIt|abort 404
+     */
     public function getPostIt()
     {
         if ($this->postIt) return $this->postIt;

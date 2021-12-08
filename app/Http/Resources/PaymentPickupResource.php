@@ -3,9 +3,12 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Traits\ApiCollectionResource;
 
 class PaymentPickupResource extends JsonResource
 {
+    use ApiCollectionResource;
+    
     /**
      * Transform the resource into an array.
      *
@@ -27,16 +30,17 @@ class PaymentPickupResource extends JsonResource
             $structure['reason_not_all'] = $this->reason_not_all;
         }
 
+        if ($this->relationLoaded('company')) {
+            $structure['company'] = new CompanyResource($this->company);
+        }
+
         if ($this->relationLoaded('appointment')) {
-            //
+            $structure['appointment'] = new AppointmentResource($this->appointment);
         }
 
-        if ($this->relationLoaded('employee')) {
-            //
-        }
 
-        if ($this->relationLoaded('paymentPickupable')) {
-            //
+        if ($this->relationLoaded('pickupables')) {
+            $structure['pickupables'] = $this->pickupables;
         }
 
         return $structure;

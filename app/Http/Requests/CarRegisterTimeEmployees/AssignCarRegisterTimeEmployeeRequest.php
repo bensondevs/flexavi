@@ -6,18 +6,33 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
-
 use App\Models\{ CarRegisterTime, Employee };
-
 use App\Rules\OnlyOneDriver;
 
 class AssignCarRegisterTimeEmployeeRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Found car register time container
+     * 
+     * @var \App\Models\CarRegisterTime
+     */
     private $time;
+
+    /**
+     * Found employee container
+     * 
+     * @var \App\Models\Employee
+     */
     private $employee;
 
+    /**
+     * Get car register time by supplied input of
+     * `car_register_time_id`
+     * 
+     * @return \App\Models\CarRegisterTime|abort 404
+     */
     public function getCarRegisterTime()
     {
         if ($this->time) return $this->time;
@@ -26,6 +41,11 @@ class AssignCarRegisterTimeEmployeeRequest extends FormRequest
         return $this->time = CarRegisterTime::findOrFail($id);
     }
 
+    /**
+     * Get employee by supplied input of `employee_id`
+     * 
+     * @return \App\Models\Employee|abort 404
+     */
     public function getEmployee()
     {
         if ($this->employee) return $this->employee;
@@ -55,7 +75,7 @@ class AssignCarRegisterTimeEmployeeRequest extends FormRequest
     {
         $time = $this->getCarRegisterTime();
         return [
-            'employee_id' => ['required']
+            'employee_id' => ['required'],
             'passanger_type' => ['numeric', new OnlyOneDriver($time)],
         ];
     }

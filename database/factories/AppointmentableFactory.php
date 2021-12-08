@@ -80,12 +80,14 @@ class AppointmentableFactory extends Factory
     /**
      * Indicate model appointment has relationship with worklist.
      *
+     * @param \App\Models\Worklist|null
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
     public function worklist($worklist = null)
     {
         return $this->state(function (array $attributes) use ($worklist) {
             if (! $worklist) {
+                $company = $this->company;
                 $worklist = Worklist::factory()->create();
             }
 

@@ -7,6 +7,17 @@ use App\Models\{ Workday, Appointment };
 class AppointmentObserver
 {
     /**
+     * Handle the Appointment "creating" event.
+     *
+     * @param  \App\Models\Appointment  $appointment
+     * @return void
+     */
+    public function creating(Appointment $appointment)
+    {
+        $appointment->id = generateUuid();
+    }
+
+    /**
      * Handle the Appointment "created" event.
      *
      * @param  \App\Models\Appointment  $appointment

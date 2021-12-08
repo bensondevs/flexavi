@@ -178,10 +178,14 @@ class OwnerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $url = '/api/dashboard/companies/addresses/owner/restore';
-        $address = Address::factory()->owner($owner)->softDeleted()->create();
+        $address = Address::factory()
+            ->owner($owner)
+            ->softDeleted()
+            ->create();
 
         $response = $this->json('PATCH', $url, ['id' => $address->id]);
 

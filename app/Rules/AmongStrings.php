@@ -6,6 +6,11 @@ use Illuminate\Contracts\Validation\Rule;
 
 class AmongStrings implements Rule
 {
+    /**
+     * Array of allowed strings to be inputted
+     * 
+     * @var array
+     */
     protected $allowedStrings;
 
     /**

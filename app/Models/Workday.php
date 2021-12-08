@@ -204,7 +204,7 @@ class Workday extends Model
                 'id' => generateUuid(),
                 'company_id' => $this->attributes['company_id'],
                 'workday_id' => $this->attributes['id'],
-                'status' => \App\Enums\Worklist\WorklistStatus::Created,
+                'status' => \App\Enums\Worklist\WorklistStatus::Prepared,
                 'worklist_name' => 'Worklist ' . ($index + 1),
                 'created_at' => now(),
                 'updated_at' => now(),

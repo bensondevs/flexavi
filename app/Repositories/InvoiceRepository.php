@@ -2,20 +2,17 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 use App\Jobs\SendMail;
-
 use App\Mail\Invoice\{
 	SendInvoice,
 	InvoiceFirstReminder,
 	InvoiceSecondReminder,
 	InvoiceThirdReminder
 };
-
 use App\Enums\Invoice\InvoiceStatus;
-
 use App\Models\{
 	Invoice,
 	InvoiceItem,
@@ -28,11 +25,22 @@ use App\Repositories\Base\BaseRepository;
 
 class InvoiceRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Invoice);
 	}
 
+	/**
+	 * Save invoice
+	 * 
+	 * @param array  $invoiceData
+	 * @return \App\Models\Invoice
+	 */
 	public function save(array $invoiceData = [])
 	{
 		try {
@@ -51,8 +59,16 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Generate invoice from appointment
+	 * 
+	 * @param \App\Models\Appointment  $appointment
+	 * @param array  $invoiceData
+	 * @return \Ap\Models\Invoice
+	 */
 	public function generateFromAppointment(Appointment $appointment, array $invoiceData = [])
 	{
+		// Appointment has invoice already
 		if ($invoice = $appointment->invoice) {
 			$this->setModel($invoice);
 			$this->setSuccess('This appointment has invoice already, not generating, just returning record.');
@@ -60,6 +76,7 @@ class InvoiceRepository extends BaseRepository
 			return $this->getModel();
 		}
 
+		// Making sure the appointment does not works
 		$works = $appointment->works;
 		if (empty($works)) {
 			$this->setUnprocessedInput('Failed to generate invoice from appointment. Appointment has no work attached.');
@@ -91,6 +108,13 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Generate invoice from quotation
+	 * 
+	 * @param \App\Models\Quotation  $quotation
+	 * @param array  $invoiceData
+	 * @return \App\Models\Invoice
+	 */
 	public function generateFromQuotation(Quotation $quotation, array $invoiceData = [])
 	{
 		if ($invoice = $quotation->invoice) {
@@ -131,6 +155,13 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Generate invoice from work contract
+	 * 
+	 * @param \App\Models\WorkContract  $contract
+	 * @param array  $invoiceData
+	 * @return \App\Models\Invoice
+	 */
 	public function generateFromWorkContract(WorkContract $contract, array $invoiceData = [])
 	{
 		$works = $contract->works;
@@ -163,6 +194,15 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Generate invoice number and send to customer
+	 * 
+	 * If destination email is not supplied, 
+	 * this function will take default customer's email
+	 * 
+	 * @param string|null  $destinationEmail
+	 * @return \App\Models\Invoice
+	 */
 	public function send(string $destinationEmail = '')
 	{
 		try {
@@ -190,6 +230,11 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Print invoice as draft and generate invoice number
+	 * 
+	 * @return \App\Models\Invoice
+	 */
 	public function printDraft()
 	{
 		try {
@@ -208,6 +253,11 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Print invoice and set the status as sent
+	 * 
+	 * @return \App\Models\Invoice
+	 */
 	public function print()
 	{
 		try {
@@ -226,6 +276,13 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Populate only overdue invoices
+	 * 
+	 * @param array|null  $options
+	 * @param bool  $pagination
+	 * @return \Illuminate\Support\Collection
+	 */
 	public function overdueInvoices(array $options = [], bool $pagination = false)
 	{
 		if (! isset($options['scopes'])) {
@@ -237,6 +294,12 @@ class InvoiceRepository extends BaseRepository
         return $this->all($options, $pagination);
 	}
 
+	/**
+	 * Change status of the invoice
+	 * 
+	 * @param int  $status
+	 * @return \App\Models\Invoice
+	 */
 	public function changeStatus(int $status)
 	{
 		try {
@@ -255,6 +318,12 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Send reminder about invoice to destinated email
+	 * 
+	 * @param string  $destinationEmail
+	 * @return \App\Models\Invoice
+	 */
 	public function sendReminder(string $destinationEmail = '')
 	{
 		$invoice = $this->getModel();
@@ -278,6 +347,12 @@ class InvoiceRepository extends BaseRepository
 		}
 	}
 
+	/**
+	 * Send the first reminder about invoice payment
+	 * 
+	 * @param string  $destinationEmail
+	 * @return \App\Models\Invoice
+	 */
 	public function sendFirstReminder(string $destinationEmail = '')
 	{
 		try {
@@ -303,7 +378,13 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function sendSecondReminder()
+	/**
+	 * Send second reminder about the invoice payment
+	 * 
+	 * @param string  $destinationEmail
+	 * @return \App\Models\Invoice
+	 */
+	public function sendSecondReminder(string $destinationEmail = '')
 	{
 		try {
 			$invoice = $this->getModel();
@@ -328,7 +409,13 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function sendThirdReminder()
+	/**
+	 * Send the third reminder about the invoice payment
+	 * 
+	 * @param string  $destinationEmail
+	 * @return \App\Models\Invoice
+	 */
+	public function sendThirdReminder(string $destinationEmail = '')
 	{
 		try {
 			$invoice = $this->getModel();
@@ -353,6 +440,11 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Send invoice to debt collector to be collected
+	 * 
+	 * @return \App\Models\Invoice
+	 */
 	public function sendDebtCollector()
 	{
 		try {
@@ -367,8 +459,18 @@ class InvoiceRepository extends BaseRepository
 			$error = $qe->getMessage();
 			$this->setError('Failed to send debt collector', $error);
 		}
+
+		return $this->getModel();
 	}
 
+	/**
+	 * Mark invoice as paid
+	 * 
+	 * Set the parameter to true if payment settled through debt collector
+	 * 
+	 * @param bool  $viaDebtCollector
+	 * @return \App\Models\Invoice
+	 */
 	public function markAsPaid(bool $viaDebtCollector = false)
 	{
 		try {
@@ -389,6 +491,12 @@ class InvoiceRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete invoice, set parameter to true for force delete
+	 * 
+	 * @param bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -401,10 +509,8 @@ class InvoiceRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete invoice.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete invoice', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete invoice', $error);
 		}
 
 		return $this->returnResponse();

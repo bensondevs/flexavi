@@ -24,6 +24,7 @@ use App\Http\Controllers\Api\Company\{
 	OwnerController,
 	InspectorController,
 	PaymentTermController,
+	PaymentPickupController,
 	WorkdayController,
 		WorkdayWorklistController,
 		Costs\WorkdayCostController,
@@ -422,31 +423,55 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Warranties
-	*/
+	/**
+	 * Company Warranties
+	 */
 	Route::group(['prefix' => 'warranties'], function () {
 		Route::get('/', [WarrantyController::class, 'companyWarranties']);
 	});
 
-	/*
-		Company Work Contracts
-	*/
+	/**
+	 * Company Payment Pickups
+	 */
+	Route::group(['prefix' => 'payment_pickups'], function () {
+		Route::get('/', [PaymentPickupController::class, 'companyPaymentPickups']);
+		Route::get('appointment', [PaymentPickupController::class, 'appointmentPaymentPickups']);
+		Route::post('store', [PaymentPickupController::class, 'store']);
+		Route::post('process', [PaymentPickupController::class, 'process']);
+		Route::match(['PUT', 'PATCH'], 'update', [PaymentPickupController::class, 'update']);
+		Route::delete('delete', [PaymentPickupController::class, 'delete']);
+		Route::patch('restore', [PaymentPickupController::class, 'restore']);
+
+		/**
+		 * Payment pickup-pickupables
+		 */
+		Route::group(['prefix' => 'pickupables'], function () {
+			Route::post('add', [PaymentPickupController::class, 'addPickupable']);
+			Route::post('add_multiple', [PaymentPickupController::class, 'addMultiplePickupables']);
+			Route::delete('remove', [PaymentPickupController::class, 'removePickupable']);
+			Route::delete('remove_multiple', [PaymentPickupController::class, 'removeMultiplePickupables']);
+			Route::delete('truncate', [PaymentPickupController::class, 'truncatePickupables']);
+		});
+	});
+
+	/**
+	 * Company Work Contracts
+	 */
 	Route::group(['prefix' => 'work_contracts'], function () {
 		Route::get('/', [WorkContractController::class, 'companyWorkContracts']);
 		Route::post('store', [WorkContractController::class, 'store']);
 		Route::match(['PUT', 'PATCH'], 'update', [WorkContractController::class, 'update']);
 		Route::delete('delete', [WorkContractController::class, 'delete']);
 
-		/*
-			Quotation Works
-		*/
+		/**
+		 * Work contract works
+		 */
 		Route::get('works', [WorkController::class, 'contractWorks']);
 	});
 
-	/*
-		Company Work Module
-	*/
+	/**
+	 * Company work module
+	 */
 	Route::group(['prefix' => 'works'], function () {
 		Route::get('/', [WorkController::class, 'companyWorks']);
 		Route::get('appointment_finisheds', [WorkController::class, 'appointmentFinishedWorks']);
@@ -459,9 +484,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::delete('delete', [WorkController::class, 'delete']);
 		Route::patch('restore', [WorkController::class, 'restore']);
 
-		/*
-			Execute Work Module
-		*/
+		/**
+		 * Execute work module
+		 */
 		Route::group(['prefix' => 'executes'], function () {
 			Route::get('/', [ExecuteWorkController::class, 'executeWorks']);
 			Route::get('trasheds', [ExecuteWorkController::class, 'trashedExecuteWorks']);
@@ -471,9 +496,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::delete('delete', [ExecuteWorkController::class, 'delete']);
 			Route::patch('restore', [ExecuteWorkController::class, 'restore']);
 
-			/*
-				Execute Work Photo Module
-			*/
+			/**
+			 * Execute work photo module
+			 */
 			Route::group(['prefix' => 'photos'], function () {
 				Route::get('/', [ExecuteWorkPhotoController::class, 'executeWorkPhotos']);
 				Route::get('trasheds', [ExecuteWorkPhotoController::class, 'trashedExecuteWorkPhotos']);
@@ -487,9 +512,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::post('mark_unfinish', [WorkController::class, 'markUnfinsih']);
 	});
 
-	/*
-		Address Module
-	*/
+	/**
+	 * Address module
+	 */
 	Route::group(['prefix' => 'addresses'], function () {
 		Route::get('/', [AddressController::class, 'companyAddresses']);
 		Route::get('trasheds', [AddressController::class, 'companyTrashedAddresses']);
@@ -499,9 +524,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::delete('delete', [AddressController::class, 'delete']);
 		Route::patch('restore', [AddressController::class, 'restore']);
 
-		/*
-			Customer Address Module
-		*/
+		/**
+		 * Customer address module
+		 */
 		Route::group(['prefix' => 'customer'], function () {
 			Route::get('/', [CustomerAddressController::class, 'customerAddresses']);
 			Route::get('trasheds', [CustomerAddressController::class, 'customerTrashedAddresses']);
@@ -512,9 +537,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::patch('restore', [CustomerAddressController::class, 'restore']);
 		});
 		
-		/*
-			Owner Address Module
-		*/
+		/**
+		 * Owner address module
+		 */
 		Route::group(['prefix' => 'owner'], function () {
 			Route::get('/', [OwnerAddressController::class, 'ownerAddresses']);
 			Route::get('trasheds', [OwnerAddressController::class, 'ownerTrashedAddresses']);
@@ -525,9 +550,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::patch('restore', [OwnerAddressController::class, 'restore']);
 		});
 
-		/*
-			Employee Address Module
-		*/
+		/**
+		 * Employee address module
+		 */
 		Route::group(['prefix' => 'employee'], function () {
 			Route::get('/', [EmployeeAddressController::class, 'employeeAddresses']);
 			Route::get('trasheds', [EmployeeAddressController::class, 'employeeTrashedAddresses']);
@@ -539,9 +564,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Post It Module
-	*/
+	/**
+	 * Company Post It Module
+	 */
 	Route::group(['prefix' => 'post_its'], function () {
 		Route::get('/', [PostItController::class, 'companyPostIts']);
 		Route::post('store', [PostItController::class, 'store']);
@@ -551,9 +576,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::delete('delete', [PostItController::class, 'delete']);
 	});
 
-	/*
-		Company Register Invitation Module
-	*/
+	/**
+	 * Company registration invitations module
+	 */
 	Route::group(['prefix' => 'register_invitations'], function () {
 		Route::post('invite_employee', [RegisterInvitationController::class, 'inviteEmployee']);
 		Route::post('invite_owner', [RegisterInvitationController::class, 'inviteOwner']);

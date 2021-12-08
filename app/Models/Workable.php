@@ -57,6 +57,7 @@ class Workable extends Model
      * @var array
      */
     protected $fillable = [
+        'work_id',
         'workable_type',
         'workable_id',
     ];
@@ -76,6 +77,25 @@ class Workable extends Model
     	self::creating(function ($workable) {
             $workable->id = Uuid::generate()->string;
     	});
+    }
+
+    /**
+     * Get work of current pivot model
+     */
+    public function work()
+    {
+        return $this->belongsTo(Work::class);
+    }
+
+    /**
+     * Get the workable model. Possible workable type
+     * \App\Models\Appointment
+     * \App\Models\Quotation
+     * \App\Models\SubAppointment
+     */
+    public function workable()
+    {
+        return $this->morphTo();
     }
 
     /**

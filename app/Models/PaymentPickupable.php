@@ -3,18 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\{ Model, SoftDeletes, Builder, Factories\HasFactory };
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
 class PaymentPickupable extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
-    use Searchable;
+    use HasFactory, SoftDeletes, Searchable;
 
     /**
      * Database table name
@@ -65,6 +60,17 @@ class PaymentPickupable extends Model
     ];
 
     /**
+     * Possible morph types list
+     * 
+     * @var array
+     */
+    const MORPHED_TYPES = [
+        Revenue::class,
+        Invoice::class,
+        PaymentTerm::class,
+    ];
+
+    /**
      * Perform any actions required before the model boots.
      * This is where observer should be put.
      * Any events and listener logic can be added in this method
@@ -78,6 +84,35 @@ class PaymentPickupable extends Model
     	self::creating(function ($paymentPickupable) {
             $paymentPickupable->id = Uuid::generate()->string;
     	});
+    }
+
+    /**
+     * Create callable function of `wherePaymentPickup(PaymentPickup $pickup)`
+     * This callable function will query only the result of payment pickup's pivot
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param \App\Models\PaymentPickup  $pickup
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWherePaymentPickup(Builder $query, PaymentPickup $pickup)
+    {
+        return $query->where('payment_pickup_id', $pickup->id);
+    }
+
+    /**
+     * Create callable function of `wherePickupable($pickupable)`
+     * This callable function only query the result where `payment_pickupable_type`
+     * and `payment_pickupable_id` are match with the supplied argument.
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder  $query
+     * @param mixed  $pickupable
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWherePickupable(Builder $query, $pickupable)
+    {
+        return $query
+            ->where('payment_pickupable_id', $pickupable->id)
+            ->where('payment_pickupable_type', get_class($pickupable));
     }
 
     /**
@@ -123,6 +158,10 @@ class PaymentPickupable extends Model
                 break;
 
             case 'payment_term':
+                return PaymentTerm::class;
+                break;
+
+            case 'paymentterm':
                 return PaymentTerm::class;
                 break;
 

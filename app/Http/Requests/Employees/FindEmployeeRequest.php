@@ -6,20 +6,35 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Employee;
-
 use App\Traits\RequestHasRelations;
 
 class FindEmployeeRequest extends FormRequest
 {
     use RequestHasRelations;
 
+    /**
+     * List of loaded relation names
+     * 
+     * @var array
+     */
     protected $relationNames = [
         'with_company' => true,
         'with_user' => false,
     ];
 
+    /**
+     * Employee model container
+     * 
+     * @var \App\Models\Employee|null
+     */
     private $employee;
 
+    /**
+     * Get employee from the supplied input of 
+     * `id` or `employee_id`
+     * 
+     * @return \App\Models\Employee|abort 404
+     */
     public function getEmployee()
     {
         if ($this->employee) return $this->employee;
@@ -28,9 +43,14 @@ class FindEmployeeRequest extends FormRequest
         return $this->employee = Employee::findOrFail($id);
     }
 
+    /**
+     * Prepare inputtted data according to expected form
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
-        $this->prepareRelationInputs();
+        $this->prepareRelationInputs(); // Set $this->relationNames value
     }
 
     /**
@@ -40,8 +60,7 @@ class FindEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        $employee = $this->getEmployee();
-        return Gate::allows('view-employee', $employee);
+        return Gate::allows('view-employee', $this->getEmployee());
     }
 
     /**

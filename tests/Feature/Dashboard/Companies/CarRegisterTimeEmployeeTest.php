@@ -11,7 +11,9 @@ use Laravel\Sanctum\Sanctum;
 
 use App\Models\{ 
     Company, 
+    Car,
     Owner, 
+    Worklist,
     Employee, 
     CarRegisterTime, 
     CarRegisterTimeEmployee as AssignedEmployee 
@@ -19,6 +21,13 @@ use App\Models\{
 
 class CarRegisterTimeEmployeeTest extends TestCase
 {
+    use DatabaseTransactions;
+    
+    /**
+     * Car register time base url
+     * 
+     * @var string
+     */
     private $baseUrl = '/api/dashboard/companies/cars/register_times/assigned_employees';
 
     /**
@@ -55,7 +64,11 @@ class CarRegisterTimeEmployeeTest extends TestCase
         $user = $owner->user;
         Sanctum::actingAs($user, ['*']);
 
-        $time = CarRegisterTime::factory()->for($company)->create();
+        $time = CarRegisterTime::factory()
+            ->for($company)
+            ->for(Worklist::factory()->for($company)->create())
+            ->for(Car::factory()->for($company)->create())
+            ->create();
         $employee = Employee::factory()->for($company)->create();
         $url = $this->baseUrl . '/assign';
         $response = $this->json('POST', $url, [
@@ -85,6 +98,7 @@ class CarRegisterTimeEmployeeTest extends TestCase
 
         $assignedEmployee = AssignedEmployee::factory()
             ->for($company)
+            ->for(Employee::factory()->for($company)->create())
             ->create();
         $url = $this->baseUrl . '/set_as_driver';
         $response = $this->json('POST', $url, [
@@ -112,6 +126,8 @@ class CarRegisterTimeEmployeeTest extends TestCase
 
         $assignedEmployee = AssignedEmployee::factory()
             ->for($company)
+            ->for(Employee::factory()->for($company)->create())
+            ->passanger()
             ->create();
         $url = $this->baseUrl . '/set_out';
         $response = $this->json('POST', $url, [
@@ -139,6 +155,7 @@ class CarRegisterTimeEmployeeTest extends TestCase
 
         $assignedEmployee = AssignedEmployee::factory()
             ->for($company)
+            ->for(Employee::factory()->for($company)->create())
             ->create();
         $url = $this->baseUrl . '/unassign';
         $response = $this->json('DELETE', $url, [

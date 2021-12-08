@@ -169,9 +169,9 @@ class Revenue extends Model implements PaymentPickupable
     /**
      * Get revenueable laravel-model
      */
-    public function revenueable()
+    public function revenueables()
     {
-        return $this->morphTo();
+        return $this->morphMany(Revenueable::class, 'revenueable');
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Http\Requests\PaymentPickups;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
-use App\Models\{ PaymentPickup, PaymentPickupable };
+use App\Models\{ PaymentPickup, PaymentPickupable, Invoice, Revenue, PaymentTerm };
 
 class RemovePaymentPickupPickupableRequest extends FormRequest
 {
@@ -37,7 +37,9 @@ class RemovePaymentPickupPickupableRequest extends FormRequest
     }
 
     /**
-     * Get payment pickupable
+     * Get payment pickupable from supplied parameter of
+     * `type` and `id` or `invoice_id` or `revenue_id`
+     * or `payment_term_id`
      * 
      * @return mixed
      */
@@ -45,9 +47,30 @@ class RemovePaymentPickupPickupableRequest extends FormRequest
     {
         if ($this->pickupable) return $this->pickupable;
 
-        $id = $this->input('pickupable_id');
-        $type = PaymentPickupable::guessType($this->input('pickupable_type'));
-        return $this->pickupable = $type->findOrFail($id);
+        switch (true) {
+            case $this->has('invoice_id'):
+                $id = $this->input('invoice_id');
+                $type = Invoice::class;
+                break;
+
+            case $this->has('revenue_id'):
+                $id = $this->input('revenue_id');
+                $type = Revenue::class;
+                break;
+
+            case $this->has('payment_term_id'):
+                $id = $this->input('payment_term_id');
+                $type = PaymentTerm::class;
+                break;
+            
+            default:
+                $id = $this->input('pickupable_id');
+                $type = PaymentPickupable::guessType($this->input('pickupable_type'));
+                break;
+        }
+
+        
+        return $this->pickupable = $type::findOrFail($id);
     }
 
     /**
@@ -57,9 +80,10 @@ class RemovePaymentPickupPickupableRequest extends FormRequest
      */
     public function authorize()
     {
-        $paymentPickup = $this->getPaymentPickup();
-        $pickupable = $this->getPickupable();
-        return Gate::allows('remove-pickupable-payment-pickup', [$paymentPickup, $pickupable]);
+        return Gate::allows('remove-pickupable-payment-pickup', [
+            $this->getPaymentPickup(), 
+            $this->getPickupable()
+        ]);
     }
 
     /**

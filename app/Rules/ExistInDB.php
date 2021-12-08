@@ -4,19 +4,30 @@ namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
 
-use DB;
-
 class ExistInDB implements Rule
 {
+    /**
+     * Table name as the target of checking
+     * 
+     * @var string
+     */
     protected $table;
+
+    /**
+     * Table column to as the target of checking
+     * 
+     * @var string
+     */
     protected $column;
 
     /**
      * Create a new rule instance.
      *
+     * @param string  $table
+     * @param string|null  $column
      * @return void
      */
-    public function __construct($table, $column = null)
+    public function __construct(string $table, string $column = '')
     {
         $this->table = $table;
         $this->column = $column;
@@ -31,11 +42,10 @@ class ExistInDB implements Rule
      */
     public function passes($attribute, $value)
     {
-        $found = db($this->table)
-            ->where($this->column ? $this->column : $attribute, $value)
-            ->count() > 0;
+        $table = $this->table;
+        $column = $this->column ?: $attribute;
 
-        return $found;
+        return db($table)->where($column, $value)->exists();
     }
 
     /**

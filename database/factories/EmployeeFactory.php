@@ -35,10 +35,7 @@ class EmployeeFactory extends Factory
             }
 
             if (! $employee->user_id) {
-                $user = User::inRandomOrder()
-                    ->whereDoesntHave('employee')
-                    ->whereDoesntHave('owner')
-                    ->first() ?: User::factory()->create();
+                $user = User::factory()->create();
                 $employee->user()->associate($user);
             }
         });

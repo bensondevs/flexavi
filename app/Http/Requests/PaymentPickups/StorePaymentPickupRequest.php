@@ -4,10 +4,13 @@ namespace App\Http\Requests\PaymentPickups;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use App\Traits\CompanyInputRequest;
 use App\Models\{ Appointment, Employee };
 
 class StorePaymentPickupRequest extends FormRequest
 {
+    use CompanyInputRequest;
+    
     /**
      * Selected appointment set for payment pickup
      * 
@@ -49,6 +52,19 @@ class StorePaymentPickupRequest extends FormRequest
     }
 
     /**
+     * Prepare inputted columns before validation
+     * 
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        if (! $this->input('should_pickup_amount')) {
+            $amount = $this->getAppointment()->works()->sum('total_price');
+            $this->merge(['should_pickup_amount' => $amount]);
+        }
+    }
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -67,8 +83,18 @@ class StorePaymentPickupRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $this->setRules([
+            'should_pickup_amount' => ['required', 'numeric'],
+            'picked_up_amount' => ['numeric', 'nullable'],
+            'reason_not_all' => [
+                'string', 
+                'nullable', 
+                'required_unless:picked_up_amount,' . $this->input('should_pickup_amount')
+            ],
+            'should_picked_up_at' => ['nullable', 'date'],
+            'picked_up_at' => ['nullable', 'date'],
+        ]);
+
+        return $this->returnRules();
     }
 }

@@ -32,7 +32,8 @@ class CarRegisterTimeFactory extends Factory
             }
 
             if (! $time->car_id) {
-                $car = Car::factory()->create(['company_id' => $time->company_id]);
+                $company = $time->company;
+                $car = Car::factory()->for($company)->create();
                 $time->car()->associate($car);
             }
         });
@@ -58,11 +59,14 @@ class CarRegisterTimeFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function assignedToWorklist()
+    public function assignedToWorklist($worklist = null)
     {
-        return $this->state(function (array $attributes) {
-            $worklist = Worklist::inRandomOrder()->first() ?:
-                Worklist::factory()->create();
+        if (! $worklist) {
+            $companyId = $this->states->company_id;
+            $worklist = Worklist::factory()->create(['company_id' => $companyId]);
+        } 
+
+        return $this->state(function (array $attributes) use ($worklist) {
             return [
                 'worklist_id' => $worklist->id,
             ];

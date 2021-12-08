@@ -68,16 +68,15 @@ class CustomerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
 
         $url = '/api/dashboard/companies/addresses/customer/store';
         $response = $this->json('POST', $url, [
             'address_type' => 1,
-
             'customer_id' => $customer->id,
-
             'addressable_type' => 3,
             'other_address_type_description' => 'Home Address',
 

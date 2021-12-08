@@ -45,6 +45,15 @@ class Appointmentable extends Model
     public $incrementing = false;
 
     /**
+     * Columns that should be casted
+     * 
+     * @var array
+     */
+    protected $casts = [
+        'id' => 'string',
+    ];
+
+    /**
      * Set which columns are mass fillable
      * 
      * @var array

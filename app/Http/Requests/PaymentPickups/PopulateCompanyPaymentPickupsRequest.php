@@ -8,7 +8,6 @@ use App\Traits\{
     RequestHasRelations,
     CompanyPopulateRequestOptions
 };
-
 use App\Models\PaymentPickup;
 
 class PopulateCompanyPaymentPickupsRequest extends FormRequest
@@ -45,7 +44,7 @@ class PopulateCompanyPaymentPickupsRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('view-all-payment-pickup');
+        return Gate::allows('view-any-payment-pickup');
     }
 
     /**

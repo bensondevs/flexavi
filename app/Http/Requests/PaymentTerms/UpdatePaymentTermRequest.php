@@ -6,20 +6,35 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
-
 use App\Enums\PaymentTerm\PaymentTermStatus;
-
 use App\Rules\FloatValue;
-
 use App\Models\PaymentTerm;
 
 class UpdatePaymentTermRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Found invoice model container
+     * 
+     * @var \App\Models\Invoice
+     */
     private $invoice;
+
+    /**
+     * Found payment term model container
+     * 
+     * @var \App\Models\PaymentTerm
+     */
     private $paymentTerm;
 
+
+    /**
+     * Get invoice from payment term 
+     * relationship of invoice
+     * 
+     * @return \App\Models\Invoice|null
+     */
     public function getInvoice()
     {
         if ($this->invoice) return $this->invoice; 
@@ -28,6 +43,10 @@ class UpdatePaymentTermRequest extends FormRequest
         return $this->invoice = $term->invoice;
     }
 
+    /**
+     * Get payment term from supplied input of 
+     * `id` or `payment_term_id`
+     */
     public function getPaymentTerm()
     {
         if ($this->paymentTerm) return $this->paymentTerm;
@@ -36,10 +55,20 @@ class UpdatePaymentTermRequest extends FormRequest
         return $this->paymentTerm = PaymentTerm::with('invoice')->findOrFail($id);
     }
 
+    /**
+     * Prepare input for validation by 
+     * formatting for expected format
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
-        $company = $this->getCompany();
-        $this->merge(['company_id' => $company->id]);
+        $this->merge([
+            'company_id' => $this->getCompany()->id,
+            'due_date' => carbon()
+                ->parse($this->input('due_date'))
+                ->toDateString(),
+        ]);
     }
 
     /**

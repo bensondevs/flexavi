@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\PaymentPickup;
+use App\Models\{ PaymentPickup, PaymentPickupable };
 
 class PaymentPickupRepository extends BaseRepository
 {
@@ -114,7 +114,25 @@ class PaymentPickupRepository extends BaseRepository
 	 */
 	public function removePickupable($pickupable)
 	{
-		//
+		try {
+			$pickup = $this->getModel();
+			$type = get_class($pickupable);
+			if ($type !== PaymentPickupable::class) {
+				$paymentPickupable  = PaymentPickupable::wherePaymentPickup($pickup)
+					->wherePickupable($pickupable)
+					->firstOrFail();
+			}
+			$paymentPickupable->delete();
+
+			$this->setModel($pickup);
+
+			$this->setSuccess('Successfully remove payment pickupable.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to remove pickupable.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	/**
@@ -123,9 +141,26 @@ class PaymentPickupRepository extends BaseRepository
 	 * @param array  $pickupables
 	 * @return \App\Models\PaymentPickup
 	 */
-	public function removeMultiplePickupables()
+	public function removeMultiplePickupables(array $pickupables)
 	{
-		//
+		try {
+			$pickup = $this->getModel();
+
+			$ids = array_map(function ($pickupable) {
+				if (isset($pickupable['id'])) {
+					return $pickupable['id'];
+				}
+			}, $pickupables);
+			PaymentPickupable::whereIn('payment_pickupable_id', $ids)->destroy();
+
+			$this->setModel($pickup);
+			$this->setSuccess('Successfully remove multiple pickupable.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to remove multiple pickupables.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	/**
@@ -135,7 +170,19 @@ class PaymentPickupRepository extends BaseRepository
 	 */
 	public function truncatePickupables()
 	{
-		//
+		try {
+			$pickup = $this->getModel();
+			$pickup->pickupables()->delete();
+
+			$this->setModel($pickup);
+
+			$this->setSuccess('Successfully remove all pickupable.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to remove all pickupables.', $error);
+		}
+
+		return $this->getModel();
 	}
 
 	/**
@@ -145,6 +192,28 @@ class PaymentPickupRepository extends BaseRepository
 	 * @return bool
 	 */
 	public function delete(bool $force = false)
+	{
+		try {
+			$pickup = $this->getModel();
+			$pickup->delete();
+
+			$this->destroyModel();
+
+			$this->setSuccess('Successfully delete payment pickup.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete payment pickup.', $error);
+		}
+
+		return $this->returnResponse();
+	}
+
+	/**
+	 * Restore payment pickup
+	 * 
+	 * @return \App\Models\PaymentPickup
+	 */
+	public function restore()
 	{
 		//
 	}

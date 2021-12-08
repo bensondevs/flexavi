@@ -26,6 +26,7 @@ use App\Policies\{
     ExecuteWorkPolicy,
     InvoiceItemPolicy,
     PaymentTermPolicy,
+    PaymentPickupPolicy,
     SubAppointmentPolicy,
     CarRegisterTimePolicy,
     ExecuteWorkPhotoPolicy,
@@ -316,6 +317,20 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('unassign-user-post-it', [PostItPolicy::class, 'unassignUser']);
         Gate::define('delete-post-it', [PostItPolicy::class, 'delete']);
         Gate::define('force-delete-post-it', [PostItPolicy::class, 'forceDelete']);
+
+        // Payment Pickup
+        Gate::define('view-any-payment-pickup', [PaymentPickupPolicy::class, 'viewAny']);
+        Gate::define('view-appointment-payment-pickup', [PaymentPickupPolicy::class, 'viewAppointment']);
+        Gate::define('view-payment-pickup', [PaymentPickupPolicy::class, 'view']);
+        Gate::define('create-payment-pickup', [PaymentPickupPolicy::class, 'create']);
+        Gate::define('edit-payment-pickup', [PaymentPickupPolicy::class, 'update']);
+        Gate::define('add-pickupable-payment-pickup', [PaymentPickupPolicy::class, 'addPickupable']);
+        Gate::define('add-multiple-pickupable-payment-pickup', [PaymentPickupPolicy::class, 'addMultiplePickupables']);
+        Gate::define('remove-pickupable-payment-pickup', [PaymentPickupPolicy::class, 'removePickupable']);
+        Gate::define('remove-multiple-pickupable-payment-pickup', [PaymentPickupPolicy::class, 'removeMultiplePickupable']);
+        Gate::define('delete-payment-pickup', [PaymentPickupPolicy::class, 'delete']);
+        Gate::define('restore-payment-pickup', [PaymentPickupPolicy::class, 'restore']);
+        Gate::define('force-delete-payment-pickup', [PaymentPickupPolicy::class, 'forceDelete']);
 
         // Register Invitation
         Gate::define('send-employee-register-invitation', [RegisterInvitationPolicy::class, 'sendEmployeeRegisterInvitation']);

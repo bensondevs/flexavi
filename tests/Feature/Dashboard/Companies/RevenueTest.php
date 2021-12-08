@@ -14,7 +14,7 @@ use App\Models\{ Company, Owner, Revenue, Work };
 class RevenueTest extends TestCase
 {
     use DatabaseTransactions;
-    
+
     /**
      * A load all revenues test.
      *
@@ -136,6 +136,32 @@ class RevenueTest extends TestCase
 
         $url = '/api/dashboard/companies/revenues/delete';
         $response = $this->json('DELETE', $url, ['revenue_id' => $revenue]);
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->has('message');
+            $json->where('status', 'success');
+        });
+    }
+
+    /**
+     * Restore revenue test
+     * 
+     * @return void
+     */
+    public function test_restore_revenue()
+    {
+        $company = Company::inRandomOrder()->first();
+        $owner = Owner::factory()->for($company)->create();
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
+
+        $revenue = Revenue::factory()->for($company)
+            ->softDeleted()
+            ->create();
+
+        $url = '/api/dashboard/companies/revenues/restore';
+        $response = $this->json('PATCH', $url, ['id' => $revenue->id]);
 
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {

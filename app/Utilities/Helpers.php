@@ -15,20 +15,29 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Gate;
 use Webpatser\Uuid\Uuid;
 
-function searchInCollection(Collection $collection, $search)
-{
-    return ($collection->filter(function ($item) use ($search) {
-        $attributes = array_keys($item);
-        foreach ($attributes as $attribute)
-            if (isset($item[$attribute]) && (! is_array($item[$attribute])))
-                if (stripos($item[$attribute], $search) !== false)
-                    return true;
+/**
+ * Search value in collection
+ * 
+ * @param Illuminate\Support\Collection  $collection
+ * @param mixed  $search
+ * @return bool
+ */
+if (! function_exists('searchInCollection')) {
+    function searchInCollection(Collection $collection, $search)
+    {
+        return ($collection->filter(function ($item) use ($search) {
+            $attributes = array_keys($item);
+            foreach ($attributes as $attribute)
+                if (isset($item[$attribute]) && (! is_array($item[$attribute])))
+                    if (stripos($item[$attribute], $search) !== false)
+                        return true;
 
-        return false;
-    }))->toArray();
+            return false;
+        }))->toArray();
+    }
 }
 
-function urlToUsername($urlString)
+function urlToUsername(string $urlString)
 {
     $urlString = str_replace('http://', '', $urlString);
     $urlString = str_replace('https://', '', $urlString);
@@ -116,10 +125,9 @@ function genarate_uuid()
     return generateUuid();
 }
 
-function db($table = '')
+function db(string $table = '')
 {
-    return ($table) ? 
-        DB::table($table) : new DB;
+    return ($table) ? DB::table($table) : new DB;
 }
 
 function hashCheck(string $check, string $hashed)
@@ -315,7 +323,7 @@ function gate()
     return new Gate();
 }
 
-function jsonResponse($response)
+function jsonResponse(array $response)
 {
     return response()->json($response);
 }

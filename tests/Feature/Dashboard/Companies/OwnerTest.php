@@ -36,22 +36,6 @@ class OwnerTest extends TestCase
     }
 
     /**
-     * Test non owner view all company owners.
-     *
-     * @return void
-     */
-    public function test_non_owner_view_all_company_owners()
-    {
-        $user = User::factory()->create();
-        Sanctum::actingAs($user, ['*']);
-
-        $url = '/api/dashboard/companies/owners';
-        $response = $this->json('GET', $url);
-
-        $response->assertStatus(403);
-    }
-
-    /**
      * Test view all inviteable owners.
      *
      * @return void

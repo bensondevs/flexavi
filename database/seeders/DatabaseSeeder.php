@@ -44,6 +44,9 @@ class DatabaseSeeder extends Seeder
             CostsSeeder::class,
             CarRegisterTimesSeeder::class,
             PostItsSeeder::class,
+            PaymentPickupsSeeder::class,
         ]);
+
+        \Artisan::call('queue:work');
     }
 }

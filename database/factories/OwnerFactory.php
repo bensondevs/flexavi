@@ -18,6 +18,12 @@ class OwnerFactory extends Factory
      */
     protected $model = Owner::class;
 
+    /**
+     * Companyless marker variable
+     * To create owner without company, set this to true
+     * 
+     * @var bool
+     */
     private $companyless = true;
 
     /**

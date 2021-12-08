@@ -11,9 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PaymentPickup extends Model
 {
-    use HasFactory;
-    use Searchable;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable;
 
     /**
      * The table name
@@ -49,8 +47,8 @@ class PaymentPickup extends Model
      * @var bool
      */
     protected $fillable = [
+        'company_id',
         'appointment_id',
-        'employee_id',
         'should_pickup_amount',
         'picked_up_amount',
         'reason_not_all',
@@ -76,19 +74,19 @@ class PaymentPickup extends Model
     }
 
     /**
-     * Get appointment of payment pickup happen
+     * Get company of payment pickup
+     */
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
+
+    /**
+     * Get appointment where payment pickup happen
      */
     public function appointment()
     {
         return $this->belongsTo(Appointment::class);
-    }
-
-    /**
-     * Get employee who do the payment pick up
-     */
-    public function employee()
-    {
-        return $this->belongsTo(Employee::class);
     }
 
     /**

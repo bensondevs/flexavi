@@ -145,9 +145,12 @@ class EmployeeTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $employee = Employee::factory()->for($company)->create();
+        $employee = Employee::factory()
+            ->for($company)
+            ->create();
 
         $url = '/api/dashboard/companies/employees/view?id=' . $employee->id;
         $response = $this->json('GET', $url);
@@ -167,7 +170,8 @@ class EmployeeTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $employee = Employee::factory()->for($company)->create();
         
@@ -193,7 +197,8 @@ class EmployeeTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $employee = Employee::factory()->for($company)->softDeleted()->create();
 
