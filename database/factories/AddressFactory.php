@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Traits\FactoryDeletedState;
 
 use App\Models\{ Company, Customer, Owner, Employee, Address };
-
 use App\Enums\Address\AddressType;
 
 class AddressFactory extends Factory

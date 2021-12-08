@@ -6,26 +6,54 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Traits\InputRequest;
-
-use App\Rules\Base64Image;
-use App\Rules\Base64MaxSize;
-
-use App\Models\Receipt;
-use App\Models\Workday;
-use App\Models\Worklist;
-use App\Models\Appointment;
+use App\Rules\{ Base64Image, Base64MaxSize };
+use App\Models\{ Receipt, Workday, Worklist, Appointment };
 
 class SaveReceiptRequest extends FormRequest
 {
     use InputRequest;
 
+    /**
+     * Found receipt model container
+     * 
+     * @var  \App\Models\Receipt
+     */
     private $receipt;
 
+    /**
+     * Workday found container
+     * 
+     * @var  \App\Models\Workday
+     */
     private $workday;
+
+    /**
+     * Worklist found container
+     * 
+     * @var  \App\Models\Worklist
+     */
     private $worklist;
+
+    /**
+     * Appointment found container
+     * 
+     * @var  \App\Models\Appointment
+     */
     private $appointment;
+
+    /**
+     * Receiptable found container
+     * 
+     * @var  \App\Models\Receiptable
+     */
     private $receiptable;
 
+    /**
+     * Get receipt to be updated and 
+     * set the value of receiptable
+     * 
+     * @return \App\Models\Receipt|abort 404
+     */
     public function getReceipt()
     {
         if ($this->receipt) return $this->receipt;
@@ -37,47 +65,39 @@ class SaveReceiptRequest extends FormRequest
         return $receipt;
     }
 
+    /**
+     * Get receiptable model
+     * 
+     * @return \App\Models
+     */
     public function getReceiptable()
     {
         if ($this->receiptable) return $this->receiptable;
 
-        if ($this->input('workday_id')) {
-            return $this->receiptable = $this->getWorkday();
+        switch (true) {
+            case $this->has('workday_id'):
+                $id = $this->input('workday_id');
+                $type = Workday::class;
+                break;
+
+            case $this->has('worklist_id'):
+                $id = $this->input('worklist_id');
+                $type = Worklist::class;
+                break;
+
+            case $this->has('appointment_id'):
+                $id = $this->input('appointment_id');
+                $type = Appointment::class;
+                break;
+            
+            default:
+                $id = $this->input('revenueable_id');
+                $type = $this->input('revenueable_type');
+                break;
         }
 
-        if ($this->input('worklist_id')) {
-            return $this->receiptable = $this->getWorklist();
-        }
-
-        if ($this->input('appointment_id')) {
-            return $this->receiptable = $this->getAppointment();
-        }
-
-        return null;
-    }
-
-    public function getWorkday()
-    {
-        if ($this->workday) return $this->workday;
-
-        $id = $this->input('workday_id');
-        return $this->workday = Workday::findOrFail($id);
-    }
-
-    public function getWorklist()
-    {
-        if ($this->worklist) return $this->worklist;
-
-        $id = $this->input('worklist_id');
-        return $this->worklist = Worklist::findOrFail($id);
-    }
-
-    public function getAppointment()
-    {
-        if ($this->appointment) return $this->appointment;
-
-        $id = $this->input('appointment_id');
-        return $this->appointment = Appointment::findOrFail($id);
+        $type = Revenue::guessType($type);
+        return $type->findOrFail($id);
     }
 
     /**
@@ -133,7 +153,10 @@ class SaveReceiptRequest extends FormRequest
         ]);
 
         if (is_base64_string($this->input('receipt_image'))) {
-            $this->addRule('receipt_image', [new Base64Image, new Base64MaxSize(5126000)]);
+            $this->addRule('receipt_image', [
+                new Base64Image, 
+                new Base64MaxSize(5126000)
+            ]);
         }
 
         return $this->returnRules();

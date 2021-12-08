@@ -43,7 +43,14 @@
         }
     },
     "autoload-dev": {
-        "files": ["app/Utilities/Helpers.php"],
+        "files": [
+            "app/Utilities/Helpers.php",
+            "app/Utilities/UrlHelpers.php",
+            "app/Utilities/FileHelpers.php",
+            "app/Utilities/StringHelpers.php",
+            "app/Utilities/DateTimeHelpers.php",
+            "app/Utilities/EncryptionHelpers.php"
+        ],
         "psr-4": {
             "Tests\\": "tests/"
         }

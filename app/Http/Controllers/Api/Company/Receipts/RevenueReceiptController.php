@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api\Company\Receipts;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use App\Repositories\ReceiptRepository;
 
 class RevenueReceiptController extends Controller

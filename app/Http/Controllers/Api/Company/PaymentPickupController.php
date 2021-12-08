@@ -205,8 +205,8 @@ class PaymentPickupController extends Controller
     /**
      * Truncate payment pickupables in payment pickup
      * 
-     * @param FindRequest  $request
-     * @return \Illuminate\Support\Facades\Response
+     * @param  FindRequest  $request
+     * @return  \Illuminate\Support\Facades\Response
      */
     public function truncatePickupables(FindRequest $request)
     {
@@ -216,6 +216,28 @@ class PaymentPickupController extends Controller
         $this->paymentPickup->truncatePickupables();
 
         return apiResponse($this->paymentPickup);
+    }
+
+    /**
+     * Add receipt to the payment pickup
+     * 
+     * @param  AddReceiptRequest  $request
+     * @return  \Illuminate\Support\Facades\Response
+     */
+    public function addReceipt(AddReceiptRequest $request)
+    {
+        //
+    }
+
+    /**
+     * Remove receipt added to payment pickup
+     * 
+     * @param  RemoveReceiptRequest  $request
+     * @return  \Illuminate\Support\Facades\Response
+     */
+    public function removeReceipt()
+    {
+        //
     }
 
     /**

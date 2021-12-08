@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
-use App\Models\{ Owner, Company, Employee };
+use App\Models\{ Owner, Company, Employee, User };
 
 class EmployeeTest extends TestCase
 {
@@ -200,7 +200,11 @@ class EmployeeTest extends TestCase
         $user = $owner->user;
         Sanctum::actingAs($user, ['*']);
 
-        $employee = Employee::factory()->for($company)->softDeleted()->create();
+        $employee = Employee::factory()
+            ->for($company)
+            // ->for(User::factory()->employee()->create())
+            ->softDeleted()
+            ->create();
 
         $employeeData = ['id' => $employee->id];
         $url = '/api/dashboard/companies/employees/restore';

@@ -6,11 +6,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Traits\FactoryDeletedState;
 use Illuminate\Support\Str;
 
-use App\Models\User;
-use App\Models\Owner;
-use App\Models\RegisterInvitation;
-
 use App\Enums\User\UserIdCardType as CardType;
+use App\Models\{ User, Owner, RegisterInvitation, Employee, Company };
 
 class UserFactory extends Factory
 {
@@ -82,13 +79,42 @@ class UserFactory extends Factory
     /**
      * Indicate that the model's role is owner.
      *
+     * @param  mixed  $company
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function owner()
+    public function owner($company = null)
     {
-        return $this->afterCreating(function (User $user) {
+        if (! $company) $company = Company::inRandomOrder()->first();
+
+        return $this->afterCreating(function (User $user) use ($company) {
             $user->assignRole('owner');
-            $user->owner()->save(Owner::factory()->make());
+
+            $owner = Owner::factory()
+                ->for($company)
+                ->for($user)
+                ->make();
+            $user->owner()->save($owner);
+        });
+    }
+
+    /**
+     * Indicate that the model's role is owner.
+     *
+     * @param  mixed  $company
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function employee($company = null)
+    {
+        if (! $company) $company = Company::inRandomOrder()->first();
+
+        return $this->afterCreating(function (User $user) use ($company) {
+            $user->assignRole('employee');
+
+            $employee = Employee::factory()
+                ->for($company)
+                ->for($user)
+                ->make();
+            $user->employee()->save($employee);
         });
     }
 

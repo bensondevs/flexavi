@@ -2,21 +2,33 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-use \Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
+use App\Repositories\Base\BaseRepository;
 
 use App\Models\StorageFile;
 
-use App\Repositories\Base\BaseRepository;
-
 class StorageFileRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new StorageFile);
 	}
 
+	/**
+	 * Upload file to certain path and disk
+	 * 
+	 * @param  mixed  $content
+	 * @param  string  $path
+	 * @param  string  $disk
+	 * @return  \App\Models\StorageFile|bool
+	 */
 	public function upload($content, string $path = '', $disk = 'public')
 	{
 		if (Storage::disk($disk)->put($path, $content)) {
@@ -33,7 +45,14 @@ class StorageFileRepository extends BaseRepository
 		return false;
 	}
 
-	public function record(string $path, $disk = 'public')
+	/**
+	 * Record file insertion into database
+	 * 
+	 * @param  string  $path
+	 * @param  string  $disk
+	 * @return  \App\Models\StorageFile
+	 */
+	public function record(string $path, string $disk = 'public')
 	{
 		try {
 			$file = $this->getModel();
@@ -52,6 +71,11 @@ class StorageFileRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete file in directory and unrecord in database
+	 * 
+	 * @return  bool
+	 */
 	public function delete()
 	{
 		try {
@@ -68,5 +92,7 @@ class StorageFileRepository extends BaseRepository
 			$error = $qe->getMessage();
 			$this->setError('Failed to delete file.', $error);
 		}
+
+		return $this->returnResponse();
 	}
 }

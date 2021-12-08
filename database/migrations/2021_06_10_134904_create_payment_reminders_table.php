@@ -22,17 +22,13 @@ class CreatePaymentRemindersTable extends Migration
                 ->on('appointments')
                 ->onDelete('SET NULL');
 
-            /*$table->uuid('payment_term_id')->nullable();
-            $table->foreign('payment_term_id')
-                ->references('id')
-                ->on('payment_terms')
-                ->onDelete('SET NULL');*/
-
-            $table->nullableUuidMorphs('reminderable');
-
-            $table->integer('reminder_amount')->default(0);
+            $table->nullableUuidMorphs('remindable');
+            $table->double('reminded_amount', 20, 3)->default(0);
+            $table->double('transferred_amount', 20, 3)->default(0);
+            $table->longText('reason_not_all')->nullable();
 
             $table->timestamps();
+            $table->timestamps('transferred_at')->nullable();
             $table->softDeletes();
         });
     }

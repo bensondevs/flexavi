@@ -9,6 +9,8 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Observers\PaymentPickupObserver;
+
 class PaymentPickup extends Model
 {
     use HasFactory, SoftDeletes, Searchable;
@@ -67,10 +69,7 @@ class PaymentPickup extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($paymentPickup) {
-            $paymentPickup->id = Uuid::generate()->string;
-    	});
+        self::observe(PaymentPickupObserver::class);
     }
 
     /**

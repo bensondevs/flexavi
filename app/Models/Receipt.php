@@ -70,6 +70,19 @@ class Receipt extends Model
     ];
 
     /**
+     * Possible morph types list
+     * 
+     * @var  array
+     */
+    const MORPHED_TYPES = [
+        Cost::class,
+        Revenue::class,
+        PaymentTerm::class,
+        PaymentPickup::class,
+        PaymentReminder::class,
+    ];
+
+    /**
      * Function that will be run whenever event happened
      * 
      * @return  void
@@ -78,22 +91,19 @@ class Receipt extends Model
     {
     	parent::boot();
         self::observe(ReceiptObserver::class);
-
-    	self::creating(function ($receipt) {
-            $receipt->id = Uuid::generate()->string;
-    	});
     }
 
     /**
-     * Get relationship attached
-     * 
-     * @return  Builder
+     * Get receiptable attached for receipt
      */
     public function receiptable()
     {
         return $this->morphTo();
     }
 
+    /**
+     * Get the company owner of the receipt
+     */
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -127,7 +137,34 @@ class Receipt extends Model
             return '[File not found]';
         }
 
-
         return $file->getDownloadUrl();
+    }
+
+    /**
+     * Guess the model type of the receiptable
+     * 
+     * @static
+     * @param  string  $clue
+     */
+    public static function guessType(string $clue)
+    {
+        foreach (self::MORPHED_TYPES as $type) {
+            // Clue is perfectly match with specified types
+            if ($clue == $type) return $type;
+
+            // Clue is the lower case of type
+            if (strtolower($clue) == strtolower($type)) return $type;
+
+            // Clue is the pure class of type
+            if ($clue == get_pure_class($type)) return $type;
+
+            // Clue is the pure lower case of type
+            if (strtolower($clue) == get_lower_class($type)) return $type;
+
+            // Clue is the plural class of type
+            if (strtolower($clue) == get_plural_lower_class($type)) return $type;
+        }
+
+        return self::MORPHED_TYPES[rand(0, count(self::MORPHED_TYPES))];
     }
 }

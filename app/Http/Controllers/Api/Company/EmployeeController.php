@@ -12,11 +12,9 @@ use App\Http\Requests\Employees\{
     RestoreEmployeeRequest as RestoreRequest,
     PopulateEmployeesRequest as PopulateRequest
 };
-
 use App\Http\Resources\EmployeeResource;
 
 use App\Models\Company;
-
 use App\Repositories\EmployeeRepository;
 
 class EmployeeController extends Controller
@@ -124,7 +122,7 @@ class EmployeeController extends Controller
      * Update employee
      * 
      * @param SaveRequest  $request
-     * @return Illuminate\Support\Facades\Response
+     * @return \Illuminate\Support\Facades\Response
      */
     public function update(SaveRequest $request)
     {
@@ -137,6 +135,12 @@ class EmployeeController extends Controller
     	return apiResponse($this->employee);
     }
 
+    /**
+     * Delete employee
+     * 
+     * @param  DeleteRequest  $request
+     * @return  \Illuminate\Support\Facades\Response
+     */
     public function delete(DeleteRequest $request)
     {
         $employee = $request->getEmployee();
@@ -148,6 +152,12 @@ class EmployeeController extends Controller
     	return apiResponse($this->employee);
     }
 
+    /**
+     * Restore employee
+     * 
+     * @param  RestoreRequest  $request
+     * @return  \Illuminate\Support\Facades\Response
+     */
     public function restore(RestoreRequest $request)
     {
         $employee = $request->getTrashedEmployee();

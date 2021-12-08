@@ -2,11 +2,22 @@
 
 namespace App\Observers;
 
-use App\Models\Receipt;
+use App\Models\{ Receipt, StorageFile };
 use App\Models\StorageFile;
 
 class ReceiptObserver
 {
+    /**
+     * Handle the Receipt "creating" event.
+     *
+     * @param  \App\Models\Receipt  $receipt
+     * @return void
+     */
+    public function creating(Receipt $receipt)
+    {
+        $receipt->id = generateUuid();
+    }
+
     /**
      * Handle the Receipt "created" event.
      *

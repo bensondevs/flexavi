@@ -62,7 +62,7 @@ class PaymentPickupable extends Model
     /**
      * Possible morph types list
      * 
-     * @var array
+     * @var  array
      */
     const MORPHED_TYPES = [
         Revenue::class,

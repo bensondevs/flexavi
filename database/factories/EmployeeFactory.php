@@ -35,7 +35,7 @@ class EmployeeFactory extends Factory
             }
 
             if (! $employee->user_id) {
-                $user = User::factory()->create();
+                $user = User::factory()->employee()->create();
                 $employee->user()->associate($user);
             }
         });
