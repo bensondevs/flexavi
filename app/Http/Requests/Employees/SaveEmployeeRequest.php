@@ -6,17 +6,26 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Employee;
-
 use App\Enums\Employee\EmployeeType;
-
 use App\Traits\CompanyInputRequest;
 
 class SaveEmployeeRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Found employee container
+     * 
+     * @var \App\Models\Employee
+     */
     private $employee;
 
+    /**
+     * Get employee from the supplied input of
+     * "employee_id" or "id"
+     * 
+     * @return \App\Models\Employee
+     */
     public function getEmployee()
     {
         if ($this->employee) return $this->employee;
@@ -39,6 +48,11 @@ class SaveEmployeeRequest extends FormRequest
         return Gate::allows('edit-employee', $this->getEmployee());
     }
 
+    /**
+     * Prepare input before validation
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         if ($type = $this->employee_type) {

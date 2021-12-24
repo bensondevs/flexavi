@@ -6,6 +6,11 @@ use Illuminate\Contracts\Validation\Rule;
 
 class AlphaSpace implements Rule
 {
+    /**
+     * Error message to the user
+     * 
+     * @var  string
+     */
     private $message;
 
     /**
@@ -42,6 +47,7 @@ class AlphaSpace implements Rule
      */
     public function message()
     {
-        return $this->message ?: 'The value must be alphabeth and spaces only.';
+        return $this->message ?: 
+            'The value must be alphabeth and spaces only.';
     }
 }

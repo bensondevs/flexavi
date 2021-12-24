@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\PaymentPickups;
+namespace App\Http\Requests\PaymentReminders;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
@@ -8,9 +8,9 @@ use App\Traits\{
     RequestHasRelations,
     CompanyPopulateRequestOptions
 };
-use App\Models\PaymentPickup;
+use App\Models\PaymentReminder;
 
-class PopulateCompanyPaymentPickupsRequest extends FormRequest
+class PopulateCompanyPaymentRemindersRequest extends FormRequest
 {
     use RequestHasRelations;
     use CompanyPopulateRequestOptions;
@@ -23,13 +23,11 @@ class PopulateCompanyPaymentPickupsRequest extends FormRequest
      * @var array
      */
     protected $relationNames = [
-        'with_appointment' => true,
-        'with_employee' => true,
         'with_company' => false,
     ];
 
     /**
-     * Prepare input to load the relationships
+     * Prepare input for validation
      * 
      * @return void
      */
@@ -45,7 +43,7 @@ class PopulateCompanyPaymentPickupsRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('view-any-payment-pickup');
+        return Gate::allows('view-all-payment-reminder');
     }
 
     /**
@@ -61,14 +59,13 @@ class PopulateCompanyPaymentPickupsRequest extends FormRequest
     }
 
     /**
-     * Get populate options.
-     * 
-     * This functions include queries where, with and etc...
+     * Request options, contains query and any relation
+     * loaded when result is queries
      * 
      * @return array
      */
     public function options()
     {
-        return $this->collectCompanyOptions();
+        //
     }
 }

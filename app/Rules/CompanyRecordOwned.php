@@ -8,8 +8,23 @@ use App\Models\Company;
 
 class CompanyRecordOwned implements Rule
 {
+    /**
+     * Company model container
+     * 
+     * @var \App\Models\Company
+     */
     private $company;
+
+    /**
+     * Checked model container
+     * 
+     * @var mixed
+     */
     private $model;
+
+    /**
+     * Company ID column
+     */
     private $companyIdColumn;
 
     private $errorMessage;
@@ -17,9 +32,12 @@ class CompanyRecordOwned implements Rule
     /**
      * Create a new rule instance.
      *
+     * @param  \App\Models\Company  $company
+     * @param  mixed  $model
+     * @param  string  $companyIdColumn
      * @return void
      */
-    public function __construct(Company $company, $model, $companyIdColumn = 'company_id')
+    public function __construct(Company $company, $model, string $companyIdColumn = 'company_id')
     {
         $this->company = $company;
         $this->model = $model;

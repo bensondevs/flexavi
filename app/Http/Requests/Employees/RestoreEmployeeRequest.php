@@ -9,8 +9,19 @@ use App\Models\Employee;
 
 class RestoreEmployeeRequest extends FormRequest
 {
+    /**
+     * Found trashed employee
+     * 
+     * @var \App\Models\Employee
+     */
     private $trashedEmployee;
 
+    /**
+     * Get trashed employee by supplied input of
+     * "id" or "employee_id"
+     * 
+     * @return \App\Models\Employee
+     */
     public function getTrashedEmployee()
     {
         if ($this->trashedEmployee) return $this->trashedEmployee;

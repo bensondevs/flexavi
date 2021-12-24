@@ -6,11 +6,17 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Base64File implements Rule
 {
+    /**
+     * Array of list of allowed extensions
+     * 
+     * @var array
+     */
     private $allowedExtensions = [];
 
     /**
      * Create a new rule instance.
      *
+     * @param  string|array  $allowedExtensions
      * @return void
      */
     public function __construct($allowedExtensions)

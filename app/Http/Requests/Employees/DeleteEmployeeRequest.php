@@ -9,8 +9,19 @@ use App\Models\Employee;
 
 class DeleteEmployeeRequest extends FormRequest
 {
+    /**
+     * Deleted employee container
+     * 
+     * @var  \App\Models\Employee|null
+     */
     private $employee;
 
+    /**
+     * Get employee from supplied input of
+     * "employee_id" or "id"
+     * 
+     * @return  \App\Models\Employee|abort 404
+     */
     public function getEmployee()
     {
         if ($this->employee) return $this->employee;
@@ -38,7 +49,7 @@ class DeleteEmployeeRequest extends FormRequest
     public function rules()
     {
         return [
-            
+            //
         ];
     }
 }

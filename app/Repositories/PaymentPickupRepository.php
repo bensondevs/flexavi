@@ -118,9 +118,11 @@ class PaymentPickupRepository extends BaseRepository
 			$pickup = $this->getModel();
 			$type = get_class($pickupable);
 			if ($type !== PaymentPickupable::class) {
-				$paymentPickupable  = PaymentPickupable::wherePaymentPickup($pickup)
+				$paymentPickupable = PaymentPickupable::wherePaymentPickup($pickup)
 					->wherePickupable($pickupable)
 					->firstOrFail();
+			} else {
+				$paymentPickupable = $pickupable;
 			}
 			$paymentPickupable->delete();
 
@@ -215,6 +217,18 @@ class PaymentPickupRepository extends BaseRepository
 	 */
 	public function restore()
 	{
-		//
+		try {
+			$pickup = $this->getModel();
+			$pickup->restore();
+
+			$this->setModel($pickup);
+
+			$this->setSuccess('Successfully restore payment pickup.');
+		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore payment pickup.', $error);
+		}
+
+		return $this->getModel();
 	}
 }

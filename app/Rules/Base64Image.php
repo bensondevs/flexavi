@@ -6,6 +6,11 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Base64Image implements Rule
 {
+    /**
+     * Allowed extensions of files
+     * 
+     * @var  array
+     */
     protected $allowedExtensions = [
         'jpg',
         'png',
@@ -13,6 +18,11 @@ class Base64Image implements Rule
         'jpeg',
     ];
 
+    /**
+     * Error message for the user
+     * 
+     * @var string
+     */
     private $errorMessage;
 
     /**

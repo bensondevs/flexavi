@@ -6,12 +6,25 @@ use Illuminate\Contracts\Validation\Rule;
 
 class BetweenIntegers implements Rule
 {
+    /**
+     * The minimum value of the allowed input
+     * 
+     * @var int
+     */
     protected $minimum;
+
+    /**
+     * The maximum value of the allowed input
+     * 
+     * @var int
+     */
     protected $maximum;
 
     /**
      * Create a new rule instance.
      *
+     * @param  int  $minimum
+     * @param  int  $maximum
      * @return void
      */
     public function __construct(int $minimum, int $maximum)

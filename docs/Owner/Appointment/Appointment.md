@@ -647,7 +647,43 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 4. Update Appointment
+### 4. View Appointment
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/appointments/view`
+
+**Method:** `POST`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `appointment_id` | Required | string | ID of selected appointment
+`with_finished_works` | Optional | boolean, boolean string | Set to `true` to load appointment with finished works within appointment
+`with_customer` | Optional | boolean, boolean string | Set to `true` to load appointment with customer of appointment
+`with_subs` | Optional | boolean, boolean string | Set to true to load appointment with subs of appointment
+`with_works` | Optional | boolean, boolean string | Set to true to load appointment with works of appointment
+`with_worklists` | Optional | boolean, boolean string | Set to true to load appointment with worklists of appointment
+`with_workdays` | Optional | boolean, boolean string | Set to true to load appointment with workdays of appointment
+`with_calculation` | Optional | boolean, boolean string | Set to true to load appointment with calculation of appointment
+`with_employees` | Optional | boolean, boolean string | Set to true to load appointment with employees of appointment
+`with_revenues` | Optional | boolean, boolean string | Set to true to load appointment with revenues of appointment
+`with_costs` | Optional | boolean, boolean string | Set to true to load appointment with costs of appointment
+`with_quotation` | Optional | boolean, boolean string | Set to true to load appointment with quotation of appointment
+`with_execute_works` | Optional | boolean, boolean string | Set to true to load appointment with execute_works of appointment
+`with_warranties` | Optional | boolean, boolean string | Set to true to load appointment with warranties of appointment
+`with_payment_reminder` | Optional | boolean, boolean string | Set to true to load appointment with payment_reminder of appointment
+`with_invoice` | Optional | boolean, boolean string | Set to true to load appointment with invoice of appointment
+
+-------------------------------------------------------
+### 5. Update Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/update`
@@ -702,7 +738,7 @@ Payload name | Required | Validation | Description
 1. Only appointment with status of `Created` can be updated.
 
 -------------------------------------------------------
-### 5. Execute Appointment
+### 6. Execute Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/execute`
@@ -745,7 +781,7 @@ Payload name | Required | Validation | Description
 2. Executing appointment will change the appointment status to `InProcess`
 
 -------------------------------------------------------
-### 6. Process Appointment
+### 7. Process Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/process`
@@ -783,7 +819,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 7. Cancel Appointment
+### 8. Cancel Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/cancel`
@@ -827,7 +863,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 8. Reschedule Appointment
+### 9. Reschedule Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/reschedule`
@@ -875,7 +911,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 8. Generate Invoice from Appointment
+### 10. Generate Invoice from Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/generate_invoice`
@@ -952,7 +988,7 @@ Payload name | Required | Validation | Description
 2. In `invoice` object, we will have `invoice.appointment` data. In other endpoint which implements invoicing like `quotation` for an example, we'll have `invoice.quotation`. The attribute of it depends on what is within the record of `invoiceable_type` (To define the model class) and `invoiceable_id` (To define ID of associated class).
 
 -------------------------------------------------------
-### 8. Delete Appointment
+### 11. Delete Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/delete`
@@ -989,7 +1025,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 8. Populate Deleted/Trashed Appointments
+### 12. Populate Deleted/Trashed Appointments
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/trasheds`
@@ -1189,7 +1225,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 8. Restore Appointment
+### 13. Restore Appointment
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/appointments/restore`

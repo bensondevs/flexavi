@@ -13,8 +13,18 @@ class RestoreCarRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Found trashed car
+     * 
+     * @var  \App\Models\Car|null
+     */
     private $trashedCar;
 
+    /**
+     * Get trashed car by supplied input of "id" or "car_id"
+     * 
+     * @return \App\Models\Car|abort 404
+     */
     public function getTrashedCar()
     {
         if ($this->trashedCar) return $this->trashedCar;

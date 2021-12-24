@@ -28,9 +28,16 @@ class PopulateEmployeesRequest extends FormRequest
      */
     public function rules()
     {
-        return [];
+        return [
+            //
+        ];
     }
 
+    /**
+     * The query options for the populate employees
+     * 
+     * @return array
+     */
     public function options()
     {
         $this->addWith('user');

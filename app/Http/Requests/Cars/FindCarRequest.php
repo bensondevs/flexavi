@@ -13,13 +13,28 @@ class FindCarRequest extends FormRequest
 {
     use RequestHasRelations;
 
+    /**
+     * List configuration for relationship loaded
+     * 
+     * @var array
+     */
     private $relationNames = [
         'with_company' => true,
         'with_worklists' => true,
     ];
 
+    /**
+     * Found target car container
+     * 
+     * @var  \App\Models\Car|null
+     */
     private $car;
 
+    /**
+     * Get requested car or abort 404
+     * 
+     * @return  \App\Models\Car|abort 404
+     */
     public function getCar()
     {
         if ($this->car) return $this->car;
@@ -28,6 +43,11 @@ class FindCarRequest extends FormRequest
         return $this->car = Car::findOrFail($id);
     }
 
+    /**
+     * Prepare inputs for validation
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $this->prepareRelationInputs();
