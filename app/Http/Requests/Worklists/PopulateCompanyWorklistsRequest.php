@@ -95,7 +95,7 @@ class PopulateCompanyWorklistsRequest extends FormRequest
         }
 
         if (! $toDate = $this->input('to_date')) {
-            $toDate = current_date();
+            $toDate = now();
         }
 
         $this->addWhereHas('workday', [
