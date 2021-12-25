@@ -227,10 +227,13 @@ Authorization | `Bearer {token}`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `id` or `workday_id` | Required | string | The workday that will be viewed
-`with_worklists` | Optional | boolean, boolean string | Set this to `true` to load relationship with worklists, if not set, the default value would be `true`
-`with_appointments` | Optional | boolean, boolean string | Set this to `true` to load relationship with appointments, if not set, the default value wilould be `true`
-`with_costs` | Optional | boolean, boolean string | Set this to `true` to load relationship with costs, if not set, the default value would be `false`
-`with_employees` | Optional | boolean, boolean string | Set this to `true` to load relationship with employees, if not set, the default value would be `false`
+`with_company` | Optional | boolean, boolean string | Set to `true` to load relationship with company. The default value is `false` 
+`with_worklists` | Optional | boolean, boolean string | Set to `true` to load relationship with worklists. The default value is `true` 
+`with_appointments` | Optional | boolean, boolean string | Set to `true` to load relationship with appointments. The default value is `false` 
+`with_costs` | Optional | boolean, boolean string | Set to `true` to load relationship with costs. The default value is `false` 
+`with_receipts` | Optional | boolean, boolean string | Set to `true` to load relationship with receipts. The default value is `false` 
+`with_worklists_costs` | Optional | boolean, boolean string | Set to `true` to load relationship with worklists_costs. The default value is `false` 
+`with_employees` | Optional | boolean, boolean string | Set to `true` to load relationship with employees. The default value is `false` 
 
 **Response Attributes:**
 
@@ -259,9 +262,7 @@ Attribute Name  | Type  | Description
                 "updated_at": "2021-09-22T14:43:50.000000Z",
                 "processed_at": "2021-09-22 16:43:50"
             }
-        ],
-        "appointments": [],
-        "employees": []
+        ]
     }
 }
 ```

@@ -19,8 +19,10 @@ class FindCarRequest extends FormRequest
      * @var array
      */
     private $relationNames = [
-        'with_company' => true,
         'with_worklists' => true,
+        'with_company' => false,
+        'with_registered_times' => true,
+        'with_registered_time_employees' => true,
     ];
 
     /**

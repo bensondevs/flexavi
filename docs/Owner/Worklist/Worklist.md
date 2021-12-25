@@ -616,7 +616,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 2. View Worklist
+### 3. View Worklist
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/worklists/view`
@@ -642,8 +642,14 @@ Attribute Name  | Type  | Description
 ----------------|-------|---------------
 `worklist` | Object | Worklist Data.
 
+**Success Response Example:**
+
+```json
+
+```
+
 -------------------------------------------------------
-### 3. Update Worklist
+### 4. Update Worklist
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/worklists/update`
@@ -691,7 +697,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 3. Process Worklist
+### 5. Process Worklist
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/worklists/process`
@@ -736,7 +742,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 4. Calculate Worklist
+### 6. Calculate Worklist
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/worklists/calculate`
@@ -781,7 +787,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 5. Delete Worklist
+### 7. Delete Worklist
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/worklists/delete`
@@ -827,7 +833,7 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
-### 6. Restore Worklist
+### 8. Restore Worklist
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/worklists/restore`

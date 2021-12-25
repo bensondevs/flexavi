@@ -179,11 +179,10 @@ class Car extends Model
      */
     public function worklists()
     {
-        return $this->belongsToMany(Worklist::class)
-            ->withPivot(
-                'should_return_at',
-                'returned_at'
-            );
+        return $this->belongsToMany(
+            Worklist::class, 
+            CarRegisterTime::class
+        )->withPivot('should_return_at', 'marked_return_at');
     }
 
     /**
@@ -205,9 +204,12 @@ class Car extends Model
     /**
      * Get all registered employee that have been in the car
      */
-    public function registeredEmployees()
+    public function registeredTimeEmployees()
     {
-        return $this->hasMany(CarRegisterEmployee::class);
+        return $this->hasManyThrough(
+            CarRegisterTimeEmployee::class, 
+            CarRegisterTime::class
+        );
     }
 
     /**

@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Models\PaymentPickup;
 
-class PaymentPikcupObserver
+class PaymentPickupObserver
 {
     /**
      * Handle the PaymentPickup "creating" event.
@@ -25,7 +25,7 @@ class PaymentPikcupObserver
      */
     public function created(PaymentPickup $paymentPickup)
     {
-        if ($paymentPickup->picked_up_amount && $paymentPickup->picked_up_at) {
+        if ($paymentPickup->isPickedUp()) {
             $paymentPickup->picked_up_at = now();
         }
     }
@@ -38,8 +38,10 @@ class PaymentPikcupObserver
      */
     public function updated(PaymentPickup $paymentPickup)
     {
-        if ($paymentPickup->picked_up_amount && $paymentPickup->picked_up_at) {
-            $paymentPickup->picked_up_at = now();
+        if ($paymentPickup->isDirty('picked_up_amount')) {
+            if (! $paymentPickup->getOriginal('picked_up_amount')) {
+                $paymentPickup->picked_up_at = now();
+            }
         }
     }
 

@@ -500,6 +500,187 @@ Attribute Name  | Type  | Description
 ```
 
 -------------------------------------------------------
+### 3. View Quotation
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/quotations/view`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` | Required | string | ID of selected quotation
+`with_appointment` | Optional | boolean, boolean string | Set to `true` to load quotation with it's relationship with appointment. The default value is `true`
+`with_works` | Optional | boolean, boolean string | Set to `true` to load quotation with it's relationship with works. The default value is `true`
+`with_customer` | Optional | boolean, boolean string | Set to `true` to load quotation with it's relationship with customer. The default value is `true`
+`with_attachments` | Optional | boolean, boolean string | Set to `true` to load quotation with it's relationship with attachments. The default value is `true`
+`with_company` | Optional | boolean, boolean string | Set to `true` to load quotation with it's relationship with company. The default value is `false`
+`with_revisions` | Optional | boolean, boolean string | Set to `true` to load quotation with it's relationship with revisions. The default value is `false`
+`with_invoice` | Optional | boolean, boolean string | Set to `true` to load quotation with it's relationship with invoice. The default value is `false`
+
+**Success Response Example:**
+
+```json
+{
+    "quotation": {
+        "id": "4301d200-5831-11ec-8780-bb2a18720019",
+        "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+        "customer_id": "314e94e0-5831-11ec-b1fe-47e694ad6358",
+        "appointment_id": "34545130-5831-11ec-add4-552fe11ec680",
+        "type": 1,
+        "quotation_date": "2021-12-13",
+        "quotation_number": "OGBKCVBK",
+        "contact_person": "Geovany Padberg",
+        "address": "Random Address",
+        "zipcode": "111000",
+        "phone_number": "02861282634",
+        "damage_causes": "[1, 2, 3, 4]",
+        "quotation_description": "Hello this is seeder quotation damage descripton",
+        "amount": 2024,
+        "vat_percentage": 21,
+        "discount_amount": 271,
+        "total_amount": 2178,
+        "expiry_date": "2021-12-17",
+        "status": 1,
+        "payment_method": 1,
+        "honor_note": null,
+        "canceller": null,
+        "cancellation_reason": null,
+        "created_at": "2021-12-08T14:15:14.000000Z",
+        "updated_at": "2021-12-08T14:15:14.000000Z",
+        "honored_at": null,
+        "first_sent_at": null,
+        "last_sent_at": null,
+        "revised_at": null,
+        "cancelled_at": null,
+        "deleted_at": null,
+        "appointment": {
+            "id": "34545130-5831-11ec-add4-552fe11ec680",
+            "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+            "customer_id": "314e94e0-5831-11ec-b1fe-47e694ad6358",
+            "previous_appointment_id": null,
+            "next_appointment_id": null,
+            "start": "2021-12-16T14:14:49.000000Z",
+            "end": "2021-12-20T14:14:49.000000Z",
+            "include_weekend": true,
+            "status": 1,
+            "type": 2,
+            "note": "This is seeder appointment",
+            "cancellation_cause": null,
+            "cancellation_vault": null,
+            "cancellation_note": null,
+            "cancellation_data": null,
+            "created_at": "2021-12-08T14:14:49.000000Z",
+            "updated_at": "2021-12-08T14:14:49.000000Z",
+            "in_process_at": null,
+            "processed_at": null,
+            "calculated_at": null,
+            "cancelled_at": null,
+            "deleted_at": null
+        },
+        "works": [
+            {
+                "id": "49f7cb90-5831-11ec-9b38-0f1d85e316e0",
+                "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+                "status": 1,
+                "quantity": 439,
+                "quantity_unit": "dm3",
+                "description": "This is seeder quotation work",
+                "unit_price": 188,
+                "include_tax": false,
+                "tax_percentage": 0,
+                "total_price": 82532,
+                "total_paid": 0,
+                "note": null,
+                "unfinish_note": null,
+                "finish_note": null,
+                "finished_at_appointment_id": null,
+                "revenue_recorded": 0,
+                "created_at": "2021-12-08T14:15:25.000000Z",
+                "updated_at": "2021-12-08T14:15:25.000000Z",
+                "executed_at": null,
+                "finished_at": null,
+                "unfinished_at": null,
+                "deleted_at": null,
+                "pivot": {
+                    "workable_id": "4301d200-5831-11ec-8780-bb2a18720019",
+                    "work_id": "49f7cb90-5831-11ec-9b38-0f1d85e316e0",
+                    "workable_type": "App\\Models\\Quotation"
+                }
+            }
+        ],
+        "customer": null,
+        "attachments": [
+            {
+                "id": "448a98f0-5831-11ec-8c34-f52dd2efa92d",
+                "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+                "quotation_id": "4301d200-5831-11ec-8780-bb2a18720019",
+                "name": "Fake Quotation Attachment",
+                "description": "This is seeder generated attachment",
+                "attachment_path": "/uploads/quotations/attachments/dummy.pdf",
+                "created_at": "2021-12-08T14:15:16.000000Z",
+                "updated_at": "2021-12-08T14:15:16.000000Z",
+                "deleted_at": null
+            },
+            {
+                "id": "448a9f00-5831-11ec-8470-7f446a1a35aa",
+                "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+                "quotation_id": "4301d200-5831-11ec-8780-bb2a18720019",
+                "name": "Fake Quotation Attachment",
+                "description": "This is seeder generated attachment",
+                "attachment_path": "/uploads/quotations/attachments/dummy.pdf",
+                "created_at": "2021-12-08T14:15:16.000000Z",
+                "updated_at": "2021-12-08T14:15:16.000000Z",
+                "deleted_at": null
+            },
+            {
+                "id": "448aa2d0-5831-11ec-aae9-bf464b43499a",
+                "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+                "quotation_id": "4301d200-5831-11ec-8780-bb2a18720019",
+                "name": "Fake Quotation Attachment",
+                "description": "This is seeder generated attachment",
+                "attachment_path": "/uploads/quotations/attachments/dummy.pdf",
+                "created_at": "2021-12-08T14:15:16.000000Z",
+                "updated_at": "2021-12-08T14:15:16.000000Z",
+                "deleted_at": null
+            },
+            {
+                "id": "448aa560-5831-11ec-81f8-633fd7cfb78a",
+                "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+                "quotation_id": "4301d200-5831-11ec-8780-bb2a18720019",
+                "name": "Fake Quotation Attachment",
+                "description": "This is seeder generated attachment",
+                "attachment_path": "/uploads/quotations/attachments/dummy.pdf",
+                "created_at": "2021-12-08T14:15:16.000000Z",
+                "updated_at": "2021-12-08T14:15:16.000000Z",
+                "deleted_at": null
+            },
+            {
+                "id": "448aa7e0-5831-11ec-ad5f-438501fe5ad7",
+                "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+                "quotation_id": "4301d200-5831-11ec-8780-bb2a18720019",
+                "name": "Fake Quotation Attachment",
+                "description": "This is seeder generated attachment",
+                "attachment_path": "/uploads/quotations/attachments/dummy.pdf",
+                "created_at": "2021-12-08T14:15:16.000000Z",
+                "updated_at": "2021-12-08T14:15:16.000000Z",
+                "deleted_at": null
+            }
+        ]
+    }
+}
+```
+
+-------------------------------------------------------
 ### 4. Update Quotation
 -------------------------------------------------------
 

@@ -12,12 +12,31 @@ class FindCustomerRequest extends FormRequest
 {
     use RequestHasRelations;
 
-    private $relationNames = [
-        'with_company' => true,
+    /**
+     * List of configurable relationships
+     * 
+     * @var array
+     */
+    protected $relationNames = [
+        'with_addresses' => true,
+        'with_company' => false,
+        'with_quotations' => false,
+        'with_appointments' => false,
+        'with_invoices' => false,
     ];
 
+    /**
+     * Found customer model container
+     * 
+     * @var \App\Models\Customer|null
+     */
     private $customer;
 
+    /**
+     * Get customer by supplied input of `id` or `customer_id`
+     * 
+     * @return \App\Models\Customer
+     */
     public function getCustomer()
     {
         if ($this->customer) return $this->customer;
@@ -26,6 +45,13 @@ class FindCustomerRequest extends FormRequest
         return $this->customer = Customer::findOrFail($id);
     }
 
+    /**
+     * Prepare input for validation
+     * 
+     * This will prepare input for configuring relationships
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $this->prepareRelationInputs();

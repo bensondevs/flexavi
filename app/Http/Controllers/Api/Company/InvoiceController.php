@@ -85,6 +85,21 @@ class InvoiceController extends Controller
     }
 
     /**
+     * View invoice
+     * 
+     * @param FindRequest $request
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function view(FindRequest $request)
+    {
+        $invoice = $request->getInvoice();
+        $invoice->load($request->relations());
+        $invoice = new InvoiceResource($invoice);
+
+        return response()->json(['invoice' => $invoice]);
+    }
+
+    /**
      * Update invoice
      * 
      * @param UpdateRequest  $request

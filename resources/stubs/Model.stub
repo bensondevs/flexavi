@@ -3,14 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\{ 
-    Model, 
-    SoftDeletes, 
-    Builder, 
-    Factories\HasFactory 
-};
+use Illuminate\Database\Eloquent\{ Model, SoftDeletes, Builder };
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+
+use App\Observers\{{modelName}}Observer as Observer;
 
 class {{modelName}} extends Model
 {
@@ -72,9 +70,6 @@ class {{modelName}} extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function (${{modelNameSingularLowerCase}}) {
-            ${{modelNameSingularLowerCase}}->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 }

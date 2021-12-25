@@ -366,22 +366,39 @@ Payload name | Required | Validation | Description
 `id` or `car_id` | Required | string | ID of selected car
 `with_company` | Optional | Boolean, string boolean | Set this to `true` will load the car relationship with company data, default value `false`
 `with_worklists` | Optional | Boolean, string boolean | Set this to `true` will load the car relationship with worklists data, default value `false`
+`with_registered_times` | Optional | boolean, boolean string | Set this to `true` to load car with it's registered times. The default value is `true`
+`with_registered_employees` | Optional | boolean, boolean string | Set this to `true` to load car with it's registered employees. The default value is `true`
 
 **Success Response Example:**
 
 ```json
 {
     "car": {
-        "id": "7fb666a0-1bb3-11ec-8030-07fd57328e0e",
+        "id": "c87ae9c0-651f-11ec-9ab7-857fce5acd23",
         "brand": "Fleet Brand",
         "model": "Fleet Model",
-        "year": 2021,
+        "year": 2019,
         "car_name": "Seeder Car Name",
         "car_license": "SEEDER_LICENSE_DATA",
-        "insured": 1,
+        "insured": 0,
         "status": 1,
         "status_description": "Free",
-        "car_image_url": "http://localhost:8000/storage/uploads/cars/9812378123.jpeg"
+        "car_image_url": "http://localhost:8000/storage/uploads/cars/9812378123.jpeg",
+        "worklists": [],
+        "registered_times": [
+            {
+                "id": "f048c390-6520-11ec-9791-557285e49af9",
+                "worklist_id": null,
+                "car_id": "c87ae9c0-651f-11ec-9ab7-857fce5acd23",
+                "should_out_at": "2021-12-22 02:21:08",
+                "should_return_at": "2021-12-28 02:21:08",
+                "marked_out_at": "2021-12-23 02:21:08",
+                "marked_return_at": null,
+                "out_late": true,
+                "late_out_difference_minute": 1440
+            }
+        ],
+        "registered_employees": []
     }
 }
 ```

@@ -9,8 +9,8 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
+use App\Observers\QuotationObserver as Observer;
 use App\Casts\QuotationDamageCausesCast;
-
 use App\Enums\Quotation\{
     QuotationType as Type,
     QuotationStatus as Status,
@@ -115,9 +115,9 @@ class Quotation extends Model
      * @var array
      */
     protected $cast = [
-        'is_signed' => 'boolean',
+        /*'is_signed' => 'boolean',
         'honored_at' => 'datetime',
-        'cancelled_at' => 'datetime',
+        'cancelled_at' => 'datetime',*/
     ];
 
     /**
@@ -131,15 +131,7 @@ class Quotation extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($quotation) {
-            $quotation->id = Uuid::generate()->string;
-
-            if (! $quotation->expiry_date) {
-                $expiryDate = carbon()->now()->addDays(14);
-                $quotation->expiry_date = $expiryDate;
-            }
-    	});
+        self::observe(Observer::class);
     }
 
     /**
@@ -313,20 +305,20 @@ class Quotation extends Model
     }
 
     /**
+     * Get target customer of quotation
+     */
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    /**
      * Create callable "works" attribute and get 
      * quoted works model data
      */
     public function works()
     {
         return $this->morphToMany(Work::class, 'workable');
-    }
-
-    /**
-     * Get target customer of quotation
-     */
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class);
     }
 
     /**

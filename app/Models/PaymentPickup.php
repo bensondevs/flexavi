@@ -9,7 +9,7 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Observers\PaymentPickupObserver;
+use App\Observers\PaymentPickupObserver as Observer;
 
 class PaymentPickup extends Model
 {
@@ -69,7 +69,7 @@ class PaymentPickup extends Model
     protected static function boot()
     {
     	parent::boot();
-        self::observe(PaymentPickupObserver::class);
+        self::observe(Observer::class);
     }
 
     /**
@@ -94,5 +94,16 @@ class PaymentPickup extends Model
     public function pickupables()
     {
         return $this->hasMany(PaymentPickupable::class);
+    }
+
+    /**
+     * Check if payment is already picked up
+     * 
+     * @return bool
+     */
+    public function isPickedUp()
+    {
+        $amount = (float) $this->attributes['picked_up_amount'];
+        return $amount > 0;
     }
 }

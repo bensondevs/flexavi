@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\Company\{
-	CarController,
+	Car\CarController,
 		Car\CarRegisterTimeController,
 		Car\CarRegisterTimeEmployeeController,
 
@@ -345,6 +345,7 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::get('/', [InvoiceController::class, 'companyInvoices']);
 		Route::get('overdue', [InvoiceController::class, 'companyOverdueInvoices']);
 		Route::post('store', [InvoiceController::class, 'store']);
+		Route::get('view', [InvoiceController::class, 'view']);
 		Route::match(['PUT', 'PATCH'], 'update', [InvoiceController::class, 'update']);
 		Route::post('send', [InvoiceController::class, 'send']);
 		Route::post('print', [InvoiceController::class, 'print']);

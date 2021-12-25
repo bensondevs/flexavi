@@ -13,6 +13,11 @@ class FindAppointmentRequest extends FormRequest
 {
     use RequestHasRelations;
 
+    /**
+     * List of loadable relations
+     * 
+     * @var array
+     */
     protected $relationNames = [
         'with_finished_works' => true,
         'with_customer' => true,
@@ -31,14 +36,38 @@ class FindAppointmentRequest extends FormRequest
         'with_invoice' => false,
     ];
 
+    /**
+     * Appointment model container
+     * 
+     * @var \App\Models\Appointment|null
+     */
     private $appointment;
 
+    /**
+     * Get appointment from the supplied input of
+     * `id` or `appointment_id`
+     * 
+     * @return \App\Models\Appointment|abort 404
+     */
     public function getAppointment()
     {
         if ($this->appointment) return $this->appointment;
 
         $id = $this->input('id') ?: $this->input('appointment_id');
         return $this->appointment = Appointment::findOrFail($id);
+    }
+
+    /**
+     * Prepare input before validation
+     * 
+     * This will process the $relationNames to make the result load the
+     * data according to configurations
+     * 
+     * @return void 
+     */
+    protected function prepareForValidation()
+    {
+        $this->prepareRelationInputs();
     }
 
     /**
@@ -51,11 +80,6 @@ class FindAppointmentRequest extends FormRequest
         $appointment = $this->getAppointment();
 
         return Gate::allows('view-appointment', $appointment);
-    }
-
-    protected function prepareForValidation()
-    {
-        $this->prepareRelationInputs();
     }
 
     /**

@@ -5,10 +5,27 @@ namespace App\Http\Requests\Invoices;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
+use App\Traits\RequestHasRelations;
+
 use App\Models\Invoice;
 
 class FindInvoiceRequest extends FormRequest
 {
+    use RequestHasRelations;
+
+    /**
+     * List of configirable relationships
+     * 
+     * @var array
+     */
+    protected $relationNames = [
+        'with_items' => true,
+        'with_payment_terms' => true,
+        'with_customer' => true,
+        'with_invoiceable' => false,
+        'with_company' => false,
+    ];
+
     /**
      * Found invoice from get function execution
      * 

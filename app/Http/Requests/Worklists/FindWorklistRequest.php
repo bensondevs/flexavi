@@ -4,17 +4,19 @@ namespace App\Http\Requests\Worklists;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use App\Traits\RequestHasRelations;
 
 use App\Models\Worklist;
-
-use App\Traits\RequestHasRelations;
 
 class FindWorklistRequest extends FormRequest
 {
     use RequestHasRelations;
 
-    private $worklist;
-
+    /**
+     * List of configurable relationships
+     * 
+     * @var array
+     */
     protected $relationNames = [
         'with_workday' => true,
         'with_appointments' => true,
@@ -24,6 +26,18 @@ class FindWorklistRequest extends FormRequest
         'with_employees' => true,
     ];
 
+    /**
+     * Found worklist model container
+     * 
+     * @var \App\Models\Worklist|null
+     */
+    private $worklist;
+    
+    /**
+     * Get worklist from supplied input of `worklist_id` or `id`
+     * 
+     * @return \App\Models\Worklist|abort 404
+     */
     public function getWorklist()
     {
         if ($this->worklist) return $this->worklist;
@@ -32,6 +46,13 @@ class FindWorklistRequest extends FormRequest
         return $this->worklist = Worklist::findOrFail($id);
     }
 
+    /**
+     * Prepare input for validation
+     * 
+     * This will configure inputs to set the relationships
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $this->prepareRelationInputs();

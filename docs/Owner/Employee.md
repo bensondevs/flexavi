@@ -644,7 +644,7 @@ Authorization | `Bearer {token}`
 **Response Attributes:**
 
 Attribute Name  | Type  | Description   
-----------------|-----------|---------------
+----------------|-------|---------------
 `employee` | Object | Object data of updated employee
 
 **Success Response Example:**
@@ -717,7 +717,6 @@ Attribute Name  | Type  | Description
     }
 }
 ```
-
 
 -------------------------------------------------------
 ### 5. Update Employee

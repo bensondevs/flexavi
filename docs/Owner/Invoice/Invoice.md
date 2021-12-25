@@ -663,7 +663,157 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 3. Update Invoice
+### 3. View Invoice
+-------------------------------------------------------
+
+**Endpoint:** `/api/dashboard/companies/invoices/view`
+
+**Method:** `GET`
+
+**Headers:**
+
+Header Name | Value 
+------------|--------------
+Accept | `application/json`
+Authorization | `Bearer {token}`
+
+**Parameters:**
+
+Payload name | Required | Validation | Description    
+-------------|----------|------------|-------------
+`id` or `invoice_id` | Required | string | ID of selected invoice
+`with_items` | Optional | boolean, boolean string | Set this to `true` to load invoice with items. The default value of this attribute is `true`
+`with_payment_terms` | Optional | boolean, boolean string | Set this to `true` to load invoice with it's payment terms. The default value of this attribute is `false`
+`with_invoiceable` | Optional | boolean, boolean string | Set this to `true` to load invoice with invoiceable (Any model that's billed through invoice). The default value of this attribute is `true`
+`with_customer` | Optional | boolean, boolean string | Set this to `true` to load invoice with it's customer. The default value of this attribute is `false`
+`with_company` | Optional | boolean, boolean string | Set this to `true` to load invoice with it's company. The default value of this attribute is `false`
+
+**Request Body Example:**
+
+```json
+{
+    "appointment_id": "07f69c00-c7b5-11eb-b290-d11f6e46c68e",
+    "with_items": true,
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`invoice` | Object | The viewed invoice object
+
+**Success Response Example:**
+
+```json
+{
+    "invoice": {
+        "id": "a2828ff0-5831-11ec-bb92-d7d4a558eec9",
+        "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+        "customer_id": "314f3c70-5831-11ec-90b2-d52353547ae1",
+        "invoiceable_type": null,
+        "invoiceable_id": null,
+        "total": 627,
+        "formatted_total": "€ 627,00",
+        "total_in_terms": 0,
+        "formatted_total_in_terms": "€ 0,00",
+        "total_out_terms": 0,
+        "formatted_total_out_terms": "€ 0,00",
+        "total_paid": 0,
+        "formatted_total_paid": "€ 0,00",
+        "total_unpaid": 627,
+        "formatted_total_unpaid": "€ 627,00",
+        "status": 3,
+        "status_description": "Paid",
+        "payment_method": "1",
+        "payment_method_description": "Cash",
+        "sent_at": null,
+        "paid_at": null,
+        "payment_overdue_at": null,
+        "first_reminder_sent_at": null,
+        "first_reminder_overdue_at": null,
+        "second_reminder_overdue_at": null,
+        "third_reminder_overdue_at": null,
+        "overdue_debt_collector_at": null,
+        "debt_collector_sent_at": null,
+        "paid_via_debt_collector_at": null,
+        "items": [
+            {
+                "id": "a58733b0-5831-11ec-a417-fd843cda6b3d",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 10,
+                "quantity_unit": "dm3",
+                "amount": 50,
+                "total": 500
+            },
+            {
+                "id": "a5873610-5831-11ec-a8ac-3bbdf514216d",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 80,
+                "quantity_unit": "m",
+                "amount": 30,
+                "total": 2400
+            },
+            {
+                "id": "a5873860-5831-11ec-8503-05ace8971e9d",
+                "item_name": "Item From Invoice",
+                "description": "Seeder Generated Record",
+                "quantity": 90,
+                "quantity_unit": "cm2",
+                "amount": 90,
+                "total": 8100
+            }
+        ],
+        "payment_terms": [
+            {
+                "id": "ab233dd0-5831-11ec-818f-2d73a902d2ba",
+                "term_name": "Another Term Name",
+                "status": 1,
+                "status_description": "Unpaid",
+                "amount": "209.00",
+                "due_date": "2021-12-14",
+                "human_due_date": "Dec 14, 2021"
+            },
+            {
+                "id": "ab234180-5831-11ec-bb76-9b7d166a9c65",
+                "term_name": "Another Term Name",
+                "status": 1,
+                "status_description": "Unpaid",
+                "amount": "209.00",
+                "due_date": "2021-12-14",
+                "human_due_date": "Dec 14, 2021"
+            },
+            {
+                "id": "ab234520-5831-11ec-afc6-071da7f15288",
+                "term_name": "Another Term Name",
+                "status": 2,
+                "status_description": "Paid",
+                "amount": "209.00",
+                "due_date": "2021-12-12",
+                "human_due_date": "Dec 12, 2021"
+            }
+        ],
+        "customer": {
+            "id": "314f3c70-5831-11ec-90b2-d52353547ae1",
+            "fullname": "Emmet Volkman",
+            "email": "ritchie.mike@example.org",
+            "phone": "+1.989.813.5240",
+            "second_phone": null,
+            "address": null,
+            "house_number": null,
+            "house_number_suffix": null,
+            "zipcode": null,
+            "city": null,
+            "province": null
+        }
+    }
+}
+```
+
+-------------------------------------------------------
+### 4. Update Invoice
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/update`
@@ -707,7 +857,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 3. Send Invoice
+### 5. Send Invoice
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/send`
@@ -746,7 +896,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 4. Print Invoice
+### 6. Print Invoice
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/print`
@@ -784,7 +934,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 5. Print Invoice as Draft
+### 7. Print Invoice as Draft
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/print_deaft`
@@ -822,7 +972,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 6. Send Invoice Reminder
+### 8. Send Invoice Reminder
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/send_reminder`
@@ -860,7 +1010,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 7. Change Invoice Status
+### 9. Change Invoice Status
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/change_status`
@@ -901,7 +1051,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 8. Mark Invoice As Paid
+### 10. Mark Invoice As Paid
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/mark_as_paid`
@@ -941,7 +1091,7 @@ Payload name | Required | Validation | Description
 ```
 
 -------------------------------------------------------
-### 9. Delete Invoice
+### 11. Delete Invoice
 -------------------------------------------------------
 
 **Endpoint:** `/api/dashboard/companies/invoices/delete`

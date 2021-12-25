@@ -306,7 +306,7 @@ class Invoice extends Model
      */
     public function invoiceable()
     {
-        return $this->morphTo();
+        return $this->morphTo('invoiceable');
     }
 
     /**

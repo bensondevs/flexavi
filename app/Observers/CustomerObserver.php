@@ -12,6 +12,18 @@ use App\Jobs\SendMail;
 class CustomerObserver
 {
     /**
+     * Handle the Customer "creating" event.
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return void
+     */
+    public function creating(Customer $customer)
+    {
+        $customer->id = generateUuid();
+        $customer->unique_key = $customer->generateUniqueKey();
+    }
+
+    /**
      * Handle the Customer "created" event.
      *
      * @param  \App\Models\Customer  $customer

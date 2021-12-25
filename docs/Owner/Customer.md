@@ -232,6 +232,10 @@ Payload name | Required | Validation | Description
 -------------|----------|------------|-------------
 `id` | Required | string | ID of updated customer
 `with_company` | Optional | string, boolean string | set this to `true` to load customer with its relation to company. If not set, the default value will be `false`
+`with_addresses` | Optional | boolean, boolean string | Set this to true and customer with it's relation with addresses will be loaded. The default value is `true`
+`with_quotations` | Optional | boolean, boolean string | Set this to true and customer with it's relation with quotations will be loaded. The default value is `false`
+`with_appointments` | Optional | boolean, boolean string | Set this to true and customer with it's relation with appointments will be loaded. The default value is `false`
+`with_invoices` | Optional | boolean, boolean string | Set this to true and customer with it's relation with invoices will be loaded. The default value is `false`
 
 **Response Attributes:**
 
@@ -242,15 +246,41 @@ Attribute Name  | Type  | Description
 ```json
 {
     "customer": {
-        "id": "8c6f56a0-c82a-11eb-9b4d-6d85f55227a6",
-        "company_id": "59322d20-c819-11eb-ac4a-5545e4062ed5",
-        "fullname": "John Doe",
-        "email": "john@doe.com",
-        "phone": "1234567890",
+        "id": "c7004dc0-651f-11ec-8bc8-117242fb494d",
+        "fullname": "Mr. Marlon Kohler",
+        "email": "lrunolfsdottir@example.org",
+        "phone": "561.931.2122",
         "second_phone": null,
-        "created_at": "2021-06-08T07:24:23.000000Z",
-        "updated_at": "2021-06-08T07:30:20.000000Z",
-        "deleted_at": null
+        "address": null,
+        "house_number": null,
+        "house_number_suffix": null,
+        "zipcode": null,
+        "city": null,
+        "province": null,
+        "addresses": [
+            {
+                "id": "cb739550-6520-11ec-bfc9-97a5e1bd98c7",
+                "address_type": 1,
+                "address_type_description": "Visiting Address",
+                "address": "942 Gerda Views Apt. 135\nSkilesmouth, WA 41506",
+                "house_number": "9794",
+                "house_number_suffix": "S",
+                "zipcode": "76329",
+                "city": "North Blaisemouth",
+                "province": "Delaware"
+            },
+            {
+                "id": "cb73a280-6520-11ec-a02b-910e9545aef0",
+                "address_type": 2,
+                "address_type_description": "Invoicing Address",
+                "address": "4536 Prohaska Turnpike\nWest Stacystad, UT 14970",
+                "house_number": "89350",
+                "house_number_suffix": null,
+                "zipcode": "13965-8132",
+                "city": "New Minerva",
+                "province": "New York"
+            }
+        ]
     }
 }
 ```

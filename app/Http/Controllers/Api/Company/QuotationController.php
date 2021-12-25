@@ -26,8 +26,8 @@ use App\Enums\Quotation\QuotationCanceller;
 
 use App\Http\Resources\{
     InvoiceResource,
-    QuotationResource,
-    QuotationAttachmentResource  
+    QuotationResource as Resource,
+    QuotationAttachmentResource as AttachmentResource
 };
 
 use App\Repositories\{
@@ -78,7 +78,7 @@ class QuotationController extends Controller
 
     	$quotations = $this->quotation->all($options);
         $quotations = $this->quotation->paginate();
-        $quotations = QuotationResource::apiCollection($quotations);
+        $quotations = Resource::apiCollection($quotations);
 
     	return response()->json(['quotations' => $quotations]);
     }
@@ -95,7 +95,7 @@ class QuotationController extends Controller
 
         $quotations = $this->quotation->all($options);
         $quotations = $this->quotation->paginate();
-        $quotations = QuotationResource::apiCollection($quotations);
+        $quotations = Resource::apiCollection($quotations);
 
         return response()->json(['quotations' => $quotations]);
     }
@@ -112,7 +112,7 @@ class QuotationController extends Controller
 
         $quotations = $this->quotation->trasheds($options);
         $quotations = $this->quotation->paginate();
-        $quotations = QuotationResource::apiCollection($quotations);
+        $quotations = Resource::apiCollection($quotations);
 
         return response()->json(['quotations' => $quotations]);
     }
@@ -140,9 +140,7 @@ class QuotationController extends Controller
     public function view(FindRequest $request)
     {
         $quotation = $request->getQuotation();
-        $relations = $request->relations();
-        $quotation->load($relations);
-        $quotaton = new QuotationResource($quotation);
+        $quotaton = new Resource($quotation);
 
         return response()->json(['quotation' => $quotation]);
     }
@@ -157,7 +155,7 @@ class QuotationController extends Controller
     {
         $quotation = $request->getQuotation();
         $attachments = $quotation->attachments;
-        $attachments = QuotationAttachmentResource::collection($attachments); 
+        $attachments = AttachmentResource::collection($attachments); 
 
         return response()->json(['attachments' => $attachments]);
     }

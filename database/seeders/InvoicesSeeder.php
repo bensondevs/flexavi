@@ -4,11 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Company;
-use App\Models\Invoice;
-use App\Models\Quotation;
-use App\Models\Appointment;
-
+use App\Models\{ Company, Invoice, Quotation, Appointment };
 use App\Jobs\Test\SyncInvoiceNumbers;
 
 class InvoicesSeeder extends Seeder

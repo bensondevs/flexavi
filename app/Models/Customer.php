@@ -12,7 +12,7 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Observers\CustomerObserver;
+use App\Observers\CustomerObserver as Observer;
 
 class Customer extends Authenticatable
 {
@@ -97,12 +97,7 @@ class Customer extends Authenticatable
     protected static function boot()
     {
     	parent::boot();
-        self::observe(CustomerObserver::class);
-
-    	self::creating(function ($customer) {
-            $customer->id = Uuid::generate()->string;
-            $customer->unique_key = $customer->generateUniqueKey();
-    	});
+        self::observe(Observer::class);
     }
 
     /**
@@ -119,6 +114,30 @@ class Customer extends Authenticatable
     public function addresses()
     {
         return $this->morphMany(Address::class, 'addressable');
+    }
+
+    /**
+     * Get customer quotations
+     */
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class);
+    }
+
+    /**
+     * Get customer invoices
+     */
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
+    /**
+     * Get customer appointments
+     */
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
     }
 
     /**

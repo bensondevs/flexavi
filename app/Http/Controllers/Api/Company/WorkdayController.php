@@ -76,7 +76,7 @@ class WorkdayController extends Controller
     public function view(FindRequest $request)
     {
         $workday = $request->getWorkday();
-        $workday->load(['worklists', 'appointments', 'costs', 'employees']);
+        $workday->load($request->relations());
         $workday = new WorkdayResource($workday);
 
         return response()->json(['workday' => $workday]);

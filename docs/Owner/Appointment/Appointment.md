@@ -666,21 +666,195 @@ Authorization | `Bearer {token}`
 Payload name | Required | Validation | Description    
 -------------|----------|------------|-------------
 `id` or `appointment_id` | Required | string | ID of selected appointment
-`with_finished_works` | Optional | boolean, boolean string | Set to `true` to load appointment with finished works within appointment
-`with_customer` | Optional | boolean, boolean string | Set to `true` to load appointment with customer of appointment
-`with_subs` | Optional | boolean, boolean string | Set to true to load appointment with subs of appointment
-`with_works` | Optional | boolean, boolean string | Set to true to load appointment with works of appointment
-`with_worklists` | Optional | boolean, boolean string | Set to true to load appointment with worklists of appointment
-`with_workdays` | Optional | boolean, boolean string | Set to true to load appointment with workdays of appointment
-`with_calculation` | Optional | boolean, boolean string | Set to true to load appointment with calculation of appointment
-`with_employees` | Optional | boolean, boolean string | Set to true to load appointment with employees of appointment
-`with_revenues` | Optional | boolean, boolean string | Set to true to load appointment with revenues of appointment
-`with_costs` | Optional | boolean, boolean string | Set to true to load appointment with costs of appointment
-`with_quotation` | Optional | boolean, boolean string | Set to true to load appointment with quotation of appointment
-`with_execute_works` | Optional | boolean, boolean string | Set to true to load appointment with execute_works of appointment
-`with_warranties` | Optional | boolean, boolean string | Set to true to load appointment with warranties of appointment
-`with_payment_reminder` | Optional | boolean, boolean string | Set to true to load appointment with payment_reminder of appointment
-`with_invoice` | Optional | boolean, boolean string | Set to true to load appointment with invoice of appointment
+`with_finished_works` | Optional | boolean, boolean string | Set to `true` to load appointment with finished works within appointment. The default value of this attribute is `true`
+`with_customer` | Optional | boolean, boolean string | Set to `true` to load appointment with customer of appointment. The default value of this attribute is `true`
+`with_subs` | Optional | boolean, boolean string | Set to `true` to load appointment with subs of appointment. The default value of this attribute is `true`
+`with_works` | Optional | boolean, boolean string | Set to `true` to load appointment with works of appointment. The default value of this attribute is `true`
+`with_worklists` | Optional | boolean, boolean string | Set to `true` to load appointment with worklists of appointment. The default value of this attribute is `true`
+`with_workdays` | Optional | boolean, boolean string | Set to `true` to load appointment with workdays of appointment. The default value of this attribute is `true`
+`with_calculation` | Optional | boolean, boolean string | Set to `true` to load appointment with calculation of appointment. The default value of this attribute is `false`
+`with_employees` | Optional | boolean, boolean string | Set to `true` to load appointment with employees of appointment. The default value of this attribute is `true`
+`with_revenues` | Optional | boolean, boolean string | Set to `true` to load appointment with revenues of appointment. The default value of this attribute is `false`
+`with_costs` | Optional | boolean, boolean string | Set to `true` to load appointment with costs of appointment. The default value of this attribute is `false`
+`with_quotation` | Optional | boolean, boolean string | Set to `true` to load appointment with quotation of appointment. The default value of this attribute is `false`
+`with_execute_works` | Optional | boolean, boolean string | Set to `true` to load appointment with execute_works of appointment. The default value of this attribute is `false`
+`with_warranties` | Optional | boolean, boolean string | Set to `true` to load appointment with warranties of appointment. The default value of this attribute is `false`
+`with_payment_reminder` | Optional | boolean, boolean string | Set to `true` to load appointment with payment_reminder of appointment. The default value of this attribute is `false`
+`with_invoice` | Optional | boolean, boolean string | Set to `true` to load appointment with invoice of appointment. The default value of this attribute is `false`
+
+**Request Body Example:**
+
+```json
+{
+    "appointment_id": "07f69c00-c7b5-11eb-b290-d11f6e46c68e",
+    "with_invoice": true,
+}
+```
+
+**Response Attributes:**
+
+Attribute Name  | Type  | Description   
+----------------|-------|---------------
+`appointment` | Object | Object data of updated appointment
+
+**Success Response Example:**
+
+```json
+{
+    "appointment": {
+        "id": "34540d80-5831-11ec-80cd-1b6bb5758996",
+        "customer_id": "314e8020-5831-11ec-8dfc-99099ffafcfc",
+        "status": 3,
+        "status_description": "Processed",
+        "type": 6,
+        "type_description": "Payment Reminder",
+        "start": "2021-12-15T14:14:49.000000Z",
+        "end": "2021-12-18T14:14:49.000000Z",
+        "include_weekend": true,
+        "note": "This is seeder appointment",
+        "created_at": "2021-12-08T14:14:49.000000Z",
+        "in_process_at": "2021-12-11 15:14:49",
+        "processed_at": null,
+        "customer": null,
+        "subs": [],
+        "works": [
+            {
+                "id": "46bda120-5831-11ec-88c3-e70ed8e551b8",
+                "status": 4,
+                "status_description": "Unfinished",
+                "quantity": 16,
+                "quantity_unit": "cm2",
+                "quantity_with_unit": "16 cm2",
+                "description": "This is seeder appointment work",
+                "unit_price": 174,
+                "formatted_unit_price": null,
+                "total_price": 2784,
+                "formatted_total_price": "€ 2.784,00",
+                "total_paid": 0,
+                "formatted_total_paid": "€ 0,00",
+                "created_at": "2021-12-08T14:15:20.000000Z",
+                "executed_at": "2021-12-08 15:15:20",
+                "finished_at_appointment_id": "34540d80-5831-11ec-80cd-1b6bb5758996",
+                "finished_at": "2021-12-08 15:15:20",
+                "finish_note": null,
+                "unfinished_at": "2021-12-08 15:15:20"
+            },
+            {
+                "id": "46bdc960-5831-11ec-baa2-f56077bbd4ca",
+                "status": 3,
+                "status_description": "Finished",
+                "quantity": 426,
+                "quantity_unit": "m2",
+                "quantity_with_unit": "426 m2",
+                "description": "This is seeder appointment work",
+                "unit_price": 100,
+                "formatted_unit_price": null,
+                "total_price": 42600,
+                "formatted_total_price": "€ 42.600,00",
+                "total_paid": 0,
+                "formatted_total_paid": "€ 0,00",
+                "created_at": "2021-12-08T14:15:20.000000Z",
+                "executed_at": "2021-12-08 15:15:20",
+                "finished_at_appointment_id": "34540d80-5831-11ec-80cd-1b6bb5758996",
+                "finished_at": "2021-12-08 15:15:20",
+                "finish_note": null
+            }
+        ],
+        "finished_works": [
+            {
+                "id": "46bda120-5831-11ec-88c3-e70ed8e551b8",
+                "status": 4,
+                "status_description": "Unfinished",
+                "quantity": 16,
+                "quantity_unit": "cm2",
+                "quantity_with_unit": "16 cm2",
+                "description": "This is seeder appointment work",
+                "unit_price": 174,
+                "formatted_unit_price": null,
+                "total_price": 2784,
+                "formatted_total_price": "€ 2.784,00",
+                "total_paid": 0,
+                "formatted_total_paid": "€ 0,00",
+                "created_at": "2021-12-08T14:15:20.000000Z",
+                "executed_at": "2021-12-08 15:15:20",
+                "finished_at_appointment_id": "34540d80-5831-11ec-80cd-1b6bb5758996",
+                "finished_at": "2021-12-08 15:15:20",
+                "finish_note": null,
+                "unfinished_at": "2021-12-08 15:15:20"
+            },
+            {
+                "id": "46bdc960-5831-11ec-baa2-f56077bbd4ca",
+                "status": 3,
+                "status_description": "Finished",
+                "quantity": 426,
+                "quantity_unit": "m2",
+                "quantity_with_unit": "426 m2",
+                "description": "This is seeder appointment work",
+                "unit_price": 100,
+                "formatted_unit_price": null,
+                "total_price": 42600,
+                "formatted_total_price": "€ 42.600,00",
+                "total_paid": 0,
+                "formatted_total_paid": "€ 0,00",
+                "created_at": "2021-12-08T14:15:20.000000Z",
+                "executed_at": "2021-12-08 15:15:20",
+                "finished_at_appointment_id": "34540d80-5831-11ec-80cd-1b6bb5758996",
+                "finished_at": "2021-12-08 15:15:20",
+                "finish_note": null
+            }
+        ],
+        "worklists": [
+            {
+                "id": "33c3cee0-5831-11ec-a331-774aba4f7b72",
+                "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+                "workday_id": "32d2c800-5831-11ec-92dd-358f7ef584f9",
+                "worklist_name": "Worklist Name 1",
+                "status": 1,
+                "status_description": "Prepared",
+                "created_at": "2021-12-08T14:14:48.000000Z",
+                "updated_at": "2021-12-08T14:14:48.000000Z"
+            }
+        ],
+        "workdays": [
+            {
+                "id": "32d2c800-5831-11ec-92dd-358f7ef584f9",
+                "date": "2021-12-27",
+                "status": 1,
+                "status_description": "Prepared"
+            }
+        ],
+        "employees": [
+            {
+                "id": "3263f250-5831-11ec-861a-6b0ed404ed91",
+                "title": "Employee Title",
+                "employee_type": 2,
+                "employee_type_description": "Roofer",
+                "employment_status": 2,
+                "employment_status_description": "Inactive"
+            }
+        ],
+        "invoice": {
+            "id": "a059edc0-5831-11ec-9aea-73d7237ec899",
+            "company_id": "31445190-5831-11ec-ad2a-df6ca196e45a",
+            "total": 45384,
+            "formatted_total": "€ 45.384,00",
+            "total_in_terms": 0,
+            "formatted_total_in_terms": "€ 0,00",
+            "total_out_terms": 0,
+            "formatted_total_out_terms": "€ 0,00",
+            "total_paid": 0,
+            "formatted_total_paid": "€ 0,00",
+            "total_unpaid": 45384,
+            "formatted_total_unpaid": "€ 45.384,00",
+            "status": 11,
+            "status_description": "Sent to debt collector",
+            "payment_method": "2",
+            "payment_method_description": "Bank Transfer"
+        },
+        "calculation": null
+    }
+}
+```
 
 -------------------------------------------------------
 ### 5. Update Appointment

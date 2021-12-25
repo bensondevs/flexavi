@@ -3,9 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-
-use App\Enums\Car\CarStatus;
-
 use App\Traits\ApiCollectionResource;
 
 class CarResource extends JsonResource
@@ -39,6 +36,17 @@ class CarResource extends JsonResource
 
         if ($this->relationLoaded('worklists')) {
             $structure['worklists'] = WorklistResource::collection($this->worklists);
+        }
+
+        if ($this->relationLoaded('registeredTimes')) {
+            $regTimes = CarRegisterTimeResource::collection($this->registeredTimes);
+            $structure['registered_times'] = $regTimes;
+        }
+
+        if ($this->relationLoaded('registeredTimeEmployees')) {
+            $regTimeEmps = $this->registeredTimeEmployees;
+            $regTimeEmps = CarRegisterTimeEmployeeResource::collection($regTimeEmps);
+            $structure['registered_employees'] = $regTimeEmps;
         }
 
         return $structure;

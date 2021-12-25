@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Company;
+namespace App\Http\Controllers\Api\Company\Car;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -112,6 +112,7 @@ class CarController extends Controller
     public function view(FindRequest $request)
     {
         $car = $request->getCar();
+        $car->load($request->relations());
         $car = new CarResource($car);
         return response()->json(['car' => $car]);
     }

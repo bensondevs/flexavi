@@ -34,8 +34,29 @@ class CustomerResource extends JsonResource
             'province' => $this->province,
         ];
 
+        if ($this->relationLoaded('addresses')) {
+            $addresses = AddressResource::collection($this->addresses);
+            $structure['addresses'] = $addresses;
+        }
+
         if ($this->relationLoaded('company')) {
-            $structure['company'] = new CompanyResource($this->company);
+            $company = new CompanyResource($this->company);
+            $structure['company'] = $company;
+        }
+
+        if ($this->relationLoaded('quotations')) {
+            $quotations = QuotationResource::collection($this->quotations);
+            $structure['quotations'] = $quotations;
+        }
+
+        if ($this->relationLoaded('appointments')) {
+            $appointments = AppointmentResource::collection($this->appointments);
+            $structure['appointments'] = $appointments;
+        }
+
+        if ($this->relationLoaded('invoices')) {
+            $invoices = InvoiceResource::collection($this->invoices);
+            $structure['invoices'] = $invoices;
         }
 
         return $structure;

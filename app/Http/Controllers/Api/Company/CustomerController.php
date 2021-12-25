@@ -94,9 +94,8 @@ class CustomerController extends Controller
     public function view(FindRequest $request)
     {
         $customer = $request->getCustomer();
-
-        $relations = $request->relations();
-        $customer->load($relations);
+        $customer->load($request->relations());
+        $customer = new CustomerResource($customer);
 
         return response()->json(['customer' => $customer]);
     }

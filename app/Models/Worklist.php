@@ -188,6 +188,10 @@ class Worklist extends Model
         return $this->morphToMany(Appointment::class, 'appointmentable');
     }
 
+    /**
+     * Get all employees attached to appointments 
+     * attached to the worklist
+     */
     public function appointEmployees()
     {
         return $this->hasManyDeep(
@@ -198,6 +202,9 @@ class Worklist extends Model
         );
     }
 
+    /**
+     * Get worklist employees
+     */
     public function employees()
     {
         return $this->hasManyDeep(
