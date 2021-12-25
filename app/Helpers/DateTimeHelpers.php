@@ -71,6 +71,18 @@ if (! function_exists('start_of_day')) {
 }
 
 /**
+ * Get start date of the current month
+ * 
+ * @return string
+ */
+if (! function_exists('month_start_date')) {
+	function month_start_date()
+	{
+		return now()->copy()->startOfMonth();
+	}
+}
+
+/**
  * Get end datetime of certain date string
  * 
  * @param  string  $date
