@@ -35,10 +35,16 @@ class RefreshCarStatuses implements ShouldQueue
     {
         $now = now()->copy();
 
+        /**
+         * Cars that has entered the out time
+         */
         Car::whereHas('registerTimes', function ($registerTime) use ($now) {
             $registerTime->where('out_time', '>=', $now);
         })->update(['status' => CarStatus::Out]);
 
+        /**
+         * Cars that has entered the return time
+         */
         Car::whereHas('registerTimes', function ($registerTime) use ($now) {
             $registerTime->where('return_time', '>=', $now);
         })->update(['status' => CarStatus::Free]);

@@ -15,9 +15,8 @@ class QuotationTest extends TestCase
      */
     public function test_all_quotation_types()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/quotation/all_types';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -29,9 +28,8 @@ class QuotationTest extends TestCase
      */
     public function test_all_quotation_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/quotation/all_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -43,9 +41,8 @@ class QuotationTest extends TestCase
      */
     public function test_all_quotation_payment_methods()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/quotation/all_payment_methods';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -57,9 +54,8 @@ class QuotationTest extends TestCase
      */
     public function test_all_quotation_damage_causes()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/quotation/all_damage_causes';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -71,9 +67,8 @@ class QuotationTest extends TestCase
      */
     public function test_all_quotation_cancellers()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/quotation/all_cancellers';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

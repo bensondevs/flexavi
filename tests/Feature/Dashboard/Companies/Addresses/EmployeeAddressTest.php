@@ -16,6 +16,13 @@ class EmployeeAddressTest extends TestCase
     use DatabaseTransactions;
 
     /**
+     * Base URL of the current test
+     * 
+     * @var string
+     */
+    private $baseUrl = '/api/dashboard/companies/addresses/employee';
+
+    /**
      * A populate customer addresses feature.
      *
      * @return void
@@ -27,7 +34,7 @@ class EmployeeAddressTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $employee = Employee::factory()->for($company)->create();
-        $url = '/api/dashboard/companies/addresses/employee?employee_id=' . $employee->id;
+        $url = $this->baseUrl . '?employee_id=' . $employee->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -48,7 +55,7 @@ class EmployeeAddressTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $employee = Employee::factory()->for($company)->create();
-        $url = '/api/dashboard/companies/addresses/employee/trasheds?employee_id=' . $employee->id;
+        $url = $this->baseUrl . '/trasheds?employee_id=' . $employee->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -69,7 +76,7 @@ class EmployeeAddressTest extends TestCase
         Sanctum::actingAs(($user = $owner->user), ['*']);
 
         $employee = Employee::factory()->for($company)->create();
-        $url = '/api/dashboard/companies/addresses/employee/store';
+        $url = $this->baseUrl . '/store';
         $response = $this->json('POST', $url, [
             'address_type' => 1,
 
@@ -106,7 +113,7 @@ class EmployeeAddressTest extends TestCase
         
         $employee = Employee::factory()->for($company)->create();
         $address = Address::factory()->employee($employee)->create();
-        $url = '/api/dashboard/companies/addresses/employee/view?address_id=' . $address->id;
+        $url = $this->baseUrl . '/view?address_id=' . $address->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -128,7 +135,7 @@ class EmployeeAddressTest extends TestCase
 
         $employee = Employee::factory()->for($company)->create();
         $address = Address::factory()->employee($employee)->create();
-        $url = '/api/dashboard/companies/addresses/employee/update';
+        $url = $this->baseUrl . '/update';
         $response = $this->json('PATCH', $url, [
             'id' => $address->id,
 
@@ -161,9 +168,10 @@ class EmployeeAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/employee/delete';
+        $url = $this->baseUrl . '/delete';
         $employee = Employee::factory()->for($company)->create();
         $address = Address::factory()->employee($employee)->create();
         $response = $this->json('DELETE', $url, ['id' => $address->id]);
@@ -184,9 +192,10 @@ class EmployeeAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/employee/restore';
+        $url = $this->baseUrl . '/restore';
         $employee = Employee::factory()->for($company)->create();
         $address = Address::factory()->softDeleted()->employee($employee)->create();
         $response = $this->json('PATCH', $url, ['id' => $address->id]);

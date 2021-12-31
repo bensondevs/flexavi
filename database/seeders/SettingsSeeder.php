@@ -4,10 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Models\Setting;
-use App\Models\Company;
-
-use App\Enums\Setting\SettingType;
+use App\Models\{ Setting, Company };
+use App\Enums\Setting\SettingType as Type;
 
 class SettingsSeeder extends Seeder
 {
@@ -18,68 +16,81 @@ class SettingsSeeder extends Seeder
      */
     public function run()
     {
-        $rawSettings = [];
+        $rawSettings = [
+            /**
+             * System setting
+             */
+            [
+                'type' => Type::System,
+                'key' => 'notification_enability',
+            ],
 
-        // Default settings
-        $rawSettings[] = [
-            'id' => generateUuid(),
-            'type' => SettingType::Default,
-            'key' => 'vat_percentage',
-            'value' => '21',
+            /**
+             * Company settings
+             */
+            [
+                'type' => Type::Company,
+                'key' => 'vat_percentage',
+            ],
+            [
+                'type' => Type::Company,
+                'key' => 'office_hours',
+            ],
+
+            /**
+             * Appointment settings
+             */
+            
+            /**
+             * Workday settings
+             */
+            [
+                'type' => Type::Workday,
+                'key' => 'standard_worklist_quantity',
+            ],
+            [
+                'type' => Type::Workday,
+                'key' => 'max_workday_quantity',
+            ]
+
+            /**
+             * Worklist settings 
+             */
+            [
+                'type' => Type::Worklist,
+                'key' => 'max_appointment_quantity',
+            ],
+            
+            /**
+             * Invoice setting
+             */
+            [
+                'type' => Type::Invoice,
+                'key' => 'overdue_deadline',
+            ],
+            [
+                'type' => Type::Invoice,
+                'key' => 'invoice_number_prefix',
+            ],
+            [
+                'type' => Type::Invoice,
+                'key' => 'invoice_number_suffix',
+            ],
+            [
+                'type' => Type::Invoice,
+                'key' => 'standard_payment_method',
+            ],
+            [
+                'type' => Type::Invoice,
+                'key' => 'standard_payment_term_quantity',
+            ]
         ];
 
-        $rawSettings[] = [
-            'id' => generateUuid(),
-            'type' => SettingType::Default,
-            'key' => 'notification_enability',
-            'value' => 'true',
-        ];
-
-        $rawSettings[] = [
-            'id' => generateUuid(),
-            'type' => SettingType::Default,
-            'key' => 'start_working_time',
-            'value' => '08:00:00',
-        ];
-
-        $rawSettings[] = [
-            'id' => generateUuid(),
-            'type' => SettingType::Default,
-            'key' => 'end_working_time',
-            'value' => '17:00:00',
-        ];
-
-        $rawSettings[] = [
-            'id' => generateUuid(),
-            'type' => SettingType::Default,
-            'key' => 'default_worklist_per_workday',
-            'value' => 3,
-        ];
-
-        Setting::insert($rawSettings);
-        $rawSettings = [];
-
-        foreach (Company::all() as $company) {
-            if (rand(0, 1)) {
-                $rawSettings[] = [
-                    'id' => generateUuid(),
-                    'type' => SettingType::Company,
-                    'settingable_type' => Company::class,
-                    'settingable_id' => $company->id,
-                    'key' => 'vat_percentage',
-                    'value' => rand(0, 100),
-                ];
-
-                $rawSettings[] = [
-                    'id' => generateUuid(),
-                    'type' => SettingType::Company,
-                    'settingable_type' => Company::class,
-                    'settingable_id' => $company->id,
-                    'key' => 'notification_enabled',
-                    'value' => 'true',
-                ];
-            }
-        }
-        Setting::insert($rawSettings);
+        Setting::insert(array_map(function ($rawSetting) {
+            $rawSetting['id'] = generateUuid();
+            $rawSetting['created_at'] = now();
+            $rawSetting['updated_at'] = now();
+            return $rawSetting;
+        }, $rawSettings));
     }
 }

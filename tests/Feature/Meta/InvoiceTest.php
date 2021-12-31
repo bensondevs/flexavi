@@ -15,9 +15,8 @@ class InvoiceTest extends TestCase
      */
     public function test_all_invoice_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/invoice/all_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -29,9 +28,8 @@ class InvoiceTest extends TestCase
      */
     public function test_selectable_invoice_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/invoice/selectable_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -43,9 +41,8 @@ class InvoiceTest extends TestCase
      */
     public function test_all_payment_methods()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/invoice/all_payment_methods';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

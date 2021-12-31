@@ -60,9 +60,9 @@ Route::group(['middleware' => ['has_company']], function () {
 	Route::post('upload_logo', [CompanyController::class, 'uploadCompanyLogo']);
 	Route::match(['PUT', 'PATCH'], 'update', [CompanyController::class, 'update']);
 
-	/*
-		Company Owners Module
-	*/
+	/**
+	 * Company Owners Module
+	 */
 	Route::group(['prefix' => 'owners'], function () {
 		Route::get('/', [OwnerController::class, 'companyOwners']);
 		Route::get('inviteables', [OwnerController::class, 'inviteableOwners']);
@@ -74,9 +74,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::patch('restore', [OwnerController::class, 'restore']);
 	});
 
-	/*
-		Company Employee Module
-	*/
+	/**
+	 * Company Employee Module
+	 */
 	Route::group(['prefix' => 'employees'], function () {
 		Route::get('/', [EmployeeController::class, 'companyEmployees']);
 		Route::get('inviteables', [EmployeeController::class, 'inviteableEmployees']);
@@ -88,9 +88,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::patch('restore', [EmployeeController::class, 'restore']);
 	});
 
-	/*
-		Company Customer Module
-	*/
+	/**
+	 * Company Customer Module
+	 */
 	Route::group(['prefix' => 'customers'], function () {
 		Route::get('/', [CustomerController::class, 'companyCustomers']);
 		Route::get('trasheds', [CustomerController::class, 'trashedCustomers']);
@@ -104,9 +104,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::get('quotations', [QuotationController::class, 'customerQuotations']);
 	});
 
-	/*
-		Company Workday Module
-	*/
+	/**
+	 * Company Workday Module
+	 */
 	Route::group(['prefix' => 'workdays'], function () {
 		Route::get('/', [WorkdayController::class, 'companyWorkdays']);
 		Route::get('current', [WorkdayController::class, 'currentWorkday']);
@@ -125,9 +125,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Worlist Module
-	*/
+	/**
+	 * Company Worklist Module
+	 */
 	Route::group(['prefix' => 'worklists'], function () {
 		Route::get('/', [WorklistController::class, 'companyWorklists']);
 		Route::get('/of_workday', [WorklistController::class, 'workdayWorklists']);
@@ -140,9 +140,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::delete('delete', [WorklistController::class, 'delete']);
 		Route::patch('restore', [WorklistController::class, 'restore']);
 
-		/*
-			Worklist Cost Module
-		*/
+		/**
+		 * Worklist Cost Module
+		 */
 		Route::group(['prefix' => 'costs'], function () {
 			Route::get('/', [WorklistCostController::class, 'worklistCosts']);
 			Route::post('store_record', [WorklistCostController::class, 'storeRecord']);
@@ -153,9 +153,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('truncate', [WorklistCostController::class, 'truncate']);
 		});
 
-		/*
-			Worklist Appointment Module
-		*/
+		/**
+		 * Worklist Appointment Module
+		 */
 		Route::group(['prefix' => 'appointments'], function () {
 			Route::get('/', [WorklistAppointmentController::class, 'worklistAppointments']);
 			Route::post('attach', [WorklistAppointmentController::class, 'attach']);
@@ -167,9 +167,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Appointment Module
-	*/
+	/**
+	 * Company Appointment Module
+	 */
 	Route::group(['prefix' => 'appointments'], function () {
 		Route::get('/', [AppointmentController::class, 'companyAppointments']);
 		Route::get('unplanneds', [AppointmentController::class, 'unplannedAppointments']);
@@ -189,9 +189,9 @@ Route::group(['middleware' => ['has_company']], function () {
 
 		Route::post('generate_invoice', [AppointmentController::class, 'generateInvoice']);
 
-		/*
-			Sub Appointments Module
-		*/
+		/**
+		 * Sub Appointments Module
+		 */
 		Route::group(['prefix' => 'subs'], function () {
 			Route::get('/', [SubAppointmentController::class, 'subAppointments']);
 			Route::post('store', [SubAppointmentController::class, 'store']);
@@ -202,9 +202,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('process', [SubAppointmentController::class, 'process']);
 			Route::delete('delete', [SubAppointmentController::class, 'delete']);
 
-			/*
-				Sub Appointment Work Module 
-			*/
+			/**
+			 * Sub Appointment Work Module
+			 */
 			Route::group(['prefix' => 'works'], function () {
 				Route::get('/', [SubAppointmentWorkController::class, 'subAppointmentWorks']);
 				Route::post('store', [SubAppointmentWorkController::class, 'store']);
@@ -216,9 +216,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			});
 		});
 
-		/*
-			Appointment Employees Module
-		*/
+		/**
+		 * Appointment Employees Module
+		 */
 		Route::group(['prefix' => 'employees'], function () {
 			Route::get('/', [AppointmentEmployeeController::class, 'appointmentEmployees']);
 			Route::get('trasheds', [AppointmentEmployeeController::class, 'trashedAppointmentEmployees']);
@@ -226,9 +226,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('unassign', [AppointmentEmployeeController::class, 'unassignEmployee']);
 		});
 
-		/*
-			Appointment Work Module
-		*/
+		/**
+		 * Appointment Work Module
+		 */
 		Route::group(['prefix' => 'works'], function () {
 			Route::get('/', [AppointmentWorkController::class, 'appointmentWorks']);
 			Route::post('store_attach', [AppointmentWorkController::class, 'storeAttach']);
@@ -239,9 +239,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::post('truncate', [AppointmentWorkController::class, 'truncate']);
 		});
 
-		/*
-			Appointment Cost Module
-		*/
+		/**
+		 * Appointment Cost Module
+		 */
 		Route::group(['prefix' => 'costs'], function () {
 			Route::get('/', [AppointmentCostController::class, 'appointmentCosts']);
 			Route::post('store_record', [AppointmentCostController::class, 'storeRecord']);
@@ -253,9 +253,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Receipt Module
-	*/
+	/**
+	 * Company Receipt Module
+	 */
 	Route::group(['prefix' => 'receipts'], function () {
 		Route::get('/', [ReceiptController::class, 'receipts']);
 		Route::get('trasheds', [ReceiptController::class, 'trashedReceipts']);
@@ -265,9 +265,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::patch('restore', [ReceiptController::class, 'restore']);
 	});
 
-	/*
-		Company Cost Module
-	*/
+	/**
+	 * Company Cost Module
+	 */
 	Route::group(['prefix' => 'costs'], function () {
 		Route::get('/', [CostController::class, 'companyCosts']);
 		Route::post('store', [CostController::class, 'store']);
@@ -282,9 +282,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Revenue Module
-	*/
+	/**
+	 * Company Revenue Module
+	 */
 	Route::group(['prefix' => 'revenues'], function () {
 		Route::get('/', [RevenueController::class, 'companyRevenues']);
 		Route::post('store', [RevenueController::class, 'store']);
@@ -298,9 +298,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Car Module
-	*/
+	/**
+	 * Company Car Module
+	 */
 	Route::group(['prefix' => 'cars'], function () {
 		Route::get('/', [CarController::class, 'companyCars']);
 		Route::get('frees', [CarController::class, 'freeCars']);
@@ -312,9 +312,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::delete('delete', [CarController::class, 'delete']);
 		Route::patch('restore', [CarController::class, 'restore']);
 
-		/*
-			Company Car Register Time Module
-		*/
+		/**
+		 * Company Car Register Time Module
+		 */
 		Route::group(['prefix' => 'register_times'], function () {
 			Route::get('/', [CarRegisterTimeController::class, 'carRegisterTimes']);
 			Route::post('register', [CarRegisterTimeController::class, 'registerTime']);
@@ -324,9 +324,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::match(['PUT', 'PATCH'], 'update', [CarRegisterTimeController::class, 'update']);
 			Route::delete('unregister', [CarRegisterTimeController::class, 'unregister']);
 
-			/*
-				Company Car Register Time Employees
-			*/
+			/**
+			 * Company Car Register Time Employees
+			 */
 			Route::group(['prefix' => 'assigned_employees'], function () {
 				Route::get('/', [CarRegisterTimeEmployeeController::class, 'assignedEmployees']);
 				Route::post('assign', [CarRegisterTimeEmployeeController::class, 'assignEmployee']);
@@ -338,9 +338,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Invoice Module
-	*/
+	/**
+	 * Company Invoice Module
+	 */
 	Route::group(['prefix' => 'invoices'], function () {
 		Route::get('/', [InvoiceController::class, 'companyInvoices']);
 		Route::get('overdue', [InvoiceController::class, 'companyOverdueInvoices']);
@@ -351,13 +351,17 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::post('print', [InvoiceController::class, 'print']);
 		Route::post('print_draft', [InvoiceController::class, 'printDraft']);
 		Route::post('send_reminder', [InvoiceController::class, 'sendReminder']);
+		Route::post('send_first_reminder', [InvoiceController::class, 'sendFirstReminder']);
+		Route::post('send_second_reminder', [InvoiceController::class, 'sendSecondReminder']);
+		Route::post('send_third_reminder', [InvoiceController::class, 'sendThirdReminder']);
+		Route::post('forward_to_debt_collector', [InvoiceController::class, 'forwardToDebtCollector']);
 		Route::match(['PUT', 'PATCH'], 'change_status', [InvoiceController::class, 'changeStatus']);
 		Route::post('mark_as_paid', [InvoiceController::class, 'markAsPaid']);
 		Route::delete('delete', [InvoiceController::class, 'delete']);
 
-		/*
-			Invoice Item Module
-		*/
+		/**
+		 * Invoice Item Module
+		 */
 		Route::group(['prefix' => 'items'], function () {
 			Route::get('/', [InvoiceItemController::class, 'invoiceItems']);
 			Route::post('store', [InvoiceItemController::class, 'store']);
@@ -365,9 +369,9 @@ Route::group(['middleware' => ['has_company']], function () {
 			Route::delete('delete', [InvoiceItemController::class, 'delete']);
 		});
 
-		/*
-			Invoice Payment Term Module
-		*/
+		/**
+		 * Invoice Payment Term Module
+		 */
 		Route::group(['prefix' => 'payment_terms'], function () {
 			Route::get('/', [PaymentTermController::class, 'paymentTerms']);
 			Route::post('store', [PaymentTermController::class, 'store']);
@@ -379,9 +383,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		});
 	});
 
-	/*
-		Company Quotation Module
-	*/
+	/**
+	 * Company Quotation Module
+	 */
 	Route::group(['prefix' => 'quotations'], function () {
 		Route::get('/', [QuotationController::class, 'companyQuotations']);
 		Route::get('trasheds', [QuotationController::class, 'trashedQuotations']);
@@ -391,18 +395,18 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::match(['PUT', 'PATCH'], 'update', [QuotationController::class, 'update']);
 		Route::delete('delete', [QuotationController::class, 'delete']);
 
-		/*
-			Attachments
-		*/
+		/**
+		 * Company Quotation Attachment Module
+		 */
 		Route::group(['prefix' => 'attachments'], function () {
 			Route::get('/', [QuotationController::class, 'attachments']);
 			Route::post('add', [QuotationController::class, 'addAttachment']);
 			Route::delete('remove', [QuotationController::class, 'removeAttachment']);
 		});
 
-		/*
-			Actions
-		*/
+		/**
+		 * Company Quotation Module Actions
+		 */
 		Route::post('send', [QuotationController::class, 'send']);
 		Route::post('print', [QuotationController::class, 'print']);
 		Route::post('revise', [QuotationController::class, 'revise']);
@@ -410,9 +414,9 @@ Route::group(['middleware' => ['has_company']], function () {
 		Route::post('honor', [QuotationController::class, 'honor']);
 		Route::post('generate_invoice', [QuotationController::class, 'generateInvoice']);
 
-		/*
-			Quotation Works
-		*/
+		/**
+		 * Company Quotation Work Module
+		 */
 		Route::group(['prefix' => 'works'], function () {
 			Route::get('/', [QuotationWorkController::class, 'quotationWorks']);
 			Route::post('store_attach', [QuotationWorkController::class, 'storeAttach']);

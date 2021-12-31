@@ -19,41 +19,4 @@ class {{repositoryName}} extends BaseRepository
 	{
 		$this->setInitModel(new {{modelName}});
 	}
-
-	public function save(array ${{variableName}}Data = [])
-	{
-		try {
-			${{variableName}} = $this->getModel();
-			${{variableName}}->fill(${{variableName}}Data);
-			${{variableName}}->save();
-
-			$this->setModel(${{variableName}});
-
-			$this->setSuccess('Successfully save {{variableName}}.');
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to save {{variableName}}.', $error);
-		}
-
-		return $this->getModel();
-	}
-
-	public function delete(bool $force = false)
-	{
-		try {
-			${{variableName}} = $this->getModel();
-			$force ?
-				${{variableName}}->forceDelete() :
-				${{variableName}}->delete();
-
-			$this->destroyModel();
-
-			$this->setSuccess('Successfully delete {{variableName}}.');
-		} catch (QueryException $qe) {
-			$error = $qe->getMessage();
-			$this->setError('Failed to delete {{variableName}}.', $error);
-		}
-
-		return $this->returnResponse();
-	}
 }

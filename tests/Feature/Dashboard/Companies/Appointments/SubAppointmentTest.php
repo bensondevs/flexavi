@@ -36,7 +36,8 @@ class SubAppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $appointment = Appointment::factory()
             ->for($company)
@@ -59,7 +60,8 @@ class SubAppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $appointment = Appointment::factory()->for($company)->create();
         $url = $this->baseUrl . '/store';
@@ -85,7 +87,8 @@ class SubAppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $subAppointment = SubAppointment::factory()->for($company)->created()->create();
         $url = $this->baseUrl . '/update';
@@ -111,7 +114,8 @@ class SubAppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $subAppointment = SubAppointment::factory()
             ->for($company)
@@ -138,7 +142,8 @@ class SubAppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $subAppointment = SubAppointment::factory()
             ->for($company)
@@ -161,7 +166,8 @@ class SubAppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $subAppointment = SubAppointment::factory()
             ->for($company)
@@ -191,7 +197,8 @@ class SubAppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $subAppointment = SubAppointment::factory()
             ->for($company)

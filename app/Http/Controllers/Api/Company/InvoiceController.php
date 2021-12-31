@@ -171,6 +171,7 @@ class InvoiceController extends Controller
 
     /**
      * Send reminder to customer about the invoice
+     * This method will guess the reminder index.
      * 
      * @param SendReminderRequest  $request
      * @return Illuminate\Support\Facades\Response
@@ -178,9 +179,78 @@ class InvoiceController extends Controller
     public function sendReminder(SendReminderRequest $request)
     {
         $invoice = $request->getInvoice();
-
         $this->invoice->setModel($invoice);
-        $this->invoice->sendReminder();
+
+        $input = $request->validated();
+        $this->invoice->sendReminder($input);
+
+        return apiResponse($this->invoice);
+    }
+
+    /**
+     * Send first reminder to customer about the invoice.
+     * 
+     * @param  SendReminderRequest  $request
+     * @return \Illuminate\Support\Facades\Response
+     */
+    public function sendFirstReminder(SendReminderRequest $request)
+    {
+        $invoice = $request->getInvoice();
+        $this->invoice->setModel($invoice);
+
+        $input = $request->validated();
+        $this->invoice->sendFirstReminder($input);
+
+        return apiResponse($this->invoice);
+    }
+
+    /**
+     * Send second reminder to customer about the invoice
+     * 
+     * @param  SendReminderRequest  $request
+     * @return \Illuminate\Support\Facades\Response
+     */
+    public function sendSecondReminder(SendReminderRequest $request)
+    {
+        $invoice = $request->getInvoice();
+        $this->invoice->setModel($invoice);
+
+        $input = $request->validated();
+        $this->invoice->sendSecondReminder($input);
+
+        return apiResponse($this->invoice);
+    }
+
+    /**
+     * Send third reminder to customer about the invoice
+     * 
+     * @param  SendReminderRequest  $request
+     * @return \Illuminate\Support\Facades\Response
+     */
+    public function sendThirdReminder(SendReminderRequest $request)
+    {
+        $invoice = $request->getInvoice();
+        $this->invoice->setModel($invoice);
+
+        $input = $request->validated();
+        $this->invoice->sendThirdReminder($input);
+
+        return apiResponse($this->invoice);
+    }
+
+    /**
+     * Forward invoice to debt collector
+     * 
+     * @param  ForwardToDebtCollectorRequest  $request
+     * @return \Illuminate\Support\Facades\Response
+     */
+    public function forwardToDebtCollector(ForwardToDebtCollectorRequest $request)
+    {
+        $invoice = $request->getInvoice();
+        $this->invoice->setModel($invoice);
+
+        $quotedPtIds = $request->getQuotedPaymentTermIds();
+        $this->invoice->forwardToDebtCollector($quotedPtIds);
 
         return apiResponse($this->invoice);
     }

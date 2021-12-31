@@ -293,3 +293,17 @@ if (! function_exists('uppercaseArray')) {
         return array_map('strtoupper', $array);
     }
 }
+
+/**
+ * Check if current request is update request
+ * 
+ * @return bool
+ */
+if (! function_exists('is_updating_request')) {
+    function is_updating_request()
+    {
+        return 
+            request()->isMethod('PUT') or 
+            request()->isMethod('PATCH');
+    }
+}

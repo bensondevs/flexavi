@@ -20,10 +20,10 @@ class FindWorklistRequest extends FormRequest
     protected $relationNames = [
         'with_workday' => true,
         'with_appointments' => true,
-        'with_costs' => true,
-        'with_worklist_cars' => true,
-        'with_appoint_employees' => true,
-        'with_employees' => true,
+        'with_worklist_cars' => false,
+        'with_costs' => false,
+        'with_appoint_employees' => false,
+        'with_employees' => false,
     ];
 
     /**

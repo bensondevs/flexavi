@@ -15,9 +15,8 @@ class UserTest extends TestCase
      */
     public function test_check_email_used()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/user/check_email_used?email=test@email.com';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -29,9 +28,8 @@ class UserTest extends TestCase
      */
     public function test_all_user_id_card_types()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/user/all_id_card_types';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

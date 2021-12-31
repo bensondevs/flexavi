@@ -16,13 +16,11 @@ class CreateSettingsTable extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->tinyInteger('type')->default(1);
-            $table->nullableUuidMorphs('settingable');
-
+            $table->tinyInteger('type')->default(SettingType::System);
             $table->string('key');
-            $table->text('value')->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

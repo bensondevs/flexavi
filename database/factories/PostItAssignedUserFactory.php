@@ -32,7 +32,7 @@ class PostItAssignedUserFactory extends Factory
             }
 
             if (! $pivot->user_id) {
-                $user = User::factory()->create();
+                $user = User::factory()->owner()->create();
                 $pivot->user()->associate($user);
             }
         });

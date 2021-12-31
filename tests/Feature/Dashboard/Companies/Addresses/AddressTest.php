@@ -16,6 +16,13 @@ class AddressTest extends TestCase
     use DatabaseTransactions;
     
     /**
+     * Module test base URL
+     * 
+     * @var string
+     */
+    private $baseUrl = '/api/dashboard/companies/addresses';
+
+    /**
      * A populate company addresses feature.
      *
      * @return void
@@ -24,9 +31,10 @@ class AddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->prime()->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses';
+        $url = $this->baseUrl;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -44,9 +52,10 @@ class AddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->prime()->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/trasheds';
+        $url = $this->baseUrl . '/trasheds';
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -64,9 +73,10 @@ class AddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->prime()->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/store';
+        $url = $this->baseUrl . '/store';
         $response = $this->json('POST', $url, [
             'address_type' => 1,
 
@@ -96,13 +106,14 @@ class AddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->prime()->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $address = Address::factory()->create([
             'addressable_id' => $company->id, 
             'addressable_type' => get_class($company)
         ]);
-        $url = '/api/dashboard/companies/addresses/view?address_id=' . $address->id;
+        $url = $this->baseUrl . '/view?address_id=' . $address->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -120,9 +131,10 @@ class AddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->prime()->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/update';
+        $url = $this->baseUrl . '/update';
         $address = Address::factory()->create([
             'addressable_id' => $company->id, 
             'addressable_type' => get_class($company)
@@ -156,9 +168,10 @@ class AddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->prime()->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/delete';
+        $url = $this->baseUrl . '/delete';
         $address = Address::factory()->create([
             'addressable_id' => $company->id, 
             'addressable_type' => get_class($company)
@@ -183,9 +196,10 @@ class AddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->prime()->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/restore';
+        $url = $this->baseUrl . '/restore';
         $address = Address::factory()->softDeleted()->create([
             'addressable_type' => Company::class,
             'addressable_id' => $company->id,

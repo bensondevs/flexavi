@@ -43,6 +43,7 @@ class CustomerFactory extends Factory
         $faker = $this->faker;
 
         return [
+            'id' => generateUuid(),
             'fullname' => $faker->name(),
             'email' => $faker->safeEmail(),
             'phone' => $faker->phoneNumber(),

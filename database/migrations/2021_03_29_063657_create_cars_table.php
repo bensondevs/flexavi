@@ -34,6 +34,8 @@ class CreateCarsTable extends Migration
             $table->boolean('insured')->default(0);
             $table->tinyInteger('status')->default(1);
 
+            $table->tinyInteger('max_passanger')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

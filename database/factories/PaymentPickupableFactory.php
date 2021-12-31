@@ -38,7 +38,12 @@ class PaymentPickupableFactory extends Factory
             }
 
             if (! $pickupable->payment_pickupable_id) {
-                $this->invoice();
+                $paymentPickup = PaymentPickup::findOrFail($pickupable->payment_pickup_id);
+                $company = $paymentPickup->company;
+                $invoice = Invoice::factory()->for($company)->create();
+
+                $paymentPickup->payment_pickupable_type = Invoice::class;
+                $paymentPickup->payment_pickupable_id = $invoice->id;
             }
         });
     }

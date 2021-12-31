@@ -15,9 +15,8 @@ class RegisterInvitationTest extends TestCase
      */
     public function test_all_register_invitation_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/register_invitation/all_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

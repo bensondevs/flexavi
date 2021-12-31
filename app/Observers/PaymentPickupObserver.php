@@ -14,7 +14,7 @@ class PaymentPickupObserver
      */
     public function creating(PaymentPickup $paymentPickup)
     {
-        $paymentPickup = generateUuid();
+        $paymentPickup->id = generateUuid();
     }
 
     /**

@@ -5,9 +5,11 @@ namespace App\Http\Requests\Addresses;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
-use App\Traits\AddressableRequest;
-use App\Traits\RequestHasRelations;
-use App\Traits\CompanyPopulateRequestOptions;
+use App\Traits\{
+    AddressableRequest,
+    RequestHasRelations,
+    CompanyPopulateRequestOptions
+};
 
 class PopulateAddressesRequest extends FormRequest
 {
@@ -15,6 +17,11 @@ class PopulateAddressesRequest extends FormRequest
     use RequestHasRelations;
     use CompanyPopulateRequestOptions;
 
+    /**
+     * List of configurable relationships
+     * 
+     * @var array
+     */
     private $relationNames = [
         'with_addressable' => false,
     ];
@@ -30,6 +37,11 @@ class PopulateAddressesRequest extends FormRequest
         return Gate::allows('view-any-address', $addressable);
     }
 
+    /**
+     * Prepare input for validation
+     * 
+     * @return void
+     */
     protected function prepareForValidation()
     {
         $this->prepareRelationInputs();

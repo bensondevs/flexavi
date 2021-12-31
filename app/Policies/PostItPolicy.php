@@ -54,10 +54,6 @@ class PostItPolicy
      */
     public function assignUser(User $user, PostIt $postIt, User $assignedUser)
     {
-        if ($assignedUser->company->id !== $postIt->company->id) {
-            return abort(403, 'This user is not from the company');
-        }
-
         return $user->hasCompanyPermission($postIt->company_id, 'assign user post its');
     }
 

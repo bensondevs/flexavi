@@ -47,13 +47,6 @@ class OwnerFactory extends Factory
                     $owner->company()->associate($company);
                 }
             }
-        })->afterCreating(function (Owner $owner) {
-            if (! $owner->user) {
-                $user = User::factory()->create();
-                $user->assignRole('owner');
-                
-                $owner->user()->associate($user);
-            }
         });
     }
 
@@ -67,6 +60,7 @@ class OwnerFactory extends Factory
         $faker = $this->faker;
 
         return [
+            'id' => generateUuid(),
             'is_prime_owner' => true,
             'bank_name' => $faker->word(),
             'bic_code' => $faker->randomNumber(3, true),

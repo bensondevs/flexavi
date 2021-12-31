@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Dashboard\Companies\Addresses;
 
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Foundation\Testing\{ DatabaseTransactions, RefreshDatabase, WithFaker };
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
@@ -24,7 +22,8 @@ class CustomerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->hasAddresses()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
 
@@ -46,7 +45,8 @@ class CustomerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->hasAddresses()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
 
@@ -128,7 +128,8 @@ class CustomerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
 
@@ -166,7 +167,8 @@ class CustomerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
             
@@ -191,7 +193,8 @@ class CustomerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
         

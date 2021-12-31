@@ -5,9 +5,12 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
-use App\Jobs\StorageFile\DatabaseFileSync;
-use App\Jobs\StorageFile\DestroyExpiredFiles;
+use App\Jobs\StorageFile\{
+    DatabaseFileSync,
+    DestroyExpiredFiles
+};
 use App\Jobs\CarRegisterTime\RefreshCarStatuses;
+use App\Jobs\Invoice\SyncInvoiceStatuses;
 
 class Kernel extends ConsoleKernel
 {
@@ -28,19 +31,24 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        /*
-            Run every day
-        */
+        /**
+         * Run every day
+         */
         $schedule->job(new DatabaseFileSync)->daily();
 
-        /*
-            Run every hour
-        */
+        /**
+         * Run every three hours
+         */
+        $schedule->job(new SyncInvoiceStatuses)->everyThreeHours();
+        
+        /**
+         * Run every hour
+         */
         $schedule->job(new DestroyExpiredFiles)->hourly();
 
-        /*
-            Run every minute
-        */
+        /**
+         * Run every minute
+         */
         $schedule->job(new RefreshCarStatuses)->everyMinute();
     }
 

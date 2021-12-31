@@ -6,16 +6,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 
 use App\Jobs\SendMail;
+use App\Jobs\Invoice\{
+	SendInvoiceFirstReminder as SendFirstReminder,
+	SendInvoiceSecondReminder as SendSecondReminder,
+	SendInvoiceThirdReminder as sendThirdReminder
+};
 use App\Mail\Invoice\{
 	SendInvoice,
 	InvoiceFirstReminder,
 	InvoiceSecondReminder,
 	InvoiceThirdReminder
 };
-use App\Enums\Invoice\InvoiceStatus;
+use App\Enums\Invoice\InvoiceStatus as Status;
 use App\Models\{
 	Invoice,
 	InvoiceItem,
+	PaymentTerm,
 	Quotation,
 	Appointment,
 	WorkContract
@@ -72,7 +78,7 @@ class InvoiceRepository extends BaseRepository
 		if ($invoice = $appointment->invoice) {
 			$this->setModel($invoice);
 			$this->setSuccess('This appointment has invoice already, not generating, just returning record.');
-			$this->setHttpStatusCode(200);
+			$this->setHttpStatusCode(201);
 			return $this->getModel();
 		}
 
@@ -208,7 +214,7 @@ class InvoiceRepository extends BaseRepository
 		try {
 			// Generate invoice number
 			$invoice = $this->getModel();
-			$invoice->status = InvoiceStatus::Sent;
+			$invoice->status = Status::Sent;
 			$invoice->generateNumber();
 			$invoice->save();
 
@@ -262,7 +268,10 @@ class InvoiceRepository extends BaseRepository
 	{
 		try {
 			$invoice = $this->getModel();
-			$invoice->status = InvoiceStatus::Sent;
+
+			if ($invoice->status <= Status::Sent) {
+				$invoice->status = Status::Sent;
+			}
 			$invoice->save();
 
 			$this->setModel($invoice);
@@ -321,28 +330,48 @@ class InvoiceRepository extends BaseRepository
 	/**
 	 * Send reminder about invoice to destinated email
 	 * 
-	 * @param string  $destinationEmail
+	 * @param  array  $reminderData
 	 * @return \App\Models\Invoice
 	 */
-	public function sendReminder(string $destinationEmail = '')
+	public function sendReminder(array $reminderData)
 	{
 		$invoice = $this->getModel();
 
 		switch (true) {
-			case ($invoice->status <= InvoiceStatus::PaymentOverdue):
-				$this->sendFirstReminder($destinationEmail);
+			/**
+			 * Indicate that invoice status is lower of equal to overdue
+			 * And that means customer hasn't been reminded even once about
+			 * current problematic invoice
+			 */
+			case ($invoice->status <= Status::PaymentOverdue):
+				$this->sendFirstReminder($reminderData);
 				break;
 
-			case ($invoice->status <= InvoiceStatus::FirstReminderSent):
-				$this->sendSecondReminder($destinationEmail);
+			/**
+			 * Indicate that invoice status is lower or equal to first reminder
+			 * status of sent. This also means that customer has already get
+			 * their first reminder sent.
+			 */
+			case ($invoice->status <= Status::FirstReminderSent):
+				$this->sendSecondReminder($reminderData);
 				break;
 
-			case ($invoice->status <= InvoiceStatus::SecondReminderSent):
-				$this->sendThirdReminder($destinationEmail);
+			/**
+			 * Indicate that invice status if lower or equal to second reminder
+			 * status of sent. This also means that customer has already get
+			 * their second reminder sent.
+			 */
+			case ($invoice->status <= Status::SecondReminderSent):
+				$this->sendThirdReminder($reminderData);
 				break;
 
+			/**
+			 * Indicate that invoice status has passed first and second
+			 * remidner of sent. This means that customer is already in
+			 * the last reminder stage.
+			 */
 			default:
-				$this->sendThirdReminder($destinationEmail);
+				$this->sendThirdReminder($reminderData);
 				break;
 		}
 	}
@@ -350,22 +379,18 @@ class InvoiceRepository extends BaseRepository
 	/**
 	 * Send the first reminder about invoice payment
 	 * 
-	 * @param string  $destinationEmail
+	 * @param  array  $reminderData
 	 * @return \App\Models\Invoice
 	 */
-	public function sendFirstReminder(string $destinationEmail = '')
+	public function sendFirstReminder(array $reminderData)
 	{
 		try {
 			$invoice = $this->getModel();
 			$invoice->load(['items', 'customer']);
 
-			// Send to mail
-			$mail = new InvoiceFirstReminder($invoice);
-			$job = new SendMail($mail, $destinationEmail ?: $invoice->customer->email);
+			// Send first reminder through job
+			$job = new SendFirstReminder($invoice, $reminderData);
 			dispatch($job);
-
-			$invoice->status = InvoiceStatus::FirstReminderSent;
-			$invoice->save();
 
 			$this->setModel($invoice);
 
@@ -381,22 +406,20 @@ class InvoiceRepository extends BaseRepository
 	/**
 	 * Send second reminder about the invoice payment
 	 * 
-	 * @param string  $destinationEmail
+	 * @param  array  $reminderData
 	 * @return \App\Models\Invoice
 	 */
-	public function sendSecondReminder(string $destinationEmail = '')
+	public function sendSecondReminder(array $reminderData)
 	{
 		try {
 			$invoice = $this->getModel();
 			$invoice->load(['items', 'customer']);
 
 			// Send to mail
-			$mail = new InvoiceSecondReminder($invoice);
-			$job = new SendMail($mail, $destinationEmail ?: $invoice->customer->email);
+			$job = new SendSecondReminder($invoice, $reminderData);
 			dispatch($job);
 
-			$invoice->status = InvoiceStatus::SecondReminderSent;
-			$invoice->save();
+			$this->setModel($invoice);
 
 			$this->setModel($invoice);
 
@@ -412,22 +435,18 @@ class InvoiceRepository extends BaseRepository
 	/**
 	 * Send the third reminder about the invoice payment
 	 * 
-	 * @param string  $destinationEmail
+	 * @param  array  $reminderData
 	 * @return \App\Models\Invoice
 	 */
-	public function sendThirdReminder(string $destinationEmail = '')
+	public function sendThirdReminder(array $reminderData)
 	{
 		try {
 			$invoice = $this->getModel();
 			$invoice->load(['items', 'customer']);
 
 			// Send to mail
-			$mail = new InvoiceThirdReminder($invoice);
-			$job = new SendMail($mail, $destinationEmail ?: $invoice->customer->email);
+			$job = new SendThirdReminder($invoice, $receiver);
 			dispatch($job);
-
-			$invoice->status = InvoiceStatus::ThirdReminderSent;
-			$invoice->save();
 
 			$this->setModel($invoice);
 
@@ -441,16 +460,22 @@ class InvoiceRepository extends BaseRepository
 	}
 
 	/**
-	 * Send invoice to debt collector to be collected
+	 * Forward invoice to debt collector to be collected
 	 * 
+	 * @param  array  $quotedPaymentTerms
 	 * @return \App\Models\Invoice
 	 */
-	public function sendDebtCollector()
+	public function forwardToDebtCollector(array $quotedPaymentTermIds = [])
 	{
 		try {
 			$invoice = $this->getModel();
-			$invoice->status = InvoiceStatus::SentDebtCollector;
+			$invoice->status = Status::SentDebtCollector;
 			$invoice->save();
+
+			PaymentTerm::whereIn('id', $quotedPaymentTermIds)
+				->update([
+					'status' => PaymentTermStatus::ForwardedToDebtCollector
+				]);
 
 			$this->setModel($invoice);
 
@@ -476,8 +501,8 @@ class InvoiceRepository extends BaseRepository
 		try {
 			$invoice = $this->getModel();
 			$invoice->status = ($viaDebtCollector) ?
-				InvoiceStatus::PaidViaDebtCollector :
-				InvoiceStatus::Paid;
+				Status::PaidViaDebtCollector :
+				Status::Paid;
 			$invoice->save();
 
 			$this->setModel($invoice);

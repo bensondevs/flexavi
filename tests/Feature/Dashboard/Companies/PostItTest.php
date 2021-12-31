@@ -10,6 +10,7 @@ use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
 use App\Models\{ 
+    User,
     Company, 
     Owner, 
     PostIt, 
@@ -21,6 +22,11 @@ class PostItTest extends TestCase
 {
     use DatabaseTransactions;
 
+    /**
+     * Module base url for test
+     * 
+     * @var string
+     */
     private $baseUrl = '/api/dashboard/companies/post_its';
 
     /**
@@ -115,11 +121,14 @@ class PostItTest extends TestCase
             ->for($company)
             ->for($user)
             ->create();
-        $employee = Employee::factory()->for($company)->create();
-        $assignedUser = $employee->user;
+        $employeeUser = User::factory()->create();
+        $employee = Employee::factory()
+            ->for($company)
+            ->for($employeeUser)
+            ->create();
         $response = $this->json('POST', $url, [
             'post_it_id' => $postIt->id,
-            'assigned_user_id' => $assignedUser->id,
+            'assigned_user_id' => $employeeUser->id,
         ]);
 
         $response->assertStatus(201);

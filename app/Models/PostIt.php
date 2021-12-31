@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\{ Model, SoftDeletes, Builder };
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+
+use App\Observers\PostItObserver as Observer;
 
 class PostIt extends Model
 {
@@ -72,10 +72,7 @@ class PostIt extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($postIt) {
-            $postIt->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 
     /**
@@ -108,5 +105,20 @@ class PostIt extends Model
     public function assignedUsers()
     {
         return $this->belongsToMany(User::class, PostItAssignedUser::class);
+    }
+
+    /**
+     * Assign user to current post it
+     * 
+     * @param  \App\Models\User  $user
+     * @return  bool
+     */
+    public function assignUser(User $user)
+    {
+        $postItAssignedUser = new PostItAssignedUser();
+        $postItAssignedUser->post_it_id = $this->attributes['id'];
+        $postItAssignedUser->user_id = $user->id;
+
+        return $postItAssignedUser->save();
     }
 }

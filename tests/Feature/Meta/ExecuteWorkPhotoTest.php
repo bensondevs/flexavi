@@ -15,9 +15,8 @@ class ExecuteWorkPhotoTest extends TestCase
      */
     public function test_all_execute_work_types()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/employee/all_types';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

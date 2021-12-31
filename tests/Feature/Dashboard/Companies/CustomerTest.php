@@ -15,6 +15,11 @@ class CustomerTest extends TestCase
 {
     use DatabaseTransactions;
 
+    /**
+     * Base URL for current test
+     * 
+     * @var string
+     */
     private $baseUrl = '/api/dashboard/companies/customers';
 
     /**

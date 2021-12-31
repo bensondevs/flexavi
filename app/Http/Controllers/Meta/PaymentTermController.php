@@ -19,4 +19,15 @@ class PaymentTermController extends Controller
         $statuses = PaymentTerm::collectAllStatuses();
         return response()->json($statuses);
     }
+
+    /**
+     * Get all payment terms payment methods enums
+     * 
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function allPaymentMethods()
+    {
+        $methods = PaymentTerm::collectAllPaymentMethods();
+        return response()->json($methods);
+    }
 }

@@ -42,6 +42,7 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'id' => generateUuid(),
             'fullname' => $this->faker->name(),
             'birth_date' => $this->faker->date(),
             'id_card_type' => rand(CardType::NationalIdCard, CardType::DrivingLicense),

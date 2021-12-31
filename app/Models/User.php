@@ -126,11 +126,6 @@ class User extends Authenticatable
     {
         parent::boot();
         self::observe(UserObserver::class);
-
-        self::creating(function ($user) {
-            $user->incrementing = false;
-            $user->id = ($user->id) ?: Uuid::generate()->string;
-        });
     }
 
     /**
@@ -178,19 +173,26 @@ class User extends Authenticatable
     public function getCompanyAttribute()
     {
         switch (true) {
+            /**
+             * User is an owner
+             */
             case $this->hasRole('owner'):
                 $role = $this->owner;
                 break;
+
+            /**
+             * User is an employee
+             */
             case $this->hasRole('employee'):
                 $role = $this->employee;
                 break;
             
             default:
-                $role = $this->owner;
+                return null;
                 break;
         }
 
-        return $this->company = $role->company;
+        return $role->company;
     }
 
     /**

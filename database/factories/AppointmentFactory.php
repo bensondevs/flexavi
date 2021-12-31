@@ -63,6 +63,8 @@ class AppointmentFactory extends Factory
         $start = $faker->datetime();
         $end = $faker->dateTimeBetween($start, '+10 days');
         return [
+            'id' => generateUuid(),
+            
             'start' => $start,
             'end' => $end,
 

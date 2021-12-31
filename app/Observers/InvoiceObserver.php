@@ -3,11 +3,25 @@
 namespace App\Observers;
 
 use App\Models\Invoice;
-
-use App\Enums\Invoice\InvoiceStatus;
+use App\Enums\Invoice\InvoiceStatus as Status;
 
 class InvoiceObserver
 {
+    /**
+     * Handle the Invoice "creating" event.
+     *
+     * @param  \App\Models\Invoice  $invoice
+     * @return void
+     */
+    public function creating(Invoice $invoice)
+    {
+        $invoice->id = generateUuid();
+
+        if (! $invoice->invoice_number) {
+            $invoice->invoice_number = $invoice->generateNumber();
+        }
+    }
+
     /**
      * Handle the Invoice "created" event.
      *
@@ -28,7 +42,7 @@ class InvoiceObserver
     public function updated(Invoice $invoice)
     {
         if ($invoice->isDirty('status')) {
-            $sentStatusCode = InvoiceStatus::Sent;
+            $sentStatusCode = Status::Sent;
 
             $currentStatus = $invoice->status;
             $previousStatus = $invoice->getOriginal('status');

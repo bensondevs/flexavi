@@ -4,6 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Enums\PaymentTerm\{
+    PaymentTermPaymentMethod as PaymentMethod,
+    PaymentTermStatus as Status
+};
+
 class CreatePaymentTermsTable extends Migration
 {
     /**
@@ -29,8 +34,9 @@ class CreatePaymentTermsTable extends Migration
                 ->onDelete('SET NULL');
 
             $table->char('term_name')->nullable();
+            $table->tinyInteger('payment_method')->default(PaymentMethod::Cash);
             $table->double('amount', 10, 2);
-            $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('status')->default(Status::Unpaid);
             $table->date('due_date');
 
             $table->timestamps();

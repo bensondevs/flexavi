@@ -2,12 +2,9 @@
 
 namespace App\Observers;
 
-use App\Models\Customer;
-
-use App\Mail\Customer\CustomerRegistered;
-use App\Mail\Customer\NewUniqueKeyGenerated;
-
 use App\Jobs\SendMail;
+use App\Models\Customer;
+use App\Mail\Customer\{ CustomerRegistered, NewUniqueKeyGenerated };
 
 class CustomerObserver
 {

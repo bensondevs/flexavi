@@ -15,9 +15,8 @@ class EmployeeTest extends TestCase
      */
     public function test_all_employee_types()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/employee/all_types';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -29,9 +28,8 @@ class EmployeeTest extends TestCase
      */
     public function test_all_employee_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/employee/all_employment_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

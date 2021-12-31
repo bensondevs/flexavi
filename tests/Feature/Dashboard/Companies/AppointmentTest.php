@@ -23,6 +23,13 @@ use App\Enums\Appointment\AppointmentStatus;
 class AppointmentTest extends TestCase
 {
     use DatabaseTransactions;
+
+    /**
+     * Test module base URL
+     * 
+     * @var string
+     */
+    private $baseUrl = '/api/dashboard/companies/appointments';
     
     /**
      * A populate appointments test.
@@ -33,9 +40,10 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments';
+        $url = $this->baseUrl;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -54,11 +62,12 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
 
-        $url = '/api/dashboard/companies/appointments/of_customer?customer_id=' . $customer->id;
+        $url = $this->baseUrl . '/of_customer?customer_id=' . $customer->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -77,11 +86,12 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customer = Customer::factory()->for($company)->create();
 
-        $url = '/api/dashboard/companies/appointments/store';
+        $url = $this->baseUrl . '/store';
         $response = $this->json('POST', $url, [
             'customer_id' => $customer->id,
             'start' => '2021-05-15',
@@ -107,9 +117,10 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/update';
+        $url = $this->baseUrl . '/update';
         $appointment = Appointment::factory()->for($company)->created()->create();
         $response = $this->json('PATCH', $url, [
             'id' => $appointment->id,
@@ -137,10 +148,14 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/execute';
-        $appointment = Appointment::factory()->for($company)->created()->create();
+        $url = $this->baseUrl . '/execute';
+        $appointment = Appointment::factory()
+            ->for($company)
+            ->created()
+            ->create();
         $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
         ]);
@@ -161,10 +176,14 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/process';
-        $appointment = Appointment::factory()->for($company)->inProcess()->create();
+        $url = $this->baseUrl . '/process';
+        $appointment = Appointment::factory()
+            ->for($company)
+            ->inProcess()
+            ->create();
         $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
         ]);
@@ -185,10 +204,14 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/cancel';
-        $appointment = Appointment::factory()->for($company)->created()->create();
+        $url = $this->baseUrl . '/cancel';
+        $appointment = Appointment::factory()
+            ->for($company)
+            ->created()
+            ->create();
         $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
             'cancellation_cause' => 'The rooder is terribly late',
@@ -212,9 +235,10 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/reschedule';
+        $url = $this->baseUrl . '/reschedule';
         $appointment = Appointment::factory()->for($company)->created()->create();
         $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
@@ -239,9 +263,10 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/generate_invoice';
+        $url = $this->baseUrl . '/generate_invoice';
         $appointment = Appointment::factory()->for($company)->calculated()->create();
         $response = $this->json('POST', $url, [
             'appointment_id' => $appointment->id,
@@ -265,9 +290,10 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/generate_invoice';
+        $url = $this->baseUrl . '/generate_invoice';
         $appointment = Appointment::factory()
             ->hasInvoice()
             ->for($company)
@@ -295,10 +321,11 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $appointment = Appointment::factory()->for($company)->create();
-        $url = '/api/dashboard/companies/appointments/delete';
+        $url = $this->baseUrl . '/delete';
         $response = $this->json('DELETE', $url, [
             'appointment_id' => $appointment->id,
         ]);
@@ -319,9 +346,10 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/trasheds';
+        $url = $this->baseUrl . '/trasheds';
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -339,9 +367,10 @@ class AppointmentTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/appointments/restore';
+        $url = $this->baseUrl . '/restore';
 
         $appointment = Appointment::factory()
             ->softDeleted()

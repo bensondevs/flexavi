@@ -159,6 +159,9 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('update-invoice', [InvoicePolicy::class, 'update']);
         Gate::define('change-status-invoice', [InvoicePolicy::class, 'changeStatus']);
         Gate::define('send-reminder-invoice', [InvoicePolicy::class, 'sendReminder']);
+        Gate::define('send-first-reminder-invoice', [InvoicePolicy::class, 'sendFirstReminder']);
+        Gate::define('send-second-reminder-invoice', [InvoicePolicy::class, 'sendSecondReminder']);
+        Gate::define('send-third-reminder-invoice', [InvoicePolicy::class, 'sendThirdReminder']);
         Gate::define('delete-invoice', [InvoicePolicy::class, 'delete']);
         Gate::define('restore-invoice', [InvoicePolicy::class, 'restore']);
         Gate::define('force-delete-invoice', [InvoicePolicy::class, 'forceDelete']);

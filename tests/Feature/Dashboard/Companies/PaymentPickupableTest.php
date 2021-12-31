@@ -42,16 +42,18 @@ class PaymentPickupableTest extends TestCase
         $user = $owner->user;
         Sanctum::actingAs($user, ['*']);
 
+        $paymentPickup = PaymentPickup::factory()
+            ->for($company)
+            ->create();
+        $invoice = Invoice::factory()
+            ->for($company)
+            ->create();
+        dd($invoice);
+
         $url = $this->baseUrl . '/add';
         $response = $this->json('POST', $url, [
-            'payment_pickup_id' => PaymentPickup::factory()
-                ->for($company)
-                ->create()
-                ->id,
-            'invoice_id' => Invoice::factory()
-                ->for($company)
-                ->create()
-                ->id,
+            'payment_pickup_id' => $paymentPickup->id,
+            'invoice_id' => $invoice->id,
         ]);
 
         $response->assertStatus(201);

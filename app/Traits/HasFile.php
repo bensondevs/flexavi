@@ -6,25 +6,48 @@ use App\Models\StorageFile;
 
 trait HasFile 
 {
-    public function getFile($path)
+    /**
+     * Get file attached to the current model
+     * 
+     * @param  string  $path
+     * @return \App\Models\StorageFile
+     */
+    public function getFile(string $path)
     {
-        $file = StorageFile::findByPath($path)
-        return $file;
+        return StorageFile::findByPath($path);
     }
 
-    public function getFileUrl($path)
+    /**
+     * Get URL of uploaded file
+     * 
+     * @param string $path
+     * @return string
+     */
+    public function getFileUrl(string $path)
     {
-        $url = StorageFile::findByPath($path)->getDownloadUrl()
-        return $url ?: null;
+        return StorageFile::findByPath($path)->getDownloadUrl();
     }
 
-    public function switchFile($currentPath, $newPath)
+    /**
+     * Replace file with new file
+     * 
+     * @param string $currentPath
+     * @param string $newPath
+     * @return void
+     */
+    public function switchFile(string $currentPath, string $newPath)
     {
         StorageFile::findByPath($currentPath)->delete();
         StorageFile::create($newPath);
     }
 
-    public function destroyFile($path)
+    /**
+     * Destroy file
+     * 
+     * @param string $file
+     * @return bool
+     */
+    public function destroyFile(string $path)
     {
         return StorageFile::findByPath($path)->delete();
     }

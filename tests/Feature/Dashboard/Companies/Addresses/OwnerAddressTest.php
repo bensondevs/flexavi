@@ -14,6 +14,13 @@ use App\Models\{ User, Owner, Customer, Company, Employee, Address };
 class OwnerAddressTest extends TestCase
 {
     use DatabaseTransactions;
+
+    /**
+     * Test module base URL
+     * 
+     * @var string
+     */
+    private $baseUrl = '/api/dashboard/companies/addresses/owner';
     
     /**
      * A populate owner addresses feature.
@@ -24,9 +31,10 @@ class OwnerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/owner';
+        $url = $this->baseUrl . '?owner_id=' . $owner->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -44,9 +52,10 @@ class OwnerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/owner/trasheds';
+        $url = $this->baseUrl . '/trasheds?owner_id=' . $owner->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -64,9 +73,10 @@ class OwnerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/owner/store';
+        $url = $this->baseUrl . '/store';
         $response = $this->json('POST', $url, [
             'address_type' => 1,
 
@@ -99,10 +109,11 @@ class OwnerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $address = Address::factory()->owner($owner)->create();
-        $url = '/api/dashboard/companies/addresses/owner/view?address_id=' . $address->id;
+        $url = $this->baseUrl . '/view?address_id=' . $address->id;
         $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
@@ -120,10 +131,11 @@ class OwnerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $address = Address::factory()->owner($owner)->create();
-        $url = '/api/dashboard/companies/addresses/owner/update';
+        $url = $this->baseUrl . '/update';
         $response = $this->json('PATCH', $url, [
             'id' => $address->id,
 
@@ -156,9 +168,10 @@ class OwnerAddressTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/owner/delete';
+        $url = $this->baseUrl . '/delete';
         $address = Address::factory()->owner($owner)->create();
         $response = $this->json('DELETE', $url, ['id' => $address->id]);
 
@@ -181,7 +194,7 @@ class OwnerAddressTest extends TestCase
         $user = $owner->user;
         Sanctum::actingAs($user, ['*']);
 
-        $url = '/api/dashboard/companies/addresses/owner/restore';
+        $url = $this->baseUrl . '/restore';
         $address = Address::factory()
             ->owner($owner)
             ->softDeleted()

@@ -8,6 +8,17 @@ use App\Models\StorageFile;
 class CarObserver
 {
     /**
+     * Handle the Car "creating" event.
+     *
+     * @param  \App\Models\Car  $car
+     * @return void
+     */
+    public function creating(Car $car)
+    {
+        $car->id = generateUuid();
+    }
+
+    /**
      * Handle the Car "created" event.
      *
      * @param  \App\Models\Car  $car

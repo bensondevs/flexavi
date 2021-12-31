@@ -3,12 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\{ Model, SoftDeletes, Builder };
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
+
+use App\Observers\PostItAssignedUserObserver as Observer;
 
 class PostItAssignedUser extends Model
 {
@@ -71,10 +71,7 @@ class PostItAssignedUser extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($postItAssignedUser) {
-            $postItAssignedUser->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 
     /**

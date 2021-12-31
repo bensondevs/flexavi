@@ -3,14 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\{ Model, SoftDeletes, Builder };
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
-use App\Observers\InvoiceObserver;
+use App\Observers\InvoiceObserver as Observer;
 use App\Enums\Invoice\{
     InvoiceStatus as Status,
     InvoicePaymentMethod as PaymentMethod
@@ -84,12 +82,19 @@ class Invoice extends Model
         'sent_at',
         'paid_at',
         'payment_overdue_at',
+        
         'first_remider_sent_at',
         'first_reminder_overdue_at',
+        
+        'second_reminder_sent_at',
         'second_reminder_overdue_at',
+        
+        'third_reminder_sent_at',
         'third_reminder_overdue_at',
-        'overdue_debt_collector_at',
+
         'debt_collector_sent_at',
+        'debt_collector_overdue_at',
+        
         'paid_via_debt_collector_at',
     ];
 
@@ -104,15 +109,7 @@ class Invoice extends Model
     protected static function boot()
     {
     	parent::boot();
-        self::observe(InvoiceObserver::class);
-
-    	self::creating(function ($invoice) {
-            $invoice->id = Uuid::generate()->string;
-
-            if (! $invoice->invoice_number) {
-                $invoice->invoice_number = $invoice->generateNumber();
-            }
-    	});
+        self::observe(Observer::class);
     }
 
     /**
@@ -124,7 +121,8 @@ class Invoice extends Model
      */
     public function scopeOverdue(Builder $query)
     {
-        return $query->where('status', '>=', Status::PaymentOverdue)
+        return $query
+            ->where('status', '>=', Status::PaymentOverdue)
             ->where('status', '<=', Status::DebtCollectorSent);
     }
 
@@ -455,6 +453,11 @@ class Invoice extends Model
         $this->attributes['total_paid'] = $paidTerms->sum('amount');
     }
 
+    /**
+     * Syncronise the invoice status
+     * 
+     * @return int
+     */
     public function syncStatus()
     {
         $isOverdue = false;
@@ -470,5 +473,56 @@ class Invoice extends Model
         }
 
         return $this->attributes['status'];
+    }
+
+    /**
+     * Mark status as first reminder sent.
+     * If the status is alredy above or equal first reminder sent,
+     * just pass and return true.
+     * 
+     * @return bool
+     */
+    public function markFirstReminderSent()
+    {
+        if ($this->attributes['status'] >= Status::FirstReminderSent) {
+            return true;
+        }
+
+        $this->attributes['status'] = Status::FirstReminderSent;
+        return $this->save();
+    }
+
+    /**
+     * Mark status as second reminder sent.
+     * If the status is already above or equal second reminder sent,
+     * just pass and return true.
+     * 
+     * @return bool
+     */
+    public function markSecondReminderSent()
+    {
+        if ($this->attributes['status'] >= Status::SecondReminderSent) {
+            return true;
+        }
+
+        $this->attributes['status'] = Status::SecondReminderSent;
+        return $this->save();
+    }
+
+    /**
+     * Mark status as third reminder sent.
+     * If the status is already above or equal third reminder sent,
+     * just pass and return true.
+     * 
+     * @return bool
+     */
+    public function markThirdReminderSent()
+    {
+        if ($this->attributes['status'] >= Status::ThirdReminderSent) {
+            return true;
+        }
+
+        $this->attributes['status'] = Status::ThirdReminderSent;
+        return $this->save();
     }
 }

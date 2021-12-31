@@ -35,6 +35,25 @@ class SendInvoiceReminderRequest extends FormRequest
     }
 
     /**
+     * Prepare input before validation
+     * 
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->has('overdue_at')) {
+            $overdueAt = $this->input('overdue_at');
+            $this->merge(['overdue_at' => carbon_parse_format($overdueAt, 'Y-m-d')]);
+        }
+
+        $this->merge([
+            'destination_email' => $this->has('destination_email') ?
+                $this->input('destination_email') :
+                $this->getInvoice()->customer->email,
+        ]);
+    }
+
+    /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -52,8 +71,12 @@ class SendInvoiceReminderRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        $this->setRules([
+            'overdue_at' => ['nullable', 'date'],
+            'destination_email' => ['required', 'email'],
+            'custom_message' => ['nullable', 'string'],
+        ]);
+
+        return $this->returnRules();
     }
 }

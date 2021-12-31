@@ -15,9 +15,8 @@ class SubAppointmentTest extends TestCase
      */
     public function test_all_sub_appointment_cancellation_vaults()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/sub_appointment/all_cancellation_vaults';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }
@@ -29,9 +28,8 @@ class SubAppointmentTest extends TestCase
      */
     public function test_all_sub_appointment_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/sub_appointment/all_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

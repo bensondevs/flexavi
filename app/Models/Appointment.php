@@ -524,10 +524,14 @@ class Appointment extends Model
     {
         $workdays = Workday::inAppointmentRange($this->first())->get();
         $pivots = [];
-        foreach ($workdays as $index => $workday) {
-            $pivots[$workday->id] = generateUuid();
+        foreach ($workdays as $workday) {
+            $pivots[$workday->id] = [
+                'id' => generateUuid(),
+                'company_id' => $workday->company_id,
+            ];
         }
-        return $this->workdays()->sync($pivots, false);
+
+        return $this->workdays()->sync($pivots);
     }
 
     /**

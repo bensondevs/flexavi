@@ -15,9 +15,8 @@ class WorkTest extends TestCase
      */
     public function test_all_work_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/work/all_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

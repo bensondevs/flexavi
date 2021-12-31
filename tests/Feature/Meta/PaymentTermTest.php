@@ -15,9 +15,8 @@ class PaymentTermTest extends TestCase
      */
     public function test_all_invoice_statuses()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/payment_term/all_statuses';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

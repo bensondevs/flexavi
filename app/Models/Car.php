@@ -3,15 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\{ Model, Builder, SoftDeletes };
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
-use App\Enums\Car\CarStatus;
+use App\Observers\CarObserver as Observer;
+
+use App\Enums\Car\CarStatus as Status;
 
 class Car extends Model
 {
@@ -74,6 +74,7 @@ class Car extends Model
         'car_license',
         'insured',
         'status',
+        'max_passanger',
     ];
 
     /**
@@ -86,10 +87,7 @@ class Car extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($car) {
-            $car->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 
     /**
@@ -101,7 +99,7 @@ class Car extends Model
      */
     public function scopeFree(Builder $query)
     {
-        return $query->where('status', CarStatus::Free);
+        return $query->where('status', Status::Free);
     }
 
     /**
@@ -113,7 +111,7 @@ class Car extends Model
      */
     public function scopeOut(Builder $query)
     {
-        return $query->where('status', CarStatus::Out);
+        return $query->where('status', Status::Out);
     }
 
     /**
@@ -125,7 +123,7 @@ class Car extends Model
     public function getStatusDescriptionAttribute()
     {
         $status = $this->attributes['status'];
-        return CarStatus::getDescription($status);
+        return Status::getDescription($status);
     }
 
     /**
@@ -163,7 +161,7 @@ class Car extends Model
      */
     public static function collectAllStatuses()
     {
-        return CarStatus::asSelectArray();
+        return Status::asSelectArray();
     }
 
     /**
@@ -219,7 +217,7 @@ class Car extends Model
      */
     public function setOut()
     {
-        $this->attributes['status'] = CarStatus::Out;
+        $this->attributes['status'] = Status::Out;
         return $this->save();
     }
 
@@ -230,7 +228,7 @@ class Car extends Model
      */
     public function setFree()
     {
-        $this->attributes['status'] = CarStatus::Free;
+        $this->attributes['status'] = Status::Free;
         return $this->save();
     }
 }

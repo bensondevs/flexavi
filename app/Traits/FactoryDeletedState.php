@@ -4,6 +4,11 @@ namespace App\Traits;
 
 trait FactoryDeletedState 
 {
+    /**
+     * Indicate that the current state is soft deleted
+     * 
+     * @return $this
+     */
     public function softDeleted()
     {
         $faker = $this->faker;

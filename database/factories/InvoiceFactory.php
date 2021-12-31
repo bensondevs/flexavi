@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-use App\Models\{ Invoice, Company, Customer };
+use App\Models\{ Invoice, Company, Customer, Appointment };
 
 use App\Enums\Invoice\{
     InvoiceStatus as Status,
@@ -29,13 +29,28 @@ class InvoiceFactory extends Factory
     {
         return $this->afterMaking(function (Invoice $invoice) {
             if (! $invoice->company_id) {
-                $invoice->company()->associate(Company::factory()->create());
+                $company = Company::factory()->create();
+                $invoice->company()->associate($company);
             }
 
+
             if (! $invoice->customer_id) {
-                $invoice->customer()->associate(Customer::factory()->create([
-                    'company_id' => $invoice->company_id
-                ]));
+                $company = Company::findOrFail($invoice->company_id);
+                $customer = Customer::factory()->for($company)->create();
+                $invoice->customer()->associate($customer);
+            }
+
+            if (! $invoice->invoiceable_id) {
+                $company = Company::findOrFail($invoice->company_id);
+                $customer = Customer::findOrFail($invoice->customer_id);
+                $invoiceable = Appointment::factory()
+                    ->for($company)
+                    ->for($customer)
+                    ->create();
+                $invoice->fill([
+                    'invoiceable_type' => Appointment::class,
+                    'invoiceable_id' => $invoiceable->id,
+                ]);
             }
         });
     }
@@ -50,6 +65,8 @@ class InvoiceFactory extends Factory
         $faker = $this->faker;
 
         return [
+            'id' => generateUuid(),
+
             'invoice_number' => $faker->randomNumber(5, true),
 
             'total' => $faker->randomNumber(4, false),
@@ -132,13 +149,24 @@ class InvoiceFactory extends Factory
     }
 
     /**
-     * Indicate that the model's has status of first reminder.
+     * Indicate that the model's has status of first reminder sent.
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function firstReminder()
+    public function firstReminderSent()
     {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::FirstReminderSent,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+            ];
+        });
     }
 
     /**
@@ -146,19 +174,20 @@ class InvoiceFactory extends Factory
      *
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function firstReminderSent()
+    public function firstReminderOverdue()
     {
-        //
-    }
-
-    /**
-     * Indicate that the model's has status of second reminder.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
-    public function secondReminder()
-    {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::FirstReminderOverdue,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+            ];
+        });
     }
 
     /**
@@ -168,7 +197,43 @@ class InvoiceFactory extends Factory
      */
     public function secondReminderSent()
     {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::SecondReminderSent,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+                'second_reminder_sent_at' => $faker->datetime(),
+                'second_reminder_overdue_at' => $faker->datetime(),
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the model's has status of second reminder overdue.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function secondReminderOverdue()
+    {
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::SecondReminderOverdue,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+                'second_reminder_sent_at' => $faker->datetime(),
+                'second_reminder_overdue_at' => $faker->datetime(),
+            ];
+        });
     }
 
     /**
@@ -178,7 +243,22 @@ class InvoiceFactory extends Factory
      */
     public function thirdReminder()
     {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::ThirdReminderSent,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+                'second_reminder_sent_at' => $faker->datetime(),
+                'second_reminder_overdue_at' => $faker->datetime(),
+                'third_reminder_sent_at' => $faker->datetime(),
+                'third_reminder_overdue_at' => $faker->datetime(),
+            ];
+        });
     }
 
     /**
@@ -188,7 +268,22 @@ class InvoiceFactory extends Factory
      */
     public function thirdReminderSent()
     {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::ThirdReminderOverdue,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+                'second_reminder_sent_at' => $faker->datetime(),
+                'second_reminder_overdue_at' => $faker->datetime(),
+                'third_reminder_sent_at' => $faker->datetime(),
+                'third_reminder_overdue_at' => $faker->datetime(),
+            ];
+        });
     }
 
     /**
@@ -198,7 +293,24 @@ class InvoiceFactory extends Factory
      */
     public function debtCollectorSent()
     {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::DebtCollectorSent,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+                'second_reminder_sent_at' => $faker->datetime(),
+                'second_reminder_overdue_at' => $faker->datetime(),
+                'third_reminder_sent_at' => $faker->datetime(),
+                'third_reminder_overdue_at' => $faker->datetime(),
+                'debt_collector_sent_at' => $faker->datetime(),
+                'debt_collector_overdue_at' => $faker->datetime(),
+            ];
+        });
     }
 
     /**
@@ -208,6 +320,72 @@ class InvoiceFactory extends Factory
      */
     public function paidViaDebtCollector()
     {
-        //
+        $faker = $this->faker;
+        return $this->state(function (array $attributes) use ($faker) {
+            return [
+                'status' => Status::PaidViaDebtCollector,
+                'created_at' => $faker->datetime(),
+                'sent_at' => $faker->datetime(),
+                'paid_at' => $faker->datetime(),
+                'payment_overdue_at' => $faker->datetime(),
+                'first_reminder_sent_at' => $faker->datetime(),
+                'first_reminder_overdue_at' => $faker->datetime(),
+                'second_reminder_sent_at' => $faker->datetime(),
+                'second_reminder_overdue_at' => $faker->datetime(),
+                'third_reminder_sent_at' => $faker->datetime(),
+                'third_reminder_overdue_at' => $faker->datetime(),
+                'debt_collector_sent_at' => $faker->datetime(),
+                'debt_collector_overdue_at' => $faker->datetime(),
+                'paid_via_debt_collector_at' => $faker->datetime(),
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the model is attached to appointment.
+     *
+     * @param  \App\Models\Appointment  $appointment
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function appointmentInvoiceable(Appointment $appointment)
+    {
+        return $this->state(function (array $attributes) use ($appointment) {
+            return [
+                'invoiceable_type' => Appointment::class,
+                'invoiceable_id' => $appointment->id,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the model is attached to quotation.
+     *
+     * @param  \App\Models\Quotation  $quotation
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function quotationInvoiceable(Quotation $quotation)
+    {
+        return $this->state(function (array $attributes) use ($quotation) {
+            return [
+                'invoiceable_type' => Quotation::class,
+                'invoiceable_id' => $quotation->id,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the model is attached to work contract.
+     *
+     * @param  \App\Models\WorkContract  $contract
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function workContractInvoiceable(WorkContract $contract)
+    {
+        return $this->state(function (array $attributes) use ($contract) {
+            return [
+                'invoiceable_type' => WorkContract::class,
+                'invoiceable_id' => $contract->id,
+            ];
+        });
     }
 }

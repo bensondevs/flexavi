@@ -15,9 +15,8 @@ class CostTest extends TestCase
      */
     public function test_all_costable_types()
     {
-        $headers = ['Accept' => 'application/json'];
         $url = '/api/meta/cost/all_costable_types';
-        $response = $this->withHeaders($headers)->get($url);
+        $response = $this->json('GET', $url);
 
         $response->assertStatus(200);
     }

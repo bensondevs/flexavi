@@ -1,24 +1,26 @@
 <?php
 
 use App\Enums\Address\AddressType;
-
-use App\Enums\Appointment\AppointmentStatus;
-use App\Enums\Appointment\AppointmentType;
-
+use App\Enums\Appointment\{
+    AppointmentStatus,
+    AppointmentType
+};
 use App\Enums\Cost\CostableType;
-
-use App\Enums\Quotation\QuotationStatus;
-use App\Enums\Quotation\QuotationDamageCause;
-use App\Enums\Quotation\QuotationPaymentMethod;
-
+use App\Enums\Quotation\{
+    QuotationStatus,
+    QuotationDamageCause, 
+    QuotationPaymentMethod
+};
 use App\Enums\Work\WorkStatus;
-
 use App\Enums\User\UserIdCardType;
-
-use App\Enums\Invoice\InvoiceStatus;
-use App\Enums\Invoice\InvoicePaymentMethod;
-
-use App\Enums\PaymentTerm\PaymentTermStatus;
+use App\Enums\Invoice\{
+    InvoiceStatus,
+    InvoicePaymentMethod
+};
+use App\Enums\PaymentTerm\{
+    PaymentTermStatus,
+    PaymentTermPaymentMethod
+};
 
 return [
     // User
@@ -97,28 +99,35 @@ return [
 
         InvoiceStatus::PaymentOverdue => 'Payment Overdue',
         
-        InvoiceStatus::FirstReminder => 'Overdue, send first reminder?',
         InvoiceStatus::FirstReminderSent => 'First Reminder Sent',
+        InvoiceStatus::FirstReminderOverdue => 'First Reminder Overdue, send second reminder?',
         
-        InvoiceStatus::SecondReminder => 'Second reminder reminder sent, send the second reminder?',
         InvoiceStatus::SecondReminderSent => 'Second Reminder Sent',
+        InvoiceStatus::SecondReminderOverdue => 'Second reminder overdue, send third reminder?',
         
-        InvoiceStatus::ThirdReminder => 'Second Reminder Sent, send the third reminder?',
         InvoiceStatus::ThirdReminderSent => 'Third Reminder Sent',
+        InvoiceStatus::ThirdReminderOverdue => 'Third Reminder Overdue, sent debt collector?',
 
-        InvoiceStatus::DebtCollectorSent => 'Sent to debt collector',
-        InvoiceStatus::PaidViaDebtCollector => 'Paid via Debt collector',
+        InvoiceStatus::DebtCollectorSent => 'Debt Collector Sent',
+        InvoiceStatus::PaidViaDebtCollector => 'Paid Via Debt Collector',
     ],
 
+    // Invoice Payment Method
     InvoicePaymentMethod::class => [
         InvoicePaymentMethod::Cash => 'Cash',
         InvoicePaymentMethod::BankTransfer => 'Bank Transfer',
     ],
 
-    // Payment Term
+    // Payment Term Status
     PaymentTermStatus::class => [
         PaymentTermStatus::Unpaid => 'Unpaid',
         PaymentTermStatus::Paid => 'Paid',
         PaymentTermStatus::ForwardedToDebtCollector => 'Forwarded to Debt Collector',
+    ],
+
+    // Payment Term Payment
+    PaymentTermPaymentMethod::class => [
+        PaymentTermPaymentMethod::Cash => 'Cash',
+        PaymentTermPaymentMethod::BankTransfer => 'Bank Transfer'
     ],
 ];

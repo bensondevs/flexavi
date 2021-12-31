@@ -73,16 +73,12 @@ class AddressFactory extends Factory
     /**
      * Indicate that the model's belongs to Company.
      *
+     * @param \App\Models\Company  $company
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function company($company = null)
+    public function company(Company $company)
     {
         return $this->state(function (array $attributes) use ($company) {
-            if (! $company) {
-                $company = Company::inRandomOrder()->first() ?: 
-                    Company::factory()->create();
-            }
-
             return [
                 'addressable_type' => Company::class,
                 'addressable_id' => $company->id,
@@ -93,16 +89,12 @@ class AddressFactory extends Factory
     /**
      * Indicate that the model's belongs to Customer.
      *
+     * @param \App\Models\Customer  $customer
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function customer($customer = null)
+    public function customer(Customer $customer)
     {
         return $this->state(function (array $attributes) use ($customer) {
-            if (! $customer) {
-                $customer = Customer::inRandomOrder()->first() ?: 
-                    Customer::factory()->create();
-            }
-
             return [
                 'addressable_type' => Customer::class,
                 'addressable_id' => $customer->id,
@@ -113,16 +105,12 @@ class AddressFactory extends Factory
     /**
      * Indicate that the model's belongs to Owner.
      *
+     * @param  \App\Models\Owner  $owner
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function owner($owner = null)
+    public function owner(Owner $owner)
     {
         return $this->state(function (array $attributes) use ($owner) {
-            if (! $owner) {
-                $owner = Ownere::inRandomOrder()->first() ?: 
-                    Owner::factory()->create();
-            }
-            
             return [
                 'addressable_type' => Owner::class,
                 'addressable_id' => $owner->id,
@@ -132,16 +120,12 @@ class AddressFactory extends Factory
 
     /**
      * Indicate that the model's belongs to Employee.
-     *
+     * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Database\Eloquent\Factories\Factory
      */
-    public function employee($employee = null)
+    public function employee(Employee $employee)
     {
         return $this->state(function (array $attributes) use ($employee) {
-            if (! $employee) {
-                $employee = Employee::inRandomOrder()->first() ?:
-                    Employee::factory()->create();
-            }
             return [
                 'addressable_type' => Employee::class,
                 'addressable_id' => $employee->id,

@@ -89,8 +89,8 @@ class UpdatePaymentTermRequest extends FormRequest
      */
     public function rules()
     {
-        $invoice = $this->getInvoice();
         $paymentTerm = $this->getPaymentTerm();
+        $invoice = $paymentTerm->invoice;
         $totalOutTerms = $invoice->total_out_terms;
         $maximum = $invoice->total_out_terms + $paymentTerm->amount;
 

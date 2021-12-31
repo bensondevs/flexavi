@@ -59,6 +59,7 @@ class SaveCarRequest extends FormRequest
                 ]
             )],
             'car_license' => ['required', 'string', 'unique:cars,car_license'],
+            'max_passanger' => ['nullable', 'numeric'],
         ]);
 
         return $this->returnRules();

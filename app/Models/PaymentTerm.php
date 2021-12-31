@@ -205,6 +205,17 @@ class PaymentTerm extends Model implements PaymentPickupable
     }
 
     /**
+     * Collect all possible payment methods of the payment terms
+     * for select-options items
+     * 
+     * @return array
+     */
+    public static function collectAllPaymentMethods()
+    {
+        //
+    }
+
+    /**
      * Recount total of payment terms from parent invoice
      * 
      * @return bool
