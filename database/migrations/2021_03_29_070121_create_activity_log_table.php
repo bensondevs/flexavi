@@ -14,11 +14,11 @@ class CreateActivityLogTable extends Migration
         Schema::connection(config('activitylog.database_connection'))->create(config('activitylog.table_name'), function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('company_id');
+            $table->uuid('company_id')->nullable();
             $table->foreign('company_id')
                 ->references('id')
                 ->on('companies')
-                ->onDelete('CASCADE');
+                ->onDelete('SET NULL');
 
             $table->string('log_name')->nullable();
             $table->text('description');

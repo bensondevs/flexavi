@@ -177,7 +177,8 @@ class Quotation extends Model
      */
     public function getVatAmountAttribute()
     {
-        $amount = $this->attributes['amount'];
+        $amount = isset($this->attributes['amount']) ?
+            $this->attributes['amount'] : 0;
         $percentage = $this->attributes['vat_percentage'];
 
         return ($percentage / 100) * $amount;
@@ -472,7 +473,8 @@ class Quotation extends Model
      */
     public function calculateTotal()
     {
-        $amount = $this->attributes['amount'];
+        $amount = isset($this->attributes['amount']) ?
+            $this->attributes['amount'] : 0;
         $vatAmount = $this->getVatAmountAttribute();
         $discountAmount = $this->attributes['discount_amount'];
 

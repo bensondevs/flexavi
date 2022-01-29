@@ -18,7 +18,7 @@ class PopulateEmployeesRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('view any employees');
+        return Gate::allows('view-any-employees');
     }
 
     /**

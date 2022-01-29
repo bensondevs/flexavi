@@ -4,19 +4,12 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-
 use App\Repositories\Base\BaseRepository;
-
-use App\Repositories\{
-	CostRepository,
-	RevenueRepository
-};
 
 use App\Models\{
 	Calculation,
 	Appointment
 };
-
 use App\Http\Resources\{
 	CalculationCostResource,
 	CalculationWorkResource,
@@ -25,17 +18,39 @@ use App\Http\Resources\{
 
 class CalculationRepository extends BaseRepository
 {
-	private $cost;
-	private $revenue;
+	/**
+	 * Cost repository class container
+	 * 
+	 * @var \App\Repositories\CostRepository|null
+	 */
+	private $costRepository;
 
+	/**
+	 * Revenue repository class container
+	 * 
+	 * @var \App\Repositories\RevenueRepository|null
+	 */
+	private $revenueRepository;
+
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Calculation);
 
-		$this->cost = new CostRepository;
-		$this->revenue = new RevenueRepository;
+		$this->costRepository = new CostRepository;
+		$this->revenueRepository = new RevenueRepository;
 	}
 
+	/**
+	 * Make calculation result of appointment
+	 * 
+	 * @param  \App\Models\Appointment  $appointment
+	 * @return \App\Models\Calculation
+	 */
 	public function calculateAppointment(Appointment $appointment)
 	{
 		if ($calculation = $appointment->calculation) {
@@ -110,16 +125,34 @@ class CalculationRepository extends BaseRepository
 		return $calculationData;
 	}
 
+	/**
+	 * Make calculation result for worklist
+	 * 
+	 * @param  \App\Models\Worklist  $worklist
+	 * @return \App\Models\Calculation
+	 */
 	public function calculateWorklist(Worklist $worklist)
 	{
 		//
 	}
 
+	/**
+	 * Make calculation result for workday
+	 * 
+	 * @param  \App\Models\Workday  $workday
+	 * @return \App\Models\Calculation
+	 */
 	public function calculateWorkday(Workday $workday)
 	{
 		//
 	}
 
+	/**
+	 * Delete calculation
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {

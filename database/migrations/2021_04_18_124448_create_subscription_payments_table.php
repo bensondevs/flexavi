@@ -34,15 +34,9 @@ class CreateSubscriptionPaymentsTable extends Migration
                 ->on('subscriptions')
                 ->onDelete('SET NULL');
 
-            $table->uuid('pricing_id')->nullable();
-            $table->foreign('pricing_id')
-                ->references('id')
-                ->on('pricings')
-                ->onDelete('SET NULL');
-
-            $table->char('payment_method');
-            $table->json('bank_information_json');
-            $table->double('paid_amount');
+            $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('payment_method')->default(1);
+            $table->double('amount', 20, 2)->default(0);
 
             $table->timestamps();
             $table->softDeletes();

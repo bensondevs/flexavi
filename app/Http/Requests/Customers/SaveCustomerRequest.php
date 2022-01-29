@@ -6,11 +6,10 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Models\Customer;
-
-use App\Rules\ZipCode;
-use App\Rules\NotEqual;
-use App\Rules\AmongStrings;
-use App\Rules\CompanyOwned;
+use App\Enums\Customer\CustomerAcquisition as Acquisition;
+use App\Rules\{
+    ZipCode, NotEqual, AmongStrings, CompanyOwned
+};
 
 use App\Traits\CompanyInputRequest;
 
@@ -18,8 +17,18 @@ class SaveCustomerRequest extends FormRequest
 {
     use CompanyInputRequest;
 
+    /**
+     * Target customer model
+     * 
+     * @var \App\Models\Customer
+     */
     private $customer;
 
+    /**
+     * Get target customer
+     * 
+     * @return \App\Models\Customer|abort 404
+     */
     public function getCustomer()
     {
         if ($this->customer) return $this->customer;
@@ -55,6 +64,13 @@ class SaveCustomerRequest extends FormRequest
             'email' => ['string', 'email', 'unique:customers,email'],
             'phone' => ['required', 'numeric', 'unique:customers,phone'],
             'second_phone' => ['numeric', new NotEqual('phone')],
+
+            'acquired_through' => [
+                'nullable', 
+                'min:' . Acquisition::Website, 
+                'max:' . Acquisition::Company
+            ],
+            'acquired_by' => ['nullable', 'exists:users,id'],
 
             'address' => ['required', 'string'],
             'house_number' => ['required', 'numeric'],

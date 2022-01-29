@@ -4,10 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-use App\Enums\SettingValue\{
-    SettingValueType as Type,
-    SettingValueDataType as DataType
-};
+use App\Enums\SettingValue\SettingValueType as Type;
 
 class CreateSettingValuesTable extends Migration
 {
@@ -21,17 +18,20 @@ class CreateSettingValuesTable extends Migration
         Schema::create('setting_values', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->uuid('setting_key_id');
-            $table->foreign('setting_key_id')
+            $table->uuid('setting_id');
+            $table->foreign('setting_id')
                 ->references('id')
-                ->on('setting_keys')
+                ->on('settings')
                 ->onDelete('CASCADE');
 
+            $table->uuid('company_id')->nullable();
+            $table->foreign('company_id')
+                ->references('id')
+                ->on('companies')
+                ->onDelete('CASCADE');
+                
             $table->tinyInteger('value_type')->default(Type::Default);
-            $table->nullableUuidMorphs('value_setter');
-
-            $table->tinyInteger('data_type')->default(DataType::Text);
-            $table->longText('value');
+            $table->longText('value')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

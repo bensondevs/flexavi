@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\Address;
@@ -88,7 +87,7 @@ class AddressRepository extends BaseRepository
 	/**
 	 * Delete address
 	 * 
-	 * @param bool  $force   set to true to do force delete
+	 * @param  bool  $force   set to true to do force delete
 	 * @return bool
 	 */
 	public function delete(bool $force = false)

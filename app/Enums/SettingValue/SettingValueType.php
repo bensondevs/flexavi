@@ -14,9 +14,9 @@ final class SettingValueType extends Enum
     const Default = 1;
 
     /**
-     * Setting value type of custom
+     * Setting value type of company
      * 
      * @var int
      */
-    const Custom = 2;
+    const Company = 2;
 }

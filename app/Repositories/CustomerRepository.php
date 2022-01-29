@@ -2,20 +2,30 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use App\Repositories\Base\BaseRepository;
 
 use App\Models\Customer;
 
-use App\Repositories\Base\BaseRepository;
-
 class CustomerRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Customer);
 	}
 
+	/**
+	 * Save to create or update customer
+	 * 
+	 * @param  array  $customerData
+	 * @return \App\Models\Customer
+	 */
 	public function save(array $customerData)
 	{
 		try {
@@ -27,16 +37,20 @@ class CustomerRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save customer data.');			
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save customer data.',
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save customer data.', $error);
 		}
 
 		return $this->getModel();
 	}
 
-	public function delete($force = false)
+	/**
+	 * Delete customer
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
+	public function delete(bool $force = false)
 	{
 		try {
 			$customer = $this->getModel();
@@ -47,15 +61,18 @@ class CustomerRepository extends BaseRepository
 
 			$this->setSuccess('Successully delete customer data.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete customer data.',
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete customer data.', $error);
 		}
 
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Restore customer
+	 * 
+	 * @return \App\Models\Customer
+	 */
 	public function restore()
 	{
 		try {
@@ -66,10 +83,8 @@ class CustomerRepository extends BaseRepository
 
 			$this->setSuccess('Successfully restore customer data.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to restore customer data.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to restore customer data.', $error);
 		}
 
 		return $this->getModel();

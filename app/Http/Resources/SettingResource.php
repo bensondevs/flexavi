@@ -15,9 +15,10 @@ class SettingResource extends JsonResource
     public function toArray($request)
     {
         $structure = [
+            'id' => $this->id,
             'type' => $this->type,
             'key' => $this->key,
-            'value' => $this->value,
+            'value_data_type' => $this->value_data_type,
         ];
 
         return $structure;

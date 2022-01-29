@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Traits\RequestHasRelations;
-
 use App\Models\Invoice;
 
 class FindInvoiceRequest extends FormRequest

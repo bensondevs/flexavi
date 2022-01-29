@@ -11,7 +11,7 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-use App\Observers\WorkdayObserver;
+use App\Observers\WorkdayObserver as Observer;
 
 use App\Enums\Workday\WorkdayStatus;
 
@@ -81,11 +81,7 @@ class Workday extends Model
     protected static function boot()
     {
     	parent::boot();
-        self::observe(WorkdayObserver::class);
-
-    	self::creating(function ($workday) {
-            $workday->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 
     /**

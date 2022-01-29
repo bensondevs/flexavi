@@ -2,23 +2,30 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
-use App\Enums\Work\WorkStatus;
-
-use App\Models\Work;
-use App\Models\ExecuteWork;
+use App\Models\{ Work, ExecuteWork };
 
 class ExecuteWorkRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new ExecuteWork);
 	}
 
+	/**
+	 * Execute work and create execute-work model
+	 * 
+	 * @param  array  $executionData
+	 * @return \App\Models\ExecuteWork
+	 */
 	public function execute(array $executionData = [])
 	{
 		try {
@@ -37,6 +44,12 @@ class ExecuteWorkRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Finish execute work
+	 * 
+	 * @param  array  $finishData
+	 * @return \App\Models\ExecuteWork
+	 */
 	public function finish(array $finishData = [])
 	{
 		try {
@@ -54,6 +67,12 @@ class ExecuteWorkRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete execute work
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -73,6 +92,11 @@ class ExecuteWorkRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Restore execute work
+	 * 
+	 * @return \App\Models\ExecuteWork
+	 */
 	public function restore()
 	{
 		try {
@@ -87,6 +111,6 @@ class ExecuteWorkRepository extends BaseRepository
 			$this->setError('Failed to restore execute work.', $error);
 		}
 
-		return $this->returnResponse();
+		return $this->getModel();
 	}
 }

@@ -141,10 +141,10 @@ class OwnerController extends Controller
      */
     public function delete(DeleteRequest $request)
     {
-        $owner = $request->getTargetedOwner();
+        $owner = $request->getOwner();
         $this->owner->setModel($owner);
 
-        $force = strtobool($request->input('force'));
+        $force = $request->input('force', false);
         $this->owner->delete($force);
 
         return apiResponse($this->owner);

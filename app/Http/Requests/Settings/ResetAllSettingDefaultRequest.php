@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\WarrantyClaims;
+namespace App\Http\Requests\Settings;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FindWarrantyClaimRequest extends FormRequest
+class ResetAllSettingDefaultRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class FindWarrantyClaimRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return false;
     }
 
     /**

@@ -347,5 +347,10 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('delete-owner', [OwnerPolicy::class, 'delete']);
         Gate::define('restore-owner', [OwnerPolicy::class, 'restore']);
         Gate::define('force-delete-owner', [OwnerPolicy::class, 'forceDelete']);
+
+        // Setting
+        Gate::define('set-company-setting-value', [SettingValuePolicy::class, 'setForCompany']);
+        Gate::define('show-company-setting-value', [SettingValuePolicy::class, 'showCompanyValue']);
+        Gate::define('reset-default-company-setting-value', [SettingValuePolicy::class, 'resetDefaultForCompany']);
     }
 }

@@ -365,6 +365,18 @@ class PermissionsSeeder extends Seeder
             'remove pickupable payment pickups',
             'remove multiple pickupables payment pickups',
             'truncate pickupables payment pickups',
+
+            // Subscription
+            'view any subscriptions',
+            'view subscriptions',
+            'purchase subscriptions',
+            'activate subscriptions',
+            'terminate subscriptions',
+
+            // Setting
+            'view setting values',
+            'set setting values',
+            'reset default setting values',
         ];
 
         $rawPermissions = [];

@@ -3,12 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-
 use App\Traits\ApiCollectionResource;
-
-use App\Http\Resources\CompanyResource;
-use App\Http\Resources\CustomerResource;
-
 use App\Enums\Appointment\AppointmentStatus;
 
 class AppointmentResource extends JsonResource

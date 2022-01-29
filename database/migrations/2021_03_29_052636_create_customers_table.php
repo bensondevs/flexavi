@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Enums\Customer\CustomerAcquisition as Acquisition;
+
 class CreateCustomersTable extends Migration
 {
     /**
@@ -22,7 +24,13 @@ class CreateCustomersTable extends Migration
                 ->on('companies')
                 ->onDelete('SET NULL');
 
-            $table->string('registered_from')->default('web');
+            $table->tinyInteger('acquired_through')
+                ->default(Acquisition::Website);
+            $table->uuid('acquired_by')->nullable();
+            $table->foreign('acquired_by')
+                ->references('id')
+                ->on('users')
+                ->onDelete('SET NULL');
 
             $table->string('fullname');
 
@@ -32,13 +40,6 @@ class CreateCustomersTable extends Migration
             $table->string('second_phone')->nullable();
 
             $table->char('unique_key');
-
-            /*$table->text('address');
-            $table->char('house_number');
-            $table->char('house_number_suffix')->nullable();
-            $table->char('zipcode');
-            $table->char('city');
-            $table->char('province');*/
 
             $table->rememberToken();
             $table->timestamps();

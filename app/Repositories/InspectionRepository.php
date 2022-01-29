@@ -2,26 +2,35 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use App\Repositories\Base\BaseRepository;
 
 use App\Models\Inspection;
 
-use App\Repositories\Base\BaseRepository;
-
 class InspectionRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Inspection);
 	}
 
+	/**
+	 * Start inspection
+	 * 
+	 * @return 
+	 */
 	public function startInspection()
 	{
 		$question = Inspection::QUESTIONS[0][0];
 		$inspection = new Inspection();
 		return [
-			'inspection_id' => ,
+			// 'inspection_id' => ,
 
 			'number' => 1,
 			'phase' => 1,
@@ -31,6 +40,11 @@ class InspectionRepository extends BaseRepository
 		];
 	}
 
+	/**
+	 * Handle inspection on answer next
+	 * 
+	 * @return void
+	 */
 	public function handleNext(array $answer)
 	{
 		$phase = $answer['phase'];
@@ -64,6 +78,12 @@ class InspectionRepository extends BaseRepository
 		}
 	}
 
+	/**
+	 * Save inspection data
+	 * 
+	 * @param  array  $inspectionData
+	 * @return \App\Models\Inspection
+	 */
 	public function save(array $inspectionData)
 	{
 		try {
@@ -75,16 +95,19 @@ class InspectionRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save inspection data.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save inspection data.',
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save inspection data.', $error);
 		}
 
 		return $this->getModel();
 	}
 
-	public function delete(bool $force)
+	/**
+	 * Delete inspection
+	 * 
+	 * @param  bool  $force
+	 */
+	public function delete(bool $force = false)
 	{
 		try {
 			$inspection = $this->getModel();
@@ -96,9 +119,10 @@ class InspectionRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete inspection.');
 		} catch (QueryException $qe) {
+			$error = $qe->getMessage();
 			$this->setError(
 				'Failed to delete inspection.', 
-				$qe->getMessage()
+				
 			);
 		}
 

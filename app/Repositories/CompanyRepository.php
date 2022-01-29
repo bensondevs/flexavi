@@ -2,35 +2,30 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\{ User, Company };
 
 class CompanyRepository extends BaseRepository
 {
-	private $owner;
-
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Company);
-		$this->owner = new CompanyOwnerRepository();
 	}
 
-	public function ofUser(User $user)
-	{
-		$owners = $user->owners;
-		$ownerIds = [];
-		foreach ($owners as $owner) {
-			array_push($ownerIds, $owner->id);
-		}
-
-		$companies = Company::whereIn('owner_id', $ownerIds)->get();
-		return $this->setCollection($companies);
-	}
-
+	/**
+	 * Upload company logo
+	 * 
+	 * @param  mixed  $logoFile
+	 * @return \App\Models\Company
+	 */
 	public function uploadCompanyLogo($logoFile)
 	{
 		try {
@@ -49,6 +44,12 @@ class CompanyRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Save company for creating or updating company
+	 * 
+	 * @param  array  $companyData
+	 * @return \App\Models\Company
+	 */
 	public function save(array $companyData)
 	{
 		try {
@@ -69,7 +70,13 @@ class CompanyRepository extends BaseRepository
 		return $this->getModel();
 	}
 
-	public function delete($force = false)
+	/**
+	 * Delete company
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
+	public function delete(bool $force = false)
 	{
 		try {
 			$company = $this->getModel();
@@ -79,7 +86,8 @@ class CompanyRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete company');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to delete company');
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete company', $error);
 		}
 
 		return $this->returnResponse();

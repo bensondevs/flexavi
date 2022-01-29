@@ -4,19 +4,27 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\Work;
-use App\Models\Revenue;
+use App\Models\{ Work, Revenue };
 
 class RevenueRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Revenue);
 	}
 
+	/**
+	 * Save revenue using supplied data in parameter
+	 * 
+	 * @return \App\Models\Revenue
+	 */
 	public function save(array $revenueData = [])
 	{
 		try {
@@ -35,6 +43,13 @@ class RevenueRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Record revenue from work
+	 * 
+	 * @param  \App\Models\Work  $work
+	 * @param  array  $revenueData
+	 * @return \App\Models\Revenue
+	 */
 	public function recordWork(Work $work, array $revenueData = [])
 	{
 		try {
@@ -58,6 +73,12 @@ class RevenueRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete revenue
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {

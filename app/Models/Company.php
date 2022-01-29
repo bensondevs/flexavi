@@ -3,8 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\{ Model, SoftDeletes, Builder };
 use Dyrynda\Database\Support\CascadeSoftDeletes;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
@@ -119,6 +118,19 @@ class Company extends Model
                 $company->id = Uuid::generate()->string;
             }
         });
+    }
+
+    /**
+     * Create callable method of "waitingDestroy()"
+     * This callable method will query only companies
+     * which is in progress to be destroyed
+     * 
+     * @param  Illuminate\Database\Eloquent\Builder  $query 
+     * @return Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeWaitingDestroy(Builder $query)
+    {
+        return $query->whereNotNull('will_be_destroyed_at');
     }
 
     /**
@@ -260,9 +272,9 @@ class Company extends Model
     /**
      * Get the company settings
      */
-    public function settings()
+    public function settingValues()
     {
-        return $this->morphMany(Setting::class, 'settingable');
+        return $this->hasMany(SettingValue::class);
     }
 
     /**
@@ -407,5 +419,19 @@ class Company extends Model
     public function setCompanyIdAttribute(string $id)
     {
         $this->attributes['id'] = $id;
+    }
+
+    /**
+     * Set the destory days duration of the company
+     * 
+     * @param  int  $days
+     * @return bool
+     */
+    public function willBeDestroyedInDays(int $days)
+    {
+        $destroyTime = now()->copy()->addDays($days);
+        $this->attributes['will_be_destroyed_at'] = $destroyTime;
+
+        return $this->save();
     }
 }

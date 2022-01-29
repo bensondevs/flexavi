@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+use App\Enums\Warranty\WarrantyStatus;
+
 class CreateWarrantiesTable extends Migration
 {
     /**
@@ -28,10 +30,10 @@ class CreateWarrantiesTable extends Migration
                 ->on('appointments')
                 ->onDelete('CASCADE');
 
-            $table->uuid('work_id')->nullable();
-            $table->foreign('work_id')
+            $table->uuid('for_appointment_id');
+            $table->foreign('for_appointment_id')
                 ->references('id')
-                ->on('works')
+                ->on('appointments')
                 ->onDelete('CASCADE');
 
             $table->tinyInteger('status')->default(1);

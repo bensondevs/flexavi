@@ -18,6 +18,10 @@ class CustomerObserver
     {
         $customer->id = generateUuid();
         $customer->unique_key = $customer->generateUniqueKey();
+
+        if ((! $customer->acquired_by) && auth()->check()) {
+            $customer->acquired_by = auth()->user()->id;
+        }
     }
 
     /**

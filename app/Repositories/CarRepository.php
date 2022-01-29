@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use App\Repositories\Base\BaseRepository;
 
 use App\Models\{ 
 	Car, 
@@ -14,8 +15,6 @@ use App\Models\{
 };
 
 use App\Enums\Car\CarStatus;
-
-use App\Repositories\Base\BaseRepository;
 
 class CarRepository extends BaseRepository
 {

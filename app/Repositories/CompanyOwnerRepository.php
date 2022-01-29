@@ -2,22 +2,31 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
-use App\Models\User;
-use App\Models\Owner;
-use App\Models\Company;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
+
+use App\Models\{ User, Owner, Company };
 
 class CompanyOwnerRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Owner);
 	}
 
+	/**
+	 * Get all inviteable owners
+	 * 
+	 * @param  array  $options
+	 * @return \Illuminate\Support\Collection|
+	 * 		   \Illuminate\Pagination\LengthAwarePaginator
+	 */
 	public function inviteables(array $options = [])
 	{
 		array_push($options['wheres'], [
@@ -28,6 +37,12 @@ class CompanyOwnerRepository extends BaseRepository
 		return $this->all($options);
 	}
 
+	/**
+	 * Save to create or update owner
+	 * 
+	 * @param  array  $ownerData
+	 * @return \App\Models\Owner
+	 */
 	public function save(array $ownerData)
 	{
 		try {
@@ -39,13 +54,19 @@ class CompanyOwnerRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save owner.');
 		} catch (QueryException $qe) {
-			$queryError = $qe->getMessage();
-			$this->setError('Failed to save owner.', $queryError);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save owner.', $error);
 		}
 
 		return $this->getModel();
 	}
 
+	/**
+	 * Assign user to owner
+	 * 
+	 * @param  \App\Models\User  $user
+	 * @return \App\Models\Owner
+	 */
 	public function assignUser(User $user)
 	{
 		try {
@@ -63,6 +84,12 @@ class CompanyOwnerRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Assign company to owner
+	 * 
+	 * @param  \App\Models\Company  $company
+	 * @return \App\Models\Owner
+	 */
 	public function assignCompany(Company $company)
 	{
 		try {
@@ -81,6 +108,12 @@ class CompanyOwnerRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete company
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -98,6 +131,11 @@ class CompanyOwnerRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Restore owner from soft-delete
+	 * 
+	 * @return \App\Models\Owner
+	 */
 	public function restore()
 	{
 		try {

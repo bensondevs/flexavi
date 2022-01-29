@@ -3,45 +3,57 @@
 namespace App\Models;
 
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\{ Model, SoftDeletes, Builder };
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use App\Observers\SubscriptionPaymentObserver as Observer;
+use App\Enums\SubscriptionPayment\{
+    SubscriptionPaymentStatus as Status,
+    SubscriptionPaymentMethod as Method
+};
 
 class SubscriptionPayment extends Model
 {
-    use HasFactory;
-    use Searchable;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes, Searchable;
 
     /**
-     * The table name
+     * Database table name
      * 
      * @var string
      */
     protected $table = 'subscription_payments';
 
     /**
-     * The primary key of the model
+     * Table name primary key
      * 
      * @var string
      */
     protected $primaryKey = 'id';
 
     /**
-     * Timestamp recording
+     * Set timestamp each time model is saved
      * 
      * @var bool
      */
     public $timestamps = true;
 
     /**
-     * Set whether primary key use increment or not
+     * Set whether primary key use incrementing value or not
      * 
      * @var bool
      */
     public $incrementing = false;
+
+    /**
+     * Set which columns are searchable
+     * 
+     * @var array
+     */
+    protected $searchable = [
+        //
+    ];
 
     /**
      * Set which columns are mass fillable
@@ -51,11 +63,10 @@ class SubscriptionPayment extends Model
     protected $fillable = [
         'user_id',
         'company_id',
-        'company_subscription_id',
-        'pricing_id',
+        'subscription_id',
+        'status',
         'payment_method',
-        'bank_information_json',
-        'paid_amount',
+        'amount',
     ];
 
     /**
@@ -63,20 +74,42 @@ class SubscriptionPayment extends Model
      * This is where observer should be put.
      * Any events and listener logic can be added in this method
      *
-     * @static
      * @return void
      */
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($payment) {
-            $payment->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 
     /**
-     * Get user that pays the subscription
+     * Create callable attribute of "status_description"
+     * This callable attribute will return description 
+     * of the current payment status
+     * 
+     * @return string
+     */
+    public function getStatusDescriptionAttribute()
+    {
+        $status = $this->attributes['status'];
+        return Status::getDescription($status);
+    }
+
+    /**
+     * Create callable attribute of "payment_method_description"
+     * This callable attribute will return description of
+     * the current payment method
+     * 
+     * @return string
+     */
+    public function getPaymentMethodStatusAttribute()
+    {
+        $method = $this->attributes['payment_method'];
+        return Method::getDescription($method);
+    }
+
+    /**
+     * Get the user that do the payment
      */
     public function user()
     {
@@ -84,7 +117,7 @@ class SubscriptionPayment extends Model
     }
 
     /**
-     * Get company that bears the subscription
+     * Get company of the subscription
      */
     public function company()
     {
@@ -92,43 +125,10 @@ class SubscriptionPayment extends Model
     }
 
     /**
-     * Get subscription
+     * Get subscription parent of current payment
      */
     public function subscription()
     {
-        return $this->belongsTo(CompanySubscription::class);
-    }
-
-    /**
-     * Get pricing of the subscription
-     */
-    public function pricing()
-    {
-        return $this->hasOne(Pricing::class);
-    }
-
-    /**
-     * Create callable "bank_information" attribute
-     * This callable attribute will return array of bank information
-     * 
-     * @return array
-     */
-    public function getBankInformationAttribute()
-    {
-        $bankInformation = $this->attributes['bank_information_json'];
-        return json_decode($bankInformation, true);
-    }
-
-    /**
-     * Create settable "bank_information" attribute
-     * This settable attribute will allow insertion to bank information 
-     * using array
-     * 
-     * @param array  $bankInformation
-     * @return void 
-     */
-    public function setBankInformationAttribute(array $bankInformation)
-    {
-        $this->attributes['bank_information_json'] = json_encode($bankInformation);
+        return $this->belongsTo(Subscription::class);
     }
 }

@@ -72,22 +72,6 @@ class CompanyController extends Controller
     }
 
     /**
-     * Get company settings
-     * 
-     * @return Illuminate\Support\Facades\Response
-     */
-    public function settings()
-    {
-        if (! $owner = (auth()->user())->owner) {
-            return abort(404, 'This user is not owner of company.');
-        }
-        
-        $company = $owner->company;
-        $settings = Setting::ofCompany($company);
-        return response()->json(['settings' => SettingResource::collection($settings)]);
-    }
-
-    /**
      * Upload Company Logo
      * 
      * @param UploadLogoRequest  $request
@@ -127,7 +111,7 @@ class CompanyController extends Controller
     /**
      * Upload company
      * 
-     * @param SaveRequest  $request
+     * @param  SaveRequest  $request
      * @return Illuminate\Support\Facades\Response
      */
     public function update(SaveRequest $request)
@@ -137,6 +121,22 @@ class CompanyController extends Controller
 
         $input = $request->companyData();
         $company = $this->company->save($input);
+
+        return apiResponse($this->company);
+    }
+
+    /**
+     * Delete company
+     * 
+     * @param  DeleteRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function delete(DeleteRequest $request)
+    {
+        $company = $request->getCompany();
+        
+        $this->company->setModel($company);
+        $this->company->delete($company, false);
 
         return apiResponse($this->company);
     }

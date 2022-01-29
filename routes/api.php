@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\Api\SubscriptionPlanController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -16,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'auth'], base_path('routes/api/auth.php'));
 Route::group(['prefix' => 'meta'], base_path('routes/api/meta.php'));
+
+Route::get('/subscription_plans', [SubscriptionPlanController::class, 'plans']);
 
 Route::group(
 	['prefix' => 'dashboard', 'middleware' => 'auth:sanctum'], 

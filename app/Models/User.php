@@ -172,27 +172,10 @@ class User extends Authenticatable
      */
     public function getCompanyAttribute()
     {
-        switch (true) {
-            /**
-             * User is an owner
-             */
-            case $this->hasRole('owner'):
-                $role = $this->owner;
-                break;
+        $role = $this->roles->first();
+        $roleName = $role->name;
 
-            /**
-             * User is an employee
-             */
-            case $this->hasRole('employee'):
-                $role = $this->employee;
-                break;
-            
-            default:
-                return null;
-                break;
-        }
-
-        return $role->company;
+        return $this->{$roleName}->company;
     }
 
     /**
@@ -396,31 +379,64 @@ class User extends Authenticatable
     /**
      * Check if user has company permission
      * 
-     * @param string  $companyId
+     * @param mixed  $company
      * @param string|null  $doAction
      * @return bool
      */
-    public function hasCompanyPermission($companyId, string $doAction = '')
+    public function hasCompanyPermission($company, string $doAction = '')
     {
+        // One user must only have ONE ROLE
+        // It's impossible (administratively) at this app for one user to
+        // possess more than one role
+        // But if some user have more than one role, just return the first role
+        // assigned to the user and ignore the other(s).
+        // So, make sure that one user can only have one role, if you want to change the role
+        // Make sure to detach the current role first and re-assign with new role
         $role = $this->roles->first();
 
-        // Allow Administrators
-        if ($role->name == 'admin') return true;
-
-        // Allow Owner
-        if ($role->name == 'owner') {
-            $owner = $this->owner;
-            return ($owner->company_id === $companyId);
+        // Check if $company is instance of \App\Models\Company
+        // If yes, just replace the variable value with it's ID
+        // This will allow flexible parameter type of argument
+        if ($company instanceof Company) {
+            $company = $company->id;
         }
 
-        // Allow Employee
-        if ($role->name == 'employee') {
-            $employee = $this->employee;
-            return ($employee->company_id == $companyId) && $employee->hasPermissionTo($doAction);
+        switch ($role->name) {
+            // The current user role is admin
+            // Admin is allowed to do anything to the application
+            case 'admin':
+                return true;
+                break;
+
+            // The current user is owner
+            // Owner is allowed to do anything to the company
+            // Permission check is to check for certain action
+            // That only main owner can do
+            case 'owner':
+                $owner = $this->owner;
+                return ($owner->company_id == $company) &&
+                    $this->hasPermissionTo($doAction);
+                break;
+
+            // The current user is employee
+            // This will make sure that employee will do
+            // only things that they are able to access to
+            case 'employee':
+                $employee = $this->employee;
+                return 
+                    ($employee->company_id == $company) && 
+                    $this->hasPermissionTo($doAction);
+                break;
+            
+            // The current user has no role
+            // There must be something wrong if this happen
+            // So, just return as error 500 to see what's wrong
+            default:
+                abort(500, 'Current user has no role, there must be something wrong with role assignment.');
+                break;
         }
 
-        // Disallow, because pass none
-        return false;
+        return abort(500, 'Unplanned passing of switch-case gate checking. The user role is never specified. Role is: ' . $role->name);
     }
 
     /**

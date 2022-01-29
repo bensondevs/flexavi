@@ -3,17 +3,43 @@
 namespace App\Http\Requests\Owners;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 use App\Models\Owner;
 
 class DeleteOwnerRequest extends FormRequest
 {
-    private $targetedOwner;
+    /**
+     * Owner deletion target
+     * 
+     * @var \App\Models\Owner|null
+     */
+    private $owner;
 
-    public function getTargetedOwner()
+    /**
+     * Get deleted owner
+     * 
+     * @return \App\Models\Owner|abort 404
+     */
+    public function getOwner()
     {
-        return $this->targetedOwner = $this->targetedOwner ?:
-            Owner::withTrashed()->findOrFail($this->input('id'));
+        if ($this->owner) return $this->owner;
+
+        $id = $this->input('id') ?: $this->input('owner_id');
+        return Owner::withTrashed()->findOrFail($id);
+    }
+
+    /**
+     * Prepare input before validation
+     * 
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->has('force')) {
+            $force = strtobool($this->input('force'));
+            $this->merge(['force' => $force]);
+        }
     }
 
     /**
@@ -23,18 +49,8 @@ class DeleteOwnerRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = $this->user();
-        $targetedOwner = $this->getTargetedOwner();
-
-        // Action is authorized by permision owned
-        $actionAuthorized = $user->hasCompanyPermission(
-            $targetedOwner->company_id, 
-            'delete owner'
-        );
-
-        // Target is not prime owner
-        $targetAllowed = (! $targetedOwner->is_prime_owner);
-        return ($actionAuthorized && $targetAllowed);
+        $owner = $this->getOwner();
+        return Gate::allows('delete-owner', $owner);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Company;
+namespace App\Http\Controllers\Api\Company\Warranties;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -10,9 +10,7 @@ use App\Http\Requests\Warranties\{
     FindWarrantyRequest as FindRequest,
     PopulateWarrantiesRequest as PopulateRequest
 };
-
 use App\Http\Resources\WarrantyResource;
-
 use App\Repositories\WarrantyRepository;
 
 class WarrantyController extends Controller
@@ -52,21 +50,18 @@ class WarrantyController extends Controller
     }
 
     /**
-     * Store multiple warranty
+     * Populate appointment warranties
      * 
-     * @param MultipleStoreRequest  $request
+     * @param  AppointmentPopulateRequest  $request
      * @return Illuminate\Support\Facades\Response
      */
-    public function multipleStore(MultipleStoreRequest $request)
+    public function appointmentWarranties()
     {
-        $rawWarranties = $request->collectRawWarranties();
-        $this->warranty->storeMultiple($rawWarranties);
-
         $appointment = $request->getAppointment();
-        return response()->json([
-            'appointment' => $appointment->fresh(),
-            'warranties' => $appointment->warranties,
-        ]);
+        $warranties = $appointment->warranties;
+        $warranties = WarrantyResource::apiCollection($warranties);
+
+        return response()->json(['warranties' => $warranties]);
     }
 
     /**
@@ -80,7 +75,28 @@ class WarrantyController extends Controller
         $input = $request->validated();
         $warranty = $this->warranty->save($input);
 
+        if ($request->has('warranty_works')) {
+            $this->warranty->save($input['warranty_works']);
+        }
+
         return apiResponse($this->warranty);
+    }
+    
+    /**
+     * View warranty
+     * 
+     * @param FindRequest  $request
+     * @return Illuminate\Support\Facades\Response
+     */
+    public function view(FindRequest $request)
+    {
+        $warranty = $request->getWarranty();
+
+        $relations = $request->relations();
+        $warranty->load($relations);
+
+        $warranty = new WarrantyResource($warranty);
+        return response()->json(['warranty' => $warranty]);
     }
 
     /**
@@ -98,23 +114,6 @@ class WarrantyController extends Controller
         $this->warranty->save($input);
 
         return apiResponse($this->warranty);
-    }
-
-    /**
-     * View warranty
-     * 
-     * @param FindRequest  $request
-     * @return Illuminate\Support\Facades\Response
-     */
-    public function view(FindRequest $request)
-    {
-        $warranty = $request->getWarranty();
-
-        $relations = $request->relations();
-        $warranty->load($relations);
-
-        $warranty = new WarrantyResource($warranty);
-        return response()->json(['warranty' => $warranty]);
     }
 
     /**

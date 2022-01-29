@@ -379,14 +379,6 @@ class Appointment extends Model
     }
 
     /**
-     * Get the appointment warranty
-     */
-    public function warranty()
-    {
-        return $this->hasOne(Warranty::class);
-    }
-
-    /**
      * Get the appointment warranties
      */
     public function warranties()

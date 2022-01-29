@@ -49,14 +49,14 @@ use App\Http\Controllers\Api\Company\{
 	ExecuteWorkController,
 		ExecuteWorkPhotoController,
 	PostItController,
-	AnalyticController
+	AnalyticController,
+	SettingController
 };
 
 Route::post('register', [CompanyController::class, 'register']);
 
 Route::group(['middleware' => ['has_company']], function () {
 	Route::get('user', [CompanyController::class, 'userCompany']);
-	Route::get('settings', [CompanyController::class, 'settings']);
 	Route::post('upload_logo', [CompanyController::class, 'uploadCompanyLogo']);
 	Route::match(['PUT', 'PATCH'], 'update', [CompanyController::class, 'update']);
 
@@ -594,5 +594,15 @@ Route::group(['middleware' => ['has_company']], function () {
 	 */
 	Route::group(['prefix' => 'analytics'], function () {
 		Route::get('revenue_trends', [AnalyticController::class, 'revenueTrends']);
+	});
+
+	/**
+	 * Company Setting Module
+	 */
+	Route::group(['prefix' => 'settings'], function () {
+		Route::get('/', [SettingController::class, 'companySettings']);
+		Route::post('/set_value', [SettingController::class, 'setValue']);
+		Route::post('/reset_type_default', [SettingController::class, 'resetTypeDefault']);
+		Route::post('reset_all_default', [SettingController::class, 'resetAllDefault']);
 	});
 });

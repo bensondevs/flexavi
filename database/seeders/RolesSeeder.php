@@ -4,17 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-use App\Repositories\PermissionRepository;
+use App\Models\Role;
 
 class RolesSeeder extends Seeder
 {
-	protected $permission;
-
-	public function __construct(PermissionRepository $permission)
-	{
-		$this->permission = $permission;
-	}
-
     /**
      * Run the database seeds.
      *
@@ -22,9 +15,9 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
-        $this->permission->createRole('admin');
-        $this->permission->createRole('owner');
-        $this->permission->createRole('employee');
-        $this->permission->createRole('customer');
+        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'owner']);
+        Role::create(['name' => 'employee']);
+        Role::create(['name' => 'customer']);
     }
 }

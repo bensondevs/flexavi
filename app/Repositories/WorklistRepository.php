@@ -4,18 +4,28 @@ namespace App\Repositories;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
-
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\{Worklist, Appointment, Appointmentable};
 
 class WorklistRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Worklist);
 	}
 
+	/**
+	 * Save worklist from supplied array input
+	 * 
+	 * @param  array  $worklistData
+	 * @return \App\Models\Worklist
+	 */
 	public function save(array $worklistData = [])
 	{
 		try {
@@ -34,6 +44,12 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Attach appointment to current worklist
+	 * 
+	 * @param  \App\Models\Appointment
+	 * @return \App\Models\Worklist
+	 */
 	public function attachAppointment(Appointment $appointment)
 	{
 		try {
@@ -56,6 +72,12 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Attach multiple appointments
+	 * 
+	 * @param  array  $appointmentIds
+	 * @return \App\Models\Worklist
+	 */
 	public function attachManyAppointments(array $appointmentIds)
 	{
 		try {
@@ -74,6 +96,12 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Detach appointment from worklist
+	 * 
+	 * @param  \App\Models\Appointment  $appointment
+	 * @return \App\Models\Worklist
+	 */
 	public function detachAppointment(Appointment $appointment)
 	{
 		try {
@@ -92,6 +120,12 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Detach many appointment from worklist
+	 * 
+	 * @param  array  $appointmentIds
+	 * @return \App\Models\Worklist
+	 */
 	public function detachManyAppointments(array $appointmentIds)
 	{
 		try {
@@ -110,6 +144,11 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete all attached appointments of worklist
+	 * 
+	 * @return \Ap\Models\Worklist
+	 */
 	public function truncateAppointments()
 	{
 		try {
@@ -128,6 +167,11 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Process worklist
+	 * 
+	 * @return \App\Models\Worklist
+	 */
 	public function process()
 	{
 		try {
@@ -145,6 +189,11 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Calculate worklist revenue and cost
+	 * 
+	 * @return \App\Models\Worklist
+	 */
 	public function calculate()
 	{
 		try {
@@ -162,6 +211,12 @@ class WorklistRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete worklist
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -181,6 +236,11 @@ class WorklistRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Restore soft deleted worklist
+	 * 
+	 * @return \App\Models\Worklist
+	 */
 	public function restore()
 	{
 		try {

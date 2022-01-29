@@ -10,6 +10,7 @@ use Tests\TestCase;
 use Laravel\Sanctum\Sanctum;
 
 use App\Models\{ Owner, Customer, Company };
+use App\Enums\Customer\CustomerAcquisition;
 
 class CustomerTest extends TestCase
 {
@@ -73,7 +74,8 @@ class CustomerTest extends TestCase
     {
         $company = Company::inRandomOrder()->first();
         $owner = Owner::factory()->for($company)->create();
-        Sanctum::actingAs(($user = $owner->user), ['*']);
+        $user = $owner->user;
+        Sanctum::actingAs($user, ['*']);
 
         $customerData = [
             'fullname' => 'Customer Full Name',
@@ -86,6 +88,9 @@ class CustomerTest extends TestCase
             'zipcode' => 87211,
             'city' => 'Example City',
             'province' => 'Example Province',
+
+            'acquired_by' => $user->id,
+            'acquired_through' => CustomerAcquisition::Call,
         ];
         $url = $this->baseUrl . '/store';
         $response = $this->json('POST', $url, $customerData);

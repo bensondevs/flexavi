@@ -2,23 +2,31 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
-use App\Models\Appointment;
-use App\Models\SubAppointment;
-
-use App\Enums\SubAppointment\SubAppointmentStatus;
+use App\Models\{ Appointment, SubAppointment };
+use App\Enums\SubAppointment\SubAppointmentStatus as Status;
 
 class SubAppointmentRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new SubAppointment);
 	}
 
+	/**
+	 * Save sub appointment using supplied array input
+	 * 
+	 * @param  array  $data
+	 * @return \App\Models\SubAppointment
+	 */
 	public function save(array $data)
 	{
 		try {
@@ -37,11 +45,17 @@ class SubAppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Cancel sub appointment using supplied array input
+	 * 
+	 * @param  array  $cancellationData
+	 * @return \App\Models\SubAppointment
+	 */
 	public function cancel(array $cancellationData = [])
 	{
 		try {
 			$subAppointment = $this->getModel();
-			$subAppointment->status = SubAppointmentStatus::Cancelled;
+			$subAppointment->status = Status::Cancelled;
 			$subAppointment->fill($cancellationData);
 			$subAppointment->save();
 
@@ -56,6 +70,12 @@ class SubAppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Reschedule sub-appointment using supplied array input
+	 * 
+	 * @param  array  $newSchedule
+	 * @return \App\Models\SubAppointment
+	 */
 	public function reschedule(array $newSchedule = [])
 	{
 		try {
@@ -80,11 +100,16 @@ class SubAppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Execute sub appointment using supplied array input
+	 * 
+	 * @return \App\Models\SubAppointment
+	 */
 	public function execute()
 	{
 		try {
 			$subAppointment = $this->getModel();
-			$subAppointment->status = SubAppointmentStatus::InProcess;
+			$subAppointment->status = Status::InProcess;
 			$subAppointment->save();
 
 			$this->setModel($subAppointment);
@@ -98,11 +123,16 @@ class SubAppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Set sub-appointment status as processed
+	 * 
+	 * @return \App\Models\SubAppointment
+	 */
 	public function process()
 	{
 		try {
 			$subAppointment = $this->getModel();
-			$subAppointment->status = SubAppointmentStatus::Processed;
+			$subAppointment->status = Status::Processed;
 			$subAppointment->save();
 
 			$this->setModel($subAppointment);
@@ -116,6 +146,12 @@ class SubAppointmentRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete sub-appointment
+	 * 
+	 * @param  bool  $force
+	 * @return \App\Models\SubAppointment
+	 */
 	public function delete(bool $force = false)
 	{
 		try {

@@ -2,10 +2,21 @@
 
 namespace App\Observers;
 
-use App\Models\Workday;
+use App\Models\{ Workday, Setting };
 
 class WorkdayObserver
 {
+    /**
+     * Handle the Workday "creating" event.
+     *
+     * @param  \App\Models\Workday  $workday
+     * @return void
+     */
+    public function creating(Workday $workday)
+    {
+        $workday->id = generateUuid();
+    }
+
     /**
      * Handle the Workday "created" event.
      *
@@ -13,20 +24,13 @@ class WorkdayObserver
      * @return void
      */
     public function created(Workday $workday)
-    {
-        $company = $workday->company;
-        $settings = $company->settings;
-        
+    {   
         // Get settings about amount of worklists
-        if ($setting = $settings->where('key', 'worklist_per_workday')->first()) {
-            $setting = $settings
-                ->where('key', 'default_worklist_per_workday')
-                ->first();
-        }
-        $amountOfWorklists = (isset($setting->value)) ? $setting->value : 3;
+        $setting = Setting::findByKey('standard_worklist_quantity');
+        $worklistAmount = $setting->getCompanyCastedValue();
 
         // Generate certain amount of worklist under it
-        $workday->generateWorklists($amountOfWorklists);
+        $workday->generateWorklists($value->casted_value);
     }
 
     /**

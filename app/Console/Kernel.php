@@ -11,6 +11,7 @@ use App\Jobs\StorageFile\{
 };
 use App\Jobs\CarRegisterTime\RefreshCarStatuses;
 use App\Jobs\Invoice\SyncInvoiceStatuses;
+use App\Jobs\Subscription\CheckCompanySubscriptions;
 
 class Kernel extends ConsoleKernel
 {
@@ -34,7 +35,8 @@ class Kernel extends ConsoleKernel
         /**
          * Run every day
          */
-        $schedule->job(new DatabaseFileSync)->daily();
+        $schedule->job(new DatabaseFileSync)->dailyAt('00:00');
+        $schedule->jon(new CheckCompanySubscriptions)->dailyAt('03:00');
 
         /**
          * Run every three hours

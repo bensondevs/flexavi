@@ -2,40 +2,60 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
-use App\Enums\ExecuteWorkPhoto\PhotoConditionType;
-
 use App\Models\ExecuteWorkPhoto;
-
+use App\Enums\ExecuteWorkPhoto\PhotoConditionType as Type;
 use App\Jobs\ExecuteWorkPhoto\UploadMultiplePhoto;
 
 class ExecuteWorkPhotoRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new ExecuteWorkPhoto);
 	}
 
+	/**
+	 * Populate before-work photos
+	 * 
+	 * @return \Illuminate\Support\Collection|
+	 * 		   \Illuminate\Pagination\LengthAwarePaginator
+	 */
 	public function beforeWorkPhotos()
 	{
 		$photos = $this->getCollection();
 
-		$type = PhotoConditionType::Before;
+		$type = Type::Before;
 		return $photos->where('photo_condition_type', $type)->values();
 	}
 
+	/**
+	 * Populate after-work photos
+	 * 
+	 * @return \Illuminate\Support\Collection|
+	 * 		   \Illuminate\Pagination\LengthAwarePaginator
+	 */
 	public function afterWorkPhotos()
 	{
 		$photos = $this->getCollection();
 
-		$type = PhotoConditionType::After;
+		$type = Type::After;
 		return $photos->where('photo_condition_type', $type)->values();
 	}
 
+	/**
+	 * Upload photo for execute work
+	 * 
+	 * @param  array  $photoData
+	 * @return \App\Models\ExecuteWorkPhoto
+	 */
 	public function uploadPhoto(array $photoData = [])
 	{
 		try {
@@ -56,6 +76,12 @@ class ExecuteWorkPhotoRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Upload multiple photo
+	 * 
+	 * @param  array  $photoDataArray
+	 * @return bool
+	 */
 	public function uploadMultiplePhoto(array $photoDataArray = [])
 	{
 		try {
@@ -71,6 +97,12 @@ class ExecuteWorkPhotoRepository extends BaseRepository
 		return $this->returnResponse();
 	}
 
+	/**
+	 * Delete execute work photo
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {

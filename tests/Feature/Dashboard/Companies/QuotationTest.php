@@ -26,6 +26,11 @@ class QuotationTest extends TestCase
 {
     use DatabaseTransactions;
 
+    /**
+     * Quotation module API base url
+     * 
+     * @var string
+     */
     private $baseUrl = '/api/dashboard/companies/quotations';
 
     /**
@@ -93,6 +98,7 @@ class QuotationTest extends TestCase
             'damage_causes' => '[1, 2, 3]',
             'quotation_description' => 'The description example',
             'expiry_date' => '2021-07-01',
+            'amount' => 200,
             'vat_percentage' => 21,
             'discount_amount' => 125,
             'payment_method' => rand(PaymentMethod::Cash, PaymentMethod::BankTransfer),

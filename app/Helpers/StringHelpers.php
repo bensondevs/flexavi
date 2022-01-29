@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Str;
+use App\Enums\SettingValue\SettingValueDataType as DataType;
 
 /**
  * Get the last character of a string
@@ -69,6 +70,29 @@ if (! function_exists('is_str_starts_with')) {
 	function is_str_starts_with(string $string, string $match)
 	{
 		return substr($string, 0, strlen($match)) === $match;
+	}
+}
+
+/**
+ * Check if parameter argument is valid uuid
+ * 
+ * @param  mixed  $parameter
+ * @return bool
+ */
+if (! function_exists('is_uuid')) {
+	function is_uuid($parameter)
+	{
+		// Check if parameter is string
+		// Uuid must be string
+		if (! is_string($parameter)) return false;
+
+		// Check if pattern is correct uuid pattern
+		// Uuid must have patttern of xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx 
+		// where x is any hexadecimal digit and y is one of 8, 9, A, or B
+		$pattern = '/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i';
+		if (! preg_match($patterm, $parameter)) return false;
+
+		return true;
 	}
 }
 
@@ -146,6 +170,54 @@ if (! function_exists('strtobool')) {
 	    }
 
 	    return true;
+	}
+}
+
+/**
+ * Cast string value to certain data type
+ * 
+ * @param  string  $string
+ * @param  int  $dataType
+ * @return mixed
+ */
+if (! function_exists('cast_string')) {
+	function cast_string(string $string, int $dataType = DataType::String) {
+		switch ($dataType) {
+
+			// Data type is string
+			case DataType::String:
+				return $string;
+				break;
+
+			// Data type is int
+			case DataType::Int:
+				return intval($string);
+				break;
+
+			// Data type is float
+			case DataType::Float:
+				return floatval($string);
+				break;
+
+			// Data type is double
+			case DataType::Double:
+				return doubleval($string);
+				break;
+
+			// Data type is boolean
+			case DataType::Bool:
+				return boolval($string);
+				break;
+
+			// Data type is json
+			case DataType::Json:
+				return json_decode($string, true);
+				break;
+			
+			default:
+				return $string;
+				break;
+		}
 	}
 }
 

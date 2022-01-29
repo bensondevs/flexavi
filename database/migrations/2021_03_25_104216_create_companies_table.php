@@ -28,6 +28,8 @@ class CreateCompaniesTable extends Migration
             $table->string('company_logo_path')->nullable();
             $table->string('company_website_url')->nullable();
 
+            $table->timestamp('will_be_destroyed_at')->nullable();
+
             $table->timestamps();
             $table->softDeletes();
         });

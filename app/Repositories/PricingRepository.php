@@ -10,11 +10,22 @@ use App\Models\Pricing;
 
 class PricingRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new Pricing);
 	}
 
+	/**
+	 * Save pricing
+	 * 
+	 * @param  array  $pricingData
+	 * @return \App\Models\Pricing
+	 */
 	public function save(array $pricingData)
 	{
 		try {
@@ -26,15 +37,18 @@ class PricingRepository extends BaseRepository
 
 			$this->setSuccess('Successfully save pricing.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to save pricing.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to save pricing.', $error);
 		}
 
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete pricing
+	 * 
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -45,10 +59,8 @@ class PricingRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete pricing');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete pricing.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete pricing.', $error);
 		}
 
 		return $this->returnResponse();

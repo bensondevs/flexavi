@@ -77,7 +77,7 @@ class CustomerPolicy
      */
     public function restore(User $user, Customer $customer)
     {
-        return $user->hasCompanyPermission($customer->company_id, 'restrore customers');
+        return $user->hasCompanyPermission($customer->company_id, 'restore customers');
     }
 
     /**

@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
 
 use App\Traits\CompanyInputRequest;
-
 use App\Models\PostIt;
 
 class SavePostItRequest extends FormRequest

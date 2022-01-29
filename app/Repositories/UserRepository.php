@@ -10,20 +10,21 @@ use App\Models\{ User, Role };
 
 class UserRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new User);
 	}
 
-	public function hasRole($role)
-	{
-		$role = ($role instanceof Role) ?: 
-			Role::findByName($role);
-		$users = $role->users()->get();
-
-		return $this->setCollection($users);
-	}
-
+	/**
+	 * Save user by supplied array input
+	 * 
+	 * @return \App\Models\User
+	 */
 	public function save(array $userData)
 	{
 		try {
@@ -43,6 +44,12 @@ class UserRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Set profile picture of the user
+	 * 
+	 * @param  mixed  $pictureFile
+	 * @return \App\Models\User
+	 */
 	public function setProfilePicture($pictureFile)
 	{
 		try {
@@ -61,6 +68,12 @@ class UserRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Change user password
+	 * 
+	 * @param  string  $password
+	 * @return \App\Models\User
+	 */
 	public function changePassword(string $password)
 	{
 		try {
@@ -72,17 +85,24 @@ class UserRepository extends BaseRepository
 
 			$this->setSuccess('Successfully change password.');
 		} catch (QueryException $qe) {
-			$this->setError('Failed to change user password.', $qe->getMessage());
+			$error = $qe->getMessage();
+			$this->setError('Failed to change user password.', $error);
 		}
 
 		return $this->getModel();
 	}
 
-	public function delete($forceDelete = false)
+	/**
+	 * Delete user
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
+	public function delete(bool $force = false)
 	{
 		try {
 			$user = $this->getModel();
-			$delete = $forceDelete ?
+			$delete = $force ?
 				$user->forceDelete() : 
 				$user->delete();
 
@@ -94,6 +114,6 @@ class UserRepository extends BaseRepository
 			$this->setError('Failed to delete user data.', $error);
 		}
 
-		return $delete;
+		return $this->returnResponse();
 	}
 }

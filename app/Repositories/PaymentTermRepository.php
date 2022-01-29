@@ -2,22 +2,31 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 use App\Repositories\Base\BaseRepository;
 
 use App\Models\PaymentTerm;
-
-use App\Enums\PaymentTerm\PaymentTermStatus;
+use App\Enums\PaymentTerm\PaymentTermStatus as Status;
 
 class PaymentTermRepository extends BaseRepository
 {
+	/**
+	 * Repository constructor method
+	 * 
+	 * @return void
+	 */
 	public function __construct()
 	{
 		$this->setInitModel(new PaymentTerm);
 	}
 
+	/**
+	 * Save payment term by supplied input array
+	 * 
+	 * @param  array  $termData
+	 * @return \App\Models\PaymentTerm
+	 */
 	public function save(array $termData)
 	{
 		try {
@@ -36,11 +45,16 @@ class PaymentTermRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Mark payment term as paid
+	 * 
+	 * @return \App\Models\PaymentTerm
+	 */
 	public function markAsPaid()
 	{
 		try {
 			$term = $this->getModel();
-			$term->status = PaymentTermStatus::Paid;
+			$term->status = Status::Paid;
 			$term->save();
 
 			$this->setModel($term);
@@ -54,11 +68,16 @@ class PaymentTermRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Cancel paid status of payment term
+	 * 
+	 * @return \App\Models\PaymentTerm
+	 */
 	public function cancelPaidStatus()
 	{
 		try {
 			$term = $this->getModel();
-			$term->status = PaymentTermStatus::Unpaid;
+			$term->status = Status::Unpaid;
 			$term->save();
 
 			$this->setModel($term);
@@ -72,11 +91,16 @@ class PaymentTermRepository extends BaseRepository
 		return $this->getModel();
 	}
 
+	/**
+	 * Forward payment term to debt collectior
+	 * 
+	 * @return \App\Models\PaymentTerm
+	 */
 	public function forwardToDebtCollector()
 	{
 		try {
 			$term = $this->getModel();
-			$term->status = PaymentTermStatus::ForwardedToDebtCollector;
+			$term->status = Status::ForwardedToDebtCollector;
 			$term->save();
 
 			$this->setModel($term);
@@ -84,12 +108,19 @@ class PaymentTermRepository extends BaseRepository
 			$this->setSuccess('Successfully forward payment term to debt collector.');
 		} catch (QueryException $qe) {
 			$error = $qe->getMessage();
-			$this->setError('Failed to forward payment term to debt collector.', $error);
+			$message = 'Failed to forward payment term to debt collector.';
+			$this->setError($message, $error);
 		}
 
 		return $this->getModel();
 	}
 
+	/**
+	 * Delete payment term
+	 * 
+	 * @param  bool  $force
+	 * @return bool
+	 */
 	public function delete(bool $force = false)
 	{
 		try {
@@ -102,10 +133,8 @@ class PaymentTermRepository extends BaseRepository
 
 			$this->setSuccess('Successfully delete payment term.');
 		} catch (QueryException $qe) {
-			$this->setError(
-				'Failed to delete payment term.', 
-				$qe->getMessage()
-			);
+			$error = $qe->getMessage();
+			$this->setError('Failed to delete payment term.', $error);
 		}
 
 		return $this->returnResponse();

@@ -10,8 +10,9 @@ use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
 use App\Traits\SettingAttributes;
-
 use App\Enums\Setting\SettingType;
+use App\Enums\SettingValue\SettingValueType as ValueType;
+use App\Observers\SettingObserver as Observer;
 
 class Setting extends Model
 {
@@ -52,8 +53,13 @@ class Setting extends Model
      * @var array
      */
     protected $searchable = [
+        'type',
         'key',
-        'value',
+
+        'input_type',
+        'options',
+
+        'value_data_type',
     ];
 
     /**
@@ -64,7 +70,7 @@ class Setting extends Model
     protected $fillable = [
         'type',
         'key',
-        'value',
+        'value_data_type',
     ];
 
     /**
@@ -77,36 +83,141 @@ class Setting extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($setting) {
-            $setting->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 
     /**
-     * Get all default settings
+     * Create settable attribute of "options_array"
+     * This settable attribute will set the options json value using array
      * 
-     * @static
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param  array  $optionsArray
+     * @return void
      */
-    public static function defaults()
+    public function setOptionsArrayAttribute(array $optionsArray)
     {
-        return self::where('type', SettingType::Default)->get();
+        $json = json_encode($optionsArray);
+        $this->attributes['options'] = $json;
     }
 
     /**
-     * Get company settings
-     * 
-     * @static
-     * @param \App\Models\Company  $company
-     * @return \Illuminate\Database\Eloquent\Collection
+     * Get setting values
      */
-    public static function ofCompany(Company $company)
+    public function values()
     {
-        $defaultSettings = self::defaults();
-        $companySettings = self::where('settingable_type', Company::class)
-            ->where('settingable_id', $company->id)
-            ->get();
-        return $defaultSettings->merge($companySettings);
+        return $this->hasMany(SettingValue::class);
+    }
+
+    /**
+     * Find setting by key
+     * 
+     * @param  string  $key
+     * @param  bool  $abortIfFail 
+     * @return self
+     */
+    public static function findByKey(string $key, bool $abortIfFail = false)
+    {
+        $query = self::where('key', $key);
+        return $abortIfFail ? $query->firstOrFail() : $query->first();
+    }
+
+    /**
+     * Find setting by key and abort 404 fail if not found
+     * 
+     * @param  string  $key
+     * @return self
+     */
+    public static function findByKeyOrFail(string $key)
+    {
+        return self::findByKey($key, true);
+    }
+
+    /**
+     * Get value
+     * 
+     * @return  \App\Models\SettingValue
+     */
+    public function getValue()
+    {
+        return $this->getCompanyValue() ?:
+            $this->getDefaultValue();
+    }
+
+    /**
+     * Get default setting value
+     * 
+     * @return \App\Models\SettingValue
+     */
+    public function getDefaultValue()
+    {
+        return $this->values
+            ->where('value_type', ValueType::Default)
+            ->firstOrFail();
+    }
+
+    /**
+     * Get default casted setting value
+     * 
+     * @return mixed
+     */
+    public function getDefaultCastedValue()
+    {
+        $value = $this->getDefaultValue();
+        $dataType = $this->attributes['value_data_type'];
+        return cast_string($value->value, $dataType);
+    }
+
+    /**
+     * Get company setting value
+     * 
+     * @param  \App\Models\Company  $company
+     * @return \App\Models\SettingValue
+     */
+    public function getCompanyValue(Company $company)
+    {
+        return $this->values
+            ->where('value_type', ValueType::Company)
+            ->where('company_id', $company->id)
+            ->first();
+    }
+
+    /**
+     * Get company casted setting value
+     * 
+     * @param  \App\Models\Company  $company
+     * @return mixed
+     */
+    public function getCompanyCastedValue(Company $company)
+    {
+        $value = $this->getCompanyValue($company) ?:
+            $this->getDefaultValue();
+        $dataType = $this->attributes['value_data_type'];
+        return cast_string($value->value, $dataType);
+    }
+
+    /**
+     * Set default setting value
+     * 
+     * @param  mixed  $value
+     * @return bool
+     */
+    public function setDefaultValue($value)
+    {
+        $defaultValue = $this->getDefaultValue();
+        $defaultValue->value = $value;
+        return $defaultValue->save();
+    }
+
+    /**
+     * Set company setting value
+     * 
+     * @param  mixed  $value
+     * @param  \App\Models\Company  $company
+     * @return bool
+     */
+    public function setCompanyValue($value, Company $company)
+    {
+        $companyValue = $this->getCompanyValue();
+        $companyValue->value = $value;
+        return $companyValue->save();
     }
 }

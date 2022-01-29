@@ -2,15 +2,13 @@
 
 namespace App\Repositories;
 
-use \Illuminate\Support\Facades\DB;
-use \Illuminate\Database\QueryException;
-
-use App\Http\Resources\EmployeeResource;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use App\Repositories\Base\BaseRepository;
 
 use App\Models\Employee;
 use App\Models\AppointmentEmployee;
-
-use App\Repositories\Base\BaseRepository;
+use App\Http\Resources\EmployeeResource;
 
 class EmployeeRepository extends BaseRepository
 {

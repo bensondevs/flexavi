@@ -1,11 +1,16 @@
 <?php
 
-namespace App\Http\Requests\WarrantyClaims;
+namespace App\Http\Requests\Settings;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
-class SaveWarrantyClaimRequest extends FormRequest
+use App\Traits\CompanyPopulateRequestOptions;
+
+class PopulateCompanySettingsRequest extends FormRequest
 {
+    use CompanyPopulateRequestOptions;
+    
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -13,7 +18,7 @@ class SaveWarrantyClaimRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**

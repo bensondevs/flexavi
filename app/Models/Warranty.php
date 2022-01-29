@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Webpatser\Uuid\Uuid;
 use App\Traits\Searchable;
 
+use App\Observers\WarrantyObserver as Observer;
+
 use App\Enums\Warranty\WarrantyStatus;
 
 class Warranty extends Model
@@ -65,7 +67,6 @@ class Warranty extends Model
     protected $fillable = [
         'company_id',
         'appointment_id',
-        'work_id',
         'status',
         'problem_description',
         'fixing_description',
@@ -85,10 +86,7 @@ class Warranty extends Model
     protected static function boot()
     {
     	parent::boot();
-
-    	self::creating(function ($warranty) {
-            $warranty->id = Uuid::generate()->string;
-    	});
+        self::observe(Observer::class);
     }
 
     /**
@@ -172,10 +170,26 @@ class Warranty extends Model
     }
 
     /**
+     * Get target appointment that being warranted
+     */
+    public function forAppointment()
+    {
+        return $this->belongsTo(Appointment::class, 'for_appointment_id');
+    }
+
+    /**
+     * Get warranty works
+     */
+    public function warrantyWorks()
+    {
+        return $this->hasMany(WarrantyWork::class);
+    }
+
+    /**
      * Get work thats warrantied
      */
     public function work()
     {
-        return $this->belongsTo(Work::class);
+        return $this->hasManyThrough(Work::class, WarrantyWork::class);
     }
 }
