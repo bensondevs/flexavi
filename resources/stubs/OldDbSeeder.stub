@@ -1,0 +1,18 @@
+<?php
+
+namespace Database\Seeds\OldDatabase;
+
+class {{seederName}} extends OldDatabaseSeeder
+{
+	/**
+     * Make structure of the seeder
+     * 
+     * @return array
+     */
+    public function structure()
+    {
+        return [
+            //
+        ];
+    }
+}

@@ -1,0 +1,56 @@
+<?php
+
+namespace App\Http\Requests\Company\ExecuteWorkPhotos;
+
+use App\Enums\ExecuteWorkPhoto\PhotoConditionType;
+use App\Traits\InputRequest;
+use Illuminate\Foundation\Http\FormRequest;
+
+class UploadManyExecuteWorkPhotosRequest extends FormRequest
+{
+    use InputRequest;
+
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return false;
+    }
+
+    /**
+     * Get photo data
+     *
+     * @return array
+     */
+    public function photoDataArray()
+    {
+        $photos = $this->file('photos');
+        $descriptions = $this->input('descriptions');
+        $dataArray = [];
+        foreach ($photos as $index => $photo) {
+            array_push($dataArray, [
+                'execute_work_id' => $this->getExecuteWork()->id,
+                'photo' => $photo,
+                'photo_condition_type' => PhotoConditionType::Before,
+                'photo_description' => isset($descriptions[$index])
+                    ? $descriptions[$index]
+                    : null,
+            ]);
+        }
+
+        return $dataArray;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [];
+    }
+}

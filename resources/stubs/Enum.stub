@@ -1,0 +1,10 @@
+<?php
+
+namespace App\Enums{{extendedPath}};
+
+use App\Enums\Enum;
+
+class {{enumName}} extends Enum
+{
+	//
+}

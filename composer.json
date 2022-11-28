@@ -1,0 +1,111 @@
+{
+    "name": "flexavis/daksysteem-backend",
+    "description": "REST API Platform for Daksysteem Ecosystem.",
+    "type": "project",
+    "require": {
+        "php": "^8.0",
+        "algolia/scout-extended": "^2.0",
+        "bensampo/laravel-enum": "^6",
+        "browner12/helpers": "^3.4",
+        "caneara/axiom": "^3.2",
+        "dyrynda/laravel-cascade-soft-deletes": "^4.1",
+        "fico7489/laravel-pivot": "^3.0",
+        "fideloper/proxy": "^4.4",
+        "fidum/laravel-eloquent-morph-to-one": "^2.0",
+        "fruitcake/laravel-cors": "^3.0",
+        "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.5",
+        "laravel/framework": "^9.0",
+        "laravel/horizon": "^5.10",
+        "laravel/sanctum": "^2.9",
+        "laravel/socialite": "^5.2",
+        "laravel/telescope": "^4.8",
+        "laravel/tinker": "^2.5",
+        "league/flysystem-aws-s3-v3": "^3.10",
+        "mollie/laravel-cashier-mollie": "^2.0",
+        "mollie/laravel-mollie": "^2.0",
+        "pelmered/fake-car": "^1.7",
+        "pragmarx/health": "^1.1",
+        "pusher/pusher-php-server": "^7.2",
+        "repat/laravel-job-models": "^0.7.0",
+        "sentry/sentry-laravel": "^2.12",
+        "spatie/laravel-activitylog": "^4.0",
+        "spatie/laravel-medialibrary": "^9.12",
+        "spatie/laravel-permission": "^5.0",
+        "staudenmeir/belongs-to-through": "^2.5",
+        "staudenmeir/eloquent-has-many-deep": "^1.7",
+        "tightenco/quicksand": "^2.4",
+        "twilio/sdk": "^6.42",
+        "webpatser/laravel-uuid": "^4.0"
+    },
+    "require-dev": {
+        "barryvdh/laravel-ide-helper": "^2.12",
+        "brianium/paratest": "^6.4",
+        "spatie/laravel-ignition": "^1.0",
+        "fakerphp/faker": "^1.16.0",
+        "laravel/sail": "^1.12",
+        "mockery/mockery": "^1.4.4",
+        "nunomaduro/collision": "^6.1",
+        "nunomaduro/larastan": "^1.0",
+        "phpunit/phpunit": "^9.5.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        },
+        "files": [
+            "app/Helpers/LogHelper.php"
+        ]
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "post-root-package-install": [
+            "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
+        ],
+        "post-create-project-cmd": [
+            "@php artisan key:generate --ansi"
+        ],
+        "post-update-cmd": [
+            "@php artisan telescope:publish --ansi",
+            "@php artisan horizon:publish --ansi"
+        ],
+        "dev": [
+            "@php artisan package:discover --ansi",
+            "@php artisan ide-helper:generate",
+            "@php artisan ide-helper:meta",
+            "@php artisan ide-helper:model -n"
+        ],
+        "lint": [
+            "composer dev",
+            "composer clear-lint",
+            "phpstan analyse --memory-limit 2G"
+        ],
+        "clear-lint": [
+            "phpstan clear-result-cache"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "dont-discover": [
+                "barryvdh/laravel-ide-helper"
+            ]
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

@@ -1,0 +1,123 @@
+# For more information: https://support.atlassian.com/bitbucket-cloud/docs/configure-bitbucket-pipelinesyml
+# Maintainer: Ezra Lazuardy <ezra@exclolab.com>
+definitions:
+  steps:
+    - step: &build-project
+        image: ezralazuardy/ravel:8.1
+        name: Build Project
+        services:
+          - mysql
+        script:
+          - ln -f -s .env.example .env
+          - composer install -o --no-interaction --no-progress
+          - composer dump-autoload
+          - php artisan key:generate
+          - php artisan telescope:publish
+          - php artisan horizon:publish
+          - php artisan scout:flush
+          - php artisan migrate:fresh --seed --force
+          - php artisan optimize
+          - chown -R $USER:www-data storage bootstrap/cache
+          - chmod -R 775 storage bootstrap/cache
+  services:
+    mysql:
+      image: mysql:8.0
+      environment:
+        MYSQL_DATABASE: daksysteem
+        MYSQL_USER: daksysteem
+        MYSQL_PASSWORD: daksysteem
+        MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+
+pipelines:
+  branches:
+    canary:
+      - step:
+          name: 'Deployment to Canary'
+          deployment: canary
+          caches:
+            - docker
+          script:
+            - pipe: atlassian/ssh-run:0.4.0
+              variables:
+                MODE: script
+                COMMAND: bin/deployment/canary.sh
+                SERVER: $SSH_HOST_CANARY
+                SSH_USER: $SSH_USER_CANARY
+                SSH_KEY: $SSH_KEY_CANARY
+                DEBUG: $SSH_DEBUG_CANARY
+      - step:
+          name: 'Run Database Migration on Canary'
+          trigger: manual
+          caches:
+            - docker
+          script:
+            - pipe: atlassian/ssh-run:0.4.0
+              variables:
+                MODE: script
+                COMMAND: bin/migration/canary.sh
+                SERVER: $SSH_HOST_CANARY
+                SSH_USER: $SSH_USER_CANARY
+                SSH_KEY: $SSH_KEY_CANARY
+                DEBUG: $SSH_DEBUG_CANARY
+    development:
+      - step:
+          name: 'Deployment to Staging'
+          deployment: staging
+          caches:
+            - docker
+          script:
+            - pipe: atlassian/ssh-run:0.4.0
+              variables:
+                MODE: script
+                COMMAND: bin/deployment/staging.sh
+                SERVER: $SSH_HOST_STAGING
+                SSH_USER: $SSH_USER_STAGING
+                SSH_KEY: $SSH_KEY_STAGING
+                DEBUG: $SSH_DEBUG_STAGING
+      - step:
+          name: 'Run Database Migration on Staging'
+          trigger: manual
+          caches:
+            - docker
+          script:
+            - pipe: atlassian/ssh-run:0.4.0
+              variables:
+                MODE: script
+                COMMAND: bin/migration/staging.sh
+                SERVER: $SSH_HOST_STAGING
+                SSH_USER: $SSH_USER_STAGING
+                SSH_KEY: $SSH_KEY_STAGING
+                DEBUG: $SSH_DEBUG_STAGING
+    preproduction:
+      - step:
+          name: 'Deployment to Pre-production'
+          deployment: preproduction
+          caches:
+            - docker
+          script:
+            - pipe: atlassian/ssh-run:0.4.0
+              variables:
+                MODE: script
+                COMMAND: bin/deployment/preproduction.sh
+                SERVER: $SSH_HOST_PREPRODUCTION
+                SSH_USER: $SSH_USER_PREPRODUCTION
+                SSH_KEY: $SSH_KEY_PREPRODUCTION
+                DEBUG: $SSH_DEBUG_PREPRODUCTION
+    master:
+      - step:
+          name: 'Deployment to Production'
+          deployment: production
+          caches:
+            - docker
+          script:
+            - pipe: atlassian/ssh-run:0.4.0
+              variables:
+                MODE: script
+                COMMAND: bin/deployment/production.sh
+                SERVER: $SSH_HOST_PRODUCTION
+                SSH_USER: $SSH_USER_PRODUCTION
+                SSH_KEY: $SSH_KEY_PRODUCTION
+                DEBUG: $SSH_DEBUG_PRODUCTION
+  pull-requests:
+    '**':
+      - step: *build-project

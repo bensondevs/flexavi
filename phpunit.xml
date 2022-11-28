@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="vendor/autoload.php"
+         colors="true"
+>
+    <testsuites>
+        <!-- Run unit test suite for Units -->
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+        <!-- Run unit test suite for Units -->
+
+        <!-- Run unit test suite for all features -->
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
+        </testsuite>
+        <!-- Run unit test suite for all features -->
+
+        <!-- Run unit test suite per module -->
+        <testsuite name="OwnerModule">
+            <directory prefix="Owner" suffix="Test.php">./tests/Feature/</directory>
+            <directory prefix="Owner" suffix="Test.php">./tests/Integration/</directory>
+            <directory prefix="Owner" suffix="Test.php">./tests/Unit/</directory>
+        </testsuite>
+        <testsuite name="CustomerModule">
+            <directory prefix="Customer" suffix="Test.php">./tests/Feature/</directory>
+            <directory prefix="Customer" suffix="Test.php">./tests/Integration/</directory>
+            <directory prefix="Customer" suffix="Test.php">./tests/Unit/</directory>
+        </testsuite>
+        <testsuite name="EmployeeModule">
+            <directory prefix="Employee" suffix="Test.php">./tests/Feature/</directory>
+            <directory prefix="Employee" suffix="Test.php">./tests/Integration/</directory>
+            <directory prefix="Employee" suffix="Test.php">./tests/Unit/</directory>
+        </testsuite>
+        <!-- Run unit test suite per module -->
+
+        <testsuite name="Integration">
+            <directory suffix="Test.php">./tests/Integration</directory>
+        </testsuite>
+
+        <testsuite name="Factory">
+            <directory suffix="Test.php">./tests/Unit/Factories</directory>
+        </testsuite>
+
+        <testsuite name="Service">
+            <directory suffix="Test.php">./tests/Unit/Services</directory>
+        </testsuite>
+
+        <testsuite name="Model">
+            <directory suffix="Test.php">./tests/Unit/Models</directory>
+        </testsuite>
+    </testsuites>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./app</directory>
+        </include>
+    </coverage>
+</phpunit>

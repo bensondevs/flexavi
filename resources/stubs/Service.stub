@@ -1,0 +1,16 @@
+<?php
+
+namespace App\Services{{extendedPath}};
+
+class {{serviceName}}
+{
+	/**
+	 * Create New Service Instance
+	 * 
+	 * @return void
+	 */
+	public function __construct()
+	{
+		//
+	}
+}

@@ -1,0 +1,13 @@
+<?php
+
+if (!function_exists('example_helper')) {
+    /**
+     * //
+     *
+     * @return void
+     */
+    function example_helper(): void
+    {
+        //
+    }
+}

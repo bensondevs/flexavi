@@ -1,0 +1,46 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+parameters:
+    level: 8
+    paths:
+        - app
+        - config
+        - database
+        - routes
+    excludePaths:
+        - app/Console/Commands/*
+        - app/Traits/*
+        - app/Models/*
+        - app/Observers/*
+        - database/factories/*
+        - database/seeders/*
+        - config/sentry.php
+
+        # work in progress
+        - app/Http/Controllers/*
+        - app/Policies/*
+        - app/Services/*
+        - app/Rules/*
+
+    scanFiles:
+        - ./.phpstorm.meta.php
+        - ./_ide_helper.php
+    ignoreErrors:
+        - '#mixed#'
+        - '#Undefined variable: \$this#'
+        - '#App\\Models#'
+        - '#Call to an undefined method App\\Http\\Requests#'
+        - '#Call to an undefined method Illuminate\\Http\\Request#'
+        - '#Illuminate\\Support\\Collection#'
+        - '#array\|Illuminate\\Contracts\\Support\\Arrayable\|JsonSerializable#'
+        - '#count#'
+        - '#no type specified#'
+        - '#no return type specified#'
+        - '#undefined static method#'
+        - '#undefined method#'
+        - '#undefined property#'
+        - '#Access to undefined constant#'
+        - '#is never read, only written#'
+        - '#length of function substr#'
+        - '#expects view-string, string given#'
+    checkMissingIterableValueType: false

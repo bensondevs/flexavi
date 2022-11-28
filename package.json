@@ -1,0 +1,25 @@
+{
+    "name": "daksysteem-backend",
+    "description": "REST API Platform for Daksysteem Ecosystem.",
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "dependencies": {
+        "axios": "^0.21",
+        "laravel-echo": "^1.14.1",
+        "laravel-mix": "^6.0.43",
+        "lodash": "^4.17.19",
+        "postcss": "^8.1.14",
+        "pusher-js": "^7.4.0"
+    },
+    "devDependencies": {
+        "@prettier/plugin-php": "^0.18.4"
+    }
+}
